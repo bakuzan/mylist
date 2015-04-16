@@ -1,0 +1,73 @@
+<section data-ng-controller="MangaitemsController" data-ng-init="find()" data-ng-show="authentication.user">
+    <div class="page-header">
+        <h1>Manga</h1>
+    </div>
+    <div class="form-group col-sm-4">
+       <div class="input-group">
+            <div class="input-group-addon">
+                <i class="fa fa-search"></i>
+            </div>
+           <input type="text" class="form-control" placeholder="search manga" ng-model="search.title" typeahead="mangaitem.title for mangaitem in mangaitems | filter: { title:$viewValue } ">
+	   </div>
+        <br/>
+        <div class="input-group">
+		  <div class="input-group-addon">
+		      <i class="fa fa-check"></i>
+          </div>
+            <select class="form-control" ng-model="search.status">
+                        <option value="">All</option>
+                        <option value="false">Ongoing</option>
+                        <option value="true">Completed</option>
+            </select>
+        </div>
+        <br/>
+        <div class="input-group">
+		  <div class="input-group-addon">
+		      <i class="fa fa-sort"></i>
+          </div>
+            <select class="form-control" ng-model="sortType">
+                        <option value="">-- choose sort type --</option>
+                        <option value="title">Title</option>
+                        <option value="chapters">Chapters</option>
+                        <option value="volumes">Volumes</option>
+                        <option value="start">Start Date</option>
+                        <option value="latest">Latest</option>
+            </select>
+        </div>
+        <br/>
+        <div class="input-group" ng-click="sortReverse = !sortReverse">
+		  <div class="input-group-addon">
+		      <i class="fa" ng-class="sortReverse ? 'fa-sort-amount-desc' : 'fa-sort-amount-asc' "></i>
+          </div>
+            <input type="text" class="form-control" value="Ascending" ng-show="!sortReverse" disabled>
+            <input type="text" class="form-control" value="Descending" ng-show="sortReverse" disabled>
+            <!--<input type="checkbox" class="form-control" data-ng-model="sortReverse" id="sortReverse">-->
+        </div>
+        <br/>
+        <div class="input-group">
+		  <div class="input-group-addon">
+		      <i class="fa fa-list-ol"></i>
+          </div>
+            <input type="text" class="form-control" value="Showing {{ (mangaitems | filter: search).length }} manga." disabled>
+        </div>
+    </div>
+    <div class="list-group col-sm-8">
+        <a data-ng-repeat="mangaitem in mangaitems | orderBy: sortType:sortReverse | filter: search" data-ng-href="#!/mangaitems/{{mangaitem._id}}" class="list-group-item">
+			<small class="list-group-item-text">
+                Latest:
+				<span data-ng-bind="mangaitem.latest | date:'yyyy-MMM-dd'"></span>
+			</small>
+			<h4 class="list-group-item-heading" data-ng-bind="mangaitem.title"></h4>
+            <p class="list-group-item-text">
+                Chapters
+                <span data-ng-bind="mangaitem.chapters"></span>, 
+                Volumes
+                <span data-ng-bind="mangaitem.volumes"></span>
+            </p>
+        </a>
+    </div>
+    <div class="alert alert-warning text-center" data-ng-hide="!mangaitems.$resolved || mangaitems.length">
+    	No Mangaitems yet, why don't you <a href="/#!/mangaitems/create">create one</a>?
+    </div>
+    <!-- <i ng-show="sortType == 'name'" class="fa" ng-class="sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i> -->
+</section>

@@ -12,13 +12,9 @@
         <br/>
         <div class="input-group">
 		  <div class="input-group-addon">
-		      <i class="fa fa-check"></i>
+		      <i class="fa fa-list-ol"></i>
           </div>
-            <select class="form-control" ng-model="search.status">
-                        <option value="">All</option>
-                        <option value="false">Ongoing</option>
-                        <option value="true">Completed</option>
-            </select>
+            <input type="text" class="form-control" value="Showing {{ (mangaitems | filter: search).length }} manga." disabled>
         </div>
         <br/>
         <div class="input-group">
@@ -31,7 +27,9 @@
                         <option value="chapters">Chapters</option>
                         <option value="volumes">Volumes</option>
                         <option value="start">Start Date</option>
+                        <option value="end">End Date</option>
                         <option value="latest">Latest</option>
+                        <option value="rating">Rating</option>
             </select>
         </div>
         <br/>
@@ -46,9 +44,32 @@
         <br/>
         <div class="input-group">
 		  <div class="input-group-addon">
-		      <i class="fa fa-list-ol"></i>
+		      <i class="fa fa-check"></i>
           </div>
-            <input type="text" class="form-control" value="Showing {{ (mangaitems | filter: search).length }} manga." disabled>
+            <select class="form-control" ng-model="search.status">
+                        <option value="">All</option>
+                        <option value="false">Ongoing</option>
+                        <option value="true">Completed</option>
+            </select>
+        </div>
+        <br/>
+        <div class="input-group">
+		  <div class="input-group-addon">
+		      <i class="fa fa-book"></i>
+          </div>
+            <select class="form-control" ng-model="search.hardcopy">
+                        <option value="">All</option>
+                        <option value="false">Online</option>
+                        <option value="true">Hardcopy</option>
+            </select>
+        </div>
+        <br/>
+        <div class="input-group">
+            <div class="input-group-addon">
+                <i class="fa fa-star" data-ng-click="search.rating=undefined"></i>
+            </div>
+               <rating class="form-control" data-ng-model="search.rating" style="color: blue;" readonly="false" data-ng-click="rate==rate : rate=null" max="maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></rating>
+            <span data-ng-show="overStar!=null" class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}">{{percent}}%</span>
         </div>
     </div>
     <div class="list-group col-sm-8">
@@ -69,5 +90,4 @@
     <div class="alert alert-warning text-center" data-ng-hide="!mangaitems.$resolved || mangaitems.length">
     	No Mangaitems yet, why don't you <a href="/#!/mangaitems/create">create one</a>?
     </div>
-    <!-- <i ng-show="sortType == 'name'" class="fa" ng-class="sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i> -->
 </section>

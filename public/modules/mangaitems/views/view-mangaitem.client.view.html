@@ -1,14 +1,21 @@
 <section data-ng-controller="MangaitemsController" data-ng-init="findOne()" data-ng-show="authentication.user">
 	<div class="page-header">
-		<h1 data-ng-bind="mangaitem.title"></h1>
-        <h3>Chapter </h3><p data-ng-bind="mangaitem.chapters"></p>
-        <h3>Volume </h3><p data-ng-bind="mangaitem.volumes"></p>
+        <div class="text-left">
+            <h1 data-ng-bind="mangaitem.title"></h1>
+            <span class="text-muted" data-ng-show="mangaitem.status">(Completed)</span>
+        </div>
+        <h3>Chapter </h3><span data-ng-bind="mangaitem.chapters"></span>/<span data-ng-bind="mangaitem.finalChapter"></span>
+        <h3>Volume </h3><span data-ng-bind="mangaitem.volumes"></span>/<span data-ng-bind="mangaitem.finalVolume"></span>
+        <div class="text-right">
+            <em class="text-muted" data-ng-show="mangaitem.rating==0">No rating</em>
+            <rating data-ng-model="mangaitem.rating" style="color: blue;" readonly="true" max="maxRating" id="rating" name="rating"></rating>
+        </div>
 	</div>
 	<div class="pull-right" data-ng-show="((authentication.user) && (authentication.user._id == mangaitem.user._id))">
 		<a class="btn btn-primary" href="/#!/mangaitems/{{mangaitem._id}}/edit">
 			<i class="glyphicon glyphicon-edit"></i>
 		</a>
-		<a class="btn btn-primary" data-ng-click="remove();">
+		<a class="btn btn-danger" data-ng-click="remove();">
 			<i class="glyphicon glyphicon-trash"></i>
 		</a>
 	</div>
@@ -16,6 +23,8 @@
 		<em class="text-muted">
 			Start
 			<span data-ng-bind="mangaitem.start | date:'yyyy-MMM-dd'"></span><br/>
+            End
+			<span data-ng-bind="mangaitem.end | date:'yyyy-MMM-dd'"></span><br/>
 			Latest
 			<span data-ng-bind="mangaitem.latest | date:'yyyy-MMM-dd'"></span>
 		</em>

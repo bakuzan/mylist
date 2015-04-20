@@ -7,17 +7,13 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         
         $scope.sortType = 'latest'; //default sort type
 	    $scope.sortReverse = true; // default sort order
-        
-        /*
-        $scope.isNumber = function(evt) {
-            evt = (evt) ? evt : window.event;
-            var charCode = (evt.which) ? evt.which : evt.keyCode;
-            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-                return false;
-            }
-            return true;
-        }
-        */
+        $scope.finalNumbers = false; //default show status of final number fields in edit view.
+        $scope.maxRating = 10; //maximum rating
+
+        $scope.hoveringOver = function(value) {
+            $scope.overStar = value;
+            $scope.percent = 100 * (value / $scope.maxRating);
+        };
 
 		// Create new Mangaitem
 		$scope.create = function() {
@@ -28,7 +24,9 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                 volumes: this.volumes,
                 start: this.start,
                 latest: this.latest,
-                status: this.status,
+                finalChapter: this.finalChapter,
+                finalVolume: this.finalVolume,
+                hardcopy: this.hardcopy,
                 user: this.user
 			});
 
@@ -68,6 +66,13 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		// Update existing Mangaitem
 		$scope.update = function() {
 			var mangaitem = $scope.mangaitem;
+            console.log(mangaitem.end);
+            
+            if(mangaitem.end!==undefined) {
+                mangaitem.status = true;
+            } else {
+                mangaitem.status = false;
+            }
 
 			mangaitem.$update(function() {
 				$location.path('/mangaitems/' + mangaitem._id);

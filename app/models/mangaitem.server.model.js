@@ -29,6 +29,9 @@ var MangaitemSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  end: {
+    type: Date
+  },
   latest: {
     type: Date,
     default: Date.now
@@ -36,6 +39,24 @@ var MangaitemSchema = new Schema({
   status: {
     type: Boolean,
     default: false
+  },
+  hardcopy: {
+    type: Boolean,
+    default: false
+  },
+  finalChapter: {
+    type: Number,
+      default: '0',
+    trim: true
+  },
+  finalVolume: {
+    type: Number,
+      default: '0',
+    trim: true
+  },
+  rating: {
+    type: Number,
+      default: 0
   },
 	user: {
 		type: Schema.ObjectId,

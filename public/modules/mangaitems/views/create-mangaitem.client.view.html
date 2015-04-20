@@ -57,11 +57,37 @@
 						<span ng-show="mangaForm.latest.$valid && !mangaForm.latest.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
 					</div>
                 </div>
-                <div class="form-group">
+                <!--<div class="form-group">
                     <label for="status" class="col-md-2 control-label">Completed?</label>
                     <div class="col-md-6">
                         <input type="checkbox" class="form-control" data-ng-model="status" id="status" name="status">
                     </div>
+                </div>-->
+                <div class="form-group">
+                    <label for="hardcopy" class="col-md-2 control-label">Hardcopy?</label>
+                    <div class="col-md-6">
+                        <input type="checkbox" class="form-control" data-ng-model="hardcopy" id="hardcopy" name="hardcopy">
+                    </div>
+                </div>
+                <div class="form-group" ng-class="{ 'has-error' : mangaForm.finalChapter.$invalid && !mangaForm.finalChapter.$pristine }">
+                    <label for="finalChapter" class="col-md-2 control-label">Final chapter</label>
+                    <div class="col-md-6">
+                        <input type="number" class="form-control" data-ng-model="finalChapter" id="finalChapter" name="finalChapter" placeholder="0">
+                    </div>
+                    <div class="col-md-4">
+                        <!--<p ng-show="isNumber(mangaForm.chapters)" class="help-block">Chapter number should be a full number.</p>-->
+						<span ng-show="mangaForm.finalChapter.$valid && !mangaForm.finalChapter.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
+					</div>
+                </div>
+                <div class="form-group" ng-class="{ 'has-error' : mangaForm.finalVolume.$invalid && !mangaForm.finalVolume.$pristine }">
+                    <label for="finalVolume" class="col-md-2 control-label">Final volume</label>
+                    <div class="col-md-6">
+                        <input type="number" class="form-control" data-ng-model="finalVolume" id="finalVolume" name="finalVolume" placeholder="0">
+                    </div>
+                    <div class="col-md-4">
+                        <!--<p ng-show="isNumber(mangaForm.volumes)" class="help-block">Volume number should be a full number.</p>-->
+						<span ng-show="mangaForm.finalVolume.$valid && !mangaForm.finalVolume.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
+					</div>
                 </div>
                 <div class="form-group">
                     <input type="submit" class="btn btn-default" ng-disabled="mangaForm.$invalid">

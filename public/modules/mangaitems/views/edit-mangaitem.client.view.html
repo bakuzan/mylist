@@ -54,10 +54,58 @@
 					</div>
                 </div>
                 <div class="form-group">
+                    <label for="rating" class="col-md-2 control-label">Rating</label>
+                    <div class="col-md-6">
+                        <rating class="form-control" data-ng-model="mangaitem.rating" style="color: blue;" readonly="false" max="maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></rating>
+                    </div>
+                    <span data-ng-show="overStar!=null" class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}">{{percent}}%</span>
+                </div>
+                <hr/>
+                <div class="form-group" data-ng-hide="mangaitem.end!=null" ng-class="{ 'has-error' : mangaForm.end.$invalid }">
+                    <label for="end" class="col-md-2 control-label">End</label>
+                    <div class="col-md-6">
+                        <input type="date" class="form-control" data-ng-model="mangaitem.end" id="end" name="end" placeholder="">
+                    </div>
+                    <div class="col-md-4">
+						<span ng-show="mangaForm.end.$valid && !mangaForm.end.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
+					</div>
+                </div>
+                <div class="form-group">
                     <label for="status" class="col-md-2 control-label">Completed?</label>
                     <div class="col-md-6">
-                        <input type="checkbox" class="form-control" data-ng-model="mangaitem.status" id="status" name="status">
+                        <input type="checkbox" class="form-control" data-ng-model="mangaitem.status" data-ng-checked="mangaitem.end!=null" data-ng-true-value="true" id="status" name="status" disabled>
                     </div>
+                </div>
+                <div class="form-group">
+                    <label for="hardcopy" class="col-md-2 control-label">Hardcopy?</label>
+                    <div class="col-md-6">
+                        <input type="checkbox" class="form-control" data-ng-model="mangaitem.hardcopy" id="hardcopy" name="hardcopy">
+                    </div>
+                </div>
+                <div class="form-group text-right" data-ng-hide="mangaitem.finalChapter!=0 && mangaitem.finalVolume!=0">
+                    <a class="btn btn-primary" id="finalNumbers" name="finalNumbers" data-ng-click="finalNumbers = !finalNumbers">Toggle final numbers</a>
+                </div>
+                <div class="form-group" data-ng-show="finalNumbers">
+                <div class="form-group" ng-class="{ 'has-error' : mangaForm.finalChapter.$invalid && !mangaForm.finalChapter.$pristine }">
+                    <label for="finalChapter" class="col-md-2 control-label">Final chapter</label>
+                    <div class="col-md-6">
+                        <input type="number" class="form-control" data-ng-model="mangaitem.finalChapter" id="finalChapter" name="finalChapter" placeholder="0">
+                    </div>
+                    <div class="col-md-4">
+                        <!--<p ng-show="isNumber(mangaForm.chapters)" class="help-block">Chapter number should be a full number.</p>-->
+						<span ng-show="mangaForm.finalChapter.$valid && !mangaForm.finalChapter.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
+					</div>
+                </div>
+                <div class="form-group" ng-class="{ 'has-error' : mangaForm.finalVolume.$invalid && !mangaForm.finalVolume.$pristine }">
+                    <label for="finalVolume" class="col-md-2 control-label">Final volume</label>
+                    <div class="col-md-6">
+                        <input type="number" class="form-control" data-ng-model="mangaitem.finalVolume" id="finalVolume" name="finalVolume" placeholder="0">
+                    </div>
+                    <div class="col-md-4">
+                        <!--<p ng-show="isNumber(mangaForm.volumes)" class="help-block">Volume number should be a full number.</p>-->
+						<span ng-show="mangaForm.finalVolume.$valid && !mangaForm.finalVolume.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
+					</div>
+                </div>
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Update" class="btn btn-default" ng-disabled="mangaForm.$invalid || mangaForm.$pristine">

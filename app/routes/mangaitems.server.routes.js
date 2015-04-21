@@ -16,4 +16,8 @@ module.exports = function(app) {
 
 	// Finish by binding the Mangaitem middleware
 	app.param('mangaitemId', mangaitems.mangaitemByID);
+    
+    //image upload route
+    app.route('/upload/image')
+        .post(mangaitems.postImage);
 };

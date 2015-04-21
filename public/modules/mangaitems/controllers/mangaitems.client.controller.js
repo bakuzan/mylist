@@ -1,8 +1,8 @@
 'use strict';
 
 // Mangaitems controller
-angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems',
-	function($scope, $stateParams, $location, Authentication, Mangaitems) {
+angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', '$upload',
+	function($scope, $stateParams, $location, Authentication, Mangaitems, $upload) {
 		$scope.authentication = Authentication;
         
         $scope.sortType = 'latest'; //default sort type
@@ -11,11 +11,47 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         $scope.maxRating = 10; //maximum rating
         //$scope.capacity = '1000'; //set chapter/volume limit number
         
+        //rating 'tooltip' function
         $scope.hoveringOver = function(value) {
             $scope.overStar = value;
             $scope.percent = 100 * (value / $scope.maxRating);
         };
         
+        $scope.$watch('files', function () {
+            $scope.onFileSelect($scope.image);
+        });
+        
+        //image upload function
+        $scope.onFileSelect = function(image) {
+            if (angular.isArray(image)) {
+                image = image[0];
+            }
+            
+            //client-side file type handling.
+            if (image.type !== 'image/png' && image.type !== 'image/jpeg') {
+                alert('Only PNG and JPEG are accepted.');
+            }
+            
+            $scope.uploadInProgress = true;
+            $scope.uploadProgress = 0;
+            
+            $scope.upload = $upload.upload({
+                url: '/upload/image',
+                method: 'POST',
+                file: image
+            }).progress(function(event) {
+                $scope.uploadProgress = Math.floor(event.loaded / event.total);
+                $scope.$apply();
+            }).success(function(data, status, headers, config) {
+                console.log('file ' + config.file.name + ' uploaded. Response: ' + data);
+                $scope.uploadInProgress = false;
+                //get file immediately.
+                $scope.uploadedImage = JSON.parse(data);
+            }).error(function(err) {
+                $scope.uploadInProgress = false;
+                console.log('Error during upload: ' + err.message || err);
+            });
+        };
 
 		// Create new Mangaitem
 		$scope.create = function() {

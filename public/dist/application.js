@@ -309,10 +309,39 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 	    $scope.sortReverse = true; // default sort order
         $scope.finalNumbers = false; //default show status of final number fields in edit view.
         $scope.maxRating = 10; //maximum rating
-
+        //$scope.capacity = '1000'; //set chapter/volume limit number
+        
+        //rating 'tooltip' function
         $scope.hoveringOver = function(value) {
             $scope.overStar = value;
             $scope.percent = 100 * (value / $scope.maxRating);
+        };
+        
+        //image upload function
+        $scope.onFileSelect = function(image) {
+            //client-side file type handling.
+            if (image.type !== 'image/png' && image.type !== 'image/jpeg') {
+                alert('Only PNG and JPEG are accepted.');
+            }
+            
+            $scope.uploadInProgress = true;
+            $scope.uploadProgress = 0;
+            
+            $scope.upload = $upload.upload({
+                url: '/upload/image',
+                method: 'POST',
+                file: image
+            }).progress(function(event) {
+                $scope.uploadProgress = Math.floor(event.loaded / event.total);
+                $scope.$apply();
+            }).success(function(data, status, headers, config) {
+                $scope.uploadInProgress = false;
+                //get file immediately.
+                $scope.uploadedImage = JSON.parse(data);
+            }).error(function(err) {
+                $scope.uploadInProgress = false;
+                console.log('Error during upload: ' + err.message || err);
+            });
         };
 
 		// Create new Mangaitem
@@ -368,10 +397,17 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 			var mangaitem = $scope.mangaitem;
             console.log(mangaitem.end);
             
+            //handle status: completed.
             if(mangaitem.end!==undefined) {
                 mangaitem.status = true;
             } else {
                 mangaitem.status = false;
+            }
+            
+            //handle re-reading, re-read count.
+            if (mangaitem.reReading===true && mangaitem.chapters===mangaitem.finalChapter && mangaitem.volumes===mangaitem.finalVolume) {
+                mangaitem.reReadCount += 1;
+                mangaitem.reReading = false;
             }
 
 			mangaitem.$update(function() {
@@ -384,6 +420,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		// Find a list of Mangaitems
 		$scope.find = function() {
 			$scope.mangaitems = Mangaitems.query();
+            console.log($scope.mangaitems);
 		};
 
 		// Find existing Mangaitem
@@ -391,6 +428,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 			$scope.mangaitem = Mangaitems.get({ 
 				mangaitemId: $stateParams.mangaitemId
 			});
+            console.log($scope.mangaitem);
 		};
 	}
 ]);

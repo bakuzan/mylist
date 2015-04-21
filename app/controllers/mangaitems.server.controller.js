@@ -6,7 +6,43 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Mangaitem = mongoose.model('Mangaitem'),
+    uuid = require('node-uuid'),
+    multiparty = require('multiparty'),
+    fs = require('fs'),
 	_ = require('lodash');
+
+/**
+ * Upload image.
+ */
+exports.postImage = function(req, res) {
+    var form = new multiparty.Form();
+    //console.log(req);
+    form.parse(req, function(err, fields, files) {
+        var file = files.file[0];
+        //console.log(file);
+        var contentType = file.headers['content-type'];
+        var tmpPath = file.path;
+        var extIndex = tmpPath.lastIndexOf('.');
+        var extension = (extIndex < 0) ? '' : tmpPath.substr(extIndex);
+        //uuid for unique filenames.
+        var filename = uuid.v4() + extension;
+        var destPath = 'c:/mylist/whispering-lowlands-3953/public/modules/mangaitems/img/' + filename;
+        
+        //server-side file type check.
+        if (contentType !== 'image/png' && contentType !== 'image/jpeg') {
+            fs.unlink(tmpPath);
+            return res.status(400).send('File type not supported.');
+        }
+        
+        fs.rename(tmpPath, destPath, function(err) {
+            if (err) {
+                return res.status(400).send('Image not saved.');
+            }
+            console.log(destPath);
+            return res.json(destPath);
+        });
+    });
+};
 
 /**
  * Create a Mangaitem

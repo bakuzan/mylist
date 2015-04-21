@@ -46,17 +46,25 @@ var MangaitemSchema = new Schema({
   },
   finalChapter: {
     type: Number,
-      default: '0',
+    default: '0',
     trim: true
   },
   finalVolume: {
     type: Number,
-      default: '0',
+    default: '0',
     trim: true
   },
   rating: {
     type: Number,
-      default: 0
+    default: 0
+  },
+  reReading: {
+    type: Boolean,
+    default: false
+  },
+  reReadCount: {
+    type: Number,
+    default: 0
   },
 	user: {
 		type: Schema.ObjectId,

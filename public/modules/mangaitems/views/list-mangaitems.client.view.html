@@ -7,7 +7,7 @@
             <div class="input-group-addon">
                 <i class="fa fa-search"></i>
             </div>
-           <input type="text" class="form-control" placeholder="search manga" ng-model="search.title" typeahead="mangaitem.title for mangaitem in mangaitems | filter: { title:$viewValue } ">
+           <input type="text" class="form-control" placeholder="search manga" ng-model="search.title"><!-- typeahead="mangaitem.title for mangaitem in mangaitems | filter: { title:$viewValue } " -->
 	   </div>
         <br/>
         <div class="input-group">
@@ -65,11 +65,24 @@
         </div>
         <br/>
         <div class="input-group">
+		  <div class="input-group-addon">
+		      <i class="fa fa-repeat"></i>
+          </div>
+            <select class="form-control" ng-model="search.reReading">
+                        <option value="">All</option>
+                        <option value="false">Not Re-reading</option>
+                        <option value="true">Re-reading</option>
+            </select>
+        </div>
+        <br/>
+        <div class="input-group">
             <div class="input-group-addon">
                 <i class="fa fa-star" data-ng-click="search.rating=undefined"></i>
             </div>
-               <rating class="form-control" data-ng-model="search.rating" style="color: blue;" readonly="false" data-ng-click="rate==rate : rate=null" max="maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></rating>
-            <span data-ng-show="overStar!=null" class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}">{{percent}}%</span>
+               <rating class="form-control" data-ng-model="search.rating" style="color: blue;" readonly="false" max="maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></rating>
+            <div class="input-group-addon">
+                <span data-ng-show="overStar!=null" class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}">{{percent}}%</span>
+            </div>
         </div>
     </div>
     <div class="list-group col-sm-8">

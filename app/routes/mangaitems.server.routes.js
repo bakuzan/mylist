@@ -18,6 +18,6 @@ module.exports = function(app) {
 	app.param('mangaitemId', mangaitems.mangaitemByID);
     
     //image upload route
-    app.route('/upload/image')
+    app.route('/fileUpload')
         .post(mangaitems.postImage);
 };

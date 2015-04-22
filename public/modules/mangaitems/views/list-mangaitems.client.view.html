@@ -86,7 +86,7 @@
         </div>
     </div>
     <div class="list-group col-sm-8">
-        <a data-ng-repeat="mangaitem in mangaitems | orderBy: sortType:sortReverse | filter: search" data-ng-href="#!/mangaitems/{{mangaitem._id}}" class="list-group-item">
+        <a data-ng-repeat="mangaitem in mangaitems | orderBy: sortType:sortReverse | filter: search" data-ng-href="#!/mangaitems/{{mangaitem._id}}" list_Back="{{trustAsResourceUrl(mangaitem.image)}}" class="list-group-item">
 			<small class="list-group-item-text">
                 Latest:
 				<span data-ng-bind="mangaitem.latest | date:'yyyy-MMM-dd'"></span>

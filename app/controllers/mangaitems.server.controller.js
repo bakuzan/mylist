@@ -19,13 +19,15 @@ exports.postImage = function(req, res) {
     //console.log(req);
     form.parse(req, function(err, fields, files) {
         var file = files.file[0];
-        //console.log(file);
+        console.log(file);
         var contentType = file.headers['content-type'];
         var tmpPath = file.path;
         var extIndex = tmpPath.lastIndexOf('.');
         var extension = (extIndex < 0) ? '' : tmpPath.substr(extIndex);
+        
         //uuid for unique filenames.
-        var filename = uuid.v4() + extension;
+        //var filename = uuid.v4() + extension;
+        var filename = file.originalFilename;
         var destPath = 'c:/mylist/whispering-lowlands-3953/public/modules/mangaitems/img/' + filename;
         
         //server-side file type check.

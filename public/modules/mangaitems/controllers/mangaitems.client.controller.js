@@ -1,15 +1,22 @@
 'use strict';
 
 // Mangaitems controller
-angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', '$upload',
-	function($scope, $stateParams, $location, Authentication, Mangaitems, $upload) {
+angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'fileUpload', '$sce',
+	function($scope, $stateParams, $location, Authentication, Mangaitems, fileUpload, $sce) {
 		$scope.authentication = Authentication;
+        
         
         $scope.sortType = 'latest'; //default sort type
 	    $scope.sortReverse = true; // default sort order
         $scope.finalNumbers = false; //default show status of final number fields in edit view.
         $scope.maxRating = 10; //maximum rating
+        $scope.imgExtension = ''; //image path extension.
+        $scope.imgPath = ''; //image path
         //$scope.capacity = '1000'; //set chapter/volume limit number
+        $scope.trustAsResourceUrl = function(url) {
+            return $sce.trustAsResourceUrl(url);
+        };
+        //allow retreival of local resource
         
         //rating 'tooltip' function
         $scope.hoveringOver = function(value) {
@@ -17,43 +24,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             $scope.percent = 100 * (value / $scope.maxRating);
         };
         
-        $scope.$watch('files', function () {
-            $scope.onFileSelect($scope.image);
-        });
-        
-        //image upload function
-        $scope.onFileSelect = function(image) {
-            if (angular.isArray(image)) {
-                image = image[0];
-            }
-            
-            //client-side file type handling.
-            if (image.type !== 'image/png' && image.type !== 'image/jpeg') {
-                alert('Only PNG and JPEG are accepted.');
-            }
-            
-            $scope.uploadInProgress = true;
-            $scope.uploadProgress = 0;
-            
-            $scope.upload = $upload.upload({
-                url: '/upload/image',
-                method: 'POST',
-                file: image
-            }).progress(function(event) {
-                $scope.uploadProgress = Math.floor(event.loaded / event.total);
-                $scope.$apply();
-            }).success(function(data, status, headers, config) {
-                console.log('file ' + config.file.name + ' uploaded. Response: ' + data);
-                $scope.uploadInProgress = false;
-                //get file immediately.
-                $scope.uploadedImage = JSON.parse(data);
-            }).error(function(err) {
-                $scope.uploadInProgress = false;
-                console.log('Error during upload: ' + err.message || err);
-            });
-        };
-
-		// Create new Mangaitem
+        // Create new Mangaitem
 		$scope.create = function() {
 			// Create new Mangaitem object
 			var mangaitem = new Mangaitems ({
@@ -104,7 +75,11 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		// Update existing Mangaitem
 		$scope.update = function() {
 			var mangaitem = $scope.mangaitem;
-            console.log(mangaitem.end);
+            
+            if ($scope.imgPath!==undefined && $scope.imgPath!==null) {
+                mangaitem.image = $scope.imgPath;
+            }
+            console.log(mangaitem.image);
             
             //handle status: completed.
             if(mangaitem.end!==undefined) {
@@ -118,12 +93,14 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                 mangaitem.reReadCount += 1;
                 mangaitem.reReading = false;
             }
+                    
 
 			mangaitem.$update(function() {
 				$location.path('/mangaitems/' + mangaitem._id);
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});
+            
 		};
 
 		// Find a list of Mangaitems
@@ -139,5 +116,48 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 			});
             console.log($scope.mangaitem);
 		};
+        
+        //image upload
+        $scope.uploadFile = function(){
+            var file = $scope.myFile;
+            console.log('file is ' + JSON.stringify(file));
+            var uploadUrl = '/fileUpload';
+            fileUpload.uploadFileToUrl(file, uploadUrl);
+        };
+        
+        //set image path
+        $scope.imagePath = function(file) {
+            //var titleLower = file.toLowerCase();
+            //console.log(titleLower);
+            //var tmpName = titleLower.replace(/ /g, '-');
+            //console.log(tmpName);
+            $scope.imgPath = '/modules/mangaitems/img/' + file; //c:/mylist/whispering-lowlands-3953/public
+        };
 	}
-]);
+])
+.directive('fileModel', ['$parse', function ($parse) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            var model = $parse(attrs.fileModel);
+            var modelSetter = model.assign;
+            
+            element.bind('change', function(){
+                scope.$apply(function(){
+                    modelSetter(scope, element[0].files[0]);
+                });
+            });
+        }
+    };
+}])
+.directive('listBack', function(){
+    return function(scope, element, attrs){
+        var url = attrs.listBack;
+        element.css({
+            'background-image': 'url(' + url +')',
+            'background-size' : '50%',
+            'background-repeat': 'no-repeat',
+            'background-position': 'right' 
+        });
+    };
+});

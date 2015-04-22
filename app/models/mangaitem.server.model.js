@@ -67,7 +67,8 @@ var MangaitemSchema = new Schema({
     default: 0
   },
   image: {
-    type: Array
+    type: String,
+    default: ''
    },
 	user: {
 		type: Schema.ObjectId,

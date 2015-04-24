@@ -1,8 +1,8 @@
 'use strict';
 
 
-angular.module('core').controller('HomeController', ['$scope', 'Authentication',
-	function($scope, Authentication) {
+angular.module('core').controller('HomeController', ['$scope', 'Authentication', '$window',
+	function($scope, Authentication, $window) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
         
@@ -32,6 +32,13 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         {name: 'Sunday'}
     ];
     $scope.newTaskDay = $scope.days;
+        
+    $scope.weekBeginning = function() {
+        var day = $scope.today.getDay(),
+        diff = $scope.today.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+        var wkBeg = new Date();
+        return new Date(wkBeg.setDate(diff));
+    };
         
     //check things
     $scope.checkStatus = function() {
@@ -67,12 +74,13 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
             console.log('updated set to false');
             localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
         }
+        
     };
         
     $scope.addNew = function () {
         console.log($scope.newTaskDay.name);
         if ($scope.newTaskDay.name === null || $scope.newTaskDay.name === '' || $scope.newTaskDay.name === undefined) {
-            $scope.newTaskDay.name = 'All';
+            $scope.newTaskDay.name = 'Any';
         }
         if ($scope.newTaskCategory.name === null || $scope.newTaskCategory.name === '' || $scope.newTaskCategory.name === undefined) {
             $scope.newTaskCategory.name = 'Other';
@@ -93,15 +101,12 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         $scope.newTaskRepeat = '';
         localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
     };
-    $scope.deleteTask = function () {
-        var completedTask = $scope.taskItem;
-        $scope.taskItem = [];
-        angular.forEach(completedTask, function (taskItem) {
-            if (!taskItem.complete && taskItem.completeTimes < taskItem.repeat) {
-                $scope.taskItem.push(taskItem);
-            }
-        });
-        localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
+    $scope.deleteTask = function  (index) {
+        var removal = $window.confirm('Are you sure you want to delete this task?');
+        if (removal) {
+            $scope.taskItem.splice(index, 1);
+            localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
+        }
     };
     
     $scope.save = function (description) {
@@ -113,6 +118,14 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         });
         localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
     };
+        
+    $scope.remaining = function() {
+        var count = 0;
+        angular.forEach($scope.taskItem, function(taskItem) {
+            count += taskItem.complete ? 0 : 1;
+        });
+        return count;
+  };
         
         
 	}

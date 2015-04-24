@@ -17,7 +17,10 @@ module.exports = {
 				'public/lib/angular-sanitize/angular-sanitize.js', 
 				'public/lib/angular-ui-router/release/angular-ui-router.min.js',
 				'public/lib/angular-ui-utils/ui-utils.min.js',
-				'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js'
+				'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
+                'public/lib/angular-local-storage/dist/angular-local-storage.min.js',
+                'public/lib/ng-file-upload/angular-file-upload.min.js',
+                'public/lib/ng-file-upload/angular-file-upload-shim.min.js'
 			]
 		},
         css: [

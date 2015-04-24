@@ -4,7 +4,7 @@
 var ApplicationConfiguration = (function() {
 	// Init module configuration options
 	var applicationModuleName = 'mylist';
-	var applicationModuleVendorDependencies = ['ngResource', 'ngCookies',  'ngAnimate',  'ngTouch',  'ngSanitize',  'ui.router', 'ui.bootstrap', 'ui.utils'];
+	var applicationModuleVendorDependencies = ['ngResource', 'ngCookies',  'ngAnimate',  'ngTouch',  'ngSanitize',  'ui.router', 'ui.bootstrap', 'ui.utils', 'angularFileUpload'];
 
 	// Add a new vertical module
 	var registerModule = function(moduleName, dependencies) {
@@ -43,6 +43,10 @@ angular.element(document).ready(function() {
 });
 'use strict';
 
+// Use applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('animeitems');
+'use strict';
+
 // Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('core');
 'use strict';
@@ -53,6 +57,231 @@ ApplicationConfiguration.registerModule('mangaitems');
 
 // Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('users');
+'use strict';
+
+// Configuring the Articles module
+angular.module('animeitems').run(['Menus',
+	function(Menus) {
+		// Set top bar menu items
+		Menus.addMenuItem('topbar', 'Animeitems', 'animeitems', 'dropdown', '/animeitems(/create)?');
+		Menus.addSubMenuItem('topbar', 'animeitems', 'List Animeitems', 'animeitems');
+		Menus.addSubMenuItem('topbar', 'animeitems', 'New Animeitem', 'animeitems/create');
+	}
+]);
+'use strict';
+
+//Setting up route
+angular.module('animeitems').config(['$stateProvider',
+	function($stateProvider) {
+		// Animeitems state routing
+		$stateProvider.
+		state('listAnimeitems', {
+			url: '/animeitems',
+			templateUrl: 'modules/animeitems/views/list-animeitems.client.view.html'
+		}).
+		state('createAnimeitem', {
+			url: '/animeitems/create',
+			templateUrl: 'modules/animeitems/views/create-animeitem.client.view.html'
+		}).
+		state('viewAnimeitem', {
+			url: '/animeitems/:animeitemId',
+			templateUrl: 'modules/animeitems/views/view-animeitem.client.view.html'
+		}).
+		state('editAnimeitem', {
+			url: '/animeitems/:animeitemId/edit',
+			templateUrl: 'modules/animeitems/views/edit-animeitem.client.view.html'
+		});
+	}
+]);
+'use strict';
+
+// Animeitems controller
+angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems',  'fileUpload', '$sce',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce) {
+		$scope.authentication = Authentication;
+        
+        $scope.sortType = 'latest'; //default sort type
+	    $scope.sortReverse = true; // default sort order
+        $scope.finalNumbers = false; //default show status of final number fields in edit view.
+        $scope.maxRating = 10; //maximum rating
+        $scope.imgPath = ''; //image path
+
+        //allow retreival of local resource
+        $scope.trustAsResourceUrl = function(url) {
+            return $sce.trustAsResourceUrl(url);
+        };
+        
+        //rating 'tooltip' function
+        $scope.hoveringOver = function(value) {
+            $scope.overStar = value;
+            $scope.percent = 100 * (value / $scope.maxRating);
+        };
+
+		// Create new Animeitem
+		$scope.create = function() {
+			// Create new Animeitem object
+			var animeitem = new Animeitems ({
+				title: this.title,
+                episodes: this.episodes,
+                start: this.start,
+                latest: this.latest,
+                finalEpisode: this.finalEpisode,
+                disc: this.disc,
+                user: this.user
+			});
+
+			// Redirect after save
+			animeitem.$save(function(response) {
+				$location.path('/animeitems/' + response._id);
+
+				// Clear form fields
+								// Clear form fields
+				$scope.title = '';
+                $scope.episodes = '';
+                $scope.start = '';
+                $scope.latest = '';
+                $scope.status = '';
+			}, function(errorResponse) {
+				$scope.error = errorResponse.data.message;
+			});
+		};
+
+		// Remove existing Animeitem
+		$scope.remove = function(animeitem) {
+			if ( animeitem ) { 
+				animeitem.$remove();
+
+				for (var i in $scope.animeitems) {
+					if ($scope.animeitems [i] === animeitem) {
+						$scope.animeitems.splice(i, 1);
+					}
+				}
+			} else {
+				$scope.animeitem.$remove(function() {
+					$location.path('animeitems');
+				});
+			}
+		};
+
+		// Update existing Animeitem
+		$scope.update = function() {
+			var animeitem = $scope.animeitem;
+            
+            console.log($scope.imgPath);
+            console.log(animeitem.image);
+            if ($scope.imgPath!==undefined && $scope.imgPath!==null && $scope.imgPath!=='') {
+                animeitem.image = $scope.imgPath;
+            }
+            console.log($scope.imgPath);
+            console.log(animeitem.image);
+            
+            //handle status: completed.
+            if(animeitem.end!==undefined) {
+                animeitem.status = true;
+            } else {
+                animeitem.status = false;
+            }
+            
+            //handle re-reading, re-read count.
+            if (animeitem.reWatching===true && animeitem.episodes===animeitem.finalEpisode) {
+                animeitem.reWatchCount += 1;
+                animeitem.reWatching = false;
+            }
+            
+
+			animeitem.$update(function() {
+				$location.path('animeitems/' + animeitem._id);
+			}, function(errorResponse) {
+				$scope.error = errorResponse.data.message;
+			});
+		};
+
+		// Find a list of Animeitems
+		$scope.find = function() {
+			$scope.animeitems = Animeitems.query();
+            console.log($scope.animeitems);
+		};
+
+		// Find existing Animeitem
+		$scope.findOne = function() {
+			$scope.animeitem = Animeitems.get({ 
+				animeitemId: $stateParams.animeitemId
+			});
+		};
+        
+        // Find list of mangaitems for dropdown.
+        $scope.mangaDropdown = function() {
+            $scope.mangaitems = Mangaitems.query();
+        };
+        
+                //image upload
+        $scope.uploadFile = function(){
+            var file = $scope.myFile;
+            $scope.imgPath = '/modules/animeitems/img/' + file.name;
+            console.log('file is ' + JSON.stringify(file));
+            var uploadUrl = '/fileUploadAnime';
+            fileUpload.uploadFileToUrl(file, uploadUrl);
+        };
+	}
+]);
+'use strict';
+
+angular.module('animeitems').directive('fileModel', ['$parse', function ($parse) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            var model = $parse(attrs.fileModel);
+            var modelSetter = model.assign;
+            
+            element.bind('change', function(){
+                scope.$apply(function(){
+                    modelSetter(scope, element[0].files[0]);
+                });
+            });
+        }
+    };
+}])
+.directive('listBack', function(){
+    return function(scope, element, attrs){
+        var url = attrs.listBack;
+        element.css({
+            'background-image': 'url(' + url +')',
+            'background-size' : '50%',
+            'background-repeat': 'no-repeat',
+            'background-position': 'right'
+        });
+    };
+});
+
+'use strict';
+
+//Animeitems service used to communicate Animeitems REST endpoints
+angular.module('animeitems').factory('Animeitems', ['$resource',
+	function($resource) {
+		return $resource('animeitems/:animeitemId', { animeitemId: '@_id'
+		}, {
+			update: {
+				method: 'PUT'
+			}
+		});
+	}
+])
+.service('fileUpload', ['$http', function ($http) {
+    this.uploadFileToUrl = function(file, uploadUrl){
+        var fd = new FormData();
+        fd.append('file', file);
+        $http.post(uploadUrl, fd, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        })
+        .success(function(response){
+            alert('File Uploaded!');
+        })
+        .error(function(err){
+            alert('File Upload Failed: ' + err.message);
+        });
+    };
+}]);
 'use strict';
 
 // Setting up route
@@ -90,10 +319,132 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
 'use strict';
 
 
-angular.module('core').controller('HomeController', ['$scope', 'Authentication',
-	function($scope, Authentication) {
+angular.module('core').controller('HomeController', ['$scope', 'Authentication', '$window',
+	function($scope, Authentication, $window) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
+        
+    $scope.today = new Date();
+    $scope.saved = localStorage.getItem('taskItems');
+    $scope.taskItem = (localStorage.getItem('taskItems')!==null) ? 
+    JSON.parse($scope.saved) : [ {description: 'Why not add a task?', date: $scope.today, complete: false}];
+    localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
+    
+    $scope.newTask = null;
+    $scope.newTaskDate = null;
+    $scope.categories = [
+        {name: 'Watch'},
+        {name: 'Read'},
+        {name: 'Play'},
+        {name: 'Other'}
+    ];
+    $scope.newTaskCategory = $scope.categories;
+    $scope.days = [
+        {name: 'Any'},
+        {name: 'Monday'},
+        {name: 'Tuesday'},
+        {name: 'Wednesday'},
+        {name: 'Thursday'},
+        {name: 'Friday'},
+        {name: 'Saturday'},
+        {name: 'Sunday'}
+    ];
+    $scope.newTaskDay = $scope.days;
+        
+    $scope.weekBeginning = function() {
+        var day = $scope.today.getDay(),
+        diff = $scope.today.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+        var wkBeg = new Date();
+        return new Date(wkBeg.setDate(diff));
+    };
+        
+    //check things
+    $scope.checkStatus = function() {
+        //var day = new Date('2015-04-27').getDay();
+        var day = $scope.today.getDay();
+        console.log(day);
+        console.log($scope.taskItem);
+        if (day===1) {
+            var refreshItems = $scope.taskItem;
+            $scope.taskItem = [];
+            angular.forEach(refreshItems, function (taskItem) {
+                    if(taskItem.updated===false) {
+                        if(taskItem.completeTimes!==taskItem.repeat) {
+                            taskItem.complete = false;
+                            taskItem.updated = true;
+                            $scope.taskItem.push(taskItem);
+                            console.log('updated set to true');
+                        }
+                    } else {
+                        $scope.taskItem.push(taskItem);
+                        console.log('updated already true');
+                    }
+            });
+            localStorage.setItem('taskItems', JSON.stringify($scope.taskItem)); 
+        
+        } else {
+            var updated = $scope.taskItem;
+            $scope.taskItem = [];
+            angular.forEach(updated, function (taskItem) {
+                    taskItem.updated = false;
+                    $scope.taskItem.push(taskItem);
+                });
+            console.log('updated set to false');
+            localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
+        }
+    };
+        
+    $scope.addNew = function () {
+        console.log($scope.newTaskDay.name);
+        if ($scope.newTaskDay.name === null || $scope.newTaskDay.name === '' || $scope.newTaskDay.name === undefined) {
+            $scope.newTaskDay.name = 'Any';
+        }
+        if ($scope.newTaskCategory.name === null || $scope.newTaskCategory.name === '' || $scope.newTaskCategory.name === undefined) {
+            $scope.newTaskCategory.name = 'Other';
+        }
+            $scope.taskItem.push({
+                description: $scope.newTask,
+                day: $scope.newTaskDay.name,
+                repeat: $scope.newTaskRepeat,
+                completeTimes: 0,
+                updated: false,
+                complete: false,
+                category: $scope.newTaskCategory.name
+            });
+        
+        $scope.newTask = '';
+        $scope.newTaskDay = $scope.days;
+        $scope.newTaskCategory = $scope.categories;
+        $scope.newTaskRepeat = '';
+        localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
+    };
+    $scope.deleteTask = function  (index) {
+        var removal = $window.confirm('Are you sure you want to delete this task?');
+        if (removal) {
+            $scope.taskItem.splice(index, 1);
+            localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
+        }
+    };
+    
+    $scope.save = function (description) {
+        //update the complete task.
+        angular.forEach($scope.taskItem, function (taskItem) {
+            if (taskItem.description === description && taskItem.complete === true) {
+                taskItem.completeTimes += 1;
+            }
+        });
+        localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
+    };
+        
+    $scope.remaining = function() {
+        var count = 0;
+        angular.forEach($scope.taskItem, function(taskItem) {
+            count += taskItem.complete ? 0 : 1;
+        });
+        return count;
+  };
+        
+        
 	}
 ]);
 'use strict';
@@ -301,15 +652,22 @@ angular.module('mangaitems').config(['$stateProvider',
 'use strict';
 
 // Mangaitems controller
-angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems',
-	function($scope, $stateParams, $location, Authentication, Mangaitems) {
+angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'fileUpload', '$sce',
+	function($scope, $stateParams, $location, Authentication, Mangaitems, fileUpload, $sce) {
 		$scope.authentication = Authentication;
+        
         
         $scope.sortType = 'latest'; //default sort type
 	    $scope.sortReverse = true; // default sort order
         $scope.finalNumbers = false; //default show status of final number fields in edit view.
         $scope.maxRating = 10; //maximum rating
-        //$scope.capacity = '1000'; //set chapter/volume limit number
+        $scope.imgExtension = ''; //image path extension.
+        $scope.imgPath = ''; //image path
+
+        //allow retreival of local resource
+        $scope.trustAsResourceUrl = function(url) {
+            return $sce.trustAsResourceUrl(url);
+        };
         
         //rating 'tooltip' function
         $scope.hoveringOver = function(value) {
@@ -317,34 +675,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             $scope.percent = 100 * (value / $scope.maxRating);
         };
         
-        //image upload function
-        $scope.onFileSelect = function(image) {
-            //client-side file type handling.
-            if (image.type !== 'image/png' && image.type !== 'image/jpeg') {
-                alert('Only PNG and JPEG are accepted.');
-            }
-            
-            $scope.uploadInProgress = true;
-            $scope.uploadProgress = 0;
-            
-            $scope.upload = $upload.upload({
-                url: '/upload/image',
-                method: 'POST',
-                file: image
-            }).progress(function(event) {
-                $scope.uploadProgress = Math.floor(event.loaded / event.total);
-                $scope.$apply();
-            }).success(function(data, status, headers, config) {
-                $scope.uploadInProgress = false;
-                //get file immediately.
-                $scope.uploadedImage = JSON.parse(data);
-            }).error(function(err) {
-                $scope.uploadInProgress = false;
-                console.log('Error during upload: ' + err.message || err);
-            });
-        };
-
-		// Create new Mangaitem
+        // Create new Mangaitem
 		$scope.create = function() {
 			// Create new Mangaitem object
 			var mangaitem = new Mangaitems ({
@@ -395,7 +726,14 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		// Update existing Mangaitem
 		$scope.update = function() {
 			var mangaitem = $scope.mangaitem;
-            console.log(mangaitem.end);
+            
+            console.log($scope.imgPath);
+            console.log(mangaitem.image);
+            if ($scope.imgPath!==undefined && $scope.imgPath!==null && $scope.imgPath!=='') {
+                mangaitem.image = $scope.imgPath;
+            }
+            console.log($scope.imgPath);
+            console.log(mangaitem.image);
             
             //handle status: completed.
             if(mangaitem.end!==undefined) {
@@ -409,12 +747,14 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                 mangaitem.reReadCount += 1;
                 mangaitem.reReading = false;
             }
+                    
 
 			mangaitem.$update(function() {
 				$location.path('/mangaitems/' + mangaitem._id);
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});
+            
 		};
 
 		// Find a list of Mangaitems
@@ -430,8 +770,57 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 			});
             console.log($scope.mangaitem);
 		};
+        
+        //image upload
+        $scope.uploadFile = function(){
+            var file = $scope.myFile;
+            $scope.imgPath = '/modules/mangaitems/img/' + file.name;
+            console.log('file is ' + JSON.stringify(file));
+            var uploadUrl = '/fileUpload';
+            fileUpload.uploadFileToUrl(file, uploadUrl);
+        };
+        
+        /*set image path
+        $scope.imagePath = function(file) {
+            //var titleLower = file.toLowerCase();
+            //console.log(titleLower);
+            //var tmpName = titleLower.replace(/ /g, '-');
+            //console.log(tmpName);
+            $scope.imgPath = '/modules/mangaitems/img/' + file; //c:/mylist/whispering-lowlands-3953/public
+        };
+        */
 	}
 ]);
+
+'use strict';
+
+angular.module('mangaitems').directive('fileModel', ['$parse', function ($parse) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            var model = $parse(attrs.fileModel);
+            var modelSetter = model.assign;
+            
+            element.bind('change', function(){
+                scope.$apply(function(){
+                    modelSetter(scope, element[0].files[0]);
+                });
+            });
+        }
+    };
+}])
+.directive('listBack', function(){
+    return function(scope, element, attrs){
+        var url = attrs.listBack;
+        element.css({
+            'background-image': 'url(' + url +')',
+            'background-size' : '50%',
+            'background-repeat': 'no-repeat',
+            'background-position': 'right'
+        });
+    };
+});
+
 'use strict';
 
 //Mangaitems service used to communicate Mangaitems REST endpoints
@@ -444,7 +833,23 @@ angular.module('mangaitems').factory('Mangaitems', ['$resource',
 			}
 		});
 	}
-]);
+])
+.service('fileUpload', ['$http', function ($http) {
+    this.uploadFileToUrl = function(file, uploadUrl){
+        var fd = new FormData();
+        fd.append('file', file);
+        $http.post(uploadUrl, fd, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        })
+        .success(function(response){
+            alert('File Uploaded!');
+        })
+        .error(function(err){
+            alert('File Upload Failed: ' + err.message);
+        });
+    };
+}]);
 'use strict';
 
 // Config HTTP Error Handling
@@ -551,7 +956,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
                 $scope.loginBody = true;
 
 				// And redirect to the index page
-				$location.path('/mangaitems');
+				$location.path('/');
 			}).error(function(response) {
 				$scope.error = response.message;
 			});

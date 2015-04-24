@@ -26,12 +26,12 @@
 						<span ng-show="animeForm.episodes.$valid" class="glyphicon glyphicon-ok" style="color: green;"></span>
 					</div>
                 </div>
-                <div class="form-group" style="display: none;">
+                <!--<div class="form-group" style="display: none;">
                     <label for="start" class="col-md-2 control-label">Start</label>
                     <div class="col-md-6">
                         <input type="text" class="form-control" data-ng-model="animeitem.start" id="start" placeholder="" required disabled>
                     </div>
-                </div>
+                </div>-->
                 <div class="form-group" ng-class="{ 'has-error' : animeForm.latest.$invalid }">
                     <label for="latest" class="col-md-2 control-label">Latest</label>
                     <div class="col-md-6">
@@ -116,7 +116,7 @@
                 <div class="form-group" data-ng-show="animeitem.status==true">
                     <label for="reWatching" class="col-md-2 control-label">Re-watching?</label>
                     <div class="col-md-6">
-                        <input type="checkbox" class="form-control" data-ng-model="animeitem.reWatching" data-ng-disabled="animeitem.reWatching" data-ng-change="animeitem.chapters=0;" id="reReading" name="reReading">
+                        <input type="checkbox" class="form-control" data-ng-model="animeitem.reWatching" data-ng-disabled="animeitem.reWatching" data-ng-change="animeitem.episodes=0;" id="reReading" name="reReading">
                     </div>
                 </div>
                 <div class="form-group">

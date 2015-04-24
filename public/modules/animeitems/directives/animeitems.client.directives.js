@@ -22,7 +22,7 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
             'background-image': 'url(' + url +')',
             'background-size' : '50%',
             'background-repeat': 'no-repeat',
-            'background-position': 'right' 
+            'background-position': 'right'
         });
     };
 });

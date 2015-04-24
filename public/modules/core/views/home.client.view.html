@@ -1,25 +1,102 @@
-<section data-ng-controller="HomeController" data-ng-show="authentication.user">
+<section data-ng-controller="HomeController" data-ng-show="authentication.user" data-ng-init="checkStatus()">
 	<div class="row col-sm-12">
-        <h3>Status</h3>
+        <h3>Schedule</h3>
 	</div>
-	<div class="well col-sm-12">
-        <div class="row">
-            <div class="col-sm-3">
-                <b>Future</b><br/>
-                Add an animeitems list...
-            </div>
-            <div class="col-sm-3">
-                <b>Future</b><br/>
-                Enable status page to be editable within the app.
-            </div>
-            <div class="col-sm-3">
-                <b>2015-04-15</b><br/>
-                Manga list created.
-            </div>
+    <div class="col-md-12">
+        <div class="list-group col-md-6">
+            <a class="list-group-item"data-ng-click="isCollapse=!isCollapse">Actions</a>
         </div>
-	</div>
+        <div class="col-md-12" data-ng-show="isCollapse">
+            <form name="scheduleForm" class="form-horizontal" novalidate>
+                <fieldset>
+                <div class="form-group">
+                    <label for="description" class="col-md-1 control-label">Description</label>
+                    <div class="col-md-5">
+                        <input type="text" required id="description" class="form-control" placeholder="What do you need to do?" ng-model="newTask">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="category" class="col-md-1 control-label">Category</label>
+                    <!--<i class="fa fa-caret-down selectArrow"></i>-->
+                    <div class="col-md-5">
+                        <select required id="category" class="form-control" ng-model="newTaskCategory" ng-options="obj.name for obj in categories">
+                            <option class="disabled" value="">Choose a category</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="category" class="col-md-1 control-label">Day</label>
+                    <!--<i class="fa fa-caret-down selectArrow"></i>-->
+                    <div class="col-md-5">
+                        <select required id="day" class="form-control" ng-model="newTaskDay" ng-options="obj.name for obj in days">
+                            <option class="disabled" value="">Choose a day</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="repeat" class="col-md-1 control-label">Repeat</label>
+                    <div class="col-md-5">
+                        <input type="number" required id="repeat" class="form-control" placeholder="1" ng-model="newTaskRepeat">
+                    </div>
+                </div>
+                <br/>
+                <div class="form-group pull-left">
+                    <button class="btn btn-primary" ng-click="addNew()" ng-disabled="scheduleForm.$invalid">Add task</button>
+                    <button class="btn btn-danger" ng-click="deleteTask()">Delete Tasks</button>
+                </div>
+                </fieldset>
+            </form>
+        </div>
+        <div class="col-md-5">
+            <div class=" col-md-12 input-group">
+                <div class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </div>
+                <input type="text" class="form-control" placeholder="search tasks" ng-model="search.description">
+            </div><!-- search.description -->
+            <br/>
+            <div class="col-md-12 input-group">
+		       <div class="input-group-addon">
+		          <i class="fa fa-check"></i>
+                </div>
+                <select class="form-control" ng-model="search.complete">
+                        <option value="">All</option>
+                        <option value="false">Ongoing</option>
+                        <option value="true">Completed</option>
+                </select>
+            </div><!-- search.complete -->
+            <br/>
+            <div class="col-md-12 input-group">
+		       <div class="input-group-addon">
+		          <i class="fa fa-calendar"></i>
+                </div>
+                <select class="form-control" ng-model="search.day">
+                    <option value="">All</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Saturday">Saturday</option>
+                    <option value="Sunday">Sunday</option>
+                </select>
+            </div><!-- search.days -->
+        </div><!-- FILTERS -->
+    </div><!--col-md-12-->
+    <br/>
+    <div class="row col-md-12">
+    <hr/>
+            <ul  class="taskList col-md-12">
+                <li class="taskItem" ng-repeat="taskItem in (taskItem | filter: search) track by $index" ng-model="taskItem"><input type="checkbox" class="taskCheckbox" ng-model="taskItem.complete" ng-change="save(taskItem.description)" ng-disabled="taskItem.complete">
+                    <span class="complete-{{taskItem.complete}}">{{taskItem.description}}</span> - <span>{{taskItem.completeTimes}}/{{taskItem.repeat}}</span>
+                    <span class="category-{{taskItem.category}}">{{taskItem.category}}</span>
+                    <strong class="taskDate complete-{{taskItem.complete}}"><i class="fa fa-calendar"></i>{{taskItem.day}}</strong>
+                </li>
+            </ul>
+    </div><!-- ROW -->
     <footer class="col-sm-12">
-        <br>Build:<small>Astaroth.1</small>
-	    <br>Authour:<small>swalsh</small>
+        <hr/>
+        <br><small>Version: Astaroth.141</small>
+	    <br><small>Authour: swalsh</small>
     </footer>
 </section>

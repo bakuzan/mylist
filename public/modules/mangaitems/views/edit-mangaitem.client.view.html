@@ -64,15 +64,15 @@
                     <label for="image" class="col-md-2 control-label">Image</label>
                     <div class="col-md-6">
                         <input type="file" file-model="myFile" accept="image/png, image/jpeg">
-                        <select class="form-control" ng-model="imgExtension" data-ng-change="imagePath(myFile.name)">
+                        <!--<select class="form-control" ng-model="imgExtension" data-ng-change="imagePath(myFile.name)">
                             <option value="">-- choose file type --</option>
                             <option value=".png">PNG</option>
                             <option value=".jpg">JPEG</option>
-                        </select>
-                        <!--<pre>img path: {{imgPath}}<br/>ext: {{imgExtension}}</pre>-->
+                        </select>-->
+                        <!--<pre>img path: {{imgPath}}<br/>name: {{myFile.name}}</pre>-->
                     </div>
                     <div class="col-md-4 form-group">
-                        <a class="btn btn-primary" data-ng-click="uploadFile()" data-ng-disabled="imgExtension!='.png' && imgExtension!='.jpg'">Upload File</a>
+                        <a class="btn btn-primary" data-ng-click="uploadFile()" data-ng-disabled="myFile==='' || myFile===null || myFile===undefined">Upload File</a>
                     </div>
                 </div>
                 <hr/>

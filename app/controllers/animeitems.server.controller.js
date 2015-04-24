@@ -5,7 +5,7 @@
  */
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
-	Mangaitem = mongoose.model('Mangaitem'),
+	Animeitem = mongoose.model('Animeitem'),
     //uuid = require('node-uuid'),
     multiparty = require('multiparty'),
     fs = require('fs'),
@@ -28,7 +28,7 @@ exports.postImage = function(req, res) {
         //uuid for unique filenames.
         //var filename = uuid.v4() + extension;
         var filename = file.originalFilename;
-        var destPath = 'c:/mylist/whispering-lowlands-3953/public/modules/mangaitems/img/' + filename;
+        var destPath = 'c:/mylist/whispering-lowlands-3953/public/modules/animeitems/img/' + filename;
         
         //server-side file type check.
         if (contentType !== 'image/png' && contentType !== 'image/jpeg') {
@@ -47,98 +47,98 @@ exports.postImage = function(req, res) {
 };
 
 /**
- * Create a Mangaitem
+ * Create a Animeitem
  */
 exports.create = function(req, res) {
-	var mangaitem = new Mangaitem(req.body);
-	mangaitem.user = req.user;
+	var animeitem = new Animeitem(req.body);
+	animeitem.user = req.user;
 
-	mangaitem.save(function(err) {
+	animeitem.save(function(err) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			res.jsonp(mangaitem);
+			res.jsonp(animeitem);
 		}
 	});
 };
 
 /**
- * Show the current Mangaitem
+ * Show the current Animeitem
  */
 exports.read = function(req, res) {
-	res.jsonp(req.mangaitem);
+	res.jsonp(req.animeitem);
 };
 
 /**
- * Update a Mangaitem
+ * Update a Animeitem
  */
 exports.update = function(req, res) {
-	var mangaitem = req.mangaitem ;
+	var animeitem = req.animeitem ;
+    
+	animeitem = _.extend(animeitem , req.body);
 
-	mangaitem = _.extend(mangaitem , req.body);
-
-	mangaitem.save(function(err) {
+	animeitem.save(function(err) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			res.jsonp(mangaitem);
+			res.jsonp(animeitem);
 		}
 	});
 };
 
 /**
- * Delete an Mangaitem
+ * Delete an Animeitem
  */
 exports.delete = function(req, res) {
-	var mangaitem = req.mangaitem ;
+	var animeitem = req.animeitem ;
 
-	mangaitem.remove(function(err) {
+	animeitem.remove(function(err) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			res.jsonp(mangaitem);
+			res.jsonp(animeitem);
 		}
 	});
 };
 
 /**
- * List of Mangaitems
+ * List of Animeitems
  */
 exports.list = function(req, res) { 
-	Mangaitem.find().sort('-created').populate('user', 'displayName').exec(function(err, mangaitems) {
+	Animeitem.find().sort('-created').populate('user', 'displayName').exec(function(err, animeitems) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			res.jsonp(mangaitems);
+			res.jsonp(animeitems);
 		}
 	});
 };
 
 /**
- * Mangaitem middleware
+ * Animeitem middleware
  */
-exports.mangaitemByID = function(req, res, next, id) { 
-	Mangaitem.findById(id).populate('user', 'displayName').exec(function(err, mangaitem) {
+exports.animeitemByID = function(req, res, next, id) { 
+	Animeitem.findById(id).populate('user', 'displayName').exec(function(err, animeitem) {
 		if (err) return next(err);
-		if (! mangaitem) return next(new Error('Failed to load Mangaitem ' + id));
-		req.mangaitem = mangaitem ;
+		if (! animeitem) return next(new Error('Failed to load Animeitem ' + id));
+		req.animeitem = animeitem ;
 		next();
 	});
 };
 
 /**
- * Mangaitem authorization middleware
+ * Animeitem authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-	if (req.mangaitem.user.id !== req.user.id) {
+	if (req.animeitem.user.id !== req.user.id) {
 		return res.status(403).send('User is not authorized');
 	}
 	next();

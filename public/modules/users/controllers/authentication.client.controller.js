@@ -29,7 +29,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
                 $scope.loginBody = true;
 
 				// And redirect to the index page
-				$location.path('/mangaitems');
+				$location.path('/');
 			}).error(function(response) {
 				$scope.error = response.message;
 			});

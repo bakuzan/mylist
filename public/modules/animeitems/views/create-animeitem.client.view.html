@@ -1,0 +1,91 @@
+<section data-ng-controller="AnimeitemsController" data-ng-show="authentication.user">
+    <div class="page-header">
+        <h1>New Anime</h1>
+    </div>
+    <div class="col-md-12">
+        <form name="animeForm" class="form-horizontal" data-ng-submit="create()" novalidate>
+            <fieldset>
+                <div class="form-group" ng-class="{ 'has-error' : animeForm.title.$invalid && !animeForm.title.$pristine }">
+                    <label for="title" class="col-md-2 control-label">Title</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" data-ng-model="title" id="title" name="title" placeholder="Title" required>
+                    </div>
+                    <div class="col-md-4">
+						<p ng-show="animeForm.title.$invalid && !animeForm.title.$pristine" class="help-block" >The Title is required.</p>
+						<span ng-show="animeForm.title.$valid && !animeForm.title.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
+					</div>
+                </div>
+                <div class="form-group" ng-class="{ 'has-error' : animeForm.episodes.$invalid && !animeForm.episodes.$pristine }">
+                    <label for="episodes" class="col-md-2 control-label">Episodes</label>
+                    <div class="col-md-6">
+                        <input type="number" class="form-control" data-ng-model="episodes" id="episodes" name="episodes" placeholder="0" required>
+                    </div>
+                    <div class="col-md-4">
+						<p ng-show="animeForm.episodes.$invalid && !animeForm.episodes.$pristine" class="help-block" >Episodes is a whole number and is required.</p>
+                        <!--<p ng-show="isNumber(mangaForm.chapters)" class="help-block">Chapter number should be a full number.</p>-->
+						<span ng-show="animeForm.episodes.$valid && !animeForm.episodes.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
+					</div>
+                </div>
+                <div class="form-group" ng-class="{ 'has-error' : animeForm.start.$invalid && !animeForm.start.$pristine }">
+                    <label for="start" class="col-md-2 control-label">Start</label>
+                    <div class="col-md-6">
+                        <input type="date" class="form-control" data-ng-model="start" id="start" name="start" placeholder="" required>
+                    </div>
+                    <div class="col-md-4">
+						<p ng-show="animeForm.start.$invalid && !animeForm.start.$pristine" class="help-block" >Start date is required.</p>
+						<span ng-show="animeForm.start.$valid && !animeForm.start.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
+					</div>
+                </div>
+                <div class="form-group" ng-class="{ 'has-error' : animeForm.latest.$invalid && !animeForm.latest.$pristine }">
+                    <label for="latest" class="col-md-2 control-label">Latest</label>
+                    <div class="col-md-6">
+                        <input type="date" class="form-control" data-ng-model="latest" id="latest" name="latest" placeholder="" required>
+                    </div>
+                    <div class="col-md-4">
+						<p ng-show="animeForm.latest.$invalid && !animeForm.latest.$pristine" class="help-block" >Latest date is required.</p>
+						<span ng-show="animeForm.latest.$valid && !animeForm.latest.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
+					</div>
+                </div>
+                <!--<div class="form-group">
+                    <label for="status" class="col-md-2 control-label">Completed?</label>
+                    <div class="col-md-6">
+                        <input type="checkbox" class="form-control" data-ng-model="status" id="status" name="status">
+                    </div>
+                </div>-->
+                <div class="form-group">
+                    <label for="disc" class="col-md-2 control-label">Disc?</label>
+                    <div class="col-md-6">
+                        <input type="checkbox" class="form-control" data-ng-model="disc" id="disc" name="disc">
+                    </div>
+                </div>
+                <div class="form-group" ng-class="{ 'has-error' : animeForm.finalEpisode.$invalid && !animeForm.finalEpisode.$pristine }">
+                    <label for="finalEpisode" class="col-md-2 control-label">Final Episode</label>
+                    <div class="col-md-6">
+                        <input type="number" class="form-control" data-ng-model="finalEpisode" id="finalEpisode" name="finalEpisode" placeholder="0">
+                    </div>
+                    <div class="col-md-4">
+                        <!--<p ng-show="isNumber(mangaForm.chapters)" class="help-block">Chapter number should be a full number.</p>-->
+						<span ng-show="animeForm.finalEpisode.$valid && !animeForm.finalEpisode.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
+					</div>
+                </div>
+                <!--<div class="form-group" ng-class="{ 'has-error' : animeForm.manga.$invalid && !animeForm.manga.$pristine }">
+                    <label for="manga" class="col-md-2 control-label">Manga?</label>
+                    <div class="col-md-6">
+                        <Select class="form-control" data-ng-model="manga" id="manga" name="manga" data-ng-options="mangaitem.title for mangaitem in mangaitems track by mangaitem._id">
+                        </Select>
+                    </div>
+                    <div class="col-md-4">
+                        <!--<p ng-show="isNumber(mangaForm.chapters)" class="help-block">Chapter number should be a full number.</p>
+						<span ng-show="animeForm.manga.$valid && !animeForm.manga.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
+					</div>
+                </div>-->
+                <div class="form-group">
+                    <input type="submit" class="btn btn-default" ng-disabled="animeForm.$invalid">
+                </div>
+				<div data-ng-show="error" class="text-danger">
+					<strong data-ng-bind="error"></strong>
+				</div>
+            </fieldset>
+        </form>
+    </div>
+</section>

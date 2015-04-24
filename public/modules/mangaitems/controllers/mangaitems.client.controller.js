@@ -12,11 +12,11 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         $scope.maxRating = 10; //maximum rating
         $scope.imgExtension = ''; //image path extension.
         $scope.imgPath = ''; //image path
-        //$scope.capacity = '1000'; //set chapter/volume limit number
+
+        //allow retreival of local resource
         $scope.trustAsResourceUrl = function(url) {
             return $sce.trustAsResourceUrl(url);
         };
-        //allow retreival of local resource
         
         //rating 'tooltip' function
         $scope.hoveringOver = function(value) {
@@ -76,9 +76,12 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		$scope.update = function() {
 			var mangaitem = $scope.mangaitem;
             
-            if ($scope.imgPath!==undefined && $scope.imgPath!==null) {
+            console.log($scope.imgPath);
+            console.log(mangaitem.image);
+            if ($scope.imgPath!==undefined && $scope.imgPath!==null && $scope.imgPath!=='') {
                 mangaitem.image = $scope.imgPath;
             }
+            console.log($scope.imgPath);
             console.log(mangaitem.image);
             
             //handle status: completed.
@@ -120,12 +123,13 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         //image upload
         $scope.uploadFile = function(){
             var file = $scope.myFile;
+            $scope.imgPath = '/modules/mangaitems/img/' + file.name;
             console.log('file is ' + JSON.stringify(file));
             var uploadUrl = '/fileUpload';
             fileUpload.uploadFileToUrl(file, uploadUrl);
         };
         
-        //set image path
+        /*set image path
         $scope.imagePath = function(file) {
             //var titleLower = file.toLowerCase();
             //console.log(titleLower);
@@ -133,31 +137,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             //console.log(tmpName);
             $scope.imgPath = '/modules/mangaitems/img/' + file; //c:/mylist/whispering-lowlands-3953/public
         };
+        */
 	}
-])
-.directive('fileModel', ['$parse', function ($parse) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-            var model = $parse(attrs.fileModel);
-            var modelSetter = model.assign;
-            
-            element.bind('change', function(){
-                scope.$apply(function(){
-                    modelSetter(scope, element[0].files[0]);
-                });
-            });
-        }
-    };
-}])
-.directive('listBack', function(){
-    return function(scope, element, attrs){
-        var url = attrs.listBack;
-        element.css({
-            'background-image': 'url(' + url +')',
-            'background-size' : '50%',
-            'background-repeat': 'no-repeat',
-            'background-position': 'right' 
-        });
-    };
-});
+]);

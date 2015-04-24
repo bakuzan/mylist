@@ -1,0 +1,73 @@
+'use strict';
+
+/**
+ * Module dependencies.
+ */
+var mongoose = require('mongoose'),
+	Schema = mongoose.Schema;
+
+/**
+ * Animeitem Schema
+ */
+var AnimeitemSchema = new Schema({
+  title: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  episodes: {
+    type: Number,
+    default: '0',
+    trim: true
+  },
+  start: {
+    type: Date,
+    default: Date.now
+  },
+  end: {
+    type: Date
+  },
+  latest: {
+    type: Date,
+    default: Date.now
+  },
+  status: {
+    type: Boolean,
+    default: false
+  },
+  disc: {
+    type: Boolean,
+    default: false
+  },
+  finalEpisode: {
+    type: Number,
+    default: '0',
+    trim: true
+  },
+  rating: {
+    type: Number,
+    default: 0
+  },
+  reWatching: {
+    type: Boolean,
+    default: false
+  },
+  reWatchCount: {
+    type: Number,
+    default: 0
+  },
+  image: {
+    type: String,
+    default: ''
+   },
+  manga: {
+    type: Schema.ObjectId,
+    ref: 'Mangaitem'
+  },
+   user: {
+		type: Schema.ObjectId,
+		ref: 'User'
+  }
+});
+
+mongoose.model('Animeitem', AnimeitemSchema);

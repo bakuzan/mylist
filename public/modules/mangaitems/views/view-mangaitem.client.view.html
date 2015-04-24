@@ -1,14 +1,14 @@
 <section data-ng-controller="MangaitemsController" data-ng-init="findOne()" data-ng-show="authentication.user">
 	<div class="page-header">
         <div class="col-md-12">
-            <div class="col-md-6 pull-left">
+           <div class="col-md-3 pull-left" >
+                <img ng-src="{{trustAsResourceUrl(mangaitem.image)}}" height="100%" width="100%"/>
+            </div>
+            <div class="col-md-9 pull-left">
                 <h1 data-ng-bind="mangaitem.title"></h1>
                 <span class="glyphicon glyphicon-book" data-ng-show="mangaitem.hardcopy"></span> <span class="text-muted" data-ng-show="mangaitem.status">(Completed)</span> <span class="text-muted" data-ng-show="mangaitem.reReading">(Reading)</span>
                 <h3>Chapter </h3><span data-ng-bind="mangaitem.chapters"></span>/<span data-ng-bind="mangaitem.finalChapter"></span>
                 <h3>Volume </h3><span data-ng-bind="mangaitem.volumes"></span>/<span data-ng-bind="mangaitem.finalVolume"></span>
-            </div>
-            <div class="col-md-6 pull-right" >
-                <img ng-src="{{trustAsResourceUrl(mangaitem.image)}}" height="200" width="400"/>
             </div>
         </div>
         <div class="text-right">

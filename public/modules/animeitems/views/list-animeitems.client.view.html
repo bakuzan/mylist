@@ -1,0 +1,103 @@
+<section data-ng-controller="AnimeitemsController" data-ng-init="find()" data-ng-show="authentication.user">
+    <div class="page-header">
+        <h1>Anime</h1>
+    </div>
+    <div class="form-group col-sm-4">
+       <div class="input-group">
+            <div class="input-group-addon">
+                <i class="fa fa-search"></i>
+            </div>
+           <input type="text" class="form-control" placeholder="search anime" ng-model="search.title"><!-- typeahead="animeitem.title for animeitem in animeitems | filter: { title:$viewValue } " -->
+	   </div>
+        <br/>
+        <div class="input-group">
+		  <div class="input-group-addon">
+		      <i class="fa fa-list-ol"></i>
+          </div>
+            <input type="text" class="form-control" value="Showing {{ (animeitems | filter: search).length }} anime." disabled>
+        </div>
+        <br/>
+        <div class="input-group">
+		  <div class="input-group-addon">
+		      <i class="fa fa-sort"></i>
+          </div>
+            <select class="form-control" ng-model="sortType">
+                        <option value="">-- choose sort type --</option>
+                        <option value="title">Title</option>
+                        <option value="episodes">Episodes</option>
+                        <option value="start">Start Date</option>
+                        <option value="end">End Date</option>
+                        <option value="latest">Latest</option>
+                        <option value="rating">Rating</option>
+            </select>
+        </div>
+        <br/>
+        <div class="input-group" ng-click="sortReverse = !sortReverse">
+		  <div class="input-group-addon">
+		      <i class="fa" ng-class="sortReverse ? 'fa-sort-amount-desc' : 'fa-sort-amount-asc' "></i>
+          </div>
+            <input type="text" class="form-control" value="Ascending" ng-show="!sortReverse" disabled>
+            <input type="text" class="form-control" value="Descending" ng-show="sortReverse" disabled>
+            <!--<input type="checkbox" class="form-control" data-ng-model="sortReverse" id="sortReverse">-->
+        </div>
+        <br/>
+        <div class="input-group">
+		  <div class="input-group-addon">
+		      <i class="fa fa-check"></i>
+          </div>
+            <select class="form-control" ng-model="search.status">
+                        <option value="">All</option>
+                        <option value="false">Ongoing</option>
+                        <option value="true">Completed</option>
+            </select>
+        </div>
+        <br/>
+        <div class="input-group">
+		  <div class="input-group-addon">
+		      <i class="fa fa-book"></i>
+          </div>
+            <select class="form-control" ng-model="search.disc">
+                        <option value="">All</option>
+                        <option value="false">Online</option>
+                        <option value="true">Disc</option>
+            </select>
+        </div>
+        <br/>
+        <div class="input-group">
+		  <div class="input-group-addon">
+		      <i class="fa fa-repeat"></i>
+          </div>
+            <select class="form-control" ng-model="search.reWatching">
+                        <option value="">All</option>
+                        <option value="false">Not Re-watching</option>
+                        <option value="true">Re-watching</option>
+            </select>
+        </div>
+        <br/>
+        <div class="input-group">
+            <div class="input-group-addon">
+                <i class="fa fa-star" data-ng-click="search.rating=undefined"></i>
+            </div>
+               <rating class="form-control" data-ng-model="search.rating" style="color: blue;" readonly="false" max="maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></rating>
+            <div class="input-group-addon">
+                <span data-ng-show="overStar!=null" class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}">{{percent}}%</span>
+            </div>
+        </div>
+    </div>
+    <div class="list-group col-sm-8">
+        <a data-ng-repeat="animeitem in animeitems | orderBy: sortType:sortReverse | filter: search" data-ng-href="#!/animeitems/{{animeitem._id}}" list_Back="{{trustAsResourceUrl(animeitem.image)}}" class="list-group-item">
+			<small class="list-group-item-text">
+                Latest:
+				<span data-ng-bind="animeitem.latest | date:'yyyy-MMM-dd'"></span>
+			</small>
+			<h4 class="list-group-item-heading" data-ng-bind="animeitem.title"></h4>
+            <p class="list-group-item-text">
+                Episodes
+                <span data-ng-bind="animeitem.episodes"></span>
+            </p>
+        </a>
+    </div>
+    <div class="alert alert-warning text-center" data-ng-hide="!animeitems.$resolved || animeitems.length">
+    	No animeitems yet, why don't you <a href="/#!/animeitems/create">create one</a>?
+    </div>
+</section>

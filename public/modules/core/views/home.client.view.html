@@ -39,6 +39,12 @@
                         <input type="number" required id="repeat" class="form-control" placeholder="1" ng-model="newTaskRepeat">
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="daily" class="col-md-1 control-label">Daily?</label>
+                    <div class="col-md-5">
+                        <input type="checkbox" id="daily" class="form-control" ng-model="newTaskDaily">
+                    </div>
+                </div>
                 <br/>
                 <div class="form-group pull-left">
                     <button class="btn btn-primary" ng-click="addNew()" ng-disabled="scheduleForm.$invalid">Add task</button>
@@ -97,8 +103,8 @@
             <ul  class="taskList col-md-12">
                 <li class="taskItem" ng-repeat="taskItem in (taskItem | filter: search) track by $index" ng-model="taskItem"><input type="checkbox" class="taskCheckbox" ng-model="taskItem.complete" ng-change="save(taskItem.description)" ng-disabled="taskItem.complete">
                     <span class="complete-{{taskItem.complete}}">{{taskItem.description}}</span> - <span class="complete-{{taskItem.complete}}">{{taskItem.completeTimes}}/{{taskItem.repeat}}</span>
-                    <span class="category-{{taskItem.category}}">{{taskItem.category}}</span><a aria-hidden="true" ng-click="deleteTask($index)"><i class="fa fa-trash-o" style="color: red;"></i></a>
-                    <strong class="taskDate complete-{{taskItem.complete}}"><i class="fa fa-calendar"></i>{{taskItem.day}}</strong>
+                    <span class="category-{{taskItem.category}}">{{taskItem.category}}</span><a aria-hidden="true" ng-click="deleteTask(taskItem.description)"><i class="fa fa-trash-o" style="color: red;"></i></a>
+                    <strong class="taskDate complete-{{taskItem.complete}}"><i class="fa fa-calendar"></i>{{taskItem.day}}<span ng-show="taskItem.daily" class="complete-{{taskItem.complete}}"> - DAILY</span></strong>
                 </li>
             </ul>
     </div><!-- ROW -->

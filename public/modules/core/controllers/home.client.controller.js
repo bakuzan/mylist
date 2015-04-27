@@ -32,7 +32,8 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         {name: 'Sunday'}
     ];
     $scope.newTaskDay = $scope.days;
-        
+    
+    //get monday!
     $scope.weekBeginning = function() {
         var day = $scope.today.getDay(),
         diff = $scope.today.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
@@ -42,15 +43,18 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         
     //check things
     $scope.checkStatus = function() {
-        //var day = new Date('2015-04-27').getDay();
+        //var day = new Date('2015-05-04').getDay();
         var day = $scope.today.getDay();
         console.log(day);
         console.log($scope.taskItem);
+        //Is it monday?
         if (day===1) {
             var refreshItems = $scope.taskItem;
             $scope.taskItem = [];
             angular.forEach(refreshItems, function (taskItem) {
+                    //has it been updated today?
                     if(taskItem.updated===false) {
+                        //has it reached the necessary number of repeats?
                         if(taskItem.completeTimes!==taskItem.repeat) {
                             taskItem.complete = false;
                             taskItem.updated = true;
@@ -69,7 +73,28 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
             $scope.taskItem = [];
             angular.forEach(updated, function (taskItem) {
                     taskItem.updated = false;
-                    $scope.taskItem.push(taskItem);
+                    //is it a daily task?
+                    if (taskItem.daily===true) {
+                        //has it reached the necessary number of repeats?
+                        if(taskItem.completeTimes!==taskItem.repeat) {
+                            //var testday = new Date('2015-05-03').getDate();
+                            //has it been refreshed today?
+                            if (taskItem.dailyRefresh!==$scope.today.getDate()) {
+                                taskItem.complete = false;
+                                taskItem.dailyRefresh = $scope.today.getDate();
+                                $scope.taskItem.push(taskItem);
+                            } else { 
+                                //already refreshed today.
+                                $scope.taskItem.push(taskItem);
+                            }
+                        } else {
+                            //daily task completed, keep pushing - monday will kill it.
+                            $scope.taskItem.push(taskItem);
+                        }
+                    } else {
+                        //not daily task, so push.
+                        $scope.taskItem.push(taskItem);
+                    }
                 });
             console.log('updated set to false');
             localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
@@ -92,19 +117,30 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
                 completeTimes: 0,
                 updated: false,
                 complete: false,
-                category: $scope.newTaskCategory.name
+                category: $scope.newTaskCategory.name,
+                daily: $scope.newTaskDaily,
+                dailyRefresh: $scope.today.getDate()
             });
         
         $scope.newTask = '';
         $scope.newTaskDay = $scope.days;
         $scope.newTaskCategory = $scope.categories;
         $scope.newTaskRepeat = '';
+        $scope.newTaskDaily = false;
         localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
     };
-    $scope.deleteTask = function  (index) {
+    $scope.deleteTask = function  (description) {
+        //are you sure option...
         var removal = $window.confirm('Are you sure you want to delete this task?');
+        var deletingItem = $scope.taskItem;
+        $scope.taskItem = [];
         if (removal) {
-            $scope.taskItem.splice(index, 1);
+            //update the complete task.
+            angular.forEach(deletingItem, function (taskItem) {
+                if (taskItem.description !== description) {
+                    $scope.taskItem.push(taskItem);
+                }
+            });
             localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
         }
     };

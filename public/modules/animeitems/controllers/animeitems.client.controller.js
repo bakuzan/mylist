@@ -1,8 +1,8 @@
 'use strict';
 
 // Animeitems controller
-angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems',  'fileUpload', '$sce',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce) {
+angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems',  'fileUpload', '$sce', '$window',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window) {
 		$scope.authentication = Authentication;
         
         $scope.sortType = 'latest'; //default sort type
@@ -53,7 +53,10 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 
 		// Remove existing Animeitem
 		$scope.remove = function(animeitem) {
-			if ( animeitem ) { 
+            //are you sure option...
+            var removal = $window.confirm('Are you sure you want to delete this task?');
+            if (removal) {
+			 if ( animeitem ) { 
 				animeitem.$remove();
 
 				for (var i in $scope.animeitems) {
@@ -61,11 +64,12 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 						$scope.animeitems.splice(i, 1);
 					}
 				}
-			} else {
+			 } else {
 				$scope.animeitem.$remove(function() {
 					$location.path('animeitems');
 				});
-			}
+			 }
+            }
 		};
 
 		// Update existing Animeitem

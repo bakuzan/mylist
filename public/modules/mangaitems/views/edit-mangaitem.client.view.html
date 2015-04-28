@@ -22,7 +22,6 @@
                     </div>
                     <div class="col-md-4">
 						<p ng-show="mangaForm.chapters.$invalid && !mangaForm.chapters.$pristine" class="help-block" >Chapters is a whole number and is required.</p>
-                        <!--<p ng-show="!isNumber(mangaForm.chapters)" class="help-block">Chapter number should be a full number.</p>-->
 						<span ng-show="mangaForm.chapters.$valid" class="glyphicon glyphicon-ok" style="color: green;"></span>
 					</div>
                 </div>
@@ -33,7 +32,6 @@
                     </div>
                     <div class="col-md-4">
 						<p ng-show="mangaForm.volumes.$invalid && !mangaForm.volumes.$pristine" class="help-block" >Volumes is a whole number and is required.</p>
-                        <!--<p ng-show="!isNumber(mangaForm.volumes)" class="help-block">Volume number should be a full number.</p>-->
 						<span ng-show="mangaForm.volumes.$valid" class="glyphicon glyphicon-ok" style="color: green;"></span>
 					</div>
                 </div>
@@ -63,13 +61,7 @@
                 <div class="form-group">
                     <label for="image" class="col-md-2 control-label">Image</label>
                     <div class="col-md-6">
-                        <input type="file" file-model="myFile" accept="image/png, image/jpeg">
-                        <!--<select class="form-control" ng-model="imgExtension" data-ng-change="imagePath(myFile.name)">
-                            <option value="">-- choose file type --</option>
-                            <option value=".png">PNG</option>
-                            <option value=".jpg">JPEG</option>
-                        </select>-->
-                        <!--<pre>img path: {{imgPath}}<br/>name: {{myFile.name}}</pre>-->
+                        <input type="file" class="form-control" file-model="myFile" accept="image/png, image/jpeg">
                     </div>
                     <div class="col-md-4 form-group">
                         <a class="btn btn-primary" data-ng-click="uploadFile()" data-ng-disabled="myFile==='' || myFile===null || myFile===undefined">Upload File</a>
@@ -107,7 +99,7 @@
                         <input type="number" class="form-control" data-ng-model="mangaitem.finalChapter" id="finalChapter" name="finalChapter" placeholder="0">
                     </div>
                     <div class="col-md-4">
-                        <!--<p ng-show="isNumber(mangaForm.chapters)" class="help-block">Chapter number should be a full number.</p>-->
+						<p ng-show="mangaForm.finalChapter.$invalid && !mangaForm.finalChapter.$pristine" class="help-block" >Chapters is a whole number and is required.</p>
 						<span ng-show="mangaForm.finalChapter.$valid && !mangaForm.finalChapter.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
 					</div>
                 </div>
@@ -117,7 +109,7 @@
                         <input type="number" class="form-control" data-ng-model="mangaitem.finalVolume" id="finalVolume" name="finalVolume" placeholder="0">
                     </div>
                     <div class="col-md-4">
-                        <!--<p ng-show="isNumber(mangaForm.volumes)" class="help-block">Volume number should be a full number.</p>-->
+						<p ng-show="mangaForm.finalVolume.$invalid && !mangaForm.finalVolume.$pristine" class="help-block" >Volumes is a whole number and is required.</p>
 						<span ng-show="mangaForm.finalVolume.$valid && !mangaForm.finalVolume.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
 					</div>
                 </div>
@@ -129,7 +121,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Update" class="btn btn-default" ng-disabled="mangaForm.$invalid || mangaForm.$pristine">
+                    <input type="submit" value="Update" class="btn btn-default" ng-disabled="mangaForm.$invalid">&nbsp; - &nbsp;<a href="/#!/mangaitems/{{mangaitem._id}}">Back</a>
                 </div>
 				<div data-ng-show="error" class="text-danger">
 					<strong data-ng-bind="error"></strong>

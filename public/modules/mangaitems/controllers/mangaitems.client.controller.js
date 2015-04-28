@@ -1,8 +1,8 @@
 'use strict';
 
 // Mangaitems controller
-angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'fileUpload', '$sce',
-	function($scope, $stateParams, $location, Authentication, Mangaitems, fileUpload, $sce) {
+angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'fileUpload', '$sce', '$window',
+	function($scope, $stateParams, $location, Authentication, Mangaitems, fileUpload, $sce, $window) {
 		$scope.authentication = Authentication;
         
         
@@ -57,7 +57,10 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 
 		// Remove existing Mangaitem
 		$scope.remove = function(mangaitem) {
-			if ( mangaitem ) { 
+            //are you sure option...
+            var removal = $window.confirm('Are you sure you want to delete this task?');
+            if (removal) {
+			 if ( mangaitem ) { 
 				mangaitem.$remove();
 
 				for (var i in $scope.mangaitems) {
@@ -65,11 +68,12 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 						$scope.mangaitems.splice(i, 1);
 					}
 				}
-			} else {
+			 } else {
 				$scope.mangaitem.$remove(function() {
 					$location.path('/mangaitems');
 				});
-			}
+			 }
+            }
 		};
 
 		// Update existing Mangaitem

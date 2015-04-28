@@ -149,7 +149,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		// Remove existing Animeitem
 		$scope.remove = function(animeitem) {
             //are you sure option...
-            var removal = $window.confirm('Are you sure you want to delete this task?');
+            var removal = $window.confirm('Are you sure you want to delete this item?');
             if (removal) {
 			 if ( animeitem ) { 
 				animeitem.$remove();
@@ -765,7 +765,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		// Remove existing Mangaitem
 		$scope.remove = function(mangaitem) {
             //are you sure option...
-            var removal = $window.confirm('Are you sure you want to delete this task?');
+            var removal = $window.confirm('Are you sure you want to delete this item?');
             if (removal) {
 			 if ( mangaitem ) { 
 				mangaitem.$remove();

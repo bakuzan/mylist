@@ -96,8 +96,8 @@ angular.module('animeitems').config(['$stateProvider',
 'use strict';
 
 // Animeitems controller
-angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems',  'fileUpload', '$sce',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce) {
+angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems',  'fileUpload', '$sce', '$window',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window) {
 		$scope.authentication = Authentication;
         
         $scope.sortType = 'latest'; //default sort type
@@ -148,7 +148,10 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 
 		// Remove existing Animeitem
 		$scope.remove = function(animeitem) {
-			if ( animeitem ) { 
+            //are you sure option...
+            var removal = $window.confirm('Are you sure you want to delete this item?');
+            if (removal) {
+			 if ( animeitem ) { 
 				animeitem.$remove();
 
 				for (var i in $scope.animeitems) {
@@ -156,11 +159,12 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 						$scope.animeitems.splice(i, 1);
 					}
 				}
-			} else {
+			 } else {
 				$scope.animeitem.$remove(function() {
 					$location.path('animeitems');
 				});
-			}
+			 }
+            }
 		};
 
 		// Update existing Animeitem
@@ -395,11 +399,11 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
                     if (taskItem.daily===true) {
                         //has it reached the necessary number of repeats?
                         if(taskItem.completeTimes!==taskItem.repeat) {
-                            //var testday = new Date('2015-05-03').getDate();
+                            var today = $scope.today.getDate();
                             //has it been refreshed today?
-                            if (taskItem.dailyRefresh!==$scope.today.getDate()) {
+                            if (taskItem.dailyRefresh!==today) {
                                 taskItem.complete = false;
-                                taskItem.dailyRefresh = $scope.today.getDate();
+                                taskItem.dailyRefresh = today;
                                 $scope.taskItem.push(taskItem);
                             } else { 
                                 //already refreshed today.
@@ -428,6 +432,21 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         if ($scope.newTaskCategory.name === null || $scope.newTaskCategory.name === '' || $scope.newTaskCategory.name === undefined) {
             $scope.newTaskCategory.name = 'Other';
         }
+        //if created on a monday set updated=true - without this task could be deleted/un-completed by the check status method.
+        var day = $scope.today.getDay(); //new Date('2015-05-04').getDay();
+        if (day===1) {
+            $scope.taskItem.push({
+                description: $scope.newTask,
+                day: $scope.newTaskDay.name,
+                repeat: $scope.newTaskRepeat,
+                completeTimes: 0,
+                updated: true,
+                complete: false,
+                category: $scope.newTaskCategory.name,
+                daily: $scope.newTaskDaily,
+                dailyRefresh: $scope.today.getDate()
+            });
+        } else {
             $scope.taskItem.push({
                 description: $scope.newTask,
                 day: $scope.newTaskDay.name,
@@ -439,7 +458,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
                 daily: $scope.newTaskDaily,
                 dailyRefresh: $scope.today.getDate()
             });
-        
+        }
         $scope.newTask = '';
         $scope.newTaskDay = $scope.days;
         $scope.newTaskCategory = $scope.categories;
@@ -689,8 +708,8 @@ angular.module('mangaitems').config(['$stateProvider',
 'use strict';
 
 // Mangaitems controller
-angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'fileUpload', '$sce',
-	function($scope, $stateParams, $location, Authentication, Mangaitems, fileUpload, $sce) {
+angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'fileUpload', '$sce', '$window',
+	function($scope, $stateParams, $location, Authentication, Mangaitems, fileUpload, $sce, $window) {
 		$scope.authentication = Authentication;
         
         
@@ -745,7 +764,10 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 
 		// Remove existing Mangaitem
 		$scope.remove = function(mangaitem) {
-			if ( mangaitem ) { 
+            //are you sure option...
+            var removal = $window.confirm('Are you sure you want to delete this item?');
+            if (removal) {
+			 if ( mangaitem ) { 
 				mangaitem.$remove();
 
 				for (var i in $scope.mangaitems) {
@@ -753,11 +775,12 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 						$scope.mangaitems.splice(i, 1);
 					}
 				}
-			} else {
+			 } else {
 				$scope.mangaitem.$remove(function() {
 					$location.path('/mangaitems');
 				});
-			}
+			 }
+            }
 		};
 
 		// Update existing Mangaitem

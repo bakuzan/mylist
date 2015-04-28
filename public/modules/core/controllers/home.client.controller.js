@@ -77,11 +77,11 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
                     if (taskItem.daily===true) {
                         //has it reached the necessary number of repeats?
                         if(taskItem.completeTimes!==taskItem.repeat) {
-                            //var testday = new Date('2015-05-03').getDate();
+                            var today = $scope.today.getDate();
                             //has it been refreshed today?
-                            if (taskItem.dailyRefresh!==$scope.today.getDate()) {
+                            if (taskItem.dailyRefresh!==today) {
                                 taskItem.complete = false;
-                                taskItem.dailyRefresh = $scope.today.getDate();
+                                taskItem.dailyRefresh = today;
                                 $scope.taskItem.push(taskItem);
                             } else { 
                                 //already refreshed today.
@@ -110,6 +110,21 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         if ($scope.newTaskCategory.name === null || $scope.newTaskCategory.name === '' || $scope.newTaskCategory.name === undefined) {
             $scope.newTaskCategory.name = 'Other';
         }
+        //if created on a monday set updated=true - without this task could be deleted/un-completed by the check status method.
+        var day = $scope.today.getDay(); //new Date('2015-05-04').getDay();
+        if (day===1) {
+            $scope.taskItem.push({
+                description: $scope.newTask,
+                day: $scope.newTaskDay.name,
+                repeat: $scope.newTaskRepeat,
+                completeTimes: 0,
+                updated: true,
+                complete: false,
+                category: $scope.newTaskCategory.name,
+                daily: $scope.newTaskDaily,
+                dailyRefresh: $scope.today.getDate()
+            });
+        } else {
             $scope.taskItem.push({
                 description: $scope.newTask,
                 day: $scope.newTaskDay.name,
@@ -121,7 +136,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
                 daily: $scope.newTaskDaily,
                 dailyRefresh: $scope.today.getDate()
             });
-        
+        }
         $scope.newTask = '';
         $scope.newTaskDay = $scope.days;
         $scope.newTaskCategory = $scope.categories;

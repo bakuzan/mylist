@@ -1,0 +1,34 @@
+<section data-ng-controller="CharactersController" data-ng-init="findOne()" data-ng-show="authentication.user">
+	<div class="page-header">
+        <div class="col-md-12">
+            <div class="col-md-3 pull-left" >
+                <img ng-src="{{trustAsResourceUrl(character.image)}}" height="100%" width="100%"/>
+            </div>
+            <div class="col-md-9 pull-left">
+                <h1 data-ng-bind="character.name"></h1>
+                <br/><span><b>Anime: </b></span><a data-ng-show="character.anime!==undefined" href="/#!/animeitems/{{character.anime._id}}">{{character.anime.title}}</a>
+                <br/><span><b>Manga: </b></span><a data-ng-show="character.manga!==undefined" href="/#!/mangaitems/{{character.manga._id}}">{{character.manga.title}}</a>
+                <br/><span><b>VA: </b></span><span data-ng-bind="character.voice"></span>
+            </div>
+        </div>
+	</div>
+	<div class="pull-right" data-ng-show="((authentication.user) && (authentication.user._id == character.user._id))">
+		<a class="btn btn-success" href="/#!/characters">
+			<i class="glyphicon glyphicon-chevron-left"></i>
+		</a>
+        <a class="btn btn-primary" href="/#!/characters/{{character._id}}/edit">
+			<i class="glyphicon glyphicon-edit"></i>
+		</a>
+		<a class="btn btn-danger" data-ng-click="remove();">
+			<i class="glyphicon glyphicon-trash"></i>
+		</a>
+	</div>
+    <small>
+		<em class="text-muted">
+		Tags<br/>
+        <ul data-ng-repeat="tag in character.tags">
+            <li>{{tag.text}}</li>
+        </ul>
+		</em>
+	</small>
+</section>

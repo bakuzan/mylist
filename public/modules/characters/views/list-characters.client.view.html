@@ -1,0 +1,81 @@
+<section data-ng-controller="CharactersController" data-ng-init="find()" data-ng-show="authentication.user">
+    <div class="page-header">
+        <h1>Characters</h1>
+    </div>
+        <div class="form-group col-sm-4">
+       <div class="input-group">
+            <div class="input-group-addon">
+                <i class="fa fa-search"></i>
+            </div>
+           <input type="text" class="form-control" placeholder="search characters" ng-model="search.name"><!-- typeahead="animeitem.title for animeitem in animeitems | filter: { title:$viewValue } " -->
+	   </div>
+       <br/>
+       <div class="input-group">
+            <div class="input-group-addon">
+                <i class="fa fa-tag"></i>
+            </div>
+           <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags"><!--  -->
+	   </div>
+        <br/>
+        <div class="input-group">
+		  <div class="input-group-addon">
+		      <i class="fa fa-list-ol"></i>
+          </div>
+            <input type="text" class="form-control" value="Showing {{ (characters | filter: search | filter: mediaFilter | filter: tagFilter).length }} character(s)." disabled>
+        </div>
+        <br/>
+        <div class="input-group">
+		  <div class="input-group-addon">
+		      <i class="fa fa-sort"></i>
+          </div>
+            <select class="form-control" ng-model="sortType">
+                        <option value="">-- choose sort type --</option>
+                        <option value="name">Name</option>
+                        <option value="anime.title">Anime</option>
+                        <option value="manga.title">Manga</option>
+                        <option value="voice">Voice</option>
+            </select>
+        </div>
+        <br/>
+        <div class="input-group" ng-click="sortReverse = !sortReverse">
+		  <div class="input-group-addon">
+		      <i class="fa" ng-class="sortReverse ? 'fa-sort-amount-desc' : 'fa-sort-amount-asc' "></i>
+          </div>
+            <input type="text" class="form-control" value="Ascending" ng-show="!sortReverse" disabled>
+            <input type="text" class="form-control" value="Descending" ng-show="sortReverse" disabled>
+            <!--<input type="checkbox" class="form-control" data-ng-model="sortReverse" id="sortReverse">-->
+        </div>
+        <br/>
+        <div class="input-group">
+		  <div class="input-group-addon">
+		      <i class="fa fa-book"></i>
+          </div>
+            <select class="form-control" ng-model="media">
+                        <option value="">-- choose media type --</option>
+                        <option value="anime">Anime-only</option>
+                        <option value="manga">Manga-only</option>
+                        <option value="both">Both</option>
+            </select>
+        </div>
+        <br/>
+        <div class="input-group">
+            <div class="input-group-addon">
+                <i class="fa fa-microphone"></i>
+            </div>
+            <input type="text" class="form-control" placeholder="search voice" ng-model="search.voice" typeahead="character.voice for character in characters | filter: { voice:$viewValue } "><!-- -->
+	    </div>
+    </div>
+    <div class="list-group col-sm-4">
+        <a data-ng-repeat="character in characters | orderBy: sortType:sortReverse | filter: search | filter: mediaFilter | filter: tagFilter" data-ng-href="#!/characters/{{character._id}}" list_Back="{{trustAsResourceUrl(character.image)}}" class="list-group-item">
+			<h4 class="list-group-item-heading" data-ng-bind="character.name"></h4>
+            <p class="list-group-item-text">
+                <span data-ng-bind="character.voice"></span>
+            </p>
+            <span class="text-muted" data-ng-show="character.manga!==undefined && character.manga!==null" data-ng-bind="character.manga.title"></span>
+            <span class="text-muted" data-ng-show="character.anime!==undefined && character.manga===null" data-ng-bind="character.anime.title"></span>
+        </a>
+    </div>
+    <div class="alert alert-warning text-center" data-ng-hide="!characters.$resolved || characters.length">
+    	No Characters yet, why don't you <a href="/#!/characters/create">create one</a>?
+    </div>
+</section>

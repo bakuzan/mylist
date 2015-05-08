@@ -15,14 +15,22 @@ angular.module('characters').directive('fileModel', ['$parse', function ($parse)
         }
     };
 }])
-.directive('listBack', function(){
+.directive('characterBack', function(){
     return function(scope, element, attrs){
-        var url = attrs.listBack;
+        var url = attrs.characterBack;
         element.css({
             'background-image': 'url(' + url +')',
-            'background-size' : '50%',
+            'background-size' : '100%',
             'background-repeat': 'no-repeat',
             'background-position': 'right'
         });
     };
-});
+})
+.directive('disableNgAnimate', ['$animate', function($animate) {
+  return {
+    restrict: 'A',
+    link: function(scope, element) {
+      $animate.enabled(false, element);
+    }
+  };
+}]);

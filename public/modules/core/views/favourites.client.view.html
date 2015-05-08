@@ -1,0 +1,66 @@
+<section data-ng-controller="FavouritesController" data-ng-init="findCharacters()" data-ng-show="authentication.user">
+    <div class="page-header">
+        <h1>Favourites</h1>
+    </div>
+    <div class="col-md-12">
+        <div class="favouriteAnime col-md-4">
+            <div class="favouriteHeader">
+                <a class="favouriteLink" href="/#!/animeitems">
+                    <h2>Anime</h2>
+                </a>
+            </div>
+            <div class="favouriteContent col-sm-12">
+            
+            </div>
+            <div class="favouriteActions text-center">
+                <a class="btn btn-primary" href="/#!/animefavourites">
+                Edit anime favourites
+                </a>
+            </div>
+        </div>
+        <div class="favouriteManga col-md-4">
+            <div class="favouriteHeader">
+                <a class="favouriteLink" href="/#!/mangaitems">
+                    <h2>Manga</h2>
+                </a>
+            </div>
+            <div class="favouriteContent col-sm-12">
+            
+            </div>
+            <div class="favouriteActions text-center">
+                <a class="btn btn-primary" href="/#!/mangafavourites">
+                Edit manga favourites
+                </a>
+            </div>
+        </div>
+        <div class="favouriteCharacter col-md-4">
+            <div class="favouriteHeader">
+                <a class="favouriteLink" href="/#!/characters">
+                    <h2>Characters</h2>
+                </a>
+            </div>
+            <div class="favouriteContent col-sm-12" style="height: 300px;">
+                <carousel interval="myInterval" style="height: 300px;" disable-ng-animate>
+                    <slide ng-repeat="character in characters" active="character.active">
+                        <a href="/#!/characters/{{character._id}}">
+                            <img ng-src="{{trustAsResourceUrl(character.image)}}" style="height: 300px; width: auto; margin: auto;">
+                            <div class="carousel-caption">
+                                <span class="darkBorderedFontHeading"> {{character.name}} </span>
+                            </div>
+                        </a>
+                    </slide>
+                </carousel>
+            </div>
+            <div class="favouriteActions text-center">
+                <a class="btn btn-primary" href="/#!/characterfavourites">
+                Edit character favourites
+                </a>
+            </div>
+        </div>
+    </div>
+    <footer class="col-sm-12">
+        <hr/>
+        <br><small>Version: Belphegor.14</small>
+	    <br><small>Authour: swalsh</small>
+    </footer>
+</section>

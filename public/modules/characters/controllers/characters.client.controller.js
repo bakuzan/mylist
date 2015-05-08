@@ -11,6 +11,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         //$scope.newTag = ''; //for adding tags.
         $scope.tagArray = []; // holding tags pre-submit
         $scope.tagArrayRemove = [];
+        $scope.usedTags = []; //for typeahead array.
 
         //allow retreival of local resource
         $scope.trustAsResourceUrl = function(url) {
@@ -51,7 +52,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             var found = false;
             var i = 0;
             var tagsToSearch = [];
-            if ($scope.characterTags===undefined || $scope.characterTags==="") {
+            if ($scope.characterTags===undefined || $scope.characterTags==='') {
                 return true;
             } else {
                 //get tags that are being looked for
@@ -203,6 +204,21 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 			$scope.characters = Characters.query();
             console.log($scope.characters);
 		};
+        
+        //builds an array of unique tag names for the typeahead.
+        $scope.createUsedTags = function(text) {
+            var add = true;
+            //is tag in array?
+            for(var i=0; i < $scope.usedTags.length; i++) {
+                if ($scope.usedTags[i]===text) {
+                    add = false;
+                }
+            }
+            //add if not in.
+            if (add===true) {
+                $scope.usedTags.push(text);
+            }
+        };
 
 		// Find existing Character
 		$scope.findOne = function() {

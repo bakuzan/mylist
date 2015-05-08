@@ -5,43 +5,43 @@
     <div class="col-md-12">
         <div class="list-group col-md-6">
             <a class="list-group-item"data-ng-click="isCollapse=!isCollapse">Actions</a>
-        </div>
-        <div class="col-md-12" data-ng-show="isCollapse">
+            <div class="col-md-12" data-ng-show="isCollapse">
             <form name="scheduleForm" class="form-horizontal" novalidate>
                 <fieldset>
+                    <br/>
                 <div class="form-group">
-                    <label for="description" class="col-md-1 control-label">Description</label>
-                    <div class="col-md-5">
+                    <label for="description" class="col-md-2 control-label">Description</label>
+                    <div class="col-md-8">
                         <input type="text" required id="description" class="form-control" placeholder="What do you need to do?" ng-model="newTask">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="category" class="col-md-1 control-label">Category</label>
+                    <label for="category" class="col-md-2 control-label">Category</label>
                     <!--<i class="fa fa-caret-down selectArrow"></i>-->
-                    <div class="col-md-5">
+                    <div class="col-md-8">
                         <select required id="category" class="form-control" ng-model="newTaskCategory" ng-options="obj.name for obj in categories">
                             <option class="disabled" value="">Choose a category</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="category" class="col-md-1 control-label">Day</label>
+                    <label for="category" class="col-md-2 control-label">Day</label>
                     <!--<i class="fa fa-caret-down selectArrow"></i>-->
-                    <div class="col-md-5">
+                    <div class="col-md-8">
                         <select required id="day" class="form-control" ng-model="newTaskDay" ng-options="obj.name for obj in days">
                             <option class="disabled" value="">Choose a day</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="repeat" class="col-md-1 control-label">Repeat</label>
-                    <div class="col-md-5">
+                    <label for="repeat" class="col-md-2 control-label">Repeat</label>
+                    <div class="col-md-8">
                         <input type="number" required id="repeat" class="form-control" placeholder="1" ng-model="newTaskRepeat">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="daily" class="col-md-1 control-label">Daily?</label>
-                    <div class="col-md-5">
+                    <label for="daily" class="col-md-2 control-label">Daily?</label>
+                    <div class="col-md-8">
                         <input type="checkbox" id="daily" class="form-control" ng-model="newTaskDaily">
                     </div>
                 </div>
@@ -52,13 +52,14 @@
                 </div>
                 </fieldset>
             </form>
+            </div>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-6">
             <div class="input-group">
 		        <div class="input-group-addon">
 		          <i class="fa fa-list-ol"></i>
                 </div>
-                <input type="text" class="form-control" value="{{ remaining() }} of {{ taskItem.length }} remaining." disabled>
+                <input type="text" class="form-control" value="{{ remaining() }} remaining of {{ taskItem.length }} total." disabled>
             </div>
             <br/>
             <div class=" col-md-12 input-group">
@@ -110,7 +111,7 @@
     </div><!-- ROW -->
     <footer class="col-sm-12">
         <hr/>
-        <br><small>Version: Belphegor.</small>
+        <br><small>Version: Belphegor.14</small>
 	    <br><small>Authour: swalsh</small>
     </footer>
 </section>

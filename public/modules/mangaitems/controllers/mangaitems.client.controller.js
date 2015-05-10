@@ -9,6 +9,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         $scope.sortType = 'latest'; //default sort type
 	    $scope.sortReverse = true; // default sort order
         $scope.finalNumbers = false; //default show status of final number fields in edit view.
+        $scope.ratingLevel = undefined; //default rating selection
         $scope.maxRating = 10; //maximum rating
         $scope.imgExtension = ''; //image path extension.
         $scope.imgPath = ''; //image path
@@ -22,6 +23,15 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         $scope.hoveringOver = function(value) {
             $scope.overStar = value;
             $scope.percent = 100 * (value / $scope.maxRating);
+        };
+        
+        //filter for rating stars
+        $scope.ratingFilter = function(item) {
+            if (item.rating===$scope.ratingLevel) {
+                return item;
+            } else if ($scope.ratingLevel===undefined) {
+                return item;
+            }
         };
         
         // Create new Mangaitem

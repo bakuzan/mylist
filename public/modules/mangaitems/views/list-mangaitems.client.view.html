@@ -77,16 +77,16 @@
         <br/>
         <div class="input-group">
             <div class="input-group-addon">
-                <i class="fa fa-star" data-ng-click="search.rating=undefined"></i>
+                <i class="fa fa-star" data-ng-click="ratingLevel=undefined"></i>
             </div>
-               <rating class="form-control" data-ng-model="search.rating" style="color: blue;" readonly="false" max="maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></rating>
+               <rating class="form-control rating" data-ng-model="ratingLevel" style="color: blue;" readonly="false" max="maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></rating>
             <div class="input-group-addon">
-                <span data-ng-show="overStar!=null" class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}">{{percent}}%</span>
+                <span data-ng-show="overStar!=null" class="label" ng-class="{'label-warning': percent<40, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}">{{percent}}%</span>
             </div>
         </div>
     </div>
     <div class="list-group col-sm-8">
-        <a data-ng-repeat="mangaitem in mangaitems | orderBy: sortType:sortReverse | filter: search" data-ng-href="#!/mangaitems/{{mangaitem._id}}" list_Back="{{trustAsResourceUrl(mangaitem.image)}}" class="list-group-item">
+        <a data-ng-repeat="mangaitem in mangaitems | orderBy: sortType:sortReverse | filter: search | filter: ratingFilter" data-ng-href="#!/mangaitems/{{mangaitem._id}}" list_Back="{{trustAsResourceUrl(mangaitem.image)}}" class="list-group-item">
 			<small class="list-group-item-text">
                 Latest:
 				<span data-ng-bind="mangaitem.latest | date:'yyyy-MMM-dd'"></span>

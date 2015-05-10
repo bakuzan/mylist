@@ -12,6 +12,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.tagArray = []; // holding tags pre-submit
         $scope.tagArrayRemove = [];
         $scope.usedTags = []; //for typeahead array.
+        $scope.voiceActors = []; //for typeahead array.
 
         //allow retreival of local resource
         $scope.trustAsResourceUrl = function(url) {
@@ -217,6 +218,21 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             //add if not in.
             if (add===true) {
                 $scope.usedTags.push(text);
+            }
+        };
+        
+        //builds an array of unique voices for the typeahead.
+        $scope.createVoices = function(voice) {
+            var add = true;
+            //is tag in array?
+            for(var i=0; i < $scope.voiceActors.length; i++) {
+                if ($scope.voiceActors[i]===voice) {
+                    add = false;
+                }
+            }
+            //add if not in.
+            if (add===true) {
+                $scope.voiceActors.push(voice);
             }
         };
 

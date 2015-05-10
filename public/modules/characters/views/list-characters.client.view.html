@@ -62,7 +62,7 @@
             <div class="input-group-addon">
                 <i class="fa fa-microphone"></i>
             </div>
-            <input type="text" class="form-control" placeholder="search voice" ng-model="search.voice" typeahead="character.voice for character in characters | filter: { voice:$viewValue } "><!-- -->
+            <input type="text" class="form-control" placeholder="search voice" ng-model="search.voice" typeahead="voice for voice in voiceActors | filter: $viewValue "><!-- -->
 	    </div>
     </div>
     <div class="list-group col-sm-8">
@@ -74,6 +74,7 @@
             <span class="darkBorderedFont" data-ng-show="character.manga!==undefined && character.manga!==null" data-ng-bind="character.manga.title"></span>
             <span class="darkBorderedFont" data-ng-show="character.anime!==undefined && character.manga===null" data-ng-bind="character.anime.title"></span>
             <span ng-repeat="tag in character.tags" data-ng-init="createUsedTags(tag.text)"></span><!-- for typeahead -->
+            <span data-ng-init="createVoices(character.voice)"></span><!-- for typeahead -->
         </a>
     </div>
     <div class="alert alert-warning text-center" data-ng-hide="!characters.$resolved || characters.length">

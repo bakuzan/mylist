@@ -18,7 +18,10 @@
     color: #9d9d9d;
     padding: 15px 15px;
 }
-.navbar-favourites:hover,
+.navbar-favourites:hover  {
+    color: #ffffff;
+    text-decoration: none;
+}
 .navbar-favourites:focus {
     color: #ffffff;
     text-decoration: none;
@@ -273,7 +276,7 @@ button {
 }
 
 [class*='category-'] {
-    display: inline-block;
+/*    display: inline-block;*/
     font-size: 10px;
     background: #444;
     vertical-align: middle;
@@ -323,8 +326,11 @@ footer a {
 /* custom checkboxes */
 .taskCheckbox {
     -webkit-appearance: none;
+    -moz-appearance: none;
             appearance: none;
     -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    -moz-transition: all 0.3s;
             transition: all 0.3s;
     display: inline-block;
     cursor: pointer;
@@ -333,15 +339,13 @@ footer a {
     vertical-align: middle;
 }
 
-.taskCheckbox:focus {
-    outline: none;
-}
-
 .taskCheckbox:before, .taskCheckbox:checked:before {
     font-family: 'FontAwesome';
     color: #444;
     font-size: 20px;
     -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -o-transition: all 0.3s;
             transition: all 0.3s;
 
 }
@@ -357,6 +361,7 @@ footer a {
 /* custom select menu */
 .taskCategory {
     -webkit-appearance: none;
+    -moz-appearance: none;
             appearance: none;
     cursor: pointer;
     padding-left: 16.5px; /*specific positioning due to difficult behavior of select element*/
@@ -376,7 +381,7 @@ footer a {
 .taskCategory option {
     background: #fff;
     border: none;
-    outline: none;
+/*    outline: none;*/
     padding: 0 100px;
 }
 

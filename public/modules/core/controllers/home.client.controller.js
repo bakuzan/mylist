@@ -33,6 +33,30 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     ];
     $scope.newTaskDay = $scope.days;
     
+    //special day filter
+    $scope.dayFilter = function(item) {
+        var ds = $scope.daySelected;
+        if (ds==='1' && item.day==='Monday') {
+                return item;
+        } else if (ds==='2' && item.day==='Tuesday') {
+                return item;
+        } else if (ds==='3' && item.day==='Wednesday') {
+                return item;
+        } else if (ds==='4' && item.day==='Thursday') {
+                return item;
+        } else if (ds==='5' && item.day==='Friday') {
+                return item;
+        } else if (ds==='6' && item.day==='Saturday') {
+                return item;
+        } else if (ds==='0' && item.day==='Sunday') {
+                return item;
+        } else if (ds==='' || ds===null || ds===undefined) {
+                return item;
+        } else if (item.day==='Any') {
+                return item;
+        }
+    };
+    
     //get monday!
     $scope.weekBeginning = function() {
         var day = $scope.today.getDay(),
@@ -103,19 +127,24 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     };
         
     $scope.addNew = function () {
-        console.log($scope.newTaskDay.name);
+        //console.log($scope.newTaskDay.name);
         if ($scope.newTaskDay.name === null || $scope.newTaskDay.name === '' || $scope.newTaskDay.name === undefined) {
             $scope.newTaskDay.name = 'Any';
         }
         if ($scope.newTaskCategory.name === null || $scope.newTaskCategory.name === '' || $scope.newTaskCategory.name === undefined) {
             $scope.newTaskCategory.name = 'Other';
         }
+        if ($scope.newTaskDate === null || $scope.newTaskDate === '' || $scope.newTaskDate === undefined) {
+            $scope.newTaskDate = new Date($scope.today);
+        }
+        
         //if created on a monday set updated=true - without this task could be deleted/un-completed by the check status method.
         var day = $scope.today.getDay(); //new Date('2015-05-04').getDay();
         if (day===1) {
             $scope.taskItem.push({
                 description: $scope.newTask,
                 day: $scope.newTaskDay.name,
+                date: $scope.newTaskDate,
                 repeat: $scope.newTaskRepeat,
                 completeTimes: 0,
                 updated: true,
@@ -128,6 +157,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
             $scope.taskItem.push({
                 description: $scope.newTask,
                 day: $scope.newTaskDay.name,
+                date: $scope.newTaskDate,
                 repeat: $scope.newTaskRepeat,
                 completeTimes: 0,
                 updated: false,
@@ -139,6 +169,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         }
         $scope.newTask = '';
         $scope.newTaskDay = $scope.days;
+        $scope.newTaskDate = $scope.today.getDate();
         $scope.newTaskCategory = $scope.categories;
         $scope.newTaskRepeat = '';
         $scope.newTaskDaily = false;

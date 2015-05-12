@@ -7,6 +7,6 @@ public/lib
 app/tests/coverage/
 .bower-*/
 .idea/
-public/mangaitems/img
-public/animeitems/img
-public/characters/img
+public/animeitems/img/*
+public/mangaitems/img/*
+public/characters/img/*

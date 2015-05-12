@@ -14,7 +14,7 @@
 		  <div class="input-group-addon">
 		      <i class="fa fa-list-ol"></i>
           </div>
-            <input type="text" class="form-control" value="Showing {{ (mangaitems | filter: search).length }} manga." disabled>
+            <input type="text" class="form-control" value="Showing {{ (mangaitems | filter: search | filter: ratingFilter).length }} manga." disabled>
         </div>
         <br/>
         <div class="input-group">

@@ -439,7 +439,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         
 		// Create new Character
 		$scope.create = function() {
-            console.log($scope.tagArray);
+            //console.log($scope.tagArray);
             //Handle situation if objects not selected.
 			if (this.anime!==undefined && this.manga!==undefined && this.anime!==null && this.manga!==null) {
              // Create new Character object
@@ -521,6 +521,14 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 		// Update existing Character
 		$scope.update = function() {
 			var character = $scope.character;
+            //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
+            if ($scope.character.manga!==null) {
+                character.manga = $scope.character.manga._id;
+            }
+            if ($scope.character.anime!==null) {
+                character.anime = $scope.character.anime._id;
+            }
+            
             if ($scope.tagArray!==undefined) {
                 var temp = character.tags ;
                 character.tags = temp.concat($scope.tagArray);
@@ -541,7 +549,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 		// Find a list of Characters
 		$scope.find = function() {
 			$scope.characters = Characters.query();
-            console.log($scope.characters);
+            //console.log($scope.characters);
 		};
         
         //builds an array of unique tag names for the typeahead.
@@ -579,7 +587,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 			$scope.character = Characters.get({ 
 				characterId: $stateParams.characterId
 			});
-            console.log($scope.character);
+            //console.log($scope.character);
 		};
         
         // Find a list of Animeitems
@@ -589,7 +597,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         
         // Find existing Animeitem
 		$scope.findOneAnime = function(anime) {
-            console.log(anime);
+            //console.log(anime);
 			$scope.animeitem = Animeitems.get({ 
 				animeitemId: anime
 			});
@@ -764,6 +772,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 		$scope.authentication = Authentication;
         
     $scope.today = new Date();
+    $scope.datesSelected = 'current';
     $scope.saved = localStorage.getItem('taskItems');
     $scope.taskItem = (localStorage.getItem('taskItems')!==null) ? 
     JSON.parse($scope.saved) : [ {description: 'Why not add a task?', date: $scope.today, complete: false}];
@@ -789,6 +798,54 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         {name: 'Sunday'}
     ];
     $scope.newTaskDay = $scope.days;
+    
+    //special day filter
+    $scope.dayFilter = function(item) {
+        var ds = $scope.daySelected;
+        if (ds==='1' && item.day==='Monday') {
+                return item;
+        } else if (ds==='2' && item.day==='Tuesday') {
+                return item;
+        } else if (ds==='3' && item.day==='Wednesday') {
+                return item;
+        } else if (ds==='4' && item.day==='Thursday') {
+                return item;
+        } else if (ds==='5' && item.day==='Friday') {
+                return item;
+        } else if (ds==='6' && item.day==='Saturday') {
+                return item;
+        } else if (ds==='0' && item.day==='Sunday') {
+                return item;
+        } else if (ds==='' || ds===null || ds===undefined) {
+                return item;
+        } else if (item.day==='Any') {
+                return item;
+        }
+    };
+        
+    //date filter
+    $scope.dateFilter = function(item) {
+        if (item.date!==null || item.date!==undefined) {
+            if ($scope.datesSelected==='current') {
+                return item;
+            }
+            return false;
+        }
+            var day = item.date.getDay(),
+            diff = item.date.getDate() - day + (day === 0 ? -6:1);
+            var temp = new Date();
+            var wkBeg = new Date(temp.setDate(diff));
+        
+        if ($scope.datesSelected==='current') {
+            if (wkBeg <= $scope.weekBeginning || item.date===null || item.date===undefined) {
+                return item;
+            }
+        } else if ($scope.datesSelected==='future') {
+            if (wkBeg > $scope.weekBeginning) {
+                return item;
+            }
+        }
+    };
     
     //get monday!
     $scope.weekBeginning = function() {
@@ -860,19 +917,24 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     };
         
     $scope.addNew = function () {
-        console.log($scope.newTaskDay.name);
+        //console.log($scope.newTaskDay.name);
         if ($scope.newTaskDay.name === null || $scope.newTaskDay.name === '' || $scope.newTaskDay.name === undefined) {
             $scope.newTaskDay.name = 'Any';
         }
         if ($scope.newTaskCategory.name === null || $scope.newTaskCategory.name === '' || $scope.newTaskCategory.name === undefined) {
             $scope.newTaskCategory.name = 'Other';
         }
+        if ($scope.newTaskDate === null || $scope.newTaskDate === '' || $scope.newTaskDate === undefined) {
+            $scope.newTaskDate = new Date($scope.today);
+        }
+        
         //if created on a monday set updated=true - without this task could be deleted/un-completed by the check status method.
         var day = $scope.today.getDay(); //new Date('2015-05-04').getDay();
         if (day===1) {
             $scope.taskItem.push({
                 description: $scope.newTask,
                 day: $scope.newTaskDay.name,
+                date: $scope.newTaskDate,
                 repeat: $scope.newTaskRepeat,
                 completeTimes: 0,
                 updated: true,
@@ -885,6 +947,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
             $scope.taskItem.push({
                 description: $scope.newTask,
                 day: $scope.newTaskDay.name,
+                date: $scope.newTaskDate,
                 repeat: $scope.newTaskRepeat,
                 completeTimes: 0,
                 updated: false,
@@ -896,6 +959,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         }
         $scope.newTask = '';
         $scope.newTaskDay = $scope.days;
+        $scope.newTaskDate = $scope.today.getDate();
         $scope.newTaskCategory = $scope.categories;
         $scope.newTaskRepeat = '';
         $scope.newTaskDaily = false;

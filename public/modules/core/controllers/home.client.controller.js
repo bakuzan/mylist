@@ -7,6 +7,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 		$scope.authentication = Authentication;
         
     $scope.today = new Date();
+    $scope.datesSelected = 'current';
     $scope.saved = localStorage.getItem('taskItems');
     $scope.taskItem = (localStorage.getItem('taskItems')!==null) ? 
     JSON.parse($scope.saved) : [ {description: 'Why not add a task?', date: $scope.today, complete: false}];
@@ -54,6 +55,30 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
                 return item;
         } else if (item.day==='Any') {
                 return item;
+        }
+    };
+        
+    //date filter
+    $scope.dateFilter = function(item) {
+        if (item.date!==null || item.date!==undefined) {
+            if ($scope.datesSelected==='current') {
+                return item;
+            }
+            return false;
+        }
+            var day = item.date.getDay(),
+            diff = item.date.getDate() - day + (day === 0 ? -6:1);
+            var temp = new Date();
+            var wkBeg = new Date(temp.setDate(diff));
+        
+        if ($scope.datesSelected==='current') {
+            if (wkBeg <= $scope.weekBeginning || item.date===null || item.date===undefined) {
+                return item;
+            }
+        } else if ($scope.datesSelected==='future') {
+            if (wkBeg > $scope.weekBeginning) {
+                return item;
+            }
         }
     };
     

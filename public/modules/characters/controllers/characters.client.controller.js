@@ -101,7 +101,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         
 		// Create new Character
 		$scope.create = function() {
-            console.log($scope.tagArray);
+            //console.log($scope.tagArray);
             //Handle situation if objects not selected.
 			if (this.anime!==undefined && this.manga!==undefined && this.anime!==null && this.manga!==null) {
              // Create new Character object
@@ -183,6 +183,14 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 		// Update existing Character
 		$scope.update = function() {
 			var character = $scope.character;
+            //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
+            if ($scope.character.manga!==null) {
+                character.manga = $scope.character.manga._id;
+            }
+            if ($scope.character.anime!==null) {
+                character.anime = $scope.character.anime._id;
+            }
+            
             if ($scope.tagArray!==undefined) {
                 var temp = character.tags ;
                 character.tags = temp.concat($scope.tagArray);
@@ -203,7 +211,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 		// Find a list of Characters
 		$scope.find = function() {
 			$scope.characters = Characters.query();
-            console.log($scope.characters);
+            //console.log($scope.characters);
 		};
         
         //builds an array of unique tag names for the typeahead.
@@ -241,7 +249,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 			$scope.character = Characters.get({ 
 				characterId: $stateParams.characterId
 			});
-            console.log($scope.character);
+            //console.log($scope.character);
 		};
         
         // Find a list of Animeitems
@@ -251,7 +259,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         
         // Find existing Animeitem
 		$scope.findOneAnime = function(anime) {
-            console.log(anime);
+            //console.log(anime);
 			$scope.animeitem = Animeitems.get({ 
 				animeitemId: anime
 			});

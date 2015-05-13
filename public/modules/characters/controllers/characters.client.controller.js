@@ -184,10 +184,11 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 		$scope.update = function() {
 			var character = $scope.character;
             //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
-            if ($scope.character.manga!==null) {
+            if ($scope.character.manga!==null && $scope.character.manga!==undefined) {
                 character.manga = $scope.character.manga._id;
             }
-            if ($scope.character.anime!==null) {
+            console.log($scope.character.anime);
+            if ($scope.character.anime!==null && $scope.character.anime!==undefined) {
                 character.anime = $scope.character.anime._id;
             }
             

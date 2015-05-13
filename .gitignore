@@ -7,9 +7,6 @@ public/lib
 app/tests/coverage/
 .bower-*/
 .idea/
-public/animeitems/img/*.png
-public/animeitems/img/*.jpg
-public/mangaitems/img/*.png
-public/mangaitems/img/*.jpg
-public/characters/img/*.png
-public/characters/img/*.jpg
+public/modules/animeitems/img/*
+public/modules/mangaitems/img/*
+public/modules/characters/img/*

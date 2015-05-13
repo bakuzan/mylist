@@ -410,3 +410,9 @@ footer a {
 .favouriteLink:hover h2:after {
     content: '?';
 }
+
+.collapseBar {
+    cursor: pointer;
+    background-color: #e6e6e6;
+    font-weight: bold;
+}

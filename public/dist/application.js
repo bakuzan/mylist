@@ -770,12 +770,15 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 	function($scope, Authentication, $window) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
+    
+    $scope.isCollapseFilter = false;
+    $scope.isCollapseAction = true;
         
     $scope.today = new Date();
     $scope.datesSelected = 'current';
     $scope.saved = localStorage.getItem('taskItems');
     $scope.taskItem = (localStorage.getItem('taskItems')!==null) ? 
-    JSON.parse($scope.saved) : [ {description: 'Why not add a task?', date: $scope.today, complete: false}];
+    JSON.parse($scope.saved) : [ {description: 'Why not add a task?', date: $scope.today.toISOString().substring(0,10), complete: false}];
     localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
     
     $scope.newTask = null;
@@ -825,24 +828,43 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         
     //date filter
     $scope.dateFilter = function(item) {
-        if (item.date!==null || item.date!==undefined) {
+        if (item.date===null || item.date===undefined) {
             if ($scope.datesSelected==='current') {
                 return item;
             }
             return false;
         }
-            var day = item.date.getDay(),
-            diff = item.date.getDate() - day + (day === 0 ? -6:1);
+            //console.log(item.date);
+            var day = $scope.today.getDay(),
+            diff = $scope.today.getDate() + day + (day === 0 ? -6:1);
             var temp = new Date();
             var wkBeg = new Date(temp.setDate(diff));
-        
+            var currentWkEnd = wkBeg.toISOString().substring(0,10);
+            //console.log(currentWkEnd); // 0123-56-89
+
         if ($scope.datesSelected==='current') {
-            if (wkBeg <= $scope.weekBeginning || item.date===null || item.date===undefined) {
+            if (item.date.substr(0,4) < currentWkEnd.substr(0,4)) {
                 return item;
+            } else if (item.date.substr(0,4) === currentWkEnd.substr(0,4)) {
+                if (item.date.substr(5,2) < currentWkEnd.substr(5,2)) {
+                    return item;
+                } else if (item.date.substr(5,2) === currentWkEnd.substr(5,2)) {
+                    if (item.date.substr(8,2) <= currentWkEnd.substr(8,2)) {
+                        return item;
+                    }
+                }
             }
         } else if ($scope.datesSelected==='future') {
-            if (wkBeg > $scope.weekBeginning) {
+            if (item.date.substr(0,4) > currentWkEnd.substr(0,4)) {
                 return item;
+            } else if (item.date.substr(0,4) === currentWkEnd.substr(0,4)) {
+                if (item.date.substr(5,2) > currentWkEnd.substr(5,2)) {
+                    return item;
+                } else if (item.date.substr(5,2) === currentWkEnd.substr(5,2)) {
+                    if (item.date.substr(8,2) > currentWkEnd.substr(8,2)) {
+                        return item;
+                    }
+                }
             }
         }
     };
@@ -925,7 +947,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
             $scope.newTaskCategory.name = 'Other';
         }
         if ($scope.newTaskDate === null || $scope.newTaskDate === '' || $scope.newTaskDate === undefined) {
-            $scope.newTaskDate = new Date($scope.today);
+            $scope.newTaskDate = $scope.today.toISOString().substring(0,10); // 'yyyy-MM-dd
         }
         
         //if created on a monday set updated=true - without this task could be deleted/un-completed by the check status method.
@@ -997,8 +1019,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
             count += taskItem.complete ? 0 : 1;
         });
         return count;
-  };
-        
+    };  
         
 	}
 ]);

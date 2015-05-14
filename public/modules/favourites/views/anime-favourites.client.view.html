@@ -1,0 +1,83 @@
+<section data-ng-controller="FavouritesController" data-ng-init="findAnime()" data-ng-show="authentication.user">
+    <div class="page-header">
+        <h1>Edit Anime Favourites</h1>
+    </div>
+    <div class="col-md-12">
+        <div class="favouriteAnime col-md-4">
+            <div class="favouriteHeader">
+                <a class="favouriteLink" href="/#!/animeitems">
+                    <h2>Anime</h2>
+                </a>
+            </div>
+            <div class="favouriteContent col-sm-12">
+            <form name="favouriteForm" class="form-horizontal" novalidate>
+                <fieldset>
+                    <div class="form-group">
+                        <label for="favouriteOne" class="col-md-4 control-label">Favourite 1</label>
+                        <!--<i class="fa fa-caret-down selectArrow"></i>-->
+                        <div class="col-md-8">
+                            <select id="favouriteOne" class="form-control" ng-model="favouriteOne" ng-options="anime.title for anime in animeitems track by anime._id">
+                                <option class="disabled" value="">Choose an anime</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="favouriteTwo" class="col-md-4 control-label">Favourite 2</label>
+                        <!--<i class="fa fa-caret-down selectArrow"></i>-->
+                        <div class="col-md-8">
+                            <select id="favouriteTwo" class="form-control" ng-model="favouriteTwo" ng-options="anime.title for anime in animeitems track by anime._id">
+                                <option class="disabled" value="">Choose an anime</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="favouriteThree" class="col-md-4 control-label">Favourite 3</label>
+                        <!--<i class="fa fa-caret-down selectArrow"></i>-->
+                        <div class="col-md-8">
+                            <select id="favouriteThree" class="form-control" ng-model="favouriteThree" ng-options="anime.title for anime in animeitems track by anime._id">
+                                <option class="disabled" value="">Choose an anime</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="favouriteFour" class="col-md-4 control-label">Favourite 4</label>
+                        <!--<i class="fa fa-caret-down selectArrow"></i>-->
+                        <div class="col-md-8">
+                            <select id="favouriteFour" class="form-control" ng-model="favouriteFour" ng-options="anime.title for anime in animeitems track by anime._id">
+                                <option class="disabled" value="">Choose an anime</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="favouriteFive" class="col-md-4 control-label">Favourite 5</label>
+                        <!--<i class="fa fa-caret-down selectArrow"></i>-->
+                        <div class="col-md-8">
+                            <select id="favouriteFive" class="form-control" ng-model="favouriteFive" ng-options="anime.title for anime in animeitems track by anime._id">
+                                <option class="disabled" value="">Choose an anime</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="favouriteActions text-center">
+                        <button class="btn btn-primary" ng-click="updateAnimeFavouriteOne();updateAnimeFavouriteTwo();updateAnimeFavouriteThree();updateAnimeFavouriteFour();updateAnimeFavouriteFive();" ng-disabled="favouriteForm.$invalid">Update favourite anime</button>
+&nbsp;-&nbsp;<a href="/#!/favourites">Back</a>
+                    </div>
+                </fieldset>
+            </form>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="favouriteHeader">
+                <p>
+                    <h2>Current favourite anime</h2>
+                </p>
+            </div>
+            <div class="favouriteContent col-sm-12">
+                <div class="list-group col-sm-12">
+                    <a data-ng-repeat="favouriteAnimeitem in favouriteAnimeitem" href="/#!/animeitems/{{favouriteAnimeitem.anime._id}}" list_Back="{{trustAsResourceUrl(favouriteAnimeitem.anime.image)}}" data-ng-model="favouriteAnimeitem" class="list-group-item">
+			             <h4 class="list-group-item-heading" data-ng-bind="favouriteAnimeitem.anime.title"></h4>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

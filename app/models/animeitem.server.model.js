@@ -12,7 +12,9 @@ var mongoose = require('mongoose'),
 var AnimeitemSchema = new Schema({
   title: {
     type: String,
+    unique: 'Title must be unique.',
     default: '',
+    required: 'Please fill in an anime title',
     trim: true
   },
   episodes: {

@@ -18,12 +18,6 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
             return $sce.trustAsResourceUrl(url);
         };
         
-        //repeat the trophy 5 times.
-        $scope.myNumber = 5;
-        $scope.getNumber = function(num) {
-            return new Array(num);   
-        }
-        
         // Find a list of Characters
 		$scope.findCharacters = function() {
 			$scope.characters = Characters.query();

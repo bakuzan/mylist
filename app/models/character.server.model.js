@@ -12,6 +12,7 @@ var mongoose = require('mongoose'),
 var CharacterSchema = new Schema({
 	name: {
 		type: String,
+        unique: 'Name must be unique.',
 		default: '',
 		required: 'Please fill Character name',
 		trim: true

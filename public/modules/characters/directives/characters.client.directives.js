@@ -36,7 +36,7 @@ angular.module('characters').directive('fileModel', ['$parse', function ($parse)
 }])
 .directive('enterTag', function () {
     return function (scope, element, attrs) {
-        element.bind("keydown keypress", function (event) {
+        element.bind('keydown keypress', function (event) {
             if(event.which === 13) {
                 scope.$apply(function (){
                     scope.$eval(attrs.enterTag);

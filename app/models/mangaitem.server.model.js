@@ -12,7 +12,9 @@ var mongoose = require('mongoose'),
 var MangaitemSchema = new Schema({
   title: {
     type: String,
+    unique: 'Title must be unique.',
     default: '',
+    required: 'Please fill in a manga title',
     trim: true
   },
   chapters: {

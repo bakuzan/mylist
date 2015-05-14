@@ -102,10 +102,11 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 		// Create new Character
 		$scope.create = function() {
             //console.log($scope.tagArray);
+            var character = new Characters();
             //Handle situation if objects not selected.
 			if (this.anime!==undefined && this.manga!==undefined && this.anime!==null && this.manga!==null) {
              // Create new Character object
-			 var character = new Characters ({
+			 character = new Characters ({
 				name: this.name,
                 image: $scope.imgPath,
                 anime: this.anime._id,
@@ -115,7 +116,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                 user: this.user
 			 });
             } else if (this.anime!==undefined && this.anime!==null) {
-             var character = new Characters ({
+             character = new Characters ({
 				name: this.name,
                 image: $scope.imgPath,
                 anime: this.anime._id,
@@ -125,7 +126,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                 user: this.user
 			 });
             } else if (this.manga!==undefined && this.manga!==null) {
-             var character = new Characters ({
+             character = new Characters ({
 				name: this.name,
                 image: $scope.imgPath,
                 anime: this.anime,
@@ -135,7 +136,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                 user: this.user
 			 });
             } else {
-             var character = new Characters ({
+             character = new Characters ({
 				name: this.name,
                 image: $scope.imgPath,
                 anime: this.anime,

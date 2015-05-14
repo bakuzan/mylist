@@ -182,7 +182,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
             $scope.newTaskCategory.name = 'Other';
         }
         if ($scope.newTaskDate === null || $scope.newTaskDate === '' || $scope.newTaskDate === undefined) {
-            $scope.newTaskDate = $scope.today.toISOString().substring(0,10); // 'yyyy-MM-dd
+            $scope.newTaskDate = $scope.today.toISOString().substring(0,10); // 'yyyy-MM-dd'
         }
         
         //if created on a monday set updated=true - without this task could be deleted/un-completed by the check status method.
@@ -216,7 +216,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         }
         $scope.newTask = '';
         $scope.newTaskDay = $scope.days;
-        $scope.newTaskDate = $scope.today.getDate();
+        $scope.newTaskDate = '';
         $scope.newTaskCategory = $scope.categories;
         $scope.newTaskRepeat = '';
         $scope.newTaskDaily = false;

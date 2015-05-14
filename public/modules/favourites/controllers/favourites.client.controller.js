@@ -21,7 +21,7 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
         // Find a list of Characters
 		$scope.findCharacters = function() {
 			$scope.characters = Characters.query();
-            console.log($scope.characters);
+            //console.log($scope.characters);
 		};
         
         // Find a list of Anime

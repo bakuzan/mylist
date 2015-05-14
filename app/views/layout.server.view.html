@@ -50,6 +50,7 @@
 			{% block content %}{% endblock %}
 		</section>
 	</section>
+    <footer data-ng-include="'/modules/core/views/footer.client.view.html'" data-ng-show="authentication.user"></footer>
 
 	<!--Embedding The User Object-->
 	<script type="text/javascript">

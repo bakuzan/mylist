@@ -55,6 +55,10 @@ ApplicationConfiguration.registerModule('characters');
 ApplicationConfiguration.registerModule('core');
 'use strict';
 
+// Use Applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('favourites');
+'use strict';
+
 // Use applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('mangaitems');
 'use strict';
@@ -440,10 +444,11 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 		// Create new Character
 		$scope.create = function() {
             //console.log($scope.tagArray);
+            var character = new Characters();
             //Handle situation if objects not selected.
 			if (this.anime!==undefined && this.manga!==undefined && this.anime!==null && this.manga!==null) {
              // Create new Character object
-			 var character = new Characters ({
+			 character = new Characters ({
 				name: this.name,
                 image: $scope.imgPath,
                 anime: this.anime._id,
@@ -453,7 +458,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                 user: this.user
 			 });
             } else if (this.anime!==undefined && this.anime!==null) {
-             var character = new Characters ({
+             character = new Characters ({
 				name: this.name,
                 image: $scope.imgPath,
                 anime: this.anime._id,
@@ -463,7 +468,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                 user: this.user
 			 });
             } else if (this.manga!==undefined && this.manga!==null) {
-             var character = new Characters ({
+             character = new Characters ({
 				name: this.name,
                 image: $scope.imgPath,
                 anime: this.anime,
@@ -473,7 +478,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                 user: this.user
 			 });
             } else {
-             var character = new Characters ({
+             character = new Characters ({
 				name: this.name,
                 image: $scope.imgPath,
                 anime: this.anime,
@@ -662,7 +667,20 @@ angular.module('characters').directive('fileModel', ['$parse', function ($parse)
       $animate.enabled(false, element);
     }
   };
-}]);
+}])
+.directive('enterTag', function () {
+    return function (scope, element, attrs) {
+        element.bind('keydown keypress', function (event) {
+            if(event.which === 13) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.enterTag);
+                });
+
+                event.preventDefault();
+            }
+        });
+    };
+});
 'use strict';
 
 //Characters service used to communicate Characters REST endpoints
@@ -705,46 +723,8 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
         .state('home', {
 			url: '/',
 			templateUrl: 'modules/core/views/home.client.view.html'
-		})
-        .state('favourites', {
-			url: '/favourites',
-			templateUrl: 'modules/core/views/favourites.client.view.html'
-		})
-        .state('animeFavourites', {
-			url: '/animefavourites',
-			templateUrl: 'modules/core/views/anime-favourites.client.view.html'
-		})
-        .state('mangaFavourites', {
-			url: '/mangafavourites',
-			templateUrl: 'modules/core/views/manga-favourites.client.view.html'
-		})
-        .state('characterFavourites', {
-			url: '/characterfavourites',
-			templateUrl: 'modules/core/views/character-favourites.client.view.html'
 		});
 	}
-]);
-'use strict';
-
-
-angular.module('core').controller('FavouritesController', ['$scope', 'Authentication', '$window', '$sce', 'Characters',
-	function($scope, Authentication, $window, $sce, Characters) {
-		// This provides Authentication context.
-		$scope.authentication = Authentication;
-        
-        $scope.myInterval = 2500; //for carousel
-        
-        //allow retreival of local resource
-        $scope.trustAsResourceUrl = function(url) {
-            return $sce.trustAsResourceUrl(url);
-        };
-        
-        // Find a list of Characters
-		$scope.findCharacters = function() {
-			$scope.characters = Characters.query();
-            console.log($scope.characters);
-		};
-    }
 ]);
 'use strict';
 
@@ -948,7 +928,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
             $scope.newTaskCategory.name = 'Other';
         }
         if ($scope.newTaskDate === null || $scope.newTaskDate === '' || $scope.newTaskDate === undefined) {
-            $scope.newTaskDate = $scope.today.toISOString().substring(0,10); // 'yyyy-MM-dd
+            $scope.newTaskDate = $scope.today.toISOString().substring(0,10); // 'yyyy-MM-dd'
         }
         
         //if created on a monday set updated=true - without this task could be deleted/un-completed by the check status method.
@@ -982,7 +962,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         }
         $scope.newTask = '';
         $scope.newTaskDay = $scope.days;
-        $scope.newTaskDate = $scope.today.getDate();
+        $scope.newTaskDate = '';
         $scope.newTaskCategory = $scope.categories;
         $scope.newTaskRepeat = '';
         $scope.newTaskDaily = false;
@@ -1190,6 +1170,137 @@ angular.module('core').service('Menus', [
 		this.addMenu('topbar');
 	}
 ]);
+'use strict';
+
+// Setting up route
+angular.module('favourites').config(['$stateProvider', '$urlRouterProvider',
+	function($stateProvider, $urlRouterProvider) {
+		// Redirect to home view when route not found
+		$urlRouterProvider.otherwise('/signin');
+
+		// Home state routing
+		$stateProvider
+        .state('favourites', {
+			url: '/favourites',
+			templateUrl: 'modules/favourites/views/favourites.client.view.html'
+		})
+        .state('animeFavourites', {
+			url: '/animefavourites',
+			templateUrl: 'modules/favourites/views/anime-favourites.client.view.html'
+		})
+        .state('mangaFavourites', {
+			url: '/mangafavourites',
+			templateUrl: 'modules/favourites/views/manga-favourites.client.view.html'
+		})
+        .state('characterFavourites', {
+			url: '/characterfavourites',
+			templateUrl: 'modules/favourites/views/character-favourites.client.view.html'
+		});
+	}
+]);
+'use strict';
+
+
+angular.module('favourites').controller('FavouritesController', ['$scope', 'Authentication', '$window', '$sce', 'Characters', 'Animeitems',
+	function($scope, Authentication, $window, $sce, Characters, Animeitems) {
+		// This provides Authentication context.
+		$scope.authentication = Authentication;
+        
+        $scope.myInterval = 2500; //for carousel
+        $scope.today = new Date().toISOString();        
+        $scope.saved = localStorage.getItem('favouriteAnimeitems'); 
+        $scope.favouriteAnimeitem = (localStorage.getItem('favouriteAnimeitems')!==null) ? 
+        JSON.parse($scope.saved) : [{rank: '1', date: $scope.today, anime: { 'title': 'Steins;Gate' }},{rank: '2', date: $scope.today, anime: { 'title': 'Kiseijuu' }},{rank: '3', date: $scope.today, anime: { 'title': 'Sidonia no Kishi' }},{rank: '4', date: $scope.today, anime: { 'title': 'Code Geass R2' }},{rank: '5', date: $scope.today, anime: { 'title': 'Kill la Kill' }}]; 
+        localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
+        
+        //allow retreival of local resource
+        $scope.trustAsResourceUrl = function(url) {
+            return $sce.trustAsResourceUrl(url);
+        };
+        
+        // Find a list of Characters
+		$scope.findCharacters = function() {
+			$scope.characters = Characters.query();
+            //console.log($scope.characters);
+		};
+        
+        // Find a list of Anime
+		$scope.findAnime = function() {
+			$scope.animeitems = Animeitems.query();
+            //console.log($scope.characters);
+		};
+        
+        $scope.updateAnimeFavouriteOne = function() {
+            if ($scope.favouriteOne) {
+                angular.forEach($scope.favouriteAnimeitem, function (favouriteAnimeitem) {
+                    if (favouriteAnimeitem.rank === '1') {
+                        favouriteAnimeitem.anime = $scope.favouriteOne;
+                        favouriteAnimeitem.date = $scope.today;
+                    }
+                });
+                localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
+            } 
+        };
+        $scope.updateAnimeFavouriteTwo = function() {
+            if ($scope.favouriteTwo) {
+                angular.forEach($scope.favouriteAnimeitem, function (favouriteAnimeitem) {
+                    if (favouriteAnimeitem.rank === '2') {
+                        favouriteAnimeitem.anime = $scope.favouriteTwo;
+                        favouriteAnimeitem.date = $scope.today;
+                    }
+                });
+                localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
+            } 
+        };
+        $scope.updateAnimeFavouriteThree = function() {
+            if ($scope.favouriteThree) {
+                angular.forEach($scope.favouriteAnimeitem, function (favouriteAnimeitem) {
+                    if (favouriteAnimeitem.rank === '3') {
+                        favouriteAnimeitem.anime = $scope.favouriteThree;
+                        favouriteAnimeitem.date = $scope.today;
+                    }
+                });
+                localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
+            } 
+        };
+        $scope.updateAnimeFavouriteFour = function() {
+            if ($scope.favouriteFour) {
+                angular.forEach($scope.favouriteAnimeitem, function (favouriteAnimeitem) {
+                    if (favouriteAnimeitem.rank === '4') {
+                        favouriteAnimeitem.anime = $scope.favouriteFour;
+                        favouriteAnimeitem.date = $scope.today;
+                    }
+                });
+                localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
+            } 
+        };
+        $scope.updateAnimeFavouriteFive = function() {
+            if ($scope.favouriteFive) {
+                angular.forEach($scope.favouriteAnimeitem, function (favouriteAnimeitem) {
+                    if (favouriteAnimeitem.rank === '5') {
+                        favouriteAnimeitem.anime = $scope.favouriteFive;
+                        favouriteAnimeitem.date = $scope.today;
+                    }
+                });
+                localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
+            } 
+        };
+    
+    }
+]);
+'use strict';
+
+angular.module('favourites').directive('favouriteBack', function(){
+    return function(scope, element, attrs){
+        var url = attrs.favouriteBack;
+        element.css({
+            'background-image': 'url(' + url +')',
+            'background-size' : '100%',
+            'background-repeat': 'no-repeat',
+            'background-position': 'right'
+        });
+    };
+});
 'use strict';
 
 // Configuring the Articles module

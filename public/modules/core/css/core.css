@@ -388,8 +388,8 @@ footer a {
 /** FAVOURITES STYLING **/
 
 .favouriteHeader {
-  padding-bottom: 9px;
-  margin: 40px 0 20px;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
   border-bottom: 1px solid #eee; 
   display: inline-block;
   white-space: nowrap;
@@ -415,4 +415,12 @@ footer a {
     cursor: pointer;
     background-color: #e6e6e6;
     font-weight: bold;
+}
+
+.keepCursor {
+    cursor: default;
+}
+
+.clickable {
+    cursor: pointer;
 }

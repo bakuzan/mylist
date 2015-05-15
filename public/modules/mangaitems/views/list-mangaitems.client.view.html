@@ -34,7 +34,7 @@
         </div>
         <br/>
         <div class="input-group" ng-click="sortReverse = !sortReverse">
-		  <div class="input-group-addon">
+		  <div class="input-group-addon clickable">
 		      <i class="fa" ng-class="sortReverse ? 'fa-sort-amount-desc' : 'fa-sort-amount-asc' "></i>
           </div>
             <input type="text" class="form-control" value="Ascending" ng-show="!sortReverse" disabled>
@@ -76,8 +76,8 @@
         </div>
         <br/>
         <div class="input-group">
-            <div class="input-group-addon">
-                <i class="fa fa-star" data-ng-click="ratingLevel=undefined"></i>
+            <div class="input-group-addon clickable" data-ng-click="ratingLevel=undefined">
+                <i class="fa fa-star"></i>
             </div>
                <rating class="form-control rating" data-ng-model="ratingLevel" style="color: blue;" readonly="false" max="maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></rating>
             <div class="input-group-addon">

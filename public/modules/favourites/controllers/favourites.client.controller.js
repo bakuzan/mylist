@@ -1,7 +1,7 @@
 'use strict';
 
 
-angular.module('favourites').controller('FavouritesController', ['$scope', 'Authentication', '$window', '$sce', 'Characters', 'Animeitems', 'Mangaitems',
+angular.module('favourites').controller('FavouritesController', ['$scope', 'Authentication', '$window', '$sce', 'Animeitems', 'Mangaitems',
 	function($scope, Authentication, $window, $sce, Animeitems, Mangaitems) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;

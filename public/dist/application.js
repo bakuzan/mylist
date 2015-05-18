@@ -4,7 +4,7 @@
 var ApplicationConfiguration = (function() {
 	// Init module configuration options
 	var applicationModuleName = 'mylist';
-	var applicationModuleVendorDependencies = ['ngResource', 'ngCookies',  'ngAnimate',  'ngTouch',  'ngSanitize',  'ui.router', 'ui.bootstrap', 'ui.utils', 'angularFileUpload'];
+	var applicationModuleVendorDependencies = ['ngResource', 'ngCookies',  'ngAnimate',  'ngTouch',  'ngSanitize',  'ui.router', 'ui.bootstrap', 'ui.utils', 'angularFileUpload', 'angularMoment'];
 
 	// Add a new vertical module
 	var registerModule = function(moduleName, dependencies) {
@@ -104,10 +104,11 @@ angular.module('animeitems').config(['$stateProvider',
 'use strict';
 
 // Animeitems controller
-angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window) {
+angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'moment',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, moment) {
 		$scope.authentication = Authentication;
         
+        $scope.isList = true; //list view as default.
         $scope.sortType = 'latest'; //default sort type
 	    $scope.sortReverse = true; // default sort order
         $scope.finalNumbers = false; //default show status of final number fields in edit view.
@@ -189,13 +190,21 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		$scope.update = function() {
 			var animeitem = $scope.animeitem;
             
-            console.log($scope.imgPath);
-            console.log(animeitem.image);
+            //console.log($scope.imgPath);
+            //console.log(animeitem.image);
             if ($scope.imgPath!==undefined && $scope.imgPath!==null && $scope.imgPath!=='') {
                 animeitem.image = $scope.imgPath;
             }
-            console.log($scope.imgPath);
-            console.log(animeitem.image);
+            //console.log($scope.imgPath);
+            //console.log(animeitem.image);
+            
+            //handle end date
+            if (animeitem.episodes===animeitem.finalEpisode) {
+                if (animeitem.end===undefined) {
+                    animeitem.end = new Date().toISOString().substring(0,10);
+                    //console.log(animeitem.end);
+                }
+            }
             
             //handle status: completed.
             if(animeitem.end!==undefined) {
@@ -243,6 +252,19 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             console.log('file is ' + JSON.stringify(file));
             var uploadUrl = '/fileUploadAnime';
             fileUpload.uploadFileToUrl(file, uploadUrl);
+        };
+        
+        //latest date display format.
+        $scope.latestDate = function(latest) {
+//          console.log(latest);
+            var current = moment(latest).fromNow();
+            
+            if (current.indexOf('hours') > -1) {
+                current = 'Today';
+            } else if (current==='1 day ago') {
+                current = 'Yesterday';
+            }
+            return current;
         };
 	}
 ]);
@@ -347,6 +369,8 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window) {
 		$scope.authentication = Authentication;
         
+        $scope.isList = true; //show list? or carousel.
+        $scope.myInterval = 2500; //carousel timer.
         $scope.sortType = 'name'; //default sort type
 	    $scope.sortReverse = false; // default sort order
         $scope.imgPath = ''; //image path
@@ -817,11 +841,14 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         }
             //console.log(item.date);
             var day = $scope.today.getDay(),
-            diff = $scope.today.getDate() + day + (day === 0 ? -6:1);
+            diff = $scope.today.getDate() - day + (day === 0 ? 0:7);
             var temp = new Date();
-            var wkBeg = new Date(temp.setDate(diff));
-            var currentWkEnd = wkBeg.toISOString().substring(0,10);
-            //console.log(currentWkEnd); // 0123-56-89
+            var wkEnd = new Date(temp.setDate(diff));
+            var currentWkEnd = wkEnd.toISOString().substring(0,10);
+//            console.log('day: ' + day);
+//            console.log('date: ' + $scope.today.getDate());
+//            console.log('diff: ' + diff);
+              console.log('wk-end: ' + currentWkEnd); // 0123-56-89
 
         if ($scope.datesSelected==='current') {
             if (item.date.substr(0,4) < currentWkEnd.substr(0,4)) {
@@ -862,7 +889,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     $scope.checkStatus = function() {
         //var day = new Date('2015-05-04').getDay();
         var day = $scope.today.getDay();
-        console.log(day);
+        //console.log(day);
         console.log($scope.taskItem);
         //Is it monday?
         if (day===1) {
@@ -1201,7 +1228,7 @@ angular.module('favourites').config(['$stateProvider', '$urlRouterProvider',
 'use strict';
 
 
-angular.module('favourites').controller('FavouritesController', ['$scope', 'Authentication', '$window', '$sce', 'Characters', 'Animeitems', 'Mangaitems',
+angular.module('favourites').controller('FavouritesController', ['$scope', 'Authentication', '$window', '$sce', 'Animeitems', 'Mangaitems',
 	function($scope, Authentication, $window, $sce, Animeitems, Mangaitems) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
@@ -1506,13 +1533,21 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		$scope.update = function() {
 			var mangaitem = $scope.mangaitem;
             
-            console.log($scope.imgPath);
-            console.log(mangaitem.image);
+            //console.log($scope.imgPath);
+            //console.log(mangaitem.image);
             if ($scope.imgPath!==undefined && $scope.imgPath!==null && $scope.imgPath!=='') {
                 mangaitem.image = $scope.imgPath;
             }
-            console.log($scope.imgPath);
-            console.log(mangaitem.image);
+            //console.log($scope.imgPath);
+            //console.log(mangaitem.image);
+            
+            //handle end date
+            if (mangaitem.chapters===mangaitem.finalChapter && mangaitem.volumes===mangaitem.finalVolume) {
+                if (mangaitem.end===undefined) {
+                    mangaitem.end = new Date().toISOString().substring(0,10);
+                    //console.log(animeitem.end);
+                }
+            }
             
             //handle status: completed.
             if(mangaitem.end!==undefined) {

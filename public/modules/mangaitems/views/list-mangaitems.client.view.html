@@ -79,7 +79,7 @@
             <div class="input-group-addon clickable" data-ng-click="ratingLevel=undefined">
                 <i class="fa fa-star"></i>
             </div>
-               <rating class="form-control rating" data-ng-model="ratingLevel" style="color: blue;" readonly="false" max="maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></rating>
+               <rating class="form-control rating clickable" data-ng-model="ratingLevel" style="color: blue;" readonly="false" max="maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></rating>
             <div class="input-group-addon">
                 <span data-ng-show="overStar!=null" class="label" ng-class="{'label-warning': percent<40, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}">{{percent}}%</span>
             </div>

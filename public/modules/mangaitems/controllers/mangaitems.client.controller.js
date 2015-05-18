@@ -90,13 +90,21 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		$scope.update = function() {
 			var mangaitem = $scope.mangaitem;
             
-            console.log($scope.imgPath);
-            console.log(mangaitem.image);
+            //console.log($scope.imgPath);
+            //console.log(mangaitem.image);
             if ($scope.imgPath!==undefined && $scope.imgPath!==null && $scope.imgPath!=='') {
                 mangaitem.image = $scope.imgPath;
             }
-            console.log($scope.imgPath);
-            console.log(mangaitem.image);
+            //console.log($scope.imgPath);
+            //console.log(mangaitem.image);
+            
+            //handle end date
+            if (mangaitem.chapters===mangaitem.finalChapter && mangaitem.volumes===mangaitem.finalVolume) {
+                if (mangaitem.end===undefined) {
+                    mangaitem.end = new Date().toISOString().substring(0,10);
+                    //console.log(animeitem.end);
+                }
+            }
             
             //handle status: completed.
             if(mangaitem.end!==undefined) {

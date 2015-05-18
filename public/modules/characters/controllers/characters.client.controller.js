@@ -5,6 +5,8 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window) {
 		$scope.authentication = Authentication;
         
+        $scope.isList = true; //show list? or carousel.
+        $scope.myInterval = 2500; //carousel timer.
         $scope.sortType = 'name'; //default sort type
 	    $scope.sortReverse = false; // default sort order
         $scope.imgPath = ''; //image path

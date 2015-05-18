@@ -1,8 +1,20 @@
 <section data-ng-controller="AnimeitemsController" data-ng-init="find()" data-ng-show="authentication.user">
     <div class="page-header">
+        <div class="viewButtons text-right pull-right">
+            <label class="btn btn-primary" ng-model="isList" btn-radio="'true'" uncheckable>List</label>
+            <label class="btn btn-primary" ng-model="isList" btn-radio="'false'" uncheckable>Stats</label>
+        </div>
         <h1>Anime</h1>
     </div>
-    <div class="form-group col-sm-4">
+    <div class="col-md-12" ng-hide="isList">
+        <div class="col-md-8">
+            <h2>Statistics</h2>
+            <div class="col-md-12" ng-repeat="animeitem in animeitems | unique: 'end.substring(0,4)' | orderBy: 'end.substring(0,4)'">
+                <span>{{animeitem.end.substring(0,4)}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group col-sm-4" ng-show="isList">
        <div class="input-group">
             <div class="input-group-addon">
                 <i class="fa fa-search"></i>
@@ -84,11 +96,11 @@
             </div>
         </div>
     </div>
-    <div class="list-group col-sm-8">
+    <div class="list-group col-sm-8" ng-show="isList">
         <a data-ng-repeat="animeitem in animeitems | orderBy: sortType:sortReverse | filter: search | filter: ratingFilter" data-ng-href="#!/animeitems/{{animeitem._id}}" list_Back="{{trustAsResourceUrl(animeitem.image)}}" class="list-group-item">
 			<small class="list-group-item-text">
-                Latest:
-				<span data-ng-bind="animeitem.latest | date:'yyyy-MMM-dd'"></span>
+<!--				<span data-ng-bind="animeitem.latest | date:'yyyy-MMM-dd'"></span>-->
+                <time title="{{animeitem.latest | date: 'yyyy-MMM-dd'}}" ng-bind="latestDate(animeitem.latest)"></time>
 			</small>
 			<h4 class="list-group-item-heading" data-ng-bind="animeitem.title"></h4>
             <p class="list-group-item-text">

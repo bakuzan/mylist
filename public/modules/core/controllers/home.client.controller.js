@@ -71,11 +71,14 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         }
             //console.log(item.date);
             var day = $scope.today.getDay(),
-            diff = $scope.today.getDate() + day + (day === 0 ? -6:1);
+            diff = $scope.today.getDate() - day + (day === 0 ? 0:7);
             var temp = new Date();
-            var wkBeg = new Date(temp.setDate(diff));
-            var currentWkEnd = wkBeg.toISOString().substring(0,10);
-            //console.log(currentWkEnd); // 0123-56-89
+            var wkEnd = new Date(temp.setDate(diff));
+            var currentWkEnd = wkEnd.toISOString().substring(0,10);
+//            console.log('day: ' + day);
+//            console.log('date: ' + $scope.today.getDate());
+//            console.log('diff: ' + diff);
+              console.log('wk-end: ' + currentWkEnd); // 0123-56-89
 
         if ($scope.datesSelected==='current') {
             if (item.date.substr(0,4) < currentWkEnd.substr(0,4)) {
@@ -116,7 +119,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     $scope.checkStatus = function() {
         //var day = new Date('2015-05-04').getDay();
         var day = $scope.today.getDay();
-        console.log(day);
+        //console.log(day);
         console.log($scope.taskItem);
         //Is it monday?
         if (day===1) {

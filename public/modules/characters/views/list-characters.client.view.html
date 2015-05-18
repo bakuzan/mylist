@@ -1,5 +1,9 @@
 <section data-ng-controller="CharactersController" data-ng-init="find()" data-ng-show="authentication.user">
     <div class="page-header">
+        <div class="viewButtons text-right pull-right">
+            <label class="btn btn-primary" ng-model="isList" btn-radio="'true'" uncheckable>List</label>
+            <label class="btn btn-primary" ng-model="isList" btn-radio="'false'" uncheckable>Carousel</label>
+        </div>
         <h1>Characters</h1>
     </div>
         <div class="form-group col-sm-4">
@@ -64,8 +68,9 @@
             </div>
             <input type="text" class="form-control" placeholder="search voice" ng-model="search.voice" typeahead="voice for voice in voiceActors | filter: $viewValue "><!-- -->
 	    </div>
+        <br/>
     </div>
-    <div class="list-group col-sm-8">
+    <div class="list-group col-sm-8" data-ng-show="isList">
         <a data-ng-repeat="character in characters | orderBy: sortType:sortReverse | filter: search | filter: mediaFilter | filter: tagFilter" data-ng-href="#!/characters/{{character._id}}" character_Back="{{trustAsResourceUrl(character.image)}}" class="list-group-item col-sm-6" style="height: 150px;">
 			<h4 class="darkBorderedFontHeading" data-ng-bind="character.name"></h4>
             <p class="list-group-item-text">
@@ -76,6 +81,18 @@
             <span ng-repeat="tag in character.tags" data-ng-init="createUsedTags(tag.text)"></span><!-- for typeahead -->
             <span data-ng-init="createVoices(character.voice)"></span><!-- for typeahead -->
         </a>
+    </div>
+    <div class="characterCarousel col-sm-8" style="height: 300px;" data-ng-hide="isList">
+        <carousel interval="myInterval" style="height: 300px;" disable-ng-animate>
+            <slide ng-repeat="character in characters | filter: search | filter: mediaFilter | filter: tagFilter" active="character.active">
+                <a href="/#!/characters/{{character._id}}">
+                    <img ng-src="{{trustAsResourceUrl(character.image)}}" style="height: 300px; width: auto; margin: auto;">
+                    <div class="carousel-caption">
+                        <span class="darkBorderedFontHeading"> {{character.name}} </span>
+                    </div>
+                </a>
+            </slide>
+        </carousel>
     </div>
     <div class="alert alert-warning text-center" data-ng-hide="!characters.$resolved || characters.length">
     	No Characters yet, why don't you <a href="/#!/characters/create">create one</a>?

@@ -16,7 +16,7 @@
                         <label for="favouriteMangaOne" class="col-md-4 control-label">Favourite 1</label>
                         <!--<i class="fa fa-caret-down selectArrow"></i>-->
                         <div class="col-md-8">
-                            <select id="favouriteMangaOne" class="form-control" ng-model="favouriteMangaOne" ng-options="manga.title for manga in mangaitems track by manga._id">
+                            <select id="favouriteMangaOne" class="form-control" ng-model="favouriteMangaOne" ng-options="manga.title for manga in mangaitems | orderBy: 'title'">
                                 <option class="disabled" value="">Choose a manga</option>
                             </select>
                         </div>
@@ -25,7 +25,7 @@
                         <label for="favouriteMangaTwo" class="col-md-4 control-label">Favourite 2</label>
                         <!--<i class="fa fa-caret-down selectArrow"></i>-->
                         <div class="col-md-8">
-                            <select id="favouriteMangaTwo" class="form-control" ng-model="favouriteMangaTwo" ng-options="manga.title for manga in mangaitems track by manga._id">
+                            <select id="favouriteMangaTwo" class="form-control" ng-model="favouriteMangaTwo" ng-options="manga.title for manga in mangaitems | orderBy: 'title'">
                                 <option class="disabled" value="">Choose a manga</option>
                             </select>
                         </div>
@@ -34,7 +34,7 @@
                         <label for="favouriteMangaThree" class="col-md-4 control-label">Favourite 3</label>
                         <!--<i class="fa fa-caret-down selectArrow"></i>-->
                         <div class="col-md-8">
-                            <select id="favouriteMangaThree" class="form-control" ng-model="favouriteMangaThree" ng-options="manga.title for manga in mangaitems track by manga._id">
+                            <select id="favouriteMangaThree" class="form-control" ng-model="favouriteMangaThree" ng-options="manga.title for manga in mangaitems | orderBy: 'title'">
                                 <option class="disabled" value="">Choose a manga</option>
                             </select>
                         </div>
@@ -43,7 +43,7 @@
                         <label for="favouriteMangaFour" class="col-md-4 control-label">Favourite 4</label>
                         <!--<i class="fa fa-caret-down selectArrow"></i>-->
                         <div class="col-md-8">
-                            <select id="favouriteMangaFour" class="form-control" ng-model="favouriteMangaFour" ng-options="manga.title for manga in mangaitems track by manga._id">
+                            <select id="favouriteMangaFour" class="form-control" ng-model="favouriteMangaFour" ng-options="manga.title for manga in mangaitems | orderBy: 'title'">
                                 <option class="disabled" value="">Choose a manga</option>
                             </select>
                         </div>
@@ -52,7 +52,7 @@
                         <label for="favouriteMangaFive" class="col-md-4 control-label">Favourite 5</label>
                         <!--<i class="fa fa-caret-down selectArrow"></i>-->
                         <div class="col-md-8">
-                            <select id="favouriteMangaFive" class="form-control" ng-model="favouriteMangaFive" ng-options="manga.title for manga in mangaitems track by manga._id">
+                            <select id="favouriteMangaFive" class="form-control" ng-model="favouriteMangaFive" ng-options="manga.title for manga in mangaitems | orderBy: 'title'">
                                 <option class="disabled" value="">Choose a manga</option>
                             </select>
                         </div>

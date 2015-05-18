@@ -31,7 +31,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : characterForm.anime.$invalid && !characterForm.anime.$pristine }">
                     <label for="anime" class="col-md-2 control-label">Anime</label>
                     <div class="col-md-6">
-                        <select class="form-control" data-ng-options="anime.title for anime in animeitems track by anime._id" data-ng-model="character.anime" id="anime" name="anime">
+                        <select class="form-control" data-ng-options="anime.title for anime in animeitems | orderBy: 'title' track by anime._id" data-ng-model="character.anime" id="anime" name="anime">
                             <option value="">-- Link to an anime --</option>
                         </select>
                     </div>
@@ -43,7 +43,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : characterForm.manga.$invalid && !characterForm.manga.$pristine }">
                     <label for="manga" class="col-md-2 control-label">Manga</label>
                     <div class="col-md-6">
-                        <select class="form-control" data-ng-options="manga.title for manga in mangaitems track by manga._id" data-ng-model="character.manga" id="manga" name="manga">
+                        <select class="form-control" data-ng-options="manga.title for manga in mangaitems | orderBy: 'title' track by manga._id" data-ng-model="character.manga" id="manga" name="manga">
                             <option value="">-- Link to a manga --</option>
                         </select>
                     </div>

@@ -1,10 +1,11 @@
 'use strict';
 
 // Animeitems controller
-angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window) {
+angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'moment',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, moment) {
 		$scope.authentication = Authentication;
         
+        $scope.isList = true; //list view as default.
         $scope.sortType = 'latest'; //default sort type
 	    $scope.sortReverse = true; // default sort order
         $scope.finalNumbers = false; //default show status of final number fields in edit view.
@@ -86,13 +87,21 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		$scope.update = function() {
 			var animeitem = $scope.animeitem;
             
-            console.log($scope.imgPath);
-            console.log(animeitem.image);
+            //console.log($scope.imgPath);
+            //console.log(animeitem.image);
             if ($scope.imgPath!==undefined && $scope.imgPath!==null && $scope.imgPath!=='') {
                 animeitem.image = $scope.imgPath;
             }
-            console.log($scope.imgPath);
-            console.log(animeitem.image);
+            //console.log($scope.imgPath);
+            //console.log(animeitem.image);
+            
+            //handle end date
+            if (animeitem.episodes===animeitem.finalEpisode) {
+                if (animeitem.end===undefined) {
+                    animeitem.end = new Date().toISOString().substring(0,10);
+                    //console.log(animeitem.end);
+                }
+            }
             
             //handle status: completed.
             if(animeitem.end!==undefined) {
@@ -140,6 +149,19 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             console.log('file is ' + JSON.stringify(file));
             var uploadUrl = '/fileUploadAnime';
             fileUpload.uploadFileToUrl(file, uploadUrl);
+        };
+        
+        //latest date display format.
+        $scope.latestDate = function(latest) {
+//          console.log(latest);
+            var current = moment(latest).fromNow();
+            
+            if (current.indexOf('hours') > -1) {
+                current = 'Today';
+            } else if (current==='1 day ago') {
+                current = 'Yesterday';
+            }
+            return current;
         };
 	}
 ]);

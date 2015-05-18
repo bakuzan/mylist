@@ -1,8 +1,8 @@
 'use strict';
 
 // Mangaitems controller
-angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'fileUpload', '$sce', '$window',
-	function($scope, $stateParams, $location, Authentication, Mangaitems, fileUpload, $sce, $window) {
+angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'fileUpload', '$sce', '$window', 'moment',
+	function($scope, $stateParams, $location, Authentication, Mangaitems, fileUpload, $sce, $window, moment) {
 		$scope.authentication = Authentication;
         
         
@@ -151,14 +151,17 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             fileUpload.uploadFileToUrl(file, uploadUrl);
         };
         
-        /*set image path
-        $scope.imagePath = function(file) {
-            //var titleLower = file.toLowerCase();
-            //console.log(titleLower);
-            //var tmpName = titleLower.replace(/ /g, '-');
-            //console.log(tmpName);
-            $scope.imgPath = '/modules/mangaitems/img/' + file; //c:/mylist/whispering-lowlands-3953/public
+        //latest date display format.
+        $scope.latestDate = function(latest) {
+//          console.log(latest);
+            var current = moment(latest).fromNow();
+            
+            if (current.indexOf('hours') > -1) {
+                current = 'Today';
+            } else if (current==='1 day ago') {
+                current = 'Yesterday';
+            }
+            return current;
         };
-        */
 	}
 ]);

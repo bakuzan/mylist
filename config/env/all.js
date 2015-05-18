@@ -30,7 +30,6 @@ module.exports = {
                 'public/lib/ng-file-upload/angular-file-upload.min.js',
                 'public/lib/ng-file-upload/angular-file-upload-shim.min.js',
                 'public/lib/moment/min/moment.min.js',
-                'public/lib/moment-timezone/moment-timezone.js',
                 'public/lib/angular-moment/angular-moment.min.js'
                 
 			]

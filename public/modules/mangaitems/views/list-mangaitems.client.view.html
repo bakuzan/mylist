@@ -88,8 +88,8 @@
     <div class="list-group col-sm-8">
         <a data-ng-repeat="mangaitem in mangaitems | orderBy: sortType:sortReverse | filter: search | filter: ratingFilter" data-ng-href="#!/mangaitems/{{mangaitem._id}}" list_Back="{{trustAsResourceUrl(mangaitem.image)}}" class="list-group-item">
 			<small class="list-group-item-text">
-                Latest:
-				<span data-ng-bind="mangaitem.latest | date:'yyyy-MMM-dd'"></span>
+                <time title="{{mangaitem.latest | date: 'yyyy-MMM-dd'}}" ng-bind="latestDate(mangaitem.latest)"></time>
+<!--				<span data-ng-bind="mangaitem.latest | date:'yyyy-MMM-dd'"></span>-->
 			</small>
 			<h4 class="list-group-item-heading" data-ng-bind="mangaitem.title"></h4>
             <p class="list-group-item-text">

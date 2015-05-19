@@ -108,17 +108,69 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, moment) {
 		$scope.authentication = Authentication;
         
+        // If user is not signed in then redirect back to signin.
+		if (!$scope.authentication.user) $location.path('/signin');
+        
+        $scope.view = 'list'; //dynamic page title.
         $scope.isList = true; //list view as default.
+        $scope.showDetail = false; //show month detail.
         $scope.sortType = 'latest'; //default sort type
 	    $scope.sortReverse = true; // default sort order
         $scope.finalNumbers = false; //default show status of final number fields in edit view.
         $scope.ratingLevel = undefined; //default rating filter
         $scope.maxRating = 10; //maximum rating
         $scope.imgPath = ''; //image path
-
+        
         //allow retreival of local resource
         $scope.trustAsResourceUrl = function(url) {
             return $sce.trustAsResourceUrl(url);
+        };
+        
+        $scope.months = [
+            { number: '01', text: 'January' },
+            { number: '02', text: 'February' },
+            { number: '03', text: 'March' },
+            { number: '04', text: 'April' },
+            { number: '05', text: 'May' },
+            { number: '06', text: 'June' },
+            { number: '07', text: 'July' },
+            { number: '08', text: 'August' },
+            { number: '09', text: 'September' },
+            { number: '10', text: 'October' },
+            { number: '11', text: 'November' },
+            { number: '12', text: 'December' }
+        ];
+        
+        //ended stat month filter
+        $scope.endedMonth = function(year, month){
+            return function(item) {
+                if (item.end!==undefined) {
+                    if (item.end.substring(0,4)===year) {
+                        if (item.end.substr(5,2)===month) {
+                            return item;
+                        }
+                    }
+                }
+            };
+        };
+        
+        //show month detail.
+        $scope.monthDetail = function(year, month) {
+//            console.log(year+'-'+month);
+            //if the one already selected is clicked, hide the detail.
+            if ($scope.detailYear===year && $scope.detailMonth===month) {
+                $scope.showDetail = false;
+            } else {
+                $scope.detailYear = year;
+                $scope.detailMonth = month;
+                //get month name also, cause why not.
+                angular.forEach($scope.months, function(mmm) {
+                    if ($scope.detailMonth===mmm.number) {
+                        $scope.detailMonthName = mmm.text;
+                    }
+                });
+                $scope.showDetail = true;
+            }
         };
         
         //rating 'tooltip' function
@@ -257,14 +309,18 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         //latest date display format.
         $scope.latestDate = function(latest) {
 //          console.log(latest);
-            var current = moment(latest).fromNow();
+            var today = moment(new Date());
+            var latestDate = moment(latest);
+            var diff = today.diff(latestDate, 'days');
             
-            if (current.indexOf('hours') > -1) {
-                current = 'Today';
-            } else if (current==='1 day ago') {
-                current = 'Yesterday';
+            //for 0 and 1 day(s) ago use the special term.
+            if (diff===0) {
+                return 'Today';
+            } else if (diff===1) {
+                return 'Yesterday';
+            } else {
+                return diff + ' days ago.';
             }
-            return current;
         };
 	}
 ]);
@@ -368,6 +424,9 @@ angular.module('characters').config(['$stateProvider',
 angular.module('characters').controller('CharactersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Characters', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window',
 	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window) {
 		$scope.authentication = Authentication;
+        
+        // If user is not signed in then redirect back to signin.
+		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.isList = true; //show list? or carousel.
         $scope.myInterval = 2500; //carousel timer.
@@ -771,10 +830,13 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
 'use strict';
 
 
-angular.module('core').controller('HomeController', ['$scope', 'Authentication', '$window',
-	function($scope, Authentication, $window) {
+angular.module('core').controller('HomeController', ['$scope', 'Authentication', '$window', '$location',
+	function($scope, Authentication, $window, $location) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
+        
+        // If user is not signed in then redirect back to signin.
+		if (!$scope.authentication.user) $location.path('/signin');
     
     $scope.isCollapseFilter = false;
     $scope.isCollapseAction = true;
@@ -1228,10 +1290,13 @@ angular.module('favourites').config(['$stateProvider', '$urlRouterProvider',
 'use strict';
 
 
-angular.module('favourites').controller('FavouritesController', ['$scope', 'Authentication', '$window', '$sce', 'Animeitems', 'Mangaitems',
-	function($scope, Authentication, $window, $sce, Animeitems, Mangaitems) {
+angular.module('favourites').controller('FavouritesController', ['$scope', 'Authentication', '$window', '$sce', 'Animeitems', 'Mangaitems', '$location',
+	function($scope, Authentication, $window, $sce, Animeitems, Mangaitems, $location) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
+        
+        // If user is not signed in then redirect back to signin.
+		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.today = new Date().toISOString();
         //Anime Favourites
@@ -1448,6 +1513,8 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 	function($scope, $stateParams, $location, Authentication, Mangaitems, fileUpload, $sce, $window, moment) {
 		$scope.authentication = Authentication;
         
+        // If user is not signed in then redirect back to signin.
+		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.sortType = 'latest'; //default sort type
 	    $scope.sortReverse = true; // default sort order
@@ -1597,14 +1664,18 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         //latest date display format.
         $scope.latestDate = function(latest) {
 //          console.log(latest);
-            var current = moment(latest).fromNow();
+            var today = moment(new Date());
+            var latestDate = moment(latest);
+            var diff = today.diff(latestDate, 'days');
             
-            if (current.indexOf('hours') > -1) {
-                current = 'Today';
-            } else if (current==='1 day ago') {
-                current = 'Yesterday';
+            //for 0 and 1 day(s) ago use the special term.
+            if (diff===0) {
+                return 'Today';
+            } else if (diff===1) {
+                return 'Yesterday';
+            } else {
+                return diff + ' days ago.';
             }
-            return current;
         };
 	}
 ]);
@@ -1749,7 +1820,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 		$scope.authentication = Authentication;
 
 		// If user is signed in then redirect back home
-		if ($scope.authentication.user) $location.path('/mangaitems');
+		if ($scope.authentication.user) $location.path('/');
 
 		$scope.signup = function() {
 			$http.post('/auth/signup', $scope.credentials).success(function(response) {

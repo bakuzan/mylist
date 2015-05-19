@@ -7,8 +7,14 @@
 
 .statMonthBox {
     cursor: pointer;
+    background-color: #1212B8;
     border-style: solid;
     border-width: 2px;
-    border-radius: 5px;
+    border-color: #FFF;
+}
+.statMonthBox:hover {
+    cursor: pointer;
+    border-style: solid;
+    border-width: 1px;
     border-color: #000;
 }

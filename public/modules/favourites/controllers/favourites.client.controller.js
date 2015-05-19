@@ -1,10 +1,13 @@
 'use strict';
 
 
-angular.module('favourites').controller('FavouritesController', ['$scope', 'Authentication', '$window', '$sce', 'Animeitems', 'Mangaitems',
-	function($scope, Authentication, $window, $sce, Animeitems, Mangaitems) {
+angular.module('favourites').controller('FavouritesController', ['$scope', 'Authentication', '$window', '$sce', 'Animeitems', 'Mangaitems', '$location',
+	function($scope, Authentication, $window, $sce, Animeitems, Mangaitems, $location) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
+        
+        // If user is not signed in then redirect back to signin.
+		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.today = new Date().toISOString();
         //Anime Favourites

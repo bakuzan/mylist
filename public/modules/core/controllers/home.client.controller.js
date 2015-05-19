@@ -1,10 +1,13 @@
 'use strict';
 
 
-angular.module('core').controller('HomeController', ['$scope', 'Authentication', '$window',
-	function($scope, Authentication, $window) {
+angular.module('core').controller('HomeController', ['$scope', 'Authentication', '$window', '$location',
+	function($scope, Authentication, $window, $location) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
+        
+        // If user is not signed in then redirect back to signin.
+		if (!$scope.authentication.user) $location.path('/signin');
     
     $scope.isCollapseFilter = false;
     $scope.isCollapseAction = true;

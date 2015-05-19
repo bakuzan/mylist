@@ -1,16 +1,40 @@
 <section data-ng-controller="AnimeitemsController" data-ng-init="find()" data-ng-show="authentication.user">
     <div class="page-header">
         <div class="viewButtons text-right pull-right">
-            <label class="btn btn-primary" ng-model="isList" btn-radio="'true'" uncheckable>List</label>
-            <label class="btn btn-primary" ng-model="isList" btn-radio="'false'" uncheckable>Stats</label>
+            <label class="btn btn-primary" ng-model="isList" btn-radio="'true'" ng-click="view = 'list'" uncheckable>List</label>
+            <label class="btn btn-primary" ng-model="isList" btn-radio="'false'" ng-click="view = 'statistics'" uncheckable>Stats</label>
         </div>
-        <h1>Anime</h1>
+        <h1>Anime {{view}}</h1>
     </div>
     <div class="col-md-12" ng-hide="isList">
-        <div class="col-md-8">
-            <h2>Statistics</h2>
-            <div class="col-md-12" ng-repeat="animeitem in animeitems | unique: 'end.substring(0,4)' | orderBy: 'end.substring(0,4)'">
-                <span>{{animeitem.end.substring(0,4)}}</span>
+        <div class="col-md-12">
+            <h2>Completion by month</h2>
+            <table class="col-md-12">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th class="text-center" ng-repeat="month in months">{{month.text.substring(0,3)}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="animeitem in animeitems | unique: 'end.substring(0,4)' | orderBy: '-end.substring(0,4)'">
+                        <th ng-hide="animeitem.end==='' || animeitem.end===null || animeitem.end===undefined"><span>{{animeitem.end.substring(0,4)}}</span></th>
+                        <td  class="statMonthBox" ng-hide="animeitem.end==='' || animeitem.end===null || animeitem.end===undefined" ng-repeat="month in months" ng-click="monthDetail(animeitem.end.substring(0,4), month.number);" popover="Anime completed {{month.text}} {{animeitem.end.substring(0,4)}}: {{ (animeitems | filter: endedMonth(animeitem.end.substring(0,4), month.number)).length }}" popover-trigger="mouseenter" popover-placement="bottom">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-12 statMonthDetail" ng-show="showDetail">
+            <div class="col-md-6 statDetail">
+                <div class="statDetailHeader">
+                    <h3>Anime Completed {{detailMonthName }} {{detailYear}}</h3>
+                </div>
+                <ul class="col-md-12 statDetailList">
+                    <li ng-repeat="anime in animeitems | filter: endedMonth(detailYear, detailMonth) | orderBy: 'title'">
+                        <a href="/#!/animeitems/{{anime._id}}"><span>{{anime.title}}</span></a> - <span>{{anime.rating}}</span>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>

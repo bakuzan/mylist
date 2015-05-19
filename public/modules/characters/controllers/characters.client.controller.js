@@ -5,6 +5,9 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window) {
 		$scope.authentication = Authentication;
         
+        // If user is not signed in then redirect back to signin.
+		if (!$scope.authentication.user) $location.path('/signin');
+        
         $scope.isList = true; //show list? or carousel.
         $scope.myInterval = 2500; //carousel timer.
         $scope.sortType = 'name'; //default sort type

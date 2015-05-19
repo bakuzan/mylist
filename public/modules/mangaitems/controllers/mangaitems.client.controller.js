@@ -5,6 +5,8 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 	function($scope, $stateParams, $location, Authentication, Mangaitems, fileUpload, $sce, $window, moment) {
 		$scope.authentication = Authentication;
         
+        // If user is not signed in then redirect back to signin.
+		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.sortType = 'latest'; //default sort type
 	    $scope.sortReverse = true; // default sort order
@@ -154,14 +156,18 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         //latest date display format.
         $scope.latestDate = function(latest) {
 //          console.log(latest);
-            var current = moment(latest).fromNow();
+            var today = moment(new Date());
+            var latestDate = moment(latest);
+            var diff = today.diff(latestDate, 'days');
             
-            if (current.indexOf('hours') > -1) {
-                current = 'Today';
-            } else if (current==='1 day ago') {
-                current = 'Yesterday';
+            //for 0 and 1 day(s) ago use the special term.
+            if (diff===0) {
+                return 'Today';
+            } else if (diff===1) {
+                return 'Yesterday';
+            } else {
+                return diff + ' days ago.';
             }
-            return current;
         };
 	}
 ]);

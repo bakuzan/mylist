@@ -10,6 +10,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         
         $scope.view = 'list'; //dynamic page title.
         $scope.isList = true; //list view as default.
+        $scope.maxCompleteMonth = 0; //used to find the max number of ends in 1 month.
         $scope.showDetail = false; //show month detail.
         $scope.sortType = 'latest'; //default sort type
 	    $scope.sortReverse = true; // default sort order
@@ -56,7 +57,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 //            console.log(year+'-'+month);
             //if the one already selected is clicked, hide the detail.
             if ($scope.detailYear===year && $scope.detailMonth===month) {
-                $scope.showDetail = false;
+                    $scope.showDetail = !$scope.showDetail;
             } else {
                 $scope.detailYear = year;
                 $scope.detailMonth = month;
@@ -69,6 +70,30 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 $scope.showDetail = true;
             }
         };
+        
+        $scope.$watchCollection('animeitems', function() {
+            if ($scope.animeitems!==undefined) {
+//                console.log($scope.animeitems);
+                var modeMap = [{}];
+                var maxCount = 0;
+                for(var i = 0; i < $scope.animeitems.length; i++) {
+    	           var end = $scope.animeitems[i].end.substring(0,7);
+
+    	           if(modeMap[end] == null) {
+    		          modeMap[end] = 1;
+                   } else {
+                      modeMap[end]++;
+                   }
+
+                   if(modeMap[end] > maxCount) {
+    		          maxCount = modeMap[end];
+    	           }
+                }
+                console.log(modeMap);
+                console.log(maxCount);
+                $scope.maxCompleteMonth = maxCount;
+            }
+        });
         
         //rating 'tooltip' function
         $scope.hoveringOver = function(value) {

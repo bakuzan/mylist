@@ -74,20 +74,22 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.$watchCollection('animeitems', function() {
             if ($scope.animeitems!==undefined) {
 //                console.log($scope.animeitems);
-                var modeMap = [{}];
+                var modeMap = {};
                 var maxCount = 0;
                 for(var i = 0; i < $scope.animeitems.length; i++) {
-    	           var end = $scope.animeitems[i].end.substring(0,7);
+    	           if ($scope.animeitems[i].end!==undefined) {
+                        var end = $scope.animeitems[i].end.substring(0,7);
 
-    	           if(modeMap[end] == null) {
-    		          modeMap[end] = 1;
-                   } else {
-                      modeMap[end]++;
+    	               if(modeMap[end] === null || modeMap[end] === undefined) {
+    		              modeMap[end] = 1;
+                        } else {
+                            modeMap[end]++;
+                        }
+
+                        if(modeMap[end] > maxCount) {
+    		              maxCount = modeMap[end];
+    	               }
                    }
-
-                   if(modeMap[end] > maxCount) {
-    		          maxCount = modeMap[end];
-    	           }
                 }
                 console.log(modeMap);
                 console.log(maxCount);

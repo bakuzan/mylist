@@ -11,6 +11,8 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.view = 'list'; //dynamic page title.
         $scope.isList = true; //list view as default.
         $scope.maxAnimeCount = 0; //number of anime.
+        $scope.maxAnimeRatedCount = 0; //number of anime with a rating i.e not 0.
+        $scope.averageAnimeRating = 0; //average rating for anime.
         $scope.maxCompleteMonth = 0; //used to find the max number of ends in 1 month.
         $scope.showDetail = false; //show month detail.
         $scope.sortType = 'latest'; //default sort type
@@ -76,6 +78,14 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             if ($scope.animeitems!==undefined) {
 //                console.log($scope.animeitems);
                 $scope.maxAnimeCount = $scope.animeitems.length;
+                var tempRating = 0;
+                angular.forEach($scope.animeitems, function(anime) {
+                    if (anime.rating!==0) {
+                        tempRating += anime.rating;
+                        $scope.maxAnimeRatedCount++;
+                    }
+                });
+                $scope.averageAnimeRating = tempRating / $scope.maxAnimeRatedCount;
                 var modeMap = {};
                 var maxCount = 0;
                 for(var i = 0; i < $scope.animeitems.length; i++) {

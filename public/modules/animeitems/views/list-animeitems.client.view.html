@@ -41,7 +41,7 @@
         </div>
         <div class="col-md-6 statRatingPanel">
             <div class="statHeader">
-                <h3>Ratings</h3>
+                <h3>Ratings</h3><span class="statRatingAverage pull-right"><small class="text-muted">&nbsp;Average rating: {{averageAnimeRating | number: 2}}</small></span>
             </div>
             <div class="col-md-12">
                 <table class="col-md-12 statRatingTable">
@@ -50,7 +50,8 @@
                             <th class="col-md-1 text-right mb"><span ng-show="i!==0">{{i}}</span><span ng-show="i===0">-</span></th>
                             <td class="col-md-5 statRatingBox">
                                 <div class="progressContainer">
-                                    <progressbar class="progressBar" max="100" value="((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100" popover="{{(animeitems | filter: { rating: i }:true).length}} anime rated {{i}}." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">{{((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100 | number: 2}}%</progressbar>
+                                    <progressbar class="progressBar" ng-show="i!==0" max="100" value="((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100" popover="{{(animeitems | filter: { rating: i }:true).length}} anime rated {{i}}." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">{{((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100 | number: 2}}%</progressbar>
+                                    <progressbar class="progressBar" ng-show="i===0" max="100" value="((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100" popover="{{(animeitems | filter: { rating: i }:true).length}} anime unrated." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">{{((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100 | number: 2}}%</progressbar>
                                 </div>
                             </td>
                         </tr>

@@ -21,4 +21,30 @@
     border-color: #000;
 }
 
+.statRatingPanel {
+    margin-top: 10px;
+    border-top: 1px solid #eee;
+}
 
+.statHistory {
+    margin-bottom: 10px;
+}
+
+.statHeader {
+    border-bottom: 1px solid #eee;
+    margin-bottom: 10px;
+}
+
+
+
+
+
+
+
+.progressContainer {
+    height: 100%;
+}
+
+.progressBar {
+    margin-bottom: 10px;
+}

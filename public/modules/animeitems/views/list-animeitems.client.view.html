@@ -7,8 +7,10 @@
         <h1>Anime {{view}}</h1>
     </div>
     <div class="col-md-12" ng-hide="isList">
-        <div class="col-md-12">
-            <h2>Completion by month</h2>
+        <div class="col-md-12 statHistory">
+            <div class="statHeader">
+                <h3>History</h3>
+            </div>
             <table class="col-md-12">
                 <thead>
                     <tr>
@@ -17,7 +19,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="animeitem in animeitems | unique: 'end.substring(0,4)' | orderBy: '-end.substring(0,4)'">
+                    <tr ng-repeat="animeitem in animeitems | unique: 'end.substring(0,4)' | orderBy: '-end.substring(0,4)' | limitTo: 4">
                         <th ng-hide="animeitem.end==='' || animeitem.end===null || animeitem.end===undefined"><span>{{animeitem.end.substring(0,4)}}</span></th>
                         <td  class="statMonthBox" ng-hide="animeitem.end==='' || animeitem.end===null || animeitem.end===undefined" ng-repeat="month in months" ng-click="monthDetail(animeitem.end.substring(0,4), month.number);"  popover="Anime completed {{month.text}} {{animeitem.end.substring(0,4)}}: {{ (animeitems | filter: endedMonth(animeitem.end.substring(0,4), month.number)).length }}" popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': (animeitems | filter: endedMonth(animeitem.end.substring(0,4), month.number)).length / maxCompleteMonth }">
                         </td>
@@ -35,6 +37,25 @@
                         <a href="/#!/animeitems/{{anime._id}}"><span>{{anime.title}}</span></a> - <span>{{anime.rating}}</span>
                     </li>
                 </ul>
+            </div>
+        </div>
+        <div class="col-md-6 statRatingPanel">
+            <div class="statHeader">
+                <h3>Ratings</h3>
+            </div>
+            <div class="col-md-12">
+                <table class="col-md-12 statRatingTable">
+                    <tbody>
+                        <tr ng-repeat="i in [10,9,8,7,6,5,4,3,2,1,0]">
+                            <th class="col-md-1 text-right mb"><span ng-show="i!==0">{{i}}</span><span ng-show="i===0">-</span></th>
+                            <td class="col-md-5 statRatingBox">
+                                <div class="progressContainer">
+                                    <progressbar class="progressBar" max="100" value="((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100" popover="{{(animeitems | filter: { rating: i }:true).length}} anime rated {{i}}." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">{{((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100 | number: 2}}%</progressbar>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

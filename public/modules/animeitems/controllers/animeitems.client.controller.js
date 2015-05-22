@@ -128,15 +128,31 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		// Create new Animeitem
 		$scope.create = function() {
 			// Create new Animeitem object
-			var animeitem = new Animeitems ({
-				title: this.title,
-                episodes: this.episodes,
-                start: this.start,
-                latest: this.latest,
-                finalEpisode: this.finalEpisode,
-                disc: this.disc,
-                user: this.user
-			});
+            var animeitem = new Animeitems();
+            if (this.manga!==undefined && this.manga!==null) {
+                animeitem = new Animeitems ({
+				    title: this.title,
+                    episodes: this.episodes,
+                    start: this.start,
+                    latest: this.latest,
+                    finalEpisode: this.finalEpisode,
+                    disc: this.disc,
+                    manga: this.manga._id,
+                    user: this.user
+			     });
+            } else {
+                animeitem = new Animeitems ({
+				    title: this.title,
+                    episodes: this.episodes,
+                    start: this.start,
+                    latest: this.latest,
+                    finalEpisode: this.finalEpisode,
+                    disc: this.disc,
+                    manga: this.manga,
+                    user: this.user
+			    });
+            }
+
 
 			// Redirect after save
 			animeitem.$save(function(response) {
@@ -179,8 +195,11 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		$scope.update = function() {
 			var animeitem = $scope.animeitem;
             
-            //console.log($scope.imgPath);
-            //console.log(animeitem.image);
+            //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
+            if ($scope.animeitem.manga!==null && $scope.animeitem.manga!==undefined) {
+                animeitem.manga = $scope.animeitem.manga._id;
+            }
+            
             if ($scope.imgPath!==undefined && $scope.imgPath!==null && $scope.imgPath!=='') {
                 animeitem.image = $scope.imgPath;
             }
@@ -230,7 +249,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		};
         
         // Find list of mangaitems for dropdown.
-        $scope.mangaDropdown = function() {
+        $scope.findManga = function() {
             $scope.mangaitems = Mangaitems.query();
         };
         

@@ -9,6 +9,9 @@
                 <span class="glyphicon glyphicon-book" data-ng-show="mangaitem.hardcopy"></span> <span class="text-muted" data-ng-show="mangaitem.status">(Completed)</span> <span class="text-muted" data-ng-show="mangaitem.reReading">(Reading)</span>
                 <h3>Chapter </h3><span data-ng-bind="mangaitem.chapters"></span>/<span data-ng-bind="mangaitem.finalChapter"></span>
                 <h3>Volume </h3><span data-ng-bind="mangaitem.volumes"></span>/<span data-ng-bind="mangaitem.finalVolume"></span>
+                <div class="relatedMedia text-muted">
+                    <p data-ng-show="mangaitem.anime!==undefined">Related anime: <a href="/#!/animeitems/{{mangaitem.anime._id}}">{{mangaitem.anime.title}}</a></p>
+                </div>
             </div>
         </div>
         <div class="text-right">

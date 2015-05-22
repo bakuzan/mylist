@@ -1,4 +1,4 @@
-<section data-ng-controller="MangaitemsController" data-ng-init="findOne()" data-ng-show="authentication.user">
+<section data-ng-controller="MangaitemsController" data-ng-init="findOne(); findAnime();" data-ng-show="authentication.user">
     <div class="page-header">
         <h1>Edit Manga</h1>
     </div>
@@ -66,6 +66,18 @@
                     <div class="col-md-4 form-group">
                         <a class="btn btn-primary" data-ng-click="uploadFile()" data-ng-disabled="myFile==='' || myFile===null || myFile===undefined">Upload File</a>
                     </div>
+                </div>
+                <div class="form-group" ng-class="{ 'has-error' : mangaForm.anime.$invalid && !mangaForm.anime.$pristine }">
+                    <label for="anime" class="col-md-2 control-label">Anime</label>
+                    <div class="col-md-6">
+                        <select class="form-control" data-ng-options="anime.title for anime in animeitems | orderBy: 'title' track by anime._id" data-ng-model="mangaitem.anime" id="anime" name="anime">
+                            <option value="">-- Link to an anime --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+						<p ng-show="mangaForm.anime.$invalid && !mangaForm.anime.$pristine" class="help-block" >The anime is required.</p>
+						<span ng-show="mangaForm.anime.$valid && !mangaForm.anime.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
+					</div>
                 </div>
                 <hr/>
                 <div class="form-group" data-ng-hide="mangaitem.end!=null" ng-class="{ 'has-error' : mangaForm.end.$invalid }">

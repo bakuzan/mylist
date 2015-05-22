@@ -111,7 +111,7 @@ exports.delete = function(req, res) {
  * List of Mangaitems
  */
 exports.list = function(req, res) { 
-	Mangaitem.find().sort('-created').populate('user', 'displayName').exec(function(err, mangaitems) {
+	Mangaitem.find().sort('-created').populate('user', 'displayName').populate('anime', 'title').exec(function(err, mangaitems) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
@@ -126,7 +126,7 @@ exports.list = function(req, res) {
  * Mangaitem middleware
  */
 exports.mangaitemByID = function(req, res, next, id) { 
-	Mangaitem.findById(id).populate('user', 'displayName').exec(function(err, mangaitem) {
+	Mangaitem.findById(id).populate('user', 'displayName').populate('anime', 'title').exec(function(err, mangaitem) {
 		if (err) return next(err);
 		if (! mangaitem) return next(new Error('Failed to load Mangaitem ' + id));
 		req.mangaitem = mangaitem ;

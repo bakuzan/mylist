@@ -111,7 +111,7 @@ exports.delete = function(req, res) {
  * List of Animeitems
  */
 exports.list = function(req, res) { 
-	Animeitem.find().sort('-created').populate('user', 'displayName').exec(function(err, animeitems) {
+	Animeitem.find().sort('-created').populate('user', 'displayName').populate('manga', 'title').exec(function(err, animeitems) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
@@ -126,7 +126,7 @@ exports.list = function(req, res) {
  * Animeitem middleware
  */
 exports.animeitemByID = function(req, res, next, id) { 
-	Animeitem.findById(id).populate('user', 'displayName').exec(function(err, animeitem) {
+	Animeitem.findById(id).populate('user', 'displayName').populate('manga', 'title').exec(function(err, animeitem) {
 		if (err) return next(err);
 		if (! animeitem) return next(new Error('Failed to load Animeitem ' + id));
 		req.animeitem = animeitem ;

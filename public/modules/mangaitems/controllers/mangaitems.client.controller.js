@@ -1,8 +1,8 @@
 'use strict';
 
 // Mangaitems controller
-angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'fileUpload', '$sce', '$window', 'moment',
-	function($scope, $stateParams, $location, Authentication, Mangaitems, fileUpload, $sce, $window, moment) {
+angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'moment',
+	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, moment) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -38,18 +38,38 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         
         // Create new Mangaitem
 		$scope.create = function() {
-			// Create new Mangaitem object
-			var mangaitem = new Mangaitems ({
-				title: this.title,
-                chapters: this.chapters,
-                volumes: this.volumes,
-                start: this.start,
-                latest: this.latest,
-                finalChapter: this.finalChapter,
-                finalVolume: this.finalVolume,
-                hardcopy: this.hardcopy,
-                user: this.user
-			});
+            
+            var mangaitem = new Mangaitems();
+            //Handle situation if objects not selected.
+			if (this.anime!==undefined && this.anime!==null) {
+                // Create new Mangaitem object
+			     mangaitem = new Mangaitems ({
+				    title: this.title,
+                    chapters: this.chapters,
+                    volumes: this.volumes,
+                    start: this.start,
+                    latest: this.latest,
+                    finalChapter: this.finalChapter,
+                    finalVolume: this.finalVolume,
+                    hardcopy: this.hardcopy,
+                    anime: this.anime._id,
+                    user: this.user
+			     });
+            } else {
+                // Create new Mangaitem object
+			     mangaitem = new Mangaitems ({
+				    title: this.title,
+                    chapters: this.chapters,
+                    volumes: this.volumes,
+                    start: this.start,
+                    latest: this.latest,
+                    finalChapter: this.finalChapter,
+                    finalVolume: this.finalVolume,
+                    hardcopy: this.hardcopy,
+                    anime: this.anime,
+                    user: this.user
+			     });
+            }
 
 			// Redirect after save
 			mangaitem.$save(function(response) {
@@ -91,9 +111,11 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		// Update existing Mangaitem
 		$scope.update = function() {
 			var mangaitem = $scope.mangaitem;
+            //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
+            if ($scope.mangaitem.anime!==null && $scope.mangaitem.anime!==undefined) {
+                mangaitem.anime = $scope.mangaitem.anime._id;
+            }
             
-            //console.log($scope.imgPath);
-            //console.log(mangaitem.image);
             if ($scope.imgPath!==undefined && $scope.imgPath!==null && $scope.imgPath!=='') {
                 mangaitem.image = $scope.imgPath;
             }
@@ -142,6 +164,11 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 				mangaitemId: $stateParams.mangaitemId
 			});
             console.log($scope.mangaitem);
+		};
+        
+        // Find a list of Animeitems for dropdowns.
+		$scope.findAnime = function() {
+			$scope.animeitems = Animeitems.query();
 		};
         
         //image upload

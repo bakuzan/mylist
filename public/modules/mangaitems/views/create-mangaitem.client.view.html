@@ -1,4 +1,4 @@
-<section data-ng-controller="MangaitemsController" data-ng-show="authentication.user">
+<section data-ng-controller="MangaitemsController" data-ng-show="authentication.user" data-ng-init="findAnime();">
     <div class="page-header">
         <h1>New Manga</h1>
     </div>
@@ -68,6 +68,18 @@
                     <div class="col-md-6">
                         <input type="checkbox" class="form-control" data-ng-model="hardcopy" id="hardcopy" name="hardcopy">
                     </div>
+                </div>
+                <div class="form-group" ng-class="{ 'has-error' : mangaForm.anime.$invalid && !mangaForm.anime.$pristine }">
+                    <label for="anime" class="col-md-2 control-label">Anime</label>
+                    <div class="col-md-6">
+                        <select class="form-control" data-ng-options="anime.title for anime in animeitems | orderBy: 'title'" data-ng-model="anime" id="anime" name="anime">
+                            <option value="">-- Link to an anime --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+						<p ng-show="mangaForm.anime.$invalid && !mangaForm.anime.$pristine" class="help-block" >The anime is required.</p>
+						<span ng-show="mangaForm.anime.$valid && !mangaForm.anime.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
+					</div>
                 </div>
                 <div class="form-group" ng-class="{ 'has-error' : mangaForm.finalChapter.$invalid && !mangaForm.finalChapter.$pristine }">
                     <label for="finalChapter" class="col-md-2 control-label">Final chapter</label>

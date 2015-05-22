@@ -1,4 +1,4 @@
-<section data-ng-controller="AnimeitemsController" data-ng-show="authentication.user">
+<section data-ng-controller="AnimeitemsController" data-ng-show="authentication.user" data-ng-init="findManga();">
     <div class="page-header">
         <h1>New Anime</h1>
     </div>
@@ -68,17 +68,18 @@
 						<span ng-show="animeForm.finalEpisode.$valid && !animeForm.finalEpisode.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
 					</div>
                 </div>
-                <!--<div class="form-group" ng-class="{ 'has-error' : animeForm.manga.$invalid && !animeForm.manga.$pristine }">
+                <div class="form-group" ng-class="{ 'has-error' : animeForm.manga.$invalid && !animeForm.manga.$pristine }">
                     <label for="manga" class="col-md-2 control-label">Manga?</label>
                     <div class="col-md-6">
-                        <Select class="form-control" data-ng-model="manga" id="manga" name="manga" data-ng-options="mangaitem.title for mangaitem in mangaitems track by mangaitem._id">
-                        </Select>
+                        <select class="form-control" data-ng-options="manga.title for manga in mangaitems | orderBy: 'title'" data-ng-model="manga" id="manga" name="manga">
+                            <option value="">-- Link to a manga --</option>
+                        </select>
                     </div>
                     <div class="col-md-4">
-                        <!--<p ng-show="isNumber(mangaForm.chapters)" class="help-block">Chapter number should be a full number.</p>
+						<p ng-show="animeForm.manga.$invalid && !animeForm.manga.$pristine" class="help-block" >The manga is required.</p>
 						<span ng-show="animeForm.manga.$valid && !animeForm.manga.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
 					</div>
-                </div>-->
+                </div>
                 <div class="form-group">
                     <input type="submit" class="btn btn-default" ng-disabled="animeForm.$invalid">&nbsp; - &nbsp;<a href="/#!/animeitems">Back</a>
                 </div>

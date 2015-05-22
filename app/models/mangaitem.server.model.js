@@ -72,6 +72,10 @@ var MangaitemSchema = new Schema({
     type: String,
     default: ''
    },
+    anime: {
+        type: Schema.ObjectId,
+		ref: 'Animeitem'
+    },
 	user: {
 		type: Schema.ObjectId,
 		ref: 'User'

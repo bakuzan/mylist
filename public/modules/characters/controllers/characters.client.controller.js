@@ -24,6 +24,23 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             return $sce.trustAsResourceUrl(url);
         };
         
+        //for splitting tags in the typeahead.
+        $scope.tagSplitter = function(tag, viewValue) {
+            if (viewValue.indexOf(',') > -1) {
+                var lastTag = viewValue.substring(viewValue.lastIndexOf(',') + 1);
+//                console.log(lastTag);
+                if (tag.indexOf(lastTag) > -1) {
+//                    console.log(viewValue.substr(0, viewValue.lastIndexOf(',') + 1) + tag);
+                    var temp = viewValue.substr(0, viewValue.lastIndexOf(',') + 1) + tag;
+                    return temp;
+                }
+            } else {
+                if (tag.indexOf(viewValue) > -1) {
+                    return tag;
+                }
+            }
+        };
+        
         //for adding/removing tags.
         $scope.addTag = function () {
                 $scope.tagArray.push({ text: $scope.newTag });

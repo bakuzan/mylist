@@ -15,11 +15,20 @@
 	   </div>
        <br/>
        <div class="input-group">
-            <div class="input-group-addon">
+            <div class="input-group-addon clickable" ng-click="clearTagValues(); characterTags = ''">
                 <i class="fa fa-tag"></i>
             </div>
-           <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags" typeahead="tag for tag in usedTags | filter: $viewValue:tagSplitter"><!--  -->
+           <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags" typeahead="tag for tag in usedTags | filter: $viewValue" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
 	   </div>
+       <div class="input-group" ng-hide="searchTags===undefined || searchTags==='' || searchTags===null">
+           <ul class="taskList col-md-12">
+               <br/>
+                <li class="tagBubble col-md-12" ng-repeat="tag in tagsForFilter track by $index">
+                    {{tag}}
+                    <a class="clickable pull-right" aria-hidden="true" ng-click="deleteSearchTag(tag)"><i class="fa fa-trash-o" style="color: red;"></i></a>
+                </li>
+            </ul>
+       </div>
         <br/>
         <div class="input-group">
 		  <div class="input-group-addon">

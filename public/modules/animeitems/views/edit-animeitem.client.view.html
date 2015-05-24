@@ -64,6 +64,12 @@
 						<span ng-show="animeForm.manga.$valid && !animeForm.manga.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
 					</div>
                 </div>
+                <div class="form-group">
+                    <label for="disc" class="col-md-2 control-label">Disc?</label>
+                    <div class="col-md-6">
+                        <input type="checkbox" class="form-control" data-ng-model="animeitem.disc" id="disc" name="disc">
+                    </div>
+                </div>
                 <hr/>
                 <div class="form-group" data-ng-hide="animeitem.end!=null" ng-class="{ 'has-error' : animeForm.end.$invalid }">
                     <label for="end" class="col-md-2 control-label">End</label>
@@ -80,16 +86,10 @@
                         <input type="checkbox" class="form-control" data-ng-model="animeitem.status" data-ng-checked="animeitem.end!=null || animeitem.episodes === animeitem.finalEpisode" data-ng-true-value="true" id="status" name="status" disabled>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="disc" class="col-md-2 control-label">Disc?</label>
-                    <div class="col-md-6">
-                        <input type="checkbox" class="form-control" data-ng-model="animeitem.disc" id="disc" name="disc">
-                    </div>
-                </div>
                 <div class="form-group text-right" data-ng-hide="animeitem.finalEpisode!=0">
                     <a class="btn btn-primary" id="finalNumbers" name="finalNumbers" data-ng-click="finalNumbers = !finalNumbers">Toggle final numbers</a>
                 </div>
-                <div class="form-group" data-ng-show="finalNumbers">
+                <div class="form-group" ng-show="finalNumbers">
                 <div class="form-group" ng-class="{ 'has-error' : animeForm.finalEpisode.$invalid && !animeForm.finalEpisode.$pristine }">
                     <label for="finalEpisode" class="col-md-2 control-label">Final episode</label>
                     <div class="col-md-6">

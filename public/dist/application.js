@@ -231,15 +231,31 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		// Create new Animeitem
 		$scope.create = function() {
 			// Create new Animeitem object
-			var animeitem = new Animeitems ({
-				title: this.title,
-                episodes: this.episodes,
-                start: this.start,
-                latest: this.latest,
-                finalEpisode: this.finalEpisode,
-                disc: this.disc,
-                user: this.user
-			});
+            var animeitem = new Animeitems();
+            if (this.manga!==undefined && this.manga!==null) {
+                animeitem = new Animeitems ({
+				    title: this.title,
+                    episodes: this.episodes,
+                    start: this.start,
+                    latest: this.latest,
+                    finalEpisode: this.finalEpisode,
+                    disc: this.disc,
+                    manga: this.manga._id,
+                    user: this.user
+			     });
+            } else {
+                animeitem = new Animeitems ({
+				    title: this.title,
+                    episodes: this.episodes,
+                    start: this.start,
+                    latest: this.latest,
+                    finalEpisode: this.finalEpisode,
+                    disc: this.disc,
+                    manga: this.manga,
+                    user: this.user
+			    });
+            }
+
 
 			// Redirect after save
 			animeitem.$save(function(response) {
@@ -282,8 +298,11 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		$scope.update = function() {
 			var animeitem = $scope.animeitem;
             
-            //console.log($scope.imgPath);
-            //console.log(animeitem.image);
+            //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
+            if ($scope.animeitem.manga!==null && $scope.animeitem.manga!==undefined) {
+                animeitem.manga = $scope.animeitem.manga._id;
+            }
+            
             if ($scope.imgPath!==undefined && $scope.imgPath!==null && $scope.imgPath!=='') {
                 animeitem.image = $scope.imgPath;
             }
@@ -333,7 +352,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		};
         
         // Find list of mangaitems for dropdown.
-        $scope.mangaDropdown = function() {
+        $scope.findManga = function() {
             $scope.mangaitems = Mangaitems.query();
         };
         
@@ -484,6 +503,47 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             return $sce.trustAsResourceUrl(url);
         };
         
+        /**
+         * tag splitter for mulitple values in typeahead search.
+         *
+//        //for splitting tags in the typeahead.
+//        $scope.tagSplitter = function(viewValue) {
+//            if (viewValue.indexOf(',') > -1) {
+//                var lastTag = viewValue.substring(viewValue.lastIndexOf(',') + 1);
+////                console.log(lastTag);
+//                angular.forEach($scope.usedTags, function(used) {
+//                    $scope.usedTags.push(lastTag + used);
+//                });
+//                console.log($scope.usedTags);
+//            } else {
+//                var tempTags = $scope.usedTags;
+//                $scope.usedTags = [];
+//                angular.forEach(tempTags, function(used) {
+//                    if (used.indexOf(',') === -1) {
+//                        $scope.usedTags.push(used);
+//                    }
+//                });
+//            }
+//        };
+*/
+        
+        $scope.searchTags = '';
+        $scope.passTag = function(tag) {
+            if ($scope.searchTags.indexOf(tag) === -1) {
+                $scope.searchTags += tag + ',';
+            }
+        };
+        $scope.clearTagValues = function() {
+            $scope.searchTags = '';
+            $scope.tagsForFilter = [];
+        };
+        $scope.deleteSearchTag = function(tag) {
+            $scope.searchTags = $scope.searchTags.replace(tag + ',', '');
+            
+            var index = $scope.tagsForFilter.indexOf(tag);
+            $scope.tagsForFilter.splice(index, 1);
+        };
+        
         //for adding/removing tags.
         $scope.addTag = function () {
                 $scope.tagArray.push({ text: $scope.newTag });
@@ -518,11 +578,13 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             var found = false;
             var i = 0;
             var tagsToSearch = [];
-            if ($scope.characterTags===undefined || $scope.characterTags==='') {
+            if ($scope.searchTags===undefined || $scope.searchTags==='') {
                 return true;
             } else {
                 //get tags that are being looked for
-                var tagsForFilter = $scope.characterTags.split(',');
+//                var tagsForFilter = $scope.characterTags.split(',');
+                $scope.tagsForFilter = $scope.searchTags.substring(0, $scope.searchTags.length - 1).split(',');
+//                console.log($scope.tagsForFilter);
                 
                 //get tags of items to filter
                 angular.forEach(item.tags, function(tag) {
@@ -530,9 +592,9 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                 });
                 
                 //filter: check in 'query' is in tags.
-                for(i = 0; i < tagsForFilter.length; i++) {
+                for(i = 0; i < $scope.tagsForFilter.length; i++) {
                     
-                    if (tagsToSearch.indexOf(tagsForFilter[i]) !== -1) {
+                    if (tagsToSearch.indexOf($scope.tagsForFilter[i]) !== -1) {
                         found = true;
                     } else {
                         return false;
@@ -1549,8 +1611,8 @@ angular.module('mangaitems').config(['$stateProvider',
 'use strict';
 
 // Mangaitems controller
-angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'fileUpload', '$sce', '$window', 'moment',
-	function($scope, $stateParams, $location, Authentication, Mangaitems, fileUpload, $sce, $window, moment) {
+angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'moment',
+	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, moment) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -1586,18 +1648,38 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         
         // Create new Mangaitem
 		$scope.create = function() {
-			// Create new Mangaitem object
-			var mangaitem = new Mangaitems ({
-				title: this.title,
-                chapters: this.chapters,
-                volumes: this.volumes,
-                start: this.start,
-                latest: this.latest,
-                finalChapter: this.finalChapter,
-                finalVolume: this.finalVolume,
-                hardcopy: this.hardcopy,
-                user: this.user
-			});
+            
+            var mangaitem = new Mangaitems();
+            //Handle situation if objects not selected.
+			if (this.anime!==undefined && this.anime!==null) {
+                // Create new Mangaitem object
+			     mangaitem = new Mangaitems ({
+				    title: this.title,
+                    chapters: this.chapters,
+                    volumes: this.volumes,
+                    start: this.start,
+                    latest: this.latest,
+                    finalChapter: this.finalChapter,
+                    finalVolume: this.finalVolume,
+                    hardcopy: this.hardcopy,
+                    anime: this.anime._id,
+                    user: this.user
+			     });
+            } else {
+                // Create new Mangaitem object
+			     mangaitem = new Mangaitems ({
+				    title: this.title,
+                    chapters: this.chapters,
+                    volumes: this.volumes,
+                    start: this.start,
+                    latest: this.latest,
+                    finalChapter: this.finalChapter,
+                    finalVolume: this.finalVolume,
+                    hardcopy: this.hardcopy,
+                    anime: this.anime,
+                    user: this.user
+			     });
+            }
 
 			// Redirect after save
 			mangaitem.$save(function(response) {
@@ -1639,9 +1721,11 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		// Update existing Mangaitem
 		$scope.update = function() {
 			var mangaitem = $scope.mangaitem;
+            //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
+            if ($scope.mangaitem.anime!==null && $scope.mangaitem.anime!==undefined) {
+                mangaitem.anime = $scope.mangaitem.anime._id;
+            }
             
-            //console.log($scope.imgPath);
-            //console.log(mangaitem.image);
             if ($scope.imgPath!==undefined && $scope.imgPath!==null && $scope.imgPath!=='') {
                 mangaitem.image = $scope.imgPath;
             }
@@ -1690,6 +1774,11 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 				mangaitemId: $stateParams.mangaitemId
 			});
             console.log($scope.mangaitem);
+		};
+        
+        // Find a list of Animeitems for dropdowns.
+		$scope.findAnime = function() {
+			$scope.animeitems = Animeitems.query();
 		};
         
         //image upload

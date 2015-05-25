@@ -66,6 +66,10 @@ var AnimeitemSchema = new Schema({
         type: Schema.ObjectId,
 		ref: 'Mangaitem'
     },
+    tags: {
+        type: Array,
+        default: []
+    },
    user: {
 		type: Schema.ObjectId,
 		ref: 'User'

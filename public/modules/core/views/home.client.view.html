@@ -70,7 +70,7 @@
 		        <div class="input-group-addon">
 		          <i class="fa fa-list-ol"></i>
                 </div>
-                <input type="text" class="form-control" value="{{ remaining() }} remaining of {{ taskItem.length }} total." disabled>
+                <input type="text" class="form-control" value="{{ remaining() }} remaining of {{ (taskItem | filter: dateFilter).length }} total." disabled>
             </div>
             <br/>
             <div class=" col-md-12 input-group">

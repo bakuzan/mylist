@@ -257,7 +257,9 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     $scope.remaining = function() {
         var count = 0;
         angular.forEach($scope.taskItem, function(taskItem) {
-            count += taskItem.complete ? 0 : 1;
+            if ($scope.dateFilter(taskItem)) {
+                count += taskItem.complete ? 0 : 1;
+            }
         });
         return count;
     };  

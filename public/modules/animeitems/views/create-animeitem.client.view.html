@@ -1,7 +1,10 @@
-<section data-ng-controller="AnimeitemsController" data-ng-show="authentication.user" data-ng-init="findManga();">
+<section data-ng-controller="AnimeitemsController" data-ng-show="authentication.user" data-ng-init="find(); findManga();">
     <div class="page-header">
         <h1>New Anime</h1>
     </div>
+    <span ng-repeat="animeitem in animeitems">
+        <span ng-repeat="tag in animeitem.tags" data-ng-init="createUsedTags(tag.text)"></span><!-- use data to create used tags list -->
+    </span>
     <div class="col-md-12">
         <form name="animeForm" class="form-horizontal" data-ng-submit="create()" novalidate>
             <fieldset>
@@ -79,6 +82,23 @@
 						<p ng-show="animeForm.manga.$invalid && !animeForm.manga.$pristine" class="help-block" >The manga is required.</p>
 						<span ng-show="animeForm.manga.$valid && !animeForm.manga.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
 					</div>
+                </div>
+                <div class="form-group" ng-class="{ 'has-error' : animeForm.tags.$invalid && !animeForm.tags.$pristine }">
+                    <label for="tags" class="col-md-2 control-label">Tags</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" data-ng-model="newTag" enter-tag="addTag()" id="tags" name="tags" placeholder="tags..." typeahead="tag for tag in usedTags | filter: $viewValue">
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <a class="btn btn-primary" data-ng-click="addTag()" data-ng-disabled="newTag==='' || newTag===null || newTag===undefined">Add Tag</a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <ul class="taskList col-md-12">
+                        <li class="tagBubble col-md-2" ng-repeat="tag in tagArray track by $index">
+                            {{tag.text}}
+                            <a class="clickable pull-right" aria-hidden="true" ng-click="deleteTag(tag.text)"><i class="fa fa-trash-o" style="color: red;"></i></a>
+                        </li>
+                    </ul>
                 </div>
                 <div class="form-group">
                     <input type="submit" class="btn btn-default" ng-disabled="animeForm.$invalid">&nbsp; - &nbsp;<a href="/#!/animeitems">Back</a>

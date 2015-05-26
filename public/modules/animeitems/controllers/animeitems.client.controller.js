@@ -15,6 +15,8 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.averageAnimeRating = 0; //average rating for anime.
         $scope.maxCompleteMonth = 0; //used to find the max number of ends in 1 month.
         $scope.showDetail = false; //show month detail.
+        $scope.statTagSortType = 'tag'; //stat tag sort
+        $scope.statTagSortReverse = false; //stat tag sort direction.
         $scope.sortType = 'latest'; //default sort type
 	    $scope.sortReverse = true; // default sort order
         $scope.finalNumbers = false; //default show status of final number fields in edit view.
@@ -24,26 +26,27 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.tagArray = []; // holding tags pre-submit
         $scope.tagArrayRemove = [];
         $scope.usedTags = []; //for typeahead array.
+        $scope.statTags = []; //for stat table.
         
         //allow retreival of local resource
         $scope.trustAsResourceUrl = function(url) {
             return $sce.trustAsResourceUrl(url);
         };
         
-        //builds an array of unique tag names for the typeahead.
-        $scope.createUsedTags = function(text) {
-            var add = true;
-            //is tag in array?
-            for(var i=0; i < $scope.usedTags.length; i++) {
-                if ($scope.usedTags[i]===text) {
-                    add = false;
-                }
-            }
-            //add if not in.
-            if (add===true) {
-                $scope.usedTags.push(text);
-            }
-        };
+//        //builds an array of unique tag names for the typeahead.
+//        $scope.createUsedTags = function(text) {
+//            var add = true;
+//            //is tag in array?
+//            for(var i=0; i < $scope.usedTags.length; i++) {
+//                if ($scope.usedTags[i]===text) {
+//                    add = false;
+//                }
+//            }
+//            //add if not in.
+//            if (add===true) {
+//                $scope.usedTags.push(text);
+//            }
+//        };
         
         $scope.searchTags = '';
         $scope.passTag = function(tag) {
@@ -198,9 +201,30 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
     	               }
                    }
                 }
-                console.log(modeMap);
-                console.log(maxCount);
+//                console.log(modeMap);
+//                console.log(maxCount);
                 $scope.maxCompleteMonth = maxCount;
+                
+                var add = true;
+                //is tag in array?
+                angular.forEach($scope.animeitems, function(anime) { 
+                    angular.forEach(anime.tags, function(tag) {
+                        for(var i=0; i < $scope.statTags.length; i++) {
+                            if ($scope.statTags[i].tag===tag.text) {
+                                add = false;
+                                    $scope.statTags[i].count += 1; 
+                                    $scope.statTags[i].ratingAdded += anime.rating;
+                                    $scope.statTags[i].ratingAvg = $scope.statTags[i].ratingAdded / $scope.statTags[i].count;
+                            }
+                        }
+                        // add if not in
+                        if (add===true) {
+                            $scope.statTags.push({ tag: tag.text, count: 1, ratingAdded: anime.rating, ratingAvg: anime.rating });
+                        }
+                        add = true; //reset add status.
+                    });
+//                    console.log($scope.statTags);
+                });
             }
         });
         

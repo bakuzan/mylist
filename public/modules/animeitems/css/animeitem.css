@@ -57,3 +57,8 @@
     padding-top: 25px;
     font-size: small;
 }
+
+.statTagPanel {
+    margin-top: 10px;
+    border-top: 1px solid #eee;
+}

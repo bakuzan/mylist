@@ -1,10 +1,10 @@
 <section data-ng-controller="HomeController" data-ng-show="authentication.user" data-ng-init="checkStatus()">
-	<div class="row col-sm-12">
+	<div class="row col-lg-12 col-md-12 col-sm-12">
         <h3>Week Beginning {{weekBeginning() | date: 'dd MMM yyyy'}}</h3>
 	</div>
-    <div class="col-md-6">
+    <div class="col-lg-6 col-md-6 col-sm-6">
     <br/>
-    <div class="col-md-12">
+    <div class="col-lg-12 col-md-12 col-sm-12">
             <a class="list-group-item collapseBar" data-ng-click="isCollapseAction=!isCollapseAction">Actions</a>
             <div class="col-md-12" data-ng-hide="isCollapseAction">
             <form name="scheduleForm" class="form-horizontal" novalidate>
@@ -62,25 +62,25 @@
             </form>
             </div><!-- collapse FORM -->
     </div><!-- col-md-12 ACTIONS -->
-    <div class="col-md-12">
+    <div class="col-lg-12 col-md-12 col-sm-12">
         <a class="list-group-item collapseBar" data-ng-click="isCollapseFilter=!isCollapseFilter">Filters</a>
         <br/>
-        <div class="col-md-12" data-ng-hide="isCollapseFilter">
-            <div class="input-group">
+        <div class="col-lg-12 col-md-12 col-sm-12" data-ng-hide="isCollapseFilter">
+            <div class="col-lg-12 col-md-12 col-sm-12 input-group">
 		        <div class="input-group-addon">
 		          <i class="fa fa-list-ol"></i>
                 </div>
                 <input type="text" class="form-control" value="{{ remaining() }} remaining of {{ (taskItem | filter: dateFilter).length }} total." disabled>
             </div>
             <br/>
-            <div class=" col-md-12 input-group">
+            <div class="col-lg-12 col-md-12 col-sm-12 input-group">
                 <div class="input-group-addon">
                     <i class="fa fa-search"></i>
                 </div>
                 <input type="text" class="form-control" placeholder="search tasks" ng-model="search.description">
             </div><!-- search.description -->
             <br/>
-            <div class="col-md-12 input-group">
+            <div class="col-lg-12 col-md-12 col-sm-12 input-group">
 		       <div class="input-group-addon">
 		          <i class="fa fa-check"></i>
                 </div>
@@ -91,7 +91,7 @@
                 </select>
             </div><!-- search.complete -->
             <br/>
-            <div class="col-md-12 input-group">
+            <div class="col-lg-12 col-md-12 col-sm-12 input-group">
 		       <div class="input-group-addon">
 		          <i class="fa fa-calendar"></i>
                 </div>
@@ -108,7 +108,7 @@
                 </select>
             </div><!-- search.days -->
             <br/>
-            <div class="col-md-12 input-group">
+            <div class="col-lg-12 col-md-12 col-sm-12 input-group">
 		       <div class="input-group-addon">
 		          <i class="fa fa-calendar"></i>
                 </div>
@@ -122,9 +122,9 @@
     </div><!-- col-md-12 FILTERS -->
     </div><!-- col-md-6 ACTIONS+FILTERS -->
     <br/>
-    <div class="row col-md-6">
+    <div class="row col-lg-6 col-md-6 col-sm-6">
         <br/>
-            <ul  class="taskList col-md-12">
+            <ul  class="taskList col-lg-12 col-md-12 col-sm-12">
                 <li class="taskItem" ng-repeat="taskItem in (taskItem | filter: search | filter: dayFilter | filter: dateFilter) track by $index" ng-model="taskItem"><input type="checkbox" class="taskCheckbox" ng-model="taskItem.complete" ng-change="save(taskItem.description)" ng-disabled="taskItem.complete">
                     <span class="complete-{{taskItem.complete}}">{{taskItem.description}}</span> - <span class="complete-{{taskItem.complete}}">{{taskItem.completeTimes}}/{{taskItem.repeat}}</span>
                     <span class="category-{{taskItem.category}}">{{taskItem.category}}</span><a class="clickable" aria-hidden="true" ng-click="deleteTask(taskItem.description)"><i class="fa fa-trash-o" style="color: red;"></i></a>

@@ -1,8 +1,104 @@
 <section data-ng-controller="MangaitemsController" data-ng-init="find()" data-ng-show="authentication.user">
     <div class="page-header">
-        <h1>Manga</h1>
+        <div class="viewButtons text-right pull-right">
+            <label class="btn btn-primary" ng-model="isList" btn-radio="'true'" ng-click="view = 'list'" uncheckable>List</label>
+            <label class="btn btn-primary" ng-model="isList" btn-radio="'false'" ng-click="view = 'statistics'" uncheckable>Stats</label>
+        </div>
+        <h1>Manga {{view}}</h1>
     </div>
-    <div class="form-group col-lg-4 col-md-4 col-sm-4">
+    <div class="col-lg-12 col-md-12 col-sm-12" ng-hide="isList">
+        <div class="col-lg-12 col-md-12 col-sm-12 statHistory">
+            <div class="statHeader">
+                <h3>History</h3>
+            </div>
+            <table class="col-lg-12 col-md-12 col-sm-12">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th class="text-center" ng-repeat="month in months">{{month.text.substring(0,3)}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="mangaitem in mangaitems | unique: 'end.substring(0,4)' | orderBy: '-end.substring(0,4)' | limitTo: 4">
+                        <th ng-hide="mangaitem.end==='' || mangaitem.end===null || mangaitem.end===undefined"><span>{{mangaitem.end.substring(0,4)}}</span></th>
+                        <td  class="statMonthBox" ng-hide="mangaitem.end==='' || mangaitem.end===null || mangaitem.end===undefined" ng-repeat="month in months" ng-click="monthDetail(mangaitem.end.substring(0,4), month.number);"  popover="{{ (mangaitems | filter: endedMonth(mangaitem.end.substring(0,4), month.number)).length }} manga completed {{month.text}} {{mangaitem.end.substring(0,4)}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': (mangaitems | filter: endedMonth(mangaitem.end.substring(0,4), month.number)).length / maxCompleteMonth }">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div><!-- HISTORY PANEL END -->
+        <div class="col-lg-12 col-md-12 col-sm-12 statMonthDetail" ng-show="showDetail">
+            <div class="col-lg-6 col-md-6 col-sm-6 statDetail">
+                <div class="statDetailHeader">
+                    <h3>Manga Completed {{detailMonthName }} {{detailYear}}</h3>
+                </div>
+                <ul class="col-lg-12 col-md-12 col-sm-12 statDetailList">
+                    <li ng-repeat="manga in mangaitems | filter: endedMonth(detailYear, detailMonth) | orderBy: 'title'">
+                        <a href="/#!/mangaitems/{{manga._id}}"><span>{{manga.title}}</span></a> - <span>{{manga.rating}}</span>
+                    </li>
+                </ul>
+            </div>
+        </div><!-- DETAIL PANEL END -->
+        <div class="col-lg-6 col-md-6 col-sm-6 statRatingPanel">
+            <div class="statHeader">
+                <h3>Ratings</h3><span class="statRatingAverage pull-right"><small class="text-muted">&nbsp;{{averageMangaRating | number: 2}} average rating.</small></span>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <table class="col-lg-12 col-md-12 col-sm-12 statRatingTable">
+                    <tbody>
+                        <tr ng-repeat="i in [10,9,8,7,6,5,4,3,2,1,0]">
+                            <th class="col-lg-1 col-md-1 col-sm-1 text-right mb"><span ng-show="i!==0">{{i}}</span><span ng-show="i===0">-</span></th>
+                            <td class="col-lg-5 col-md-5 col-sm-5 statRatingBox">
+                                <div class="progressContainer">
+                                    <progressbar class="progressBar" ng-show="i!==0" max="100" value="((mangaitems | filter: { rating: i }:true).length / maxMangaCount)*100" popover="{{(mangaitems | filter: { rating: i }:true).length}} manga rated {{i}}." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">{{((mangaitems | filter: { rating: i }:true).length / maxMangaCount)*100 | number: 2}}%</progressbar>
+                                    <progressbar class="progressBar" ng-show="i===0" max="100" value="((mangaitems | filter: { rating: i }:true).length / maxMangaCount)*100" popover="{{(mangaitems | filter: { rating: i }:true).length}} anime unrated." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">{{((mangaitems | filter: { rating: i }:true).length / maxMangaCount)*100 | number: 2}}%</progressbar>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div><!-- RATING PANEL END -->
+        <div class="col-lg-6 col-md-6 col-sm-6 statTagPanel">
+            <div class="statHeader">
+                <h3>Tags</h3><span class="statRatingAverage pull-right"><small class="text-muted">&nbsp;{{statTags.length}} unique tags.</small></span>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <table class="col-lg-12 col-md-12 col-sm-12 statTagTable table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <td>
+                                <a href="" ng-click="statTagSortType = 'tag'; statTagSortReverse = !statTagSortReverse ">
+					               Tag
+					            </a>
+                                <i ng-show="statTagSortType == 'tag'" class="fa" ng-class="statTagSortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                            </td>
+                            <td class="text-right">
+                                <a href="" ng-click="statTagSortType = 'count'; statTagSortReverse = !statTagSortReverse ">
+					               Count
+					            </a>
+                                <i ng-show="statTagSortType == 'count'" class="fa" ng-class="statTagSortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                            </td>
+                            <td class="text-right">
+                                <a href="" ng-click="statTagSortType = 'ratingAvg'; statTagSortReverse = !statTagSortReverse ">
+					               Rating (Avg.)
+					            </a>
+                                <i ng-show="statTagSortType == 'ratingAvg'" class="fa" ng-class="statTagSortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="stat in statTags | orderBy: statTagSortType:statTagSortReverse">
+                        <tr><!-- repeat row for every anime tag. -->
+                            <td>{{stat.tag}}</td>
+                            <td class="text-right">{{stat.count}}</td>
+                            <td class="text-right">{{stat.ratingAvg | number: 2}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div><!-- TAG PANEL END -->
+    </div><!-- STAT VIEW END -->
+    <div class="form-group col-lg-4 col-md-4 col-sm-4" ng-show="isList">
        <div class="input-group">
             <div class="input-group-addon">
                 <i class="fa fa-search"></i>
@@ -14,7 +110,7 @@
             <div class="input-group-addon clickable" ng-click="clearTagValues(); characterTags = ''">
                 <i class="fa fa-tag"></i>
             </div>
-           <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags" typeahead="tag for tag in usedTags | filter: $viewValue" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
+           <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags" typeahead="stat.tag for stat in statTags | filter: $viewValue" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
 	   </div>
        <div class="input-group" ng-hide="searchTags===undefined || searchTags==='' || searchTags===null">
            <ul class="taskList col-lg-12 col-md-12">
@@ -101,7 +197,7 @@
             </div>
         </div>
     </div>
-    <div class="list-group col-lg-8 col-md-8 col-sm-8">
+    <div class="list-group col-lg-8 col-md-8 col-sm-8" ng-show="isList">
         <a data-ng-repeat="mangaitem in mangaitems | orderBy: sortType:sortReverse | filter: search | filter: ratingFilter | filter: tagFilter" data-ng-href="#!/mangaitems/{{mangaitem._id}}" list_Back="{{trustAsResourceUrl(mangaitem.image)}}" class="list-group-item">
 			<small class="list-group-item-text">
                 <time title="{{mangaitem.latest | date: 'yyyy-MMM-dd'}}" ng-bind="latestDate(mangaitem.latest)"></time>
@@ -113,7 +209,6 @@
                 <span data-ng-bind="mangaitem.chapters"></span>, 
                 Volumes
                 <span data-ng-bind="mangaitem.volumes"></span>
-                <span ng-repeat="tag in mangaitem.tags" data-ng-init="createUsedTags(tag.text)"></span><!-- for typeahead -->
             </p>
         </a>
     </div>

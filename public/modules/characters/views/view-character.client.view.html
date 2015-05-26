@@ -1,7 +1,7 @@
 <section data-ng-controller="CharactersController" data-ng-init="findOne()" data-ng-show="authentication.user">
 	<div class="page-header">
         <div class="col-md-12">
-            <div class="col-md-3 pull-left" >
+            <div class="col-md-3 pull-left">
                 <img ng-src="{{trustAsResourceUrl(character.image)}}" height="100%" width="100%"/>
             </div>
             <div class="col-md-9 pull-left">
@@ -10,6 +10,16 @@
                 <br/><span><b>Manga: </b></span><a data-ng-show="character.manga!==undefined" href="/#!/mangaitems/{{character.manga._id}}">{{character.manga.title}}</a>
                 <br/><span><b>VA: </b></span><span data-ng-bind="character.voice"></span>
             </div>
+        </div>
+        <div class="col=md-12">
+            <small>
+                <em class="text-muted">
+                    Tags<br/>
+                    <ul data-ng-repeat="tag in character.tags">
+                        <li>{{tag.text}}</li>
+                    </ul>
+                </em>
+            </small>
         </div>
 	</div>
 	<div class="pull-right" data-ng-show="((authentication.user) && (authentication.user._id == character.user._id))">
@@ -23,12 +33,4 @@
 			<i class="glyphicon glyphicon-trash"></i>
 		</a>
 	</div>
-    <small>
-		<em class="text-muted">
-		Tags<br/>
-        <ul data-ng-repeat="tag in character.tags">
-            <li>{{tag.text}}</li>
-        </ul>
-		</em>
-	</small>
 </section>

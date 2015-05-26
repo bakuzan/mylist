@@ -8,6 +8,16 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
+        $scope.itemUpdate = new Date().toISOString().substring(0,10); //today's date as 'yyyy-MM-dd'
+        $scope.view = 'list'; //dynamic page title.
+        $scope.isList = true; //list view as default.
+        $scope.maxMangaCount = 0; //number of anime.
+        $scope.maxMangaRatedCount = 0; //number of anime with a rating i.e not 0.
+        $scope.averageMangaRating = 0; //average rating for anime.
+        $scope.maxCompleteMonth = 0; //used to find the max number of ends in 1 month.
+        $scope.showDetail = false; //show month detail.
+        $scope.statTagSortType = 'tag'; //stat tag sort
+        $scope.statTagSortReverse = false; //stat tag sort direction.
         $scope.sortType = 'latest'; //default sort type
 	    $scope.sortReverse = true; // default sort order
         $scope.finalNumbers = false; //default show status of final number fields in edit view.
@@ -18,26 +28,29 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         $scope.tagArray = []; // holding tags pre-submit
         $scope.tagArrayRemove = [];
         $scope.usedTags = []; //for typeahead array.
+        $scope.statTags = []; //for stat table.
 
         //allow retreival of local resource
         $scope.trustAsResourceUrl = function(url) {
             return $sce.trustAsResourceUrl(url);
         };
         
-        //builds an array of unique tag names for the typeahead.
-        $scope.createUsedTags = function(text) {
-            var add = true;
-            //is tag in array?
-            for(var i=0; i < $scope.usedTags.length; i++) {
-                if ($scope.usedTags[i]===text) {
-                    add = false;
-                }
-            }
-            //add if not in.
-            if (add===true) {
-                $scope.usedTags.push(text);
-            }
-        };
+        /**
+//        //builds an array of unique tag names for the typeahead.
+//        $scope.createUsedTags = function(text) {
+//            var add = true;
+//            //is tag in array?
+//            for(var i=0; i < $scope.usedTags.length; i++) {
+//                if ($scope.usedTags[i]===text) {
+//                    add = false;
+//                }
+//            }
+//            //add if not in.
+//            if (add===true) {
+//                $scope.usedTags.push(text);
+//            }
+//        };
+*/
         
         $scope.searchTags = '';
         $scope.passTag = function(tag) {
@@ -115,6 +128,109 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                 return found;
             }
         };
+        
+        $scope.months = [
+            { number: '01', text: 'January' },
+            { number: '02', text: 'February' },
+            { number: '03', text: 'March' },
+            { number: '04', text: 'April' },
+            { number: '05', text: 'May' },
+            { number: '06', text: 'June' },
+            { number: '07', text: 'July' },
+            { number: '08', text: 'August' },
+            { number: '09', text: 'September' },
+            { number: '10', text: 'October' },
+            { number: '11', text: 'November' },
+            { number: '12', text: 'December' }
+        ];
+        
+        //ended stat month filter
+        $scope.endedMonth = function(year, month){
+            return function(item) {
+                if (item.end!==undefined) {
+                    if (item.end.substring(0,4)===year) {
+                        if (item.end.substr(5,2)===month) {
+                            return item;
+                        }
+                    }
+                }
+            };
+        };
+        
+        //show month detail.
+        $scope.monthDetail = function(year, month) {
+//            console.log(year+'-'+month);
+            //if the one already selected is clicked, hide the detail.
+            if ($scope.detailYear===year && $scope.detailMonth===month) {
+                    $scope.showDetail = !$scope.showDetail;
+            } else {
+                $scope.detailYear = year;
+                $scope.detailMonth = month;
+                //get month name also, cause why not.
+                angular.forEach($scope.months, function(mmm) {
+                    if ($scope.detailMonth===mmm.number) {
+                        $scope.detailMonthName = mmm.text;
+                    }
+                });
+                $scope.showDetail = true;
+            }
+        };
+        
+        $scope.$watchCollection('mangaitems', function() {
+            if ($scope.mangaitems!==undefined) {
+//                console.log($scope.mangaitems);
+                $scope.maxMangaCount = $scope.mangaitems.length;
+                var tempRating = 0;
+                angular.forEach($scope.mangaitems, function(manga) {
+                    if (manga.rating!==0) {
+                        tempRating += manga.rating;
+                        $scope.maxMangaRatedCount++;
+                    }
+                });
+                $scope.averageMangaRating = tempRating / $scope.maxMangaRatedCount;
+                var modeMap = {};
+                var maxCount = 0;
+                for(var i = 0; i < $scope.mangaitems.length; i++) {
+    	           if ($scope.mangaitems[i].end!==undefined) {
+                        var end = $scope.mangaitems[i].end.substring(0,7);
+
+    	               if(modeMap[end] === null || modeMap[end] === undefined) {
+    		              modeMap[end] = 1;
+                        } else {
+                            modeMap[end]++;
+                        }
+
+                        if(modeMap[end] > maxCount) {
+    		              maxCount = modeMap[end];
+    	               }
+                   }
+                }
+//                console.log(modeMap);
+//                console.log(maxCount);
+                $scope.maxCompleteMonth = maxCount;
+                
+                var add = true;
+                //is tag in array?
+                angular.forEach($scope.mangaitems, function(manga) { 
+                    angular.forEach(manga.tags, function(tag) {
+                        for(var i=0; i < $scope.statTags.length; i++) {
+                            if ($scope.statTags[i].tag===tag.text) {
+                                add = false;
+                                    $scope.statTags[i].count += 1; 
+                                    $scope.statTags[i].ratingAdded += manga.rating;
+                                    $scope.statTags[i].ratingAvg = $scope.statTags[i].ratingAdded / $scope.statTags[i].count;
+                            }
+                        }
+                        // add if not in
+                        if (add===true) {
+                            $scope.statTags.push({ tag: tag.text, count: 1, ratingAdded: manga.rating, ratingAvg: manga.rating });
+                        }
+                        add = true; //reset add status.
+                    });
+//                    console.log($scope.statTags);
+                });
+            }
+        });
         
         //rating 'tooltip' function
         $scope.hoveringOver = function(value) {
@@ -258,7 +374,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		// Find a list of Mangaitems
 		$scope.find = function() {
 			$scope.mangaitems = Mangaitems.query();
-            console.log($scope.mangaitems);
+            //console.log($scope.mangaitems);
 		};
 
 		// Find existing Mangaitem
@@ -266,7 +382,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 			$scope.mangaitem = Mangaitems.get({ 
 				mangaitemId: $stateParams.mangaitemId
 			});
-            console.log($scope.mangaitem);
+            //console.log($scope.mangaitem);
 		};
         
         // Find a list of Animeitems for dropdowns.

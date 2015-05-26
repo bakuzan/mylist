@@ -8,6 +8,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
+        $scope.itemUpdate = new Date().toISOString().substring(0,10); //today's date as 'yyyy-MM-dd'
         $scope.view = 'list'; //dynamic page title.
         $scope.isList = true; //list view as default.
         $scope.maxAnimeCount = 0; //number of anime.
@@ -316,7 +317,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		// Update existing Animeitem
 		$scope.update = function() {
 			var animeitem = $scope.animeitem;
-            
+
             //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
             if ($scope.animeitem.manga!==null && $scope.animeitem.manga!==undefined) {
                 animeitem.manga = $scope.animeitem.manga._id;
@@ -365,7 +366,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		// Find a list of Animeitems
 		$scope.find = function() {
 			$scope.animeitems = Animeitems.query();
-            console.log($scope.animeitems);
+            //console.log($scope.animeitems);
 		};
 
 		// Find existing Animeitem

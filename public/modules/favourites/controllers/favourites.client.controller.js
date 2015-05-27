@@ -166,5 +166,53 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
                 $scope.favouriteMangaFive = '';
             } 
         };
+        
+        $scope.reorderFavourites = function(favourite) {
+//            console.log(favourite);
+            if ($scope.selectedFavourite===favourite) {
+                $scope.selectedFavourite = undefined;
+                $scope.selectedFavouriteTwo = undefined;
+            } else {
+                if ($scope.selectedFavourite===undefined) {
+                    $scope.selectedFavourite = favourite;
+                } else {
+                    $scope.selectedFavouriteTwo = favourite;
+                    
+                    if ($scope.selectedFavourite.anime!==undefined) {
+//                        console.log('change places');
+                        var temprank1 = $scope.selectedFavourite.rank;
+                        var temprank2 = $scope.selectedFavouriteTwo.rank;
+                        angular.forEach($scope.favouriteAnimeitem, function(favouriteAnimeitem) {
+                            if (favouriteAnimeitem.anime.title===$scope.selectedFavourite.anime.title) {
+                                favouriteAnimeitem.rank = temprank2;
+                            } else if (favouriteAnimeitem.anime.title===$scope.selectedFavouriteTwo.anime.title) {
+                                favouriteAnimeitem.rank = temprank1;
+                            }
+//                            console.log('final=' + favouriteAnimeitem.anime.title + ' - ' + favouriteAnimeitem.rank);
+                        });
+//                        console.log($scope.favouriteAnimeitem);
+                        localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
+                        $scope.selectedFavourite = undefined;
+                        $scope.selectedFavouriteTwo = undefined;
+                    } else if ($scope.selectedFavourite.manga!==undefined) {
+//                        console.log('change places');
+                        var temprank1 = $scope.selectedFavourite.rank;
+                        var temprank2 = $scope.selectedFavouriteTwo.rank;
+                        angular.forEach($scope.favouriteMangaitem, function(favouriteMangaitem) {
+                            if (favouriteMangaitem.manga.title===$scope.selectedFavourite.manga.title) {
+                                favouriteMangaitem.rank = temprank2;
+                            } else if (favouriteMangaitem.manga.title===$scope.selectedFavouriteTwo.manga.title) {
+                                favouriteMangaitem.rank = temprank1;
+                            }
+//                            console.log('final=' + favouriteMangaitem.manga.title + ' - ' + favouriteMangaitem.rank);
+                        });
+//                        console.log($scope.favouriteMangaitem);
+                        localStorage.setItem('favouriteMangaitems', JSON.stringify($scope.favouriteMangaitem));
+                        $scope.selectedFavourite = undefined;
+                        $scope.selectedFavouriteTwo = undefined;
+                    }
+                }
+            }
+        };
     }
 ]);

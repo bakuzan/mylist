@@ -18,3 +18,7 @@
 .favourite-item {
     height: 10vh;
 }
+
+.selected {
+    border: 3px solid #FF0000;
+}

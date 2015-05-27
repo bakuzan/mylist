@@ -11,7 +11,7 @@
             </div>
             <div class="favouriteContent col-sm-12">
                     <div class="list-group col-sm-12">
-                        <a data-ng-repeat="favouriteAnimeitem in favouriteAnimeitem" href="/#!/animeitems/{{favouriteAnimeitem.anime._id}}" favourite-back="{{trustAsResourceUrl(favouriteAnimeitem.anime.image)}}" data-ng-model="favouriteAnimeitem" class="list-group-item favourite-item" popover="{{favouriteAnimeitem.date | date: 'dd-MMM-yyyy'}}" popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">
+                        <a data-ng-repeat="favouriteAnimeitem in favouriteAnimeitem | orderBy: 'rank'" href="/#!/animeitems/{{favouriteAnimeitem.anime._id}}" favourite-back="{{trustAsResourceUrl(favouriteAnimeitem.anime.image)}}" data-ng-model="favouriteAnimeitem" class="list-group-item favourite-item" popover="{{favouriteAnimeitem.date | date: 'dd-MMM-yyyy'}}" popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">
                             <i class="fa fa-trophy fa-2x pull-left trophy-{{favouriteAnimeitem.rank}}"></i><h4 class="darkBorderedFontHeading" data-ng-bind="favouriteAnimeitem.anime.title"></h4>
                         </a>
                     </div>
@@ -30,7 +30,7 @@
             </div>
             <div class="favouriteContent col-sm-12">
                 <div class="list-group col-sm-12">
-                        <a data-ng-repeat="favouriteMangaitem in favouriteMangaitem" href="/#!/mangaitems/{{favouriteMangaitem.manga._id}}" favourite-back="{{trustAsResourceUrl(favouriteMangaitem.manga.image)}}" data-ng-model="favouriteMangaitem" class="list-group-item favourite-item" popover="{{favouriteMangaitem.date | date: 'dd-MMM-yyyy'}}" popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">
+                        <a data-ng-repeat="favouriteMangaitem in favouriteMangaitem | orderBy: 'rank'" href="/#!/mangaitems/{{favouriteMangaitem.manga._id}}" favourite-back="{{trustAsResourceUrl(favouriteMangaitem.manga.image)}}" data-ng-model="favouriteMangaitem" class="list-group-item favourite-item" popover="{{favouriteMangaitem.date | date: 'dd-MMM-yyyy'}}" popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">
                             <i class="fa fa-trophy fa-2x pull-left trophy-{{favouriteMangaitem.rank}}"></i><h4 class="darkBorderedFontHeading" data-ng-bind="favouriteMangaitem.manga.title"></h4>
                         </a>
                  </div>

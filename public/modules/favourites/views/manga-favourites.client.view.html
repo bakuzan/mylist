@@ -73,7 +73,7 @@
             </div>
             <div class="favouriteContent col-sm-12">
                 <div class="list-group col-sm-12">
-                    <a data-ng-repeat="favouriteMangaitem in favouriteMangaitem" href="/#!/mangaitems/{{favouriteMangaitem.manga._id}}" list_Back="{{trustAsResourceUrl(favouriteMangaitem.manga.image)}}" data-ng-model="favouriteMangaitem" class="list-group-item">
+                    <a data-ng-repeat="favouriteMangaitem in favouriteMangaitem | orderBy: 'rank'" ng-click="reorderFavourites(favouriteMangaitem)" list_Back="{{trustAsResourceUrl(favouriteMangaitem.manga.image)}}" data-ng-model="favouriteMangaitem" class="list-group-item" ng-class="{ selected: favouriteMangaitem === selectedFavourite }">
 			             <h4 class="list-group-item-heading" data-ng-bind="favouriteMangaitem.manga.title"></h4><span data-ng-bind="favouriteMangaitem.date.substring(0,10)"></span>
                     </a>
                 </div>

@@ -1,12 +1,46 @@
 <section data-ng-controller="CharactersController" data-ng-init="find()" data-ng-show="authentication.user">
     <div class="page-header">
         <div class="viewButtons text-right pull-right">
-            <label class="btn btn-primary" ng-model="isList" btn-radio="'true'" uncheckable>List</label>
-            <label class="btn btn-primary" ng-model="isList" btn-radio="'false'" uncheckable>Carousel</label>
+            <label class="btn btn-primary" ng-model="isList" btn-radio="'list'" uncheckable>List</label>
+            <label class="btn btn-primary" ng-model="isList" btn-radio="'carousel'" uncheckable>Carousel</label>
+            <label class="btn btn-primary" ng-model="isList" btn-radio="'statistics'" uncheckable>Stats</label>
         </div>
-        <h1>Characters</h1>
+        <h1>Characters {{isList}}</h1>
     </div>
-        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+    <div class="col-lg-12 col-md-12 col-sm-12 statView" ng-show="isList==='statistics'">
+        <div class="col-lg-6 col-md-6 col-sm-6 statTagPanel">
+            <div class="statHeader">
+                <h3>Tags</h3><span class="statRatingAverage pull-right"><small class="text-muted">&nbsp;{{statTags.length}} unique tags.</small></span>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <table class="col-lg-12 col-md-12 col-sm-12 statTagTable table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <td>
+                                <a href="" ng-click="statTagSortType = 'tag'; statTagSortReverse = !statTagSortReverse ">
+					               Tag
+					            </a>
+                                <i ng-show="statTagSortType == 'tag'" class="fa" ng-class="statTagSortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                            </td>
+                            <td class="text-right">
+                                <a href="" ng-click="statTagSortType = 'count'; statTagSortReverse = !statTagSortReverse ">
+					               Count
+					            </a>
+                                <i ng-show="statTagSortType == 'count'" class="fa" ng-class="statTagSortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="stat in statTags | orderBy: statTagSortType:statTagSortReverse">
+                        <tr><!-- repeat row for every anime tag. -->
+                            <td>{{stat.tag}}</td>
+                            <td class="text-right">{{stat.count}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div><!-- TAG PANEL END -->
+    </div>
+        <div class="form-group col-lg-4 col-md-4 col-sm-4" ng-hide="isList==='statistics'">
        <div class="input-group">
             <div class="input-group-addon">
                 <i class="fa fa-search"></i>
@@ -18,7 +52,7 @@
             <div class="input-group-addon clickable" ng-click="clearTagValues(); characterTags = ''">
                 <i class="fa fa-tag"></i>
             </div>
-           <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags" typeahead="tag for tag in usedTags | filter: $viewValue" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
+           <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags" typeahead="stat.tag for stat in statTags | filter: $viewValue" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
 	   </div>
        <div class="input-group" ng-hide="searchTags===undefined || searchTags==='' || searchTags===null">
            <ul class="taskList col-lg-12 col-md-12 col-sm-12">
@@ -79,7 +113,7 @@
 	    </div>
         <br/>
     </div>
-    <div class="list-group col-lg-8 col-md-8 col-sm-8" data-ng-show="isList">
+    <div class="list-group col-lg-8 col-md-8 col-sm-8" data-ng-show="isList==='list'">
         <a data-ng-repeat="character in characters | orderBy: sortType:sortReverse | filter: search | filter: mediaFilter | filter: tagFilter" data-ng-href="#!/characters/{{character._id}}" character_Back="{{trustAsResourceUrl(character.image)}}" class="list-group-item col-lg-6 col-md-6 col-sm-6" style="height: 150px;">
 			<h4 class="darkBorderedFontHeading" data-ng-bind="character.name"></h4>
             <p class="list-group-item-text">
@@ -87,11 +121,9 @@
             </p>
             <span class="darkBorderedFont" data-ng-show="character.manga!==undefined && character.manga!==null" data-ng-bind="character.manga.title"></span>
             <span class="darkBorderedFont" data-ng-show="character.anime!==undefined && character.manga===null" data-ng-bind="character.anime.title"></span>
-            <span ng-repeat="tag in character.tags" data-ng-init="createUsedTags(tag.text)"></span><!-- for typeahead -->
-            <span data-ng-init="createVoices(character.voice)"></span><!-- for typeahead -->
         </a>
     </div>
-    <div class="characterCarousel col-lg-8 col-md-8 col-sm-8" style="height: 300px;" data-ng-hide="isList">
+    <div class="characterCarousel col-lg-8 col-md-8 col-sm-8" style="height: 300px;" data-ng-show="isList==='carousel'">
         <carousel interval="myInterval" style="height: 300px;" disable-ng-animate>
             <slide ng-repeat="character in characters | filter: search | filter: mediaFilter | filter: tagFilter" active="character.active">
                 <a href="/#!/characters/{{character._id}}">

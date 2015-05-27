@@ -177,11 +177,11 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
                     $scope.selectedFavourite = favourite;
                 } else {
                     $scope.selectedFavouriteTwo = favourite;
+                    var temprank1 = $scope.selectedFavourite.rank;
+                    var temprank2 = $scope.selectedFavouriteTwo.rank;
                     
                     if ($scope.selectedFavourite.anime!==undefined) {
 //                        console.log('change places');
-                        var temprank1 = $scope.selectedFavourite.rank;
-                        var temprank2 = $scope.selectedFavouriteTwo.rank;
                         angular.forEach($scope.favouriteAnimeitem, function(favouriteAnimeitem) {
                             if (favouriteAnimeitem.anime.title===$scope.selectedFavourite.anime.title) {
                                 favouriteAnimeitem.rank = temprank2;
@@ -196,8 +196,6 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
                         $scope.selectedFavouriteTwo = undefined;
                     } else if ($scope.selectedFavourite.manga!==undefined) {
 //                        console.log('change places');
-                        var temprank1 = $scope.selectedFavourite.rank;
-                        var temprank2 = $scope.selectedFavouriteTwo.rank;
                         angular.forEach($scope.favouriteMangaitem, function(favouriteMangaitem) {
                             if (favouriteMangaitem.manga.title===$scope.selectedFavourite.manga.title) {
                                 favouriteMangaitem.rank = temprank2;

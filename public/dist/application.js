@@ -615,7 +615,9 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
-        $scope.isList = true; //show list? or carousel.
+        $scope.isList = 'list'; //show list? or carousel.
+        $scope.statTagSortType = 'tag'; //stat tag sort
+        $scope.statTagSortReverse = false; //stat tag sort direction.
         $scope.myInterval = 2500; //carousel timer.
         $scope.sortType = 'name'; //default sort type
 	    $scope.sortReverse = false; // default sort order
@@ -625,35 +627,51 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.tagArrayRemove = [];
         $scope.usedTags = []; //for typeahead array.
         $scope.voiceActors = []; //for typeahead array.
+        $scope.statTags = []; //for tag statistics;
 
         //allow retreival of local resource
         $scope.trustAsResourceUrl = function(url) {
             return $sce.trustAsResourceUrl(url);
         };
         
-        /**
-         * tag splitter for mulitple values in typeahead search.
-         *
-//        //for splitting tags in the typeahead.
-//        $scope.tagSplitter = function(viewValue) {
-//            if (viewValue.indexOf(',') > -1) {
-//                var lastTag = viewValue.substring(viewValue.lastIndexOf(',') + 1);
-////                console.log(lastTag);
-//                angular.forEach($scope.usedTags, function(used) {
-//                    $scope.usedTags.push(lastTag + used);
-//                });
-//                console.log($scope.usedTags);
-//            } else {
-//                var tempTags = $scope.usedTags;
-//                $scope.usedTags = [];
-//                angular.forEach(tempTags, function(used) {
-//                    if (used.indexOf(',') === -1) {
-//                        $scope.usedTags.push(used);
-//                    }
-//                });
-//            }
-//        };
-*/
+        $scope.$watchCollection('characters', function() {
+            if ($scope.characters!==undefined) {
+//                console.log($scope.characters);
+                
+                var add = true;
+                //is tag in array?
+                angular.forEach($scope.characters, function(item) { 
+                    angular.forEach(item.tags, function(tag) {
+                        for(var i=0; i < $scope.statTags.length; i++) {
+                            if ($scope.statTags[i].tag===tag.text) {
+                                add = false;
+                                    $scope.statTags[i].count += 1; 
+                            }
+                        }
+                        // add if not in
+                        if (add===true) {
+                            $scope.statTags.push({ tag: tag.text, count: 1 });
+                        }
+                        add = true; //reset add status.
+                    });
+//                    console.log($scope.statTags);
+                });
+                //is voice actor in array?
+                angular.forEach($scope.characters, function(item) { 
+                        for(var i=0; i < $scope.voiceActors.length; i++) {
+                            if ($scope.voiceActors[i]===item.voice) {
+                                add = false; 
+                            }
+                        }
+                        // add if not in
+                        if (add===true) {
+                            $scope.voiceActors.push(item.voice);
+                        }
+                        add = true; //reset add status.
+                });
+            }
+        });
+        
         
         $scope.searchTags = '';
         $scope.passTag = function(tag) {
@@ -872,34 +890,34 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 		};
         
         //builds an array of unique tag names for the typeahead.
-        $scope.createUsedTags = function(text) {
-            var add = true;
-            //is tag in array?
-            for(var i=0; i < $scope.usedTags.length; i++) {
-                if ($scope.usedTags[i]===text) {
-                    add = false;
-                }
-            }
-            //add if not in.
-            if (add===true) {
-                $scope.usedTags.push(text);
-            }
-        };
+//        $scope.createUsedTags = function(text) {
+//            var add = true;
+//            //is tag in array?
+//            for(var i=0; i < $scope.usedTags.length; i++) {
+//                if ($scope.usedTags[i]===text) {
+//                    add = false;
+//                }
+//            }
+//            //add if not in.
+//            if (add===true) {
+//                $scope.usedTags.push(text);
+//            }
+//        };
         
         //builds an array of unique voices for the typeahead.
-        $scope.createVoices = function(voice) {
-            var add = true;
-            //is tag in array?
-            for(var i=0; i < $scope.voiceActors.length; i++) {
-                if ($scope.voiceActors[i]===voice) {
-                    add = false;
-                }
-            }
-            //add if not in.
-            if (add===true) {
-                $scope.voiceActors.push(voice);
-            }
-        };
+//        $scope.createVoices = function(voice) {
+//            var add = true;
+//            //is tag in array?
+//            for(var i=0; i < $scope.voiceActors.length; i++) {
+//                if ($scope.voiceActors[i]===voice) {
+//                    add = false;
+//                }
+//            }
+//            //add if not in.
+//            if (add===true) {
+//                $scope.voiceActors.push(voice);
+//            }
+//        };
 
 		// Find existing Character
 		$scope.findOne = function() {
@@ -1686,6 +1704,52 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
                 localStorage.setItem('favouriteMangaitems', JSON.stringify($scope.favouriteMangaitem));
                 $scope.favouriteMangaFive = '';
             } 
+        };
+        
+        $scope.reorderFavourites = function(favourite) {
+//            console.log(favourite);
+            if ($scope.selectedFavourite===favourite) {
+                $scope.selectedFavourite = undefined;
+                $scope.selectedFavouriteTwo = undefined;
+            } else {
+                if ($scope.selectedFavourite===undefined) {
+                    $scope.selectedFavourite = favourite;
+                } else {
+                    $scope.selectedFavouriteTwo = favourite;
+                    var temprank1 = $scope.selectedFavourite.rank;
+                    var temprank2 = $scope.selectedFavouriteTwo.rank;
+                    
+                    if ($scope.selectedFavourite.anime!==undefined) {
+//                        console.log('change places');
+                        angular.forEach($scope.favouriteAnimeitem, function(favouriteAnimeitem) {
+                            if (favouriteAnimeitem.anime.title===$scope.selectedFavourite.anime.title) {
+                                favouriteAnimeitem.rank = temprank2;
+                            } else if (favouriteAnimeitem.anime.title===$scope.selectedFavouriteTwo.anime.title) {
+                                favouriteAnimeitem.rank = temprank1;
+                            }
+//                            console.log('final=' + favouriteAnimeitem.anime.title + ' - ' + favouriteAnimeitem.rank);
+                        });
+//                        console.log($scope.favouriteAnimeitem);
+                        localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
+                        $scope.selectedFavourite = undefined;
+                        $scope.selectedFavouriteTwo = undefined;
+                    } else if ($scope.selectedFavourite.manga!==undefined) {
+//                        console.log('change places');
+                        angular.forEach($scope.favouriteMangaitem, function(favouriteMangaitem) {
+                            if (favouriteMangaitem.manga.title===$scope.selectedFavourite.manga.title) {
+                                favouriteMangaitem.rank = temprank2;
+                            } else if (favouriteMangaitem.manga.title===$scope.selectedFavouriteTwo.manga.title) {
+                                favouriteMangaitem.rank = temprank1;
+                            }
+//                            console.log('final=' + favouriteMangaitem.manga.title + ' - ' + favouriteMangaitem.rank);
+                        });
+//                        console.log($scope.favouriteMangaitem);
+                        localStorage.setItem('favouriteMangaitems', JSON.stringify($scope.favouriteMangaitem));
+                        $scope.selectedFavourite = undefined;
+                        $scope.selectedFavouriteTwo = undefined;
+                    }
+                }
+            }
         };
     }
 ]);

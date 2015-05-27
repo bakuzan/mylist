@@ -9,8 +9,9 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.isList = 'list'; //show list? or carousel.
-        $scope.statTagSortType = 'tag'; //stat tag sort
-        $scope.statTagSortReverse = false; //stat tag sort direction.
+        $scope.maxItemCount = 0; //number of characters.
+        $scope.statTagSortType = 'count'; //stat tag sort
+        $scope.statTagSortReverse = true; //stat tag sort direction.
         $scope.myInterval = 2500; //carousel timer.
         $scope.sortType = 'name'; //default sort type
 	    $scope.sortReverse = false; // default sort order
@@ -21,6 +22,9 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.usedTags = []; //for typeahead array.
         $scope.voiceActors = []; //for typeahead array.
         $scope.statTags = []; //for tag statistics;
+        $scope.male = 0; //gender count for pb.
+        $scope.female = 0; //gender count for pb.
+        $scope.nosex = 0; //no gender count for pb.
 
         //allow retreival of local resource
         $scope.trustAsResourceUrl = function(url) {
@@ -30,7 +34,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.$watchCollection('characters', function() {
             if ($scope.characters!==undefined) {
 //                console.log($scope.characters);
-                
+                $scope.maxItemCount = $scope.characters.length;
                 var add = true;
                 //is tag in array?
                 angular.forEach($scope.characters, function(item) { 
@@ -49,6 +53,15 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                     });
 //                    console.log($scope.statTags);
                 });
+                //get gender counts.
+                angular.forEach($scope.statTags, function(stat) {
+                    if (stat.tag==='male') {
+                        $scope.male = stat.count;
+                    } else if (stat.tag==='female') {
+                        $scope.female = stat.count;
+                    }
+                });
+                $scope.nosex = $scope.maxItemCount - $scope.male - $scope.female;
                 //is voice actor in array?
                 angular.forEach($scope.characters, function(item) { 
                         for(var i=0; i < $scope.voiceActors.length; i++) {

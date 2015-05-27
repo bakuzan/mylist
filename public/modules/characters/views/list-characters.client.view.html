@@ -8,11 +8,26 @@
         <h1>Characters {{isList}}</h1>
     </div>
     <div class="col-lg-12 col-md-12 col-sm-12 statView" ng-show="isList==='statistics'">
+        <div class="col-lg-12 col-md-12 col-sm-12 statGenderPanel">
+            <div class="statGenderProgressContainer">
+                <progress>
+                    <bar type="danger" value="(female / maxItemCount) * 100">{{(female / maxItemCount) * 100 | number: 2}}% female</bar>
+                    <bar type="primary" value="(male / maxItemCount) * 100">{{(male / maxItemCount) * 100 | number: 2}}% male</bar>
+                    <bar type="success" value="(nosex / maxItemCount) * 100">{{(nosex / maxItemCount) * 100 | number: 2}}% unassigned</bar>
+                </progress>
+            </div>
+        </div>
         <div class="col-lg-6 col-md-6 col-sm-6 statTagPanel">
             <div class="statHeader">
                 <h3>Tags</h3><span class="statRatingAverage pull-right"><small class="text-muted">&nbsp;{{statTags.length}} unique tags.</small></span>
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </div>
+                    <input type="text" ng-model="statSearch.tag" placeholder="search tags" class="form-control">
+                </div>
                 <table class="col-lg-12 col-md-12 col-sm-12 statTagTable table table-bordered table-striped">
                     <thead>
                         <tr>
@@ -30,7 +45,7 @@
                             </td>
                         </tr>
                     </thead>
-                    <tbody ng-repeat="stat in statTags | orderBy: statTagSortType:statTagSortReverse">
+                    <tbody ng-repeat="stat in statTags | orderBy: statTagSortType:statTagSortReverse | filter: statSearch">
                         <tr><!-- repeat row for every anime tag. -->
                             <td>{{stat.tag}}</td>
                             <td class="text-right">{{stat.count}}</td>

@@ -65,9 +65,9 @@
                     <div class="input-group-addon">
                         <i class="fa fa-search"></i>
                     </div>
-                    <input type="text" ng-model="seriesSearch.name" placeholder="search series" class="form-control">
+                    <input type="text" ng-model="seriesSearch" placeholder="search series" class="form-control">
                 </div>
-                <table class="col-lg-12 col-md-12 col-sm-12 statMediaTable table table-bordered table-striped">
+                <table class="col-lg-12 col-md-12 col-sm-12 statMediaTable table table-bordered">
                     <thead>
                         <tr>
                             <td class="text-right">#</td>
@@ -86,7 +86,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="stat in statSeries | orderBy: statSeriesSortType:statSeriesSortReverse | filter: seriesSearch"><!-- repeat row for every item in collection. -->
+                        <tr class="statTableRow clickable" ng-repeat="stat in statSeries | orderBy: statSeriesSortType:statSeriesSortReverse | filter: {name: seriesSearch }" ng-click="seriesDetail(stat.name);" >
                             <td class="text-right">{{$index+1}}</td>
                             <td>{{stat.name}}</td>
                             <td class="text-right">{{stat.count}}</td>
@@ -94,7 +94,19 @@
                     </tbody>
                 </table>
             </div>
-        </div><!-- TAG PANEL END -->
+        </div><!-- SERIES PANEL END -->
+        <div class="col-lg-6 col-md-6 col-sm-6 statMediaDetail" ng-show="showSeriesDetail">
+            <div class="col-lg-12 col-md-12 col-sm-12 statDetail">
+                <div class="statDetailHeader">
+                    <h3>Characters in {{detailSeriesName}}</h3>
+                </div>
+                <ul class="col-lg-12 col-md-12 col-sm-12 statMediaDetailList">
+                    <li ng-repeat="character in characters | orderBy: 'name' | filter: seriesDetailFilter">
+                        <a href="/#!/characters/{{character._id}}"><span>{{character.name}}</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div><!-- SERIES DETAIL PANEL END -->
     </div><!-- STATISTICS VIEW END -->
         <div class="form-group col-lg-4 col-md-4 col-sm-4" ng-hide="isList==='statistics'">
        <div class="input-group">

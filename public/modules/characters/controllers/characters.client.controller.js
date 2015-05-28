@@ -25,6 +25,8 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.voiceActors = []; //for typeahead array.
         $scope.statTags = []; //for tag statistics;
         $scope.statSeries = []; //for series statistics;
+        $scope.showSeriesDetail = false; //visibility of series drilldown.
+        $scope.seriesSearch = ''; //for filtering series values.
         $scope.areTagless = false; //are any items tagless
         $scope.taglessItem = false; //filter variable for showing tagless items.
         $scope.male = 0; //gender count for pb.
@@ -156,6 +158,32 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             if (removal) {
                 var index = $scope.character.tags.indexOf(tag);
                 $scope.character.tags.splice(index, 1);
+            }
+        };
+        
+        //filter stat series detail.
+        $scope.seriesDetailFilter = function(item) {
+            if (item.anime!==null) {
+                if (item.anime.title===$scope.detailSeriesName) {
+                    return item;
+                }
+            } else if (item.manga!==null) {
+                if (item.manga.title===$scope.detailSeriesName) {
+                    return item;
+                }
+            }
+        };
+        
+        //show stat series detail.
+        $scope.seriesDetail = function(name) {
+            if ($scope.detailSeriesName===name) {
+                $scope.seriesSearch = '';
+                $scope.showSeriesDetail = false;
+                $scope.detailSeriesName = '';
+            } else {
+                $scope.seriesSearch = name;
+                $scope.detailSeriesName = name;
+                $scope.showSeriesDetail = true;
             }
         };
         

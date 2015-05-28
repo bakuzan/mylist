@@ -31,6 +31,7 @@
                 <table class="col-lg-12 col-md-12 col-sm-12 statTagTable table table-bordered table-striped">
                     <thead>
                         <tr>
+                            <td class="text-right">#</td>
                             <td>
                                 <a href="" ng-click="statTagSortType = 'tag'; statTagSortReverse = !statTagSortReverse ">
 					               Tag
@@ -47,6 +48,7 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="stat in statTags | orderBy: statTagSortType:statTagSortReverse | filter: statSearch"><!-- repeat row for every anime tag. -->
+                            <td class="text-right">{{$index+1}}</td>
                             <td>{{stat.tag}}</td>
                             <td class="text-right">{{stat.count}}</td>
                         </tr>
@@ -59,14 +61,21 @@
                 <h3>Series</h3><span class="statSummaryInfo pull-right"><small class="text-muted">&nbsp;{{statSeries.length}} unique series.</small></span>
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </div>
+                    <input type="text" ng-model="seriesSearch.name" placeholder="search series" class="form-control">
+                </div>
                 <table class="col-lg-12 col-md-12 col-sm-12 statMediaTable table table-bordered table-striped">
                     <thead>
                         <tr>
+                            <td class="text-right">#</td>
                             <td>
-                                <a href="" ng-click="statSeriesSortType = 'series'; statSeriesSortReverse = !statSeriesSortReverse ">
+                                <a href="" ng-click="statSeriesSortType = 'name'; statSeriesSortReverse = !statSeriesSortReverse ">
 					               Series
 					            </a>
-                                <i ng-show="statSeriesSortType == 'series'" class="fa" ng-class="statSeriesSortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                                <i ng-show="statSeriesSortType == 'name'" class="fa" ng-class="statSeriesSortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                             </td>
                             <td class="text-right">
                                 <a href="" ng-click="statSeriesSortType = 'count'; statSeriesSortReverse = !statSeriesSortReverse ">
@@ -77,8 +86,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="stat in statSeries | orderBy: statSeriesSortType:statSeriesSortReverse "><!-- repeat row for every item in collection. -->
-                            <td>{{stat.series}}</td>
+                        <tr ng-repeat="stat in statSeries | orderBy: statSeriesSortType:statSeriesSortReverse | filter: seriesSearch"><!-- repeat row for every item in collection. -->
+                            <td class="text-right">{{$index+1}}</td>
+                            <td>{{stat.name}}</td>
                             <td class="text-right">{{stat.count}}</td>
                         </tr>
                     </tbody>

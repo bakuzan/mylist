@@ -24,6 +24,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.usedTags = []; //for typeahead array.
         $scope.voiceActors = []; //for typeahead array.
         $scope.statTags = []; //for tag statistics;
+        $scope.statSeries = []; //for series statistics;
         $scope.areTagless = false; //are any items tagless
         $scope.taglessItem = false; //filter variable for showing tagless items.
         $scope.male = 0; //gender count for pb.
@@ -60,6 +61,32 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                     });
 //                    console.log($scope.statTags);
                 });
+                //get series counts.
+                angular.forEach($scope.characters, function(item) {
+                    for(var i=0; i < $scope.statSeries.length; i++) {
+                        if (item.anime!==null) {
+                            if ($scope.statSeries[i].name===item.anime.title) {
+                                add = false;
+                                $scope.statSeries[i].count += 1; 
+                            }
+                        } else if (item.manga!==null) {
+                            if ($scope.statSeries[i].name===item.manga.title) {
+                                add = false;
+                                $scope.statSeries[i].count += 1; 
+                            }
+                        }
+                    }
+                    // add if not in
+                    if (add===true) {
+                        if (item.anime!==null) {
+                            $scope.statSeries.push({ name: item.anime.title, count: 1 });
+                        } else if (item.manga!==null) {
+                            $scope.statSeries.push({ name: item.manga.title, count: 1 });
+                        }
+                    }
+                    add = true; //reset add status.
+                });
+//                    console.log($scope.statSeries);
                 //get gender counts.
                 angular.forEach($scope.statTags, function(stat) {
                     if (stat.tag==='male') {

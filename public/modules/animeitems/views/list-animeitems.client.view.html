@@ -67,6 +67,7 @@
                 <table class="col-lg-12 col-md-12 col-sm-12 statTagTable table table-bordered table-striped">
                     <thead>
                         <tr>
+                            <td class="text-right">#</td>
                             <td>
                                 <a href="" ng-click="statTagSortType = 'tag'; statTagSortReverse = !statTagSortReverse ">
 					               Tag
@@ -89,6 +90,7 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="stat in statTags | orderBy: statTagSortType:statTagSortReverse"><!-- repeat row for every anime tag. -->
+                            <td class="text-right">{{$index+1}}</td>
                             <td>{{stat.tag}}</td>
                             <td class="text-right">{{stat.count}}</td>
                             <td class="text-right">{{stat.ratingAvg | number: 2}}</td>

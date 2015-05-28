@@ -108,7 +108,7 @@
         <br/>
         <div class="input-group">
             <div class="input-group-addon clickable" ng-click="clearTagValues(); characterTags = ''">
-                <i class="fa fa-tag"></i>
+                <i class="fa fa-tags"></i>
             </div>
            <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags" typeahead="stat.tag for stat in statTags | filter: $viewValue" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
 	   </div>
@@ -195,6 +195,16 @@
             <div class="input-group-addon">
                 <span data-ng-show="overStar!=null" class="label" ng-class="{'label-warning': percent<40, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}">{{percent}}%</span>
             </div>
+        </div>
+        <br/>
+        <div class="input-group" data-ng-show="areTagless">
+            <div class="input-group-addon clickable">
+                <span class="fa-stack fa-md">
+                    <i class="fa fa-tag fa-stack-1x"></i>
+                    <i class="fa fa-ban fa-stack-2x text-danger"></i>
+                </span>
+            </div>
+            <input class="form-control" type="checkbox" data-ng-model="taglessItem">
         </div>
     </div>
     <div class="list-group col-lg-8 col-md-8 col-sm-8" ng-show="isList">

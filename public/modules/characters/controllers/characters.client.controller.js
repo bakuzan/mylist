@@ -22,6 +22,8 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.usedTags = []; //for typeahead array.
         $scope.voiceActors = []; //for typeahead array.
         $scope.statTags = []; //for tag statistics;
+        $scope.areTagless = false; //are any items tagless
+        $scope.taglessItem = false; //filter variable for showing tagless items.
         $scope.male = 0; //gender count for pb.
         $scope.female = 0; //gender count for pb.
         $scope.nosex = 0; //no gender count for pb.
@@ -37,7 +39,10 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                 $scope.maxItemCount = $scope.characters.length;
                 var add = true;
                 //is tag in array?
-                angular.forEach($scope.characters, function(item) { 
+                angular.forEach($scope.characters, function(item) {
+                    if (item.tags.length===0) {
+                        $scope.areTagless = true;
+                    }
                     angular.forEach(item.tags, function(tag) {
                         for(var i=0; i < $scope.statTags.length; i++) {
                             if ($scope.statTags[i].tag===tag.text) {
@@ -130,29 +135,36 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             var found = false;
             var i = 0;
             var tagsToSearch = [];
-            if ($scope.searchTags===undefined || $scope.searchTags==='') {
-                return true;
-            } else {
-                //get tags that are being looked for
-//                var tagsForFilter = $scope.characterTags.split(',');
-                $scope.tagsForFilter = $scope.searchTags.substring(0, $scope.searchTags.length - 1).split(',');
-//                console.log($scope.tagsForFilter);
-                
-                //get tags of items to filter
-                angular.forEach(item.tags, function(tag) {
-                    tagsToSearch.push(tag.text);
-                });
-                
-                //filter: check in 'query' is in tags.
-                for(i = 0; i < $scope.tagsForFilter.length; i++) {
-                    
-                    if (tagsToSearch.indexOf($scope.tagsForFilter[i]) !== -1) {
-                        found = true;
-                    } else {
-                        return false;
-                    }
+            
+            //if tagless is checked return tagless and nothing else.
+            if ($scope.taglessItem===true) {
+                if (item.tags.length===0) {
+                    return item;
                 }
-                return found;
+            } else {
+                if ($scope.searchTags===undefined || $scope.searchTags==='') {
+                    return true;
+                } else {
+                    //get tags that are being looked for
+                    //                var tagsForFilter = $scope.characterTags.split(',');
+                    $scope.tagsForFilter = $scope.searchTags.substring(0, $scope.searchTags.length - 1).split(',');
+                    //                console.log($scope.tagsForFilter);
+                
+                    //get tags of items to filter
+                    angular.forEach(item.tags, function(tag) {
+                        tagsToSearch.push(tag.text);
+                    });
+                
+                    //filter: check in 'query' is in tags.
+                    for(i = 0; i < $scope.tagsForFilter.length; i++) {
+                        if (tagsToSearch.indexOf($scope.tagsForFilter[i]) !== -1) {
+                            found = true;
+                        } else {
+                            return false;
+                        }
+                    }
+                    return found;
+                }
             }
         };
         

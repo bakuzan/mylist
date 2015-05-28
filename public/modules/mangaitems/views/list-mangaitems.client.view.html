@@ -41,7 +41,7 @@
         </div><!-- DETAIL PANEL END -->
         <div class="col-lg-6 col-md-6 col-sm-6 statRatingPanel">
             <div class="statHeader">
-                <h3>Ratings</h3><span class="statRatingAverage pull-right"><small class="text-muted">&nbsp;{{averageMangaRating | number: 2}} average rating.</small></span>
+                <h3>Ratings</h3><span class="statSummaryInfo pull-right"><small class="text-muted">&nbsp;{{averageMangaRating | number: 2}} average rating.</small></span>
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <table class="col-lg-12 col-md-12 col-sm-12 statRatingTable">
@@ -61,7 +61,7 @@
         </div><!-- RATING PANEL END -->
         <div class="col-lg-6 col-md-6 col-sm-6 statTagPanel">
             <div class="statHeader">
-                <h3>Tags</h3><span class="statRatingAverage pull-right"><small class="text-muted">&nbsp;{{statTags.length}} unique tags.</small></span>
+                <h3>Tags</h3><span class="statSummaryInfo pull-right"><small class="text-muted">&nbsp;{{statTags.length}} unique tags.</small></span>
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <table class="col-lg-12 col-md-12 col-sm-12 statTagTable table table-bordered table-striped">
@@ -87,8 +87,8 @@
                             </td>
                         </tr>
                     </thead>
-                    <tbody ng-repeat="stat in statTags | orderBy: statTagSortType:statTagSortReverse">
-                        <tr><!-- repeat row for every anime tag. -->
+                    <tbody>
+                        <tr ng-repeat="stat in statTags | orderBy: statTagSortType:statTagSortReverse"><!-- repeat row for every anime tag. -->
                             <td>{{stat.tag}}</td>
                             <td class="text-right">{{stat.count}}</td>
                             <td class="text-right">{{stat.ratingAvg | number: 2}}</td>

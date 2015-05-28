@@ -12,6 +12,8 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.maxItemCount = 0; //number of characters.
         $scope.statTagSortType = 'count'; //stat tag sort
         $scope.statTagSortReverse = true; //stat tag sort direction.
+        $scope.statSeriesSortType = 'count'; //stat series sort
+        $scope.statSeriesSortReverse = true; //stat series sort direction.
         $scope.myInterval = 2500; //carousel timer.
         $scope.sortType = 'name'; //default sort type
 	    $scope.sortReverse = false; // default sort order
@@ -47,7 +49,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                         for(var i=0; i < $scope.statTags.length; i++) {
                             if ($scope.statTags[i].tag===tag.text) {
                                 add = false;
-                                    $scope.statTags[i].count += 1; 
+                                $scope.statTags[i].count += 1; 
                             }
                         }
                         // add if not in

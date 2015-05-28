@@ -16,10 +16,10 @@
                     <bar type="success" value="(nosex / maxItemCount) * 100">{{(nosex / maxItemCount) * 100 | number: 2}}% unassigned</bar>
                 </progress>
             </div>
-        </div>
+        </div><!-- GENDER PERCENTAGE BAR END -->
         <div class="col-lg-6 col-md-6 col-sm-6 statTagPanel">
             <div class="statHeader">
-                <h3>Tags</h3><span class="statRatingAverage pull-right"><small class="text-muted">&nbsp;{{statTags.length}} unique tags.</small></span>
+                <h3>Tags</h3><span class="statSummaryInfo pull-right"><small class="text-muted">&nbsp;{{statTags.length}} unique tags.</small></span>
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="input-group">
@@ -45,8 +45,8 @@
                             </td>
                         </tr>
                     </thead>
-                    <tbody ng-repeat="stat in statTags | orderBy: statTagSortType:statTagSortReverse | filter: statSearch">
-                        <tr><!-- repeat row for every anime tag. -->
+                    <tbody>
+                        <tr ng-repeat="stat in statTags | orderBy: statTagSortType:statTagSortReverse | filter: statSearch"><!-- repeat row for every anime tag. -->
                             <td>{{stat.tag}}</td>
                             <td class="text-right">{{stat.count}}</td>
                         </tr>
@@ -54,7 +54,38 @@
                 </table>
             </div>
         </div><!-- TAG PANEL END -->
-    </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 statMediaPanel">
+            <div class="statHeader">
+                <h3>Series</h3><span class="statSummaryInfo pull-right"><small class="text-muted">&nbsp;{{statSeries.length}} unique series.</small></span>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <table class="col-lg-12 col-md-12 col-sm-12 statMediaTable table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <td>
+                                <a href="" ng-click="statSeriesSortType = 'series'; statSeriesSortReverse = !statSeriesSortReverse ">
+					               Series
+					            </a>
+                                <i ng-show="statSeriesSortType == 'series'" class="fa" ng-class="statSeriesSortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                            </td>
+                            <td class="text-right">
+                                <a href="" ng-click="statSeriesSortType = 'count'; statSeriesSortReverse = !statSeriesSortReverse ">
+					               Count
+					            </a>
+                                <i ng-show="statSeriesSortType == 'count'" class="fa" ng-class="statSeriesSortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="stat in statSeries | orderBy: statSeriesSortType:statSeriesSortReverse "><!-- repeat row for every item in collection. -->
+                            <td>{{stat.series}}</td>
+                            <td class="text-right">{{stat.count}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div><!-- TAG PANEL END -->
+    </div><!-- STATISTICS VIEW END -->
         <div class="form-group col-lg-4 col-md-4 col-sm-4" ng-hide="isList==='statistics'">
        <div class="input-group">
             <div class="input-group-addon">

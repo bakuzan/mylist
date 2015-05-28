@@ -173,6 +173,35 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                 $scope.statSearch = name;
                 $scope.detailTagName = name;
                 $scope.showTagDetail = true;
+                $scope.tagDetailCollection = [];
+                $scope.tagDetailResult = [];
+                var add = true;
+                angular.forEach($scope.characters, function(item){
+                    for(var i=0; i < item.tags.length; i++) {
+                        if (item.tags[i].text===name) {
+                            $scope.tagDetailCollection.push(item.tags);
+                        }
+                    }
+                });
+//                console.log($scope.tagDetailCollection);
+                angular.forEach($scope.tagDetailCollection, function(item) {
+                    angular.forEach(item, function(tem) {
+                        console.log(tem);
+                        for(var i=0; i < $scope.tagDetailResult; i++) {
+                            //if exists and not the search value - increment the count.
+                            if ($scope.tagDetailResult[i].name===tem.text && tem.text!==name) {
+                                add = false;
+                                $scope.tagDetailResult[i].count += 1; 
+                            }
+                        }
+                        //add in if true and not the tag we searched on.
+                        if (add===true && tem.text!==name) {
+                            $scope.tagDetailResult.push({ name: tem.text, count: 1 });
+                        }
+                        add = true;
+                    });
+                    console.log($scope.tagDetailResult);
+                });
             }
         };
         

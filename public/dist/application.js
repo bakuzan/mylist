@@ -131,6 +131,8 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.tagArrayRemove = [];
         $scope.usedTags = []; //for typeahead array.
         $scope.statTags = []; //for stat table.
+        $scope.areTagless = false; //are any items tagless
+        $scope.taglessItem = false; //filter variable for showing tagless items.
         
         //allow retreival of local resource
         $scope.trustAsResourceUrl = function(url) {
@@ -203,29 +205,36 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             var found = false;
             var i = 0;
             var tagsToSearch = [];
-            if ($scope.searchTags===undefined || $scope.searchTags==='') {
-                return true;
-            } else {
-                //get tags that are being looked for
-//                var tagsForFilter = $scope.characterTags.split(',');
-                $scope.tagsForFilter = $scope.searchTags.substring(0, $scope.searchTags.length - 1).split(',');
-//                console.log($scope.tagsForFilter);
-                
-                //get tags of items to filter
-                angular.forEach(item.tags, function(tag) {
-                    tagsToSearch.push(tag.text);
-                });
-                
-                //filter: check in 'query' is in tags.
-                for(i = 0; i < $scope.tagsForFilter.length; i++) {
-                    
-                    if (tagsToSearch.indexOf($scope.tagsForFilter[i]) !== -1) {
-                        found = true;
-                    } else {
-                        return false;
-                    }
+            
+            //if tagless is checked return tagless and nothing else.
+            if ($scope.taglessItem===true) {
+                if (item.tags.length===0) {
+                    return item;
                 }
-                return found;
+            } else {
+                if ($scope.searchTags===undefined || $scope.searchTags==='') {
+                    return true;
+                } else {
+                    //get tags that are being looked for
+                    //                var tagsForFilter = $scope.characterTags.split(',');
+                    $scope.tagsForFilter = $scope.searchTags.substring(0, $scope.searchTags.length - 1).split(',');
+                    //                console.log($scope.tagsForFilter);
+                
+                    //get tags of items to filter
+                    angular.forEach(item.tags, function(tag) {
+                        tagsToSearch.push(tag.text);
+                    });
+                
+                    //filter: check in 'query' is in tags.
+                    for(i = 0; i < $scope.tagsForFilter.length; i++) {
+                        if (tagsToSearch.indexOf($scope.tagsForFilter[i]) !== -1) {
+                            found = true;
+                        } else {
+                            return false;
+                        }
+                    }
+                    return found;
+                }
             }
         };
         
@@ -312,6 +321,9 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 var add = true;
                 //is tag in array?
                 angular.forEach($scope.animeitems, function(anime) { 
+                    if (anime.tags.length===0) {
+                        $scope.areTagless = true;
+                    }
                     angular.forEach(anime.tags, function(tag) {
                         for(var i=0; i < $scope.statTags.length; i++) {
                             if ($scope.statTags[i].tag===tag.text) {
@@ -619,6 +631,8 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.maxItemCount = 0; //number of characters.
         $scope.statTagSortType = 'count'; //stat tag sort
         $scope.statTagSortReverse = true; //stat tag sort direction.
+        $scope.statSeriesSortType = 'count'; //stat series sort
+        $scope.statSeriesSortReverse = true; //stat series sort direction.
         $scope.myInterval = 2500; //carousel timer.
         $scope.sortType = 'name'; //default sort type
 	    $scope.sortReverse = false; // default sort order
@@ -629,6 +643,11 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.usedTags = []; //for typeahead array.
         $scope.voiceActors = []; //for typeahead array.
         $scope.statTags = []; //for tag statistics;
+        $scope.statSeries = []; //for series statistics;
+        $scope.showSeriesDetail = false; //visibility of series drilldown.
+        $scope.seriesSearch = ''; //for filtering series values.
+        $scope.areTagless = false; //are any items tagless
+        $scope.taglessItem = false; //filter variable for showing tagless items.
         $scope.male = 0; //gender count for pb.
         $scope.female = 0; //gender count for pb.
         $scope.nosex = 0; //no gender count for pb.
@@ -644,12 +663,15 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                 $scope.maxItemCount = $scope.characters.length;
                 var add = true;
                 //is tag in array?
-                angular.forEach($scope.characters, function(item) { 
+                angular.forEach($scope.characters, function(item) {
+                    if (item.tags.length===0) {
+                        $scope.areTagless = true;
+                    }
                     angular.forEach(item.tags, function(tag) {
                         for(var i=0; i < $scope.statTags.length; i++) {
                             if ($scope.statTags[i].tag===tag.text) {
                                 add = false;
-                                    $scope.statTags[i].count += 1; 
+                                $scope.statTags[i].count += 1; 
                             }
                         }
                         // add if not in
@@ -660,6 +682,32 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                     });
 //                    console.log($scope.statTags);
                 });
+                //get series counts.
+                angular.forEach($scope.characters, function(item) {
+                    for(var i=0; i < $scope.statSeries.length; i++) {
+                        if (item.anime!==null) {
+                            if ($scope.statSeries[i].name===item.anime.title) {
+                                add = false;
+                                $scope.statSeries[i].count += 1; 
+                            }
+                        } else if (item.manga!==null) {
+                            if ($scope.statSeries[i].name===item.manga.title) {
+                                add = false;
+                                $scope.statSeries[i].count += 1; 
+                            }
+                        }
+                    }
+                    // add if not in
+                    if (add===true) {
+                        if (item.anime!==null) {
+                            $scope.statSeries.push({ name: item.anime.title, count: 1 });
+                        } else if (item.manga!==null) {
+                            $scope.statSeries.push({ name: item.manga.title, count: 1 });
+                        }
+                    }
+                    add = true; //reset add status.
+                });
+//                    console.log($scope.statSeries);
                 //get gender counts.
                 angular.forEach($scope.statTags, function(stat) {
                     if (stat.tag==='male') {
@@ -732,34 +780,67 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             }
         };
         
+        //filter stat series detail.
+        $scope.seriesDetailFilter = function(item) {
+            if (item.anime!==null) {
+                if (item.anime.title===$scope.detailSeriesName) {
+                    return item;
+                }
+            } else if (item.manga!==null) {
+                if (item.manga.title===$scope.detailSeriesName) {
+                    return item;
+                }
+            }
+        };
+        
+        //show stat series detail.
+        $scope.seriesDetail = function(name) {
+            if ($scope.detailSeriesName===name) {
+                $scope.seriesSearch = '';
+                $scope.showSeriesDetail = false;
+                $scope.detailSeriesName = '';
+            } else {
+                $scope.seriesSearch = name;
+                $scope.detailSeriesName = name;
+                $scope.showSeriesDetail = true;
+            }
+        };
+        
         //special tag filter
         $scope.tagFilter = function(item) {
             var found = false;
             var i = 0;
             var tagsToSearch = [];
-            if ($scope.searchTags===undefined || $scope.searchTags==='') {
-                return true;
-            } else {
-                //get tags that are being looked for
-//                var tagsForFilter = $scope.characterTags.split(',');
-                $scope.tagsForFilter = $scope.searchTags.substring(0, $scope.searchTags.length - 1).split(',');
-//                console.log($scope.tagsForFilter);
-                
-                //get tags of items to filter
-                angular.forEach(item.tags, function(tag) {
-                    tagsToSearch.push(tag.text);
-                });
-                
-                //filter: check in 'query' is in tags.
-                for(i = 0; i < $scope.tagsForFilter.length; i++) {
-                    
-                    if (tagsToSearch.indexOf($scope.tagsForFilter[i]) !== -1) {
-                        found = true;
-                    } else {
-                        return false;
-                    }
+            
+            //if tagless is checked return tagless and nothing else.
+            if ($scope.taglessItem===true) {
+                if (item.tags.length===0) {
+                    return item;
                 }
-                return found;
+            } else {
+                if ($scope.searchTags===undefined || $scope.searchTags==='') {
+                    return true;
+                } else {
+                    //get tags that are being looked for
+                    //                var tagsForFilter = $scope.characterTags.split(',');
+                    $scope.tagsForFilter = $scope.searchTags.substring(0, $scope.searchTags.length - 1).split(',');
+                    //                console.log($scope.tagsForFilter);
+                
+                    //get tags of items to filter
+                    angular.forEach(item.tags, function(tag) {
+                        tagsToSearch.push(tag.text);
+                    });
+                
+                    //filter: check in 'query' is in tags.
+                    for(i = 0; i < $scope.tagsForFilter.length; i++) {
+                        if (tagsToSearch.indexOf($scope.tagsForFilter[i]) !== -1) {
+                            found = true;
+                        } else {
+                            return false;
+                        }
+                    }
+                    return found;
+                }
             }
         };
         
@@ -1846,6 +1927,8 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         $scope.tagArrayRemove = [];
         $scope.usedTags = []; //for typeahead array.
         $scope.statTags = []; //for stat table.
+        $scope.areTagless = false; //are any items tagless
+        $scope.taglessItem = false; //filter variable for showing tagless items.
 
         //allow retreival of local resource
         $scope.trustAsResourceUrl = function(url) {
@@ -1920,29 +2003,36 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             var found = false;
             var i = 0;
             var tagsToSearch = [];
-            if ($scope.searchTags===undefined || $scope.searchTags==='') {
-                return true;
-            } else {
-                //get tags that are being looked for
-//                var tagsForFilter = $scope.characterTags.split(',');
-                $scope.tagsForFilter = $scope.searchTags.substring(0, $scope.searchTags.length - 1).split(',');
-//                console.log($scope.tagsForFilter);
-                
-                //get tags of items to filter
-                angular.forEach(item.tags, function(tag) {
-                    tagsToSearch.push(tag.text);
-                });
-                
-                //filter: check in 'query' is in tags.
-                for(i = 0; i < $scope.tagsForFilter.length; i++) {
-                    
-                    if (tagsToSearch.indexOf($scope.tagsForFilter[i]) !== -1) {
-                        found = true;
-                    } else {
-                        return false;
-                    }
+            
+            //if tagless is checked return tagless and nothing else.
+            if ($scope.taglessItem===true) {
+                if (item.tags.length===0) {
+                    return item;
                 }
-                return found;
+            } else {
+                if ($scope.searchTags===undefined || $scope.searchTags==='') {
+                    return true;
+                } else {
+                    //get tags that are being looked for
+                    //                var tagsForFilter = $scope.characterTags.split(',');
+                    $scope.tagsForFilter = $scope.searchTags.substring(0, $scope.searchTags.length - 1).split(',');
+                    //                console.log($scope.tagsForFilter);
+                
+                    //get tags of items to filter
+                    angular.forEach(item.tags, function(tag) {
+                        tagsToSearch.push(tag.text);
+                    });
+                
+                    //filter: check in 'query' is in tags.
+                    for(i = 0; i < $scope.tagsForFilter.length; i++) {
+                        if (tagsToSearch.indexOf($scope.tagsForFilter[i]) !== -1) {
+                            found = true;
+                        } else {
+                            return false;
+                        }
+                    }
+                    return found;
+                }
             }
         };
         
@@ -2029,6 +2119,9 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                 var add = true;
                 //is tag in array?
                 angular.forEach($scope.mangaitems, function(manga) { 
+                    if (manga.tags.length===0) {
+                        $scope.areTagless = true;
+                    }
                     angular.forEach(manga.tags, function(tag) {
                         for(var i=0; i < $scope.statTags.length; i++) {
                             if ($scope.statTags[i].tag===tag.text) {

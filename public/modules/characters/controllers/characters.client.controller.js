@@ -24,6 +24,8 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.usedTags = []; //for typeahead array.
         $scope.voiceActors = []; //for typeahead array.
         $scope.statTags = []; //for tag statistics;
+        $scope.showTagDetail = false; //visibility of detail for tags.
+        $scope.statSearch = ''; //filter value for tag detail.
         $scope.statSeries = []; //for series statistics;
         $scope.showSeriesDetail = false; //visibility of series drilldown.
         $scope.seriesSearch = ''; //for filtering series values.
@@ -158,6 +160,19 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             if (removal) {
                 var index = $scope.character.tags.indexOf(tag);
                 $scope.character.tags.splice(index, 1);
+            }
+        };
+        
+        //show stat tag detail.
+        $scope.tagDetail = function(name) {
+            if ($scope.detailTagName===name) {
+                $scope.statSearch = '';
+                $scope.showTagDetail = false;
+                $scope.detailTagName = '';
+            } else {
+                $scope.statSearch = name;
+                $scope.detailTagName = name;
+                $scope.showTagDetail = true;
             }
         };
         

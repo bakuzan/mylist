@@ -17,7 +17,8 @@
                 </progress>
             </div>
         </div><!-- GENDER PERCENTAGE BAR END -->
-        <div class="col-lg-6 col-md-6 col-sm-6 statTagPanel">
+        <div class="col-lg-6 col-md-6 col-sm-6 statTagContainer">
+        <div class="col-lg-12 col-md-12 col-sm-12 statTagPanel">
             <div class="statHeader">
                 <h3>Tags</h3><span class="statSummaryInfo pull-right"><small class="text-muted">&nbsp;{{statTags.length}} unique tags.</small></span>
             </div>
@@ -26,9 +27,9 @@
                     <div class="input-group-addon">
                         <i class="fa fa-search"></i>
                     </div>
-                    <input type="text" ng-model="statSearch.tag" placeholder="search tags" class="form-control">
+                    <input type="text" ng-model="statSearch" placeholder="search tags" class="form-control">
                 </div>
-                <table class="col-lg-12 col-md-12 col-sm-12 statTagTable table table-bordered table-striped">
+                <table class="col-lg-12 col-md-12 col-sm-12 statTagTable table table-bordered">
                     <thead>
                         <tr>
                             <td class="text-right">#</td>
@@ -47,7 +48,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="stat in statTags | orderBy: statTagSortType:statTagSortReverse | filter: statSearch"><!-- repeat row for every anime tag. -->
+                        <tr class="statTableRow clickable" ng-repeat="stat in statTags | orderBy: statTagSortType:statTagSortReverse | filter: {tag: statSearch }" ng-click="tagDetail(stat.tag);">
                             <td class="text-right">{{$index+1}}</td>
                             <td>{{stat.tag}}</td>
                             <td class="text-right">{{stat.count}}</td>
@@ -56,6 +57,19 @@
                 </table>
             </div>
         </div><!-- TAG PANEL END -->
+        <div class="col-lg-12 col-md-12 col-sm-12 statTagDetail" ng-show="showTagDetail">
+            <div class="col-lg-12 col-md-12 col-sm-12 statDetail">
+                <div class="statDetailHeader">
+                    <h3>Tags appearing with {{detailTagName}}</h3>
+                </div>
+                <ul class="col-lg-12 col-md-12 col-sm-12 statTagDetailList">
+                    <li ng-repeat="stat in statRelatedTags | orderBy: 'name'">
+                        <span>{{stat.name}}</span> - <span>{{stat.count}}</span>
+                    </li>
+                </ul>
+            </div>
+        </div><!-- TAG DETAIL PANEL END -->
+        </div><!-- TAG CONTAINER END -->
         <div class="col-lg-6 col-md-6 col-sm-6 statMediaPanel">
             <div class="statHeader">
                 <h3>Series</h3><span class="statSummaryInfo pull-right"><small class="text-muted">&nbsp;{{statSeries.length}} unique series.</small></span>

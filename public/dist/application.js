@@ -139,21 +139,6 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             return $sce.trustAsResourceUrl(url);
         };
         
-//        //builds an array of unique tag names for the typeahead.
-//        $scope.createUsedTags = function(text) {
-//            var add = true;
-//            //is tag in array?
-//            for(var i=0; i < $scope.usedTags.length; i++) {
-//                if ($scope.usedTags[i]===text) {
-//                    add = false;
-//                }
-//            }
-//            //add if not in.
-//            if (add===true) {
-//                $scope.usedTags.push(text);
-//            }
-//        };
-        
         $scope.searchTags = '';
         $scope.passTag = function(tag) {
             if ($scope.searchTags.indexOf(tag) === -1) {
@@ -452,8 +437,8 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             //handle end date
             if (animeitem.episodes===animeitem.finalEpisode) {
                 if (animeitem.end===undefined) {
-                    animeitem.end = new Date().toISOString().substring(0,10);
-                    //console.log(animeitem.end);
+                    animeitem.end = animeitem.latest.substring(0,10);
+//                    console.log(animeitem.end);
                 }
             }
             
@@ -631,6 +616,8 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.maxItemCount = 0; //number of characters.
         $scope.statTagSortType = 'count'; //stat tag sort
         $scope.statTagSortReverse = true; //stat tag sort direction.
+        $scope.statTagDetailSortType = 'count'; //stat tag detail sort
+        $scope.statTagDetailSortReverse = true; //stat tag detail sort direction.
         $scope.statSeriesSortType = 'count'; //stat series sort
         $scope.statSeriesSortReverse = true; //stat series sort direction.
         $scope.myInterval = 2500; //carousel timer.
@@ -643,6 +630,8 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.usedTags = []; //for typeahead array.
         $scope.voiceActors = []; //for typeahead array.
         $scope.statTags = []; //for tag statistics;
+        $scope.showTagDetail = false; //visibility of detail for tags.
+        $scope.statSearch = ''; //filter value for tag detail.
         $scope.statSeries = []; //for series statistics;
         $scope.showSeriesDetail = false; //visibility of series drilldown.
         $scope.seriesSearch = ''; //for filtering series values.
@@ -777,6 +766,48 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             if (removal) {
                 var index = $scope.character.tags.indexOf(tag);
                 $scope.character.tags.splice(index, 1);
+            }
+        };
+        
+        //show stat tag detail.
+        $scope.tagDetail = function(name) {
+            if ($scope.detailTagName===name) {
+                $scope.statSearch = '';
+                $scope.showTagDetail = false;
+                $scope.detailTagName = '';
+            } else {
+                $scope.statSearch = name;
+                $scope.detailTagName = name;
+                $scope.showTagDetail = true;
+                $scope.tagDetailCollection = [];
+                $scope.tagDetailResult = [];
+                var add = true;
+                angular.forEach($scope.characters, function(item){
+                    for(var i=0; i < item.tags.length; i++) {
+                        if (item.tags[i].text===name) {
+                            $scope.tagDetailCollection.push(item.tags);
+                        }
+                    }
+                });
+//                console.log($scope.tagDetailCollection);
+                angular.forEach($scope.tagDetailCollection, function(item) {
+                    angular.forEach(item, function(tem) {
+//                        console.log(tem);
+                        for(var i=0; i < $scope.tagDetailResult.length; i++) {
+                            //if exists and not the search value - increment the count.
+                            if ($scope.tagDetailResult[i].name===tem.text && tem.text!==name) {
+                                add = false;
+                                $scope.tagDetailResult[i].count += 1; 
+                            }
+                        }
+                        //add in if true and not the tag we searched on.
+                        if (add===true && tem.text!==name) {
+                            $scope.tagDetailResult.push({ name: tem.text, count: 1 });
+                        }
+                        add = true;
+                    });
+//                    console.log($scope.tagDetailResult);
+                });
             }
         };
         
@@ -2254,7 +2285,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             //handle end date
             if (mangaitem.chapters===mangaitem.finalChapter && mangaitem.volumes===mangaitem.finalVolume) {
                 if (mangaitem.end===undefined) {
-                    mangaitem.end = new Date().toISOString().substring(0,10);
+                    mangaitem.end = mangaitem.latest.substring(0,10);
                     //console.log(animeitem.end);
                 }
             }

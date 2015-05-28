@@ -62,11 +62,32 @@
                 <div class="statDetailHeader">
                     <h3>Tags appearing with {{detailTagName}}</h3>
                 </div>
-                <ul class="col-lg-12 col-md-12 col-sm-12 statTagDetailList">
-                    <li ng-repeat="stat in statRelatedTags | orderBy: 'name'">
-                        <span>{{stat.name}}</span> - <span>{{stat.count}}</span>
-                    </li>
-                </ul>
+                <table class="col-lg-12 col-md-12 col-sm-12 statTagDetailTable table table-bordered">
+                    <thead>
+                        <tr>
+                            <td class="text-right">#</td>
+                            <td>
+                                <a href="" ng-click="statTagDetailSortType = 'name'; statTagDetailSortReverse = !statTagDetailSortReverse ">
+					               Tag
+					            </a>
+                                <i ng-show="statTagDetailSortType == 'name'" class="fa" ng-class="statTagDetailSortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                            </td>
+                            <td class="text-right">
+                                <a href="" ng-click="statTagDetailSortType = 'count'; statTagDetailSortReverse = !statTagDetailSortReverse ">
+					               Count
+					            </a>
+                                <i ng-show="statTagDetailSortType == 'count'" class="fa" ng-class="statTagDetailSortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="stat in tagDetailResult | orderBy: statTagDetailSortType:statTagDetailSortReverse">
+                            <td class="text-right">{{$index+1}}</td>
+                            <td>{{stat.name}}</td>
+                            <td class="text-right">{{stat.count}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div><!-- TAG DETAIL PANEL END -->
         </div><!-- TAG CONTAINER END -->

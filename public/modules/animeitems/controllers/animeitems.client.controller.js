@@ -36,21 +36,6 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             return $sce.trustAsResourceUrl(url);
         };
         
-//        //builds an array of unique tag names for the typeahead.
-//        $scope.createUsedTags = function(text) {
-//            var add = true;
-//            //is tag in array?
-//            for(var i=0; i < $scope.usedTags.length; i++) {
-//                if ($scope.usedTags[i]===text) {
-//                    add = false;
-//                }
-//            }
-//            //add if not in.
-//            if (add===true) {
-//                $scope.usedTags.push(text);
-//            }
-//        };
-        
         $scope.searchTags = '';
         $scope.passTag = function(tag) {
             if ($scope.searchTags.indexOf(tag) === -1) {
@@ -349,8 +334,8 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             //handle end date
             if (animeitem.episodes===animeitem.finalEpisode) {
                 if (animeitem.end===undefined) {
-                    animeitem.end = new Date().toISOString().substring(0,10);
-                    //console.log(animeitem.end);
+                    animeitem.end = animeitem.latest.substring(0,10);
+//                    console.log(animeitem.end);
                 }
             }
             

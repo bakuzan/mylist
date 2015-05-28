@@ -356,7 +356,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             //handle end date
             if (mangaitem.chapters===mangaitem.finalChapter && mangaitem.volumes===mangaitem.finalVolume) {
                 if (mangaitem.end===undefined) {
-                    mangaitem.end = new Date().toISOString().substring(0,10);
+                    mangaitem.end = mangaitem.latest.substring(0,10);
                     //console.log(animeitem.end);
                 }
             }

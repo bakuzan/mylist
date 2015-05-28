@@ -12,6 +12,8 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.maxItemCount = 0; //number of characters.
         $scope.statTagSortType = 'count'; //stat tag sort
         $scope.statTagSortReverse = true; //stat tag sort direction.
+        $scope.statTagDetailSortType = 'count'; //stat tag detail sort
+        $scope.statTagDetailSortReverse = true; //stat tag detail sort direction.
         $scope.statSeriesSortType = 'count'; //stat series sort
         $scope.statSeriesSortReverse = true; //stat series sort direction.
         $scope.myInterval = 2500; //carousel timer.
@@ -186,8 +188,8 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 //                console.log($scope.tagDetailCollection);
                 angular.forEach($scope.tagDetailCollection, function(item) {
                     angular.forEach(item, function(tem) {
-                        console.log(tem);
-                        for(var i=0; i < $scope.tagDetailResult; i++) {
+//                        console.log(tem);
+                        for(var i=0; i < $scope.tagDetailResult.length; i++) {
                             //if exists and not the search value - increment the count.
                             if ($scope.tagDetailResult[i].name===tem.text && tem.text!==name) {
                                 add = false;
@@ -200,7 +202,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                         }
                         add = true;
                     });
-                    console.log($scope.tagDetailResult);
+//                    console.log($scope.tagDetailResult);
                 });
             }
         };

@@ -356,8 +356,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                 mangaitem.reReadCount += 1;
                 mangaitem.reReading = false;
             }
-            
-            mangaitem.meta.updated = Date.now;
 
 			mangaitem.$update(function() {
 				$location.path('/mangaitems/' + mangaitem._id);

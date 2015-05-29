@@ -80,6 +80,7 @@ exports.update = function(req, res) {
 	var character = req.character ;
 
 	character = _.extend(character , req.body);
+    character.meta.updated = Date.now();
     
 //    console.log(character);
 	character.save(function(err) {

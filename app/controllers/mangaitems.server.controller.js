@@ -78,6 +78,7 @@ exports.update = function(req, res) {
 	var mangaitem = req.mangaitem ;
 
 	mangaitem = _.extend(mangaitem , req.body);
+    mangaitem.meta.updated = Date.now();
 
 	mangaitem.save(function(err) {
 		if (err) {

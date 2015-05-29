@@ -351,8 +351,6 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 animeitem.reWatchCount += 1;
                 animeitem.reWatching = false;
             }
-            
-            animeitem.meta.updated = Date.now;
 
 			animeitem.$update(function() {
 				$location.path('animeitems/' + animeitem._id);

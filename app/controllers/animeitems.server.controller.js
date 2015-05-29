@@ -78,6 +78,7 @@ exports.update = function(req, res) {
 	var animeitem = req.animeitem ;
     
 	animeitem = _.extend(animeitem , req.body);
+    animeitem.meta.updated = Date.now();
 
 	animeitem.save(function(err) {
 		if (err) {

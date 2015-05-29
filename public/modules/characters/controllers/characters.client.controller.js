@@ -396,8 +396,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                 character.image = $scope.imgPath;
             }
             
-            character.meta.updated = Date.now;
-            
 			character.$update(function() {
 				$location.path('characters/' + character._id);
 			}, function(errorResponse) {
@@ -416,7 +414,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 			$scope.character = Characters.get({ 
 				characterId: $stateParams.characterId
 			});
-//            console.log($scope.character);
+            console.log($scope.character);
 		};
         
         // Find a list of Animeitems

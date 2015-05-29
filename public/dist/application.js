@@ -454,7 +454,6 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 animeitem.reWatchCount += 1;
                 animeitem.reWatching = false;
             }
-            
 
 			animeitem.$update(function() {
 				$location.path('animeitems/' + animeitem._id);
@@ -474,6 +473,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 			$scope.animeitem = Animeitems.get({ 
 				animeitemId: $stateParams.animeitemId
 			});
+//            console.log($scope.animeitem);
 		};
         
         // Find list of mangaitems for dropdown.
@@ -1000,7 +1000,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                 character.image = $scope.imgPath;
             }
             
-            
 			character.$update(function() {
 				$location.path('characters/' + character._id);
 			}, function(errorResponse) {
@@ -1013,43 +1012,13 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 			$scope.characters = Characters.query();
             //console.log($scope.characters);
 		};
-        
-        //builds an array of unique tag names for the typeahead.
-//        $scope.createUsedTags = function(text) {
-//            var add = true;
-//            //is tag in array?
-//            for(var i=0; i < $scope.usedTags.length; i++) {
-//                if ($scope.usedTags[i]===text) {
-//                    add = false;
-//                }
-//            }
-//            //add if not in.
-//            if (add===true) {
-//                $scope.usedTags.push(text);
-//            }
-//        };
-        
-        //builds an array of unique voices for the typeahead.
-//        $scope.createVoices = function(voice) {
-//            var add = true;
-//            //is tag in array?
-//            for(var i=0; i < $scope.voiceActors.length; i++) {
-//                if ($scope.voiceActors[i]===voice) {
-//                    add = false;
-//                }
-//            }
-//            //add if not in.
-//            if (add===true) {
-//                $scope.voiceActors.push(voice);
-//            }
-//        };
 
 		// Find existing Character
 		$scope.findOne = function() {
 			$scope.character = Characters.get({ 
 				characterId: $stateParams.characterId
 			});
-            //console.log($scope.character);
+            console.log($scope.character);
 		};
         
         // Find a list of Animeitems
@@ -1203,8 +1172,8 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
 'use strict';
 
 
-angular.module('core').controller('HomeController', ['$scope', 'Authentication', '$window', '$location',
-	function($scope, Authentication, $window, $location) {
+angular.module('core').controller('HomeController', ['$scope', 'Authentication', '$window', '$location', 'Animeitems', 'Mangaitems',
+	function($scope, Authentication, $window, $location, Animeitems, Mangaitems) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
         
@@ -1378,7 +1347,6 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
             console.log('updated set to false');
             localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
         }
-        
     };
         
     $scope.addNew = function () {
@@ -1464,8 +1432,9 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
             }
         });
         return count;
-    };  
-        
+    };
+
+
 	}
 ]);
 'use strict';
@@ -1966,23 +1935,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             return $sce.trustAsResourceUrl(url);
         };
         
-        /**
-//        //builds an array of unique tag names for the typeahead.
-//        $scope.createUsedTags = function(text) {
-//            var add = true;
-//            //is tag in array?
-//            for(var i=0; i < $scope.usedTags.length; i++) {
-//                if ($scope.usedTags[i]===text) {
-//                    add = false;
-//                }
-//            }
-//            //add if not in.
-//            if (add===true) {
-//                $scope.usedTags.push(text);
-//            }
-//        };
-*/
-        
         $scope.searchTags = '';
         $scope.passTag = function(tag) {
             if ($scope.searchTags.indexOf(tag) === -1) {
@@ -2302,7 +2254,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                 mangaitem.reReadCount += 1;
                 mangaitem.reReading = false;
             }
-                    
 
 			mangaitem.$update(function() {
 				$location.path('/mangaitems/' + mangaitem._id);
@@ -2323,7 +2274,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 			$scope.mangaitem = Mangaitems.get({ 
 				mangaitemId: $stateParams.mangaitemId
 			});
-            //console.log($scope.mangaitem);
+//            console.log($scope.mangaitem);
 		};
         
         // Find a list of Animeitems for dropdowns.

@@ -1,8 +1,8 @@
 'use strict';
 
 
-angular.module('core').controller('HomeController', ['$scope', 'Authentication', '$window', '$location',
-	function($scope, Authentication, $window, $location) {
+angular.module('core').controller('HomeController', ['$scope', 'Authentication', '$window', '$location', 'Animeitems', 'Mangaitems',
+	function($scope, Authentication, $window, $location, Animeitems, Mangaitems) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
         
@@ -176,7 +176,6 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
             console.log('updated set to false');
             localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
         }
-        
     };
         
     $scope.addNew = function () {
@@ -262,7 +261,8 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
             }
         });
         return count;
-    };  
-        
+    };
+
+
 	}
 ]);

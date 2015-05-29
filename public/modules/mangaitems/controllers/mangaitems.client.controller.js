@@ -37,23 +37,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             return $sce.trustAsResourceUrl(url);
         };
         
-        /**
-//        //builds an array of unique tag names for the typeahead.
-//        $scope.createUsedTags = function(text) {
-//            var add = true;
-//            //is tag in array?
-//            for(var i=0; i < $scope.usedTags.length; i++) {
-//                if ($scope.usedTags[i]===text) {
-//                    add = false;
-//                }
-//            }
-//            //add if not in.
-//            if (add===true) {
-//                $scope.usedTags.push(text);
-//            }
-//        };
-*/
-        
         $scope.searchTags = '';
         $scope.passTag = function(tag) {
             if ($scope.searchTags.indexOf(tag) === -1) {
@@ -373,7 +356,8 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                 mangaitem.reReadCount += 1;
                 mangaitem.reReading = false;
             }
-                    
+            
+            mangaitem.meta.updated = Date.now;
 
 			mangaitem.$update(function() {
 				$location.path('/mangaitems/' + mangaitem._id);
@@ -394,7 +378,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 			$scope.mangaitem = Mangaitems.get({ 
 				mangaitemId: $stateParams.mangaitemId
 			});
-            //console.log($scope.mangaitem);
+//            console.log($scope.mangaitem);
 		};
         
         // Find a list of Animeitems for dropdowns.

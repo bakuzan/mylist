@@ -352,6 +352,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 animeitem.reWatching = false;
             }
             
+            animeitem.meta.updated = Date.now;
 
 			animeitem.$update(function() {
 				$location.path('animeitems/' + animeitem._id);
@@ -371,6 +372,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 			$scope.animeitem = Animeitems.get({ 
 				animeitemId: $stateParams.animeitemId
 			});
+//            console.log($scope.animeitem);
 		};
         
         // Find list of mangaitems for dropdown.

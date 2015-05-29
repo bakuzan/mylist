@@ -19,7 +19,7 @@ exports.postImage = function(req, res) {
     //console.log(req);
     form.parse(req, function(err, fields, files) {
         var file = files.file[0];
-        console.log(file);
+//        console.log(file);
         var contentType = file.headers['content-type'];
         var tmpPath = file.path;
         var extIndex = tmpPath.lastIndexOf('.');
@@ -40,7 +40,7 @@ exports.postImage = function(req, res) {
             if (err) {
                 return res.status(400).send('Image not saved.');
             }
-            console.log(destPath);
+//            console.log(destPath);
             return res.json(destPath);
         });
     });
@@ -54,7 +54,7 @@ exports.create = function(req, res) {
 	var character = new Character(req.body);
 	character.user = req.user;
     
-    console.log(character);
+//    console.log(character);
 	character.save(function(err) {
 		if (err) {
 			return res.status(400).send({
@@ -81,7 +81,7 @@ exports.update = function(req, res) {
 
 	character = _.extend(character , req.body);
     
-    console.log(character);
+//    console.log(character);
 	character.save(function(err) {
 		if (err) {
 			return res.status(400).send({

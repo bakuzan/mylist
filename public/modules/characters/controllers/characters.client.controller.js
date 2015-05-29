@@ -396,6 +396,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                 character.image = $scope.imgPath;
             }
             
+            character.meta.updated = Date.now;
             
 			character.$update(function() {
 				$location.path('characters/' + character._id);
@@ -409,43 +410,13 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 			$scope.characters = Characters.query();
             //console.log($scope.characters);
 		};
-        
-        //builds an array of unique tag names for the typeahead.
-//        $scope.createUsedTags = function(text) {
-//            var add = true;
-//            //is tag in array?
-//            for(var i=0; i < $scope.usedTags.length; i++) {
-//                if ($scope.usedTags[i]===text) {
-//                    add = false;
-//                }
-//            }
-//            //add if not in.
-//            if (add===true) {
-//                $scope.usedTags.push(text);
-//            }
-//        };
-        
-        //builds an array of unique voices for the typeahead.
-//        $scope.createVoices = function(voice) {
-//            var add = true;
-//            //is tag in array?
-//            for(var i=0; i < $scope.voiceActors.length; i++) {
-//                if ($scope.voiceActors[i]===voice) {
-//                    add = false;
-//                }
-//            }
-//            //add if not in.
-//            if (add===true) {
-//                $scope.voiceActors.push(voice);
-//            }
-//        };
 
 		// Find existing Character
 		$scope.findOne = function() {
 			$scope.character = Characters.get({ 
 				characterId: $stateParams.characterId
 			});
-            //console.log($scope.character);
+//            console.log($scope.character);
 		};
         
         // Find a list of Animeitems

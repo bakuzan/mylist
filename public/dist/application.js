@@ -111,6 +111,13 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
+        //paging controls for the list view.
+        $scope.currentPage = 0;
+        $scope.pageSize = 10;
+        $scope.numberOfPages=function(){
+            return Math.ceil($scope.animeitems.length/$scope.pageSize);                
+        };
+        
         $scope.itemUpdate = new Date().toISOString().substring(0,10); //today's date as 'yyyy-MM-dd'
         $scope.view = 'list'; //dynamic page title.
         $scope.isList = true; //list view as default.
@@ -539,6 +546,14 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
 
 'use strict';
 
+angular.module('animeitems').filter('startFrom', function() {
+    return function(input, start) {
+        start = +start; //parse to int
+        return input.slice(start);
+    };
+});
+'use strict';
+
 //Animeitems service used to communicate Animeitems REST endpoints
 angular.module('animeitems').factory('Animeitems', ['$resource',
 	function($resource) {
@@ -611,6 +626,13 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
+        
+        //paging controls for the list view.
+        $scope.currentPage = 0;
+        $scope.pageSize = 10;
+        $scope.numberOfPages=function(){
+            return Math.ceil($scope.characters.length/$scope.pageSize);                
+        };
         
         $scope.isList = 'list'; //show list? or carousel.
         $scope.maxItemCount = 0; //number of characters.
@@ -1104,6 +1126,14 @@ angular.module('characters').directive('fileModel', ['$parse', function ($parse)
                 event.preventDefault();
             }
         });
+    };
+});
+'use strict';
+
+angular.module('characters').filter('startFrom', function() {
+    return function(input, start) {
+        start = +start; //parse to int
+        return input.slice(start);
     };
 });
 'use strict';
@@ -1906,6 +1936,13 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
+        //paging controls for the list view.
+        $scope.currentPage = 0;
+        $scope.pageSize = 10;
+        $scope.numberOfPages=function(){
+            return Math.ceil($scope.mangaitems.length/$scope.pageSize);                
+        };
+        
         $scope.itemUpdate = new Date().toISOString().substring(0,10); //today's date as 'yyyy-MM-dd'
         $scope.view = 'list'; //dynamic page title.
         $scope.isList = true; //list view as default.
@@ -2339,6 +2376,14 @@ angular.module('mangaitems').directive('fileModel', ['$parse', function ($parse)
     };
 });
 
+'use strict';
+
+angular.module('mangaitems').filter('startFrom', function() {
+    return function(input, start) {
+        start = +start; //parse to int
+        return input.slice(start);
+    };
+});
 'use strict';
 
 //Mangaitems service used to communicate Mangaitems REST endpoints

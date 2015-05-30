@@ -8,6 +8,13 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
+        //paging controls for the list view.
+        $scope.currentPage = 0;
+        $scope.pageSize = 10;
+        $scope.numberOfPages=function(){
+            return Math.ceil($scope.characters.length/$scope.pageSize);                
+        };
+        
         $scope.isList = 'list'; //show list? or carousel.
         $scope.maxItemCount = 0; //number of characters.
         $scope.statTagSortType = 'count'; //stat tag sort

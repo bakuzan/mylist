@@ -216,7 +216,16 @@
         </div>
     </div>
     <div class="list-group col-lg-8 col-md-8 col-sm-8" ng-show="isList">
-        <a data-ng-repeat="mangaitem in mangaitems | orderBy: sortType:sortReverse | filter: search | filter: ratingFilter | filter: tagFilter" data-ng-href="#!/mangaitems/{{mangaitem._id}}" list_Back="{{trustAsResourceUrl(mangaitem.image)}}" class="list-group-item">
+        <div class="pagingControls col-lg-12 col-md-12 col-sm-12">
+            <button class="btn btn-primary" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                Previous
+            </button>
+                {{currentPage+1}}/{{numberOfPages()}}
+            <button class="btn btn-primary" ng-disabled="currentPage >= mangaitems.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                Next
+            </button>
+        </div>
+        <a data-ng-repeat="mangaitem in mangaitems | orderBy: sortType:sortReverse | filter: search | filter: ratingFilter | filter: tagFilter | startFrom: currentPage*pageSize | limitTo: pageSize" data-ng-href="#!/mangaitems/{{mangaitem._id}}" list_Back="{{trustAsResourceUrl(mangaitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12">
 			<small class="list-group-item-text">
                 <time title="{{mangaitem.latest | date: 'yyyy-MMM-dd'}}" ng-bind="latestDate(mangaitem.latest)"></time>
 <!--				<span data-ng-bind="mangaitem.latest | date:'yyyy-MMM-dd'"></span>-->

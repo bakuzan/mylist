@@ -1,10 +1,13 @@
 'use strict';
 
 
-angular.module('core').controller('HomeController', ['$scope', 'Authentication', '$window', '$location', 'Animeitems', 'Mangaitems',
-	function($scope, Authentication, $window, $location, Animeitems, Mangaitems) {
+angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Authentication', '$window', '$location', 'Animeitems', 'Mangaitems',
+	function($scope, $rootScope, Authentication, $window, $location, Animeitems, Mangaitems) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
+        
+        //forces page to scroll top on load.
+        $rootScope.$on('$viewContentLoaded', function(){ window.scrollTo(0, 0); });
         
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
@@ -261,6 +264,21 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
             }
         });
         return count;
+    };
+        
+    $scope.buildRecent = function() {
+        $scope.recentUpdates = [];
+        $scope.animeitems = Animeitems.query();
+        //console.log($scope.animeitems);
+        $scope.mangaitems = Mangaitems.query();
+        //console.log($scope.mangaitems);
+        
+        var animelist = $scope.animeitems;
+        var mangalist = $scope.mangaitems; 
+        angular.forEach($scope.animeitems, function(item) {
+            $scope.recentUpdates.push(item);
+        });
+        console.log($scope.recentUpdates);
     };
 
 

@@ -266,20 +266,20 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         return count;
     };
         
-    $scope.buildRecent = function() {
-        $scope.recentUpdates = [];
-        $scope.animeitems = Animeitems.query();
-        //console.log($scope.animeitems);
-        $scope.mangaitems = Mangaitems.query();
-        //console.log($scope.mangaitems);
-        
-        var animelist = $scope.animeitems;
-        var mangalist = $scope.mangaitems; 
-        angular.forEach($scope.animeitems, function(item) {
-            $scope.recentUpdates.push(item);
-        });
-        console.log($scope.recentUpdates);
-    };
+//    $scope.buildRecent = function() {
+//        $scope.recentUpdates = [];
+//        $scope.animeitems = Animeitems.query();
+//        //console.log($scope.animeitems);
+//        $scope.mangaitems = Mangaitems.query();
+//        //console.log($scope.mangaitems);
+//        
+//        var animelist = $scope.animeitems;
+//        var mangalist = $scope.mangaitems; 
+//        angular.forEach($scope.animeitems, function(item) {
+//            $scope.recentUpdates.push(item);
+//        });
+//        console.log($scope.recentUpdates);
+//    };
 
 
 	}

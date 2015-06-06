@@ -1197,6 +1197,7 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
 		$scope.$on('$stateChangeSuccess', function() {
 			$scope.isCollapsed = false;
 		});
+
 	}
 ]);
 'use strict';
@@ -1212,6 +1213,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     
     $scope.isCollapseFilter = false;
     $scope.isCollapseAction = true;
+    $scope.isAddTask = false;
         
     $scope.today = new Date();
     $scope.datesSelected = 'current';
@@ -1260,7 +1262,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
                 return item;
         } else if (ds==='' || ds===null || ds===undefined) {
                 return item;
-        } else if (item.day==='Any') {
+        } else if (ds==='Any' && item.day==='Any') {
                 return item;
         }
     };
@@ -1939,9 +1941,25 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         //paging controls for the list view.
         $scope.currentPage = 0;
         $scope.pageSize = 10;
-        $scope.numberOfPages=function(){
+        $scope.numberOfPages = function(){
             return Math.ceil($scope.mangaitems.length/$scope.pageSize);                
         };
+        
+         
+//        //on keydown for changing view and pages.
+//        angular.element($window).on('keydown', function (e) {
+//                if (e.ctrlKey && e.keyCode===39 && $scope.currentPage < $scope.pageSize) {
+//                    $scope.currentPage = $scope.currentPage + 1;
+//                } else if (e.ctrlKey && e.keyCode===37 && $scope.currentPage > 0) {
+//                    $scope.currentPage = $scope.currentPage - 1;
+//                } else if (e.altKey && e.keyCode===86) {
+//                    if ($scope.isList===true) {
+//                        $scope.isList = false;
+//                    } else if ($scope.isList===false) {
+//                        $scope.isList = true;
+//                    }
+//                }
+//        });
         
         $scope.itemUpdate = new Date().toISOString().substring(0,10); //today's date as 'yyyy-MM-dd'
         $scope.view = 'list'; //dynamic page title.

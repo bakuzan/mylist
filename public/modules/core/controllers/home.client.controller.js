@@ -11,6 +11,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
     
     $scope.isCollapseFilter = false;
     $scope.isCollapseAction = true;
+    $scope.isAddTask = false;
         
     $scope.today = new Date();
     $scope.datesSelected = 'current';
@@ -59,7 +60,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
                 return item;
         } else if (ds==='' || ds===null || ds===undefined) {
                 return item;
-        } else if (item.day==='Any') {
+        } else if (ds==='Any' && item.day==='Any') {
                 return item;
         }
     };

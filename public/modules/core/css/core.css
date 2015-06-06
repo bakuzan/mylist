@@ -417,10 +417,72 @@ footer a {
     font-weight: bold;
 }
 
+
+
 .keepCursor {
     cursor: default;
 }
 
 .clickable {
     cursor: pointer;
+}
+
+.showNav .pushWrap {
+    -webkit-transform: translate(50%, 0);
+    -moz-transform: translate(50%, 0);
+    -ms-transform: translate(50%, 0);
+    -o-transform: translate(50%, 0);
+    transform: translate(50%, 0);
+
+    -webkit-transform: translate3d(50%, 0, 0);
+    -moz-transform: translate3d(50%, 0, 0);
+    -ms-transform: translate3d(50%, 0, 0);
+    -o-transform: translate3d(50%, 0, 0);
+    transform: translate3d(50%, 0, 0);
+}
+
+/* Adds a transition and the resting translate state */
+.pushWrap {
+    -webkit-transition: all 300ms ease 0;
+    -moz-transition: all 300ms ease 0;
+    -o-transition: all 300ms ease 0;
+    transition: all 300ms ease 0;
+
+    -webkit-transform: translate(0, 0);
+    -moz-transform: translate(0, 0);
+    -ms-transform: translate(0, 0);
+    -o-transform: translate(0, 0);
+    transform: translate(0, 0);
+
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    -ms-transform: translate3d(0, 0, 0);
+    -o-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+
+.siteWrap {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.addTaskPopout {
+  width: 50%;
+  height: 100vh;
+  position: fixed;
+  border-right: 5px solid #337ab7;
+  background-color: #FFF;
+/*  color: #FFF;*/
+  top: 50px;
+  left: 0;
+/*  overflow-y: scroll;*/
+  align-content: center;
+    z-index: 100;
+}
+
+.toggleAddTask {
+/*    float: left;*/
+/*    left: 0;*/
+    font-size: 20px;
 }

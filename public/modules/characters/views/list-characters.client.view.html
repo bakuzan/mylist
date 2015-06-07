@@ -144,6 +144,15 @@
         </div><!-- SERIES DETAIL PANEL END -->
     </div><!-- STATISTICS VIEW END -->
         <div class="form-group col-lg-4 col-md-4 col-sm-4" ng-hide="isList==='statistics'">
+                    <div class="pagingControls col-lg-12 col-md-12 col-sm-12">
+            <button class="btn btn-primary" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                Previous
+            </button>
+                {{currentPage+1}}/{{numberOfPages()}}
+            <button class="btn btn-primary" ng-disabled="currentPage >= characters.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                Next
+            </button>
+        </div>
        <div class="input-group">
             <div class="input-group-addon">
                 <i class="fa fa-search"></i>
@@ -226,15 +235,6 @@
         </div>
     </div>
     <div class="list-group col-lg-8 col-md-8 col-sm-8" data-ng-show="isList==='list'">
-        <div class="pagingControls col-lg-12 col-md-12 col-sm-12">
-            <button class="btn btn-primary" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
-                Previous
-            </button>
-                {{currentPage+1}}/{{numberOfPages()}}
-            <button class="btn btn-primary" ng-disabled="currentPage >= characters.length/pageSize - 1" ng-click="currentPage=currentPage+1">
-                Next
-            </button>
-        </div>
         <a data-ng-repeat="character in characters | orderBy: sortType:sortReverse | filter: search | filter: mediaFilter | filter: tagFilter | startFrom: currentPage*pageSize | limitTo: pageSize" data-ng-href="#!/characters/{{character._id}}" character_Back="{{trustAsResourceUrl(character.image)}}" class="list-group-item col-lg-6 col-md-6 col-sm-6" style="height: 150px;">
 			<h4 class="darkBorderedFontHeading" data-ng-bind="character.name"></h4>
             <p class="list-group-item-text">

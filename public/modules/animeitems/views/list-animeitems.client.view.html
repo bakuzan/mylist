@@ -107,6 +107,15 @@
         </div><!-- TAG PANEL END -->
     </div><!-- STAT VIEW END -->
     <div class="form-group col-lg-4 col-md-4 col-sm-4" ng-show="isList">
+        <div class="pagingControls col-lg-12 col-md-12 col-sm-12">
+            <button class="btn btn-primary" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                Previous
+            </button>
+                {{currentPage+1}}/{{numberOfPages()}}
+            <button class="btn btn-primary" ng-disabled="currentPage >= animeitems.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                Next
+            </button>
+        </div>
        <div class="input-group">
             <div class="input-group-addon">
                 <i class="fa fa-search"></i>
@@ -215,15 +224,6 @@
         </div>
     </div><!-- FILTER SIDEBAR END -->
     <div class="list-group col-lg-8 col-md-8 col-sm-8" ng-show="isList">
-        <div class="pagingControls col-lg-12 col-md-12 col-sm-12">
-            <button class="btn btn-primary" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
-                Previous
-            </button>
-                {{currentPage+1}}/{{numberOfPages()}}
-            <button class="btn btn-primary" ng-disabled="currentPage >= animeitems.length/pageSize - 1" ng-click="currentPage=currentPage+1">
-                Next
-            </button>
-        </div>
         <a data-ng-repeat="animeitem in animeitems | orderBy: sortType:sortReverse | filter: search | filter: ratingFilter | filter: tagFilter | startFrom: currentPage*pageSize | limitTo: pageSize" data-ng-href="#!/animeitems/{{animeitem._id}}" list_Back="{{trustAsResourceUrl(animeitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12">
 			<small class="list-group-item-text">
 <!--				<span data-ng-bind="animeitem.latest | date:'yyyy-MMM-dd'"></span>-->

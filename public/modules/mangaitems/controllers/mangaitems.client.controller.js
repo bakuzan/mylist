@@ -11,8 +11,8 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         //paging controls for the list view.
         $scope.currentPage = 0;
         $scope.pageSize = 10;
-        $scope.numberOfPages = function(){
-            return Math.ceil($scope.mangaitems.length/$scope.pageSize);                
+        $scope.numberOfPages = function(value){
+            return Math.ceil(value/$scope.pageSize);                
         };
         
          

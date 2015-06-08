@@ -11,8 +11,8 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         //paging controls for the list view.
         $scope.currentPage = 0;
         $scope.pageSize = 10;
-        $scope.numberOfPages=function(){
-            return Math.ceil($scope.animeitems.length/$scope.pageSize);                
+        $scope.numberOfPages = function(value){
+            return Math.ceil(value/$scope.pageSize);                
         };
         
         $scope.itemUpdate = new Date().toISOString().substring(0,10); //today's date as 'yyyy-MM-dd'

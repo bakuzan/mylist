@@ -114,8 +114,8 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         //paging controls for the list view.
         $scope.currentPage = 0;
         $scope.pageSize = 10;
-        $scope.numberOfPages=function(){
-            return Math.ceil($scope.animeitems.length/$scope.pageSize);                
+        $scope.numberOfPages = function(value){
+            return Math.ceil(value/$scope.pageSize);                
         };
         
         $scope.itemUpdate = new Date().toISOString().substring(0,10); //today's date as 'yyyy-MM-dd'
@@ -630,8 +630,8 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         //paging controls for the list view.
         $scope.currentPage = 0;
         $scope.pageSize = 10;
-        $scope.numberOfPages=function(){
-            return Math.ceil($scope.characters.length/$scope.pageSize);                
+        $scope.numberOfPages = function(value){
+            return Math.ceil(value/$scope.pageSize);                
         };
         
         $scope.isList = 'list'; //show list? or carousel.
@@ -1959,8 +1959,8 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         //paging controls for the list view.
         $scope.currentPage = 0;
         $scope.pageSize = 10;
-        $scope.numberOfPages = function(){
-            return Math.ceil($scope.mangaitems.length/$scope.pageSize);                
+        $scope.numberOfPages = function(value){
+            return Math.ceil(value/$scope.pageSize);                
         };
         
          

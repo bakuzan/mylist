@@ -11,8 +11,8 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         //paging controls for the list view.
         $scope.currentPage = 0;
         $scope.pageSize = 10;
-        $scope.numberOfPages=function(){
-            return Math.ceil($scope.characters.length/$scope.pageSize);                
+        $scope.numberOfPages = function(value){
+            return Math.ceil(value/$scope.pageSize);                
         };
         
         $scope.isList = 'list'; //show list? or carousel.

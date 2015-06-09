@@ -108,13 +108,15 @@
     </div><!-- STAT VIEW END -->
     <div class="form-group col-lg-4 col-md-4 col-sm-4" ng-show="isList">
         <div class="pagingControls col-lg-12 col-md-12 col-sm-12">
+            <button class="btn btn-success" ng-click="currentPage=0">First</button>
             <button class="btn btn-primary" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
                 Previous
             </button>
-                {{currentPage+1}}/{{numberOfPages((animeitems | filter: search | filter: ratingFilter | filter: tagFilter).length)}}
-            <button class="btn btn-primary" ng-disabled="currentPage >= (animeitems | filter: search | filter: ratingFilter | filter: tagFilter).length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                {{currentPage+1}}/{{numberOfPages(showingCount)}}
+            <button class="btn btn-primary" ng-disabled="currentPage >= showingCount/pageSize - 1" ng-click="currentPage=currentPage+1">
                 Next
             </button>
+            <button class="btn btn-success" ng-click="currentPage=numberOfPages(showingCount)-1">Last</button>
         </div>
        <div class="input-group">
             <div class="input-group-addon">
@@ -143,7 +145,7 @@
 		  <div class="input-group-addon">
 		      <i class="fa fa-list-ol"></i>
           </div>
-            <input type="text" class="form-control" value="Showing {{ (animeitems | filter: search | filter: ratingFilter | filter: tagFilter).length }} anime." disabled>
+            <input type="text" class="form-control" value="Showing {{ (showingCount = (animeitems | filter: search | filter: ratingFilter | filter: tagFilter).length) }} anime." disabled>
         </div>
         <br/>
         <div class="input-group">

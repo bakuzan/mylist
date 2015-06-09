@@ -27,7 +27,7 @@
                     <div class="input-group-addon">
                         <i class="fa fa-search"></i>
                     </div>
-                    <input type="text" ng-model="statSearch" placeholder="search tags" class="form-control">
+                    <input type="text" ng-model="statSearch" placeholder="search tags" class="form-control" ng-disabled="isEqual">
                 </div>
                 <table class="col-lg-12 col-md-12 col-sm-12 statTagTable table table-bordered">
                     <thead>
@@ -48,7 +48,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="statTableRow clickable" ng-repeat="stat in statTags | orderBy: statTagSortType:statTagSortReverse | filter: {tag: statSearch }" ng-click="tagDetail(stat.tag);">
+                        <tr class="statTableRow clickable" ng-repeat="stat in statTags | orderBy: statTagSortType:statTagSortReverse | filter: {tag: statSearch }:isEqual" ng-click="tagDetail(stat.tag);">
                             <td class="text-right">{{$index+1}}</td>
                             <td>{{stat.tag}}</td>
                             <td class="text-right">{{stat.count}}</td>
@@ -61,6 +61,12 @@
             <div class="col-lg-12 col-md-12 col-sm-12 statDetail">
                 <div class="statDetailHeader">
                     <h3>Tags appearing with {{detailTagName}}</h3>
+                </div>
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </div>
+                    <input type="text" ng-model="statDetailSearch" placeholder="search related tags" class="form-control">
                 </div>
                 <table class="col-lg-12 col-md-12 col-sm-12 statTagDetailTable table table-bordered">
                     <thead>
@@ -81,7 +87,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="stat in tagDetailResult | orderBy: statTagDetailSortType:statTagDetailSortReverse">
+                        <tr ng-repeat="stat in tagDetailResult | orderBy: statTagDetailSortType:statTagDetailSortReverse | filter: {name: statDetailSearch}">
                             <td class="text-right">{{$index+1}}</td>
                             <td>{{stat.name}}</td>
                             <td class="text-right">{{stat.count}}</td>
@@ -144,14 +150,16 @@
         </div><!-- SERIES DETAIL PANEL END -->
     </div><!-- STATISTICS VIEW END -->
         <div class="form-group col-lg-4 col-md-4 col-sm-4" ng-hide="isList==='statistics'">
-                    <div class="pagingControls col-lg-12 col-md-12 col-sm-12">
+        <div class="pagingControls col-lg-12 col-md-12 col-sm-12">
+            <button class="btn btn-success" ng-click="currentPage=0">First</button>
             <button class="btn btn-primary" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
                 Previous
             </button>
-                {{currentPage+1}}/{{numberOfPages((characters | filter: search | filter: mediaFilter | filter: tagFilter).length)}}
-            <button class="btn btn-primary" ng-disabled="currentPage >= (characters | filter: search | filter: mediaFilter | filter: tagFilter).length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                {{currentPage+1}}/{{numberOfPages(showingCount)}}
+            <button class="btn btn-primary" ng-disabled="currentPage >= showingCount/pageSize - 1" ng-click="currentPage=currentPage+1">
                 Next
             </button>
+            <button class="btn btn-success" ng-click="currentPage=numberOfPages(showingCount)-1">Last</button>
         </div>
        <div class="input-group">
             <div class="input-group-addon">
@@ -180,7 +188,7 @@
 		  <div class="input-group-addon">
 		      <i class="fa fa-list-ol"></i>
           </div>
-            <input type="text" class="form-control" value="Showing {{ (characters | filter: search | filter: mediaFilter | filter: tagFilter).length }} character(s)." disabled>
+            <input type="text" class="form-control" value="Showing {{ (showingCount = (characters | filter: search | filter: mediaFilter | filter: tagFilter).length) }} character(s)." disabled>
         </div>
         <br/>
         <div class="input-group">

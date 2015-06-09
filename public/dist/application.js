@@ -797,9 +797,11 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                 $scope.statSearch = '';
                 $scope.showTagDetail = false;
                 $scope.detailTagName = '';
+                $scope.isEqual = false;
             } else {
                 $scope.statSearch = name;
                 $scope.detailTagName = name;
+                $scope.isEqual = true;
                 $scope.showTagDetail = true;
                 $scope.tagDetailCollection = [];
                 $scope.tagDetailResult = [];

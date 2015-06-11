@@ -115,7 +115,17 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.currentPage = 0;
         $scope.pageSize = 10;
         $scope.numberOfPages = function(value){
-            return Math.ceil(value/$scope.pageSize);                
+            var numPages = Math.ceil(value/$scope.pageSize);
+            
+            //reset number of pages to be the final page if the number of pages
+            //becomes less than the one you are on.
+            if ($scope.currentPage + 1 > numPages) {
+                $scope.currentPage = numPages-1;
+            }
+            if (numPages!==0 && $scope.currentPage < 0) {
+                $scope.currentPage = 0;
+            }
+            return numPages;
         };
         
         $scope.itemUpdate = new Date().toISOString().substring(0,10); //today's date as 'yyyy-MM-dd'
@@ -631,7 +641,17 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.currentPage = 0;
         $scope.pageSize = 10;
         $scope.numberOfPages = function(value){
-            return Math.ceil(value/$scope.pageSize);                
+            var numPages = Math.ceil(value/$scope.pageSize);
+            
+            //reset number of pages to be the final page if the number of pages
+            //becomes less than the one you are on.
+            if ($scope.currentPage + 1 > numPages) {
+                $scope.currentPage = numPages-1;
+            }
+            if (numPages!==0 && $scope.currentPage < 0) {
+                $scope.currentPage = 0;
+            }
+            return numPages;
         };
         
         $scope.isList = 'list'; //show list? or carousel.
@@ -1962,7 +1982,17 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         $scope.currentPage = 0;
         $scope.pageSize = 10;
         $scope.numberOfPages = function(value){
-            return Math.ceil(value/$scope.pageSize);                
+            var numPages = Math.ceil(value/$scope.pageSize);
+            
+            //reset number of pages to be the final page if the number of pages
+            //becomes less than the one you are on.
+            if ($scope.currentPage + 1 > numPages) {
+                $scope.currentPage = numPages-1;
+            }
+            if (numPages!==0 && $scope.currentPage < 0) {
+                $scope.currentPage = 0;
+            }
+            return numPages;
         };
         
          

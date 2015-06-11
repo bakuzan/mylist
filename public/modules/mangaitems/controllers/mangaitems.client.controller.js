@@ -12,7 +12,17 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         $scope.currentPage = 0;
         $scope.pageSize = 10;
         $scope.numberOfPages = function(value){
-            return Math.ceil(value/$scope.pageSize);                
+            var numPages = Math.ceil(value/$scope.pageSize);
+            
+            //reset number of pages to be the final page if the number of pages
+            //becomes less than the one you are on.
+            if ($scope.currentPage + 1 > numPages) {
+                $scope.currentPage = numPages-1;
+            }
+            if (numPages!==0 && $scope.currentPage < 0) {
+                $scope.currentPage = 0;
+            }
+            return numPages;
         };
         
          

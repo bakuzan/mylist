@@ -360,7 +360,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             }
 
 			animeitem.$update(function() {
-				$location.path('animeitems/' + animeitem._id);
+				$location.path('animeitems');
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});
@@ -369,7 +369,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		// Find a list of Animeitems
 		$scope.find = function() {
 			$scope.animeitems = Animeitems.query();
-            //console.log($scope.animeitems);
+            console.log($scope.animeitems);
 		};
 
 		// Find existing Animeitem

@@ -183,7 +183,7 @@
         <br/>
         <div class="input-group">
 		  <div class="input-group-addon">
-		      <i class="fa fa-book"></i>
+		      <i class="glyphicon glyphicon-cd"></i>
           </div>
             <select class="form-control" ng-model="search.disc">
                         <option value="">All</option>
@@ -224,19 +224,42 @@
         </div>
     </div><!-- FILTER SIDEBAR END -->
     <div class="list-group col-lg-8 col-md-8 col-sm-8" ng-show="isList">
-        <a data-ng-repeat="animeitem in animeitems | orderBy: sortType:sortReverse | filter: search | filter: ratingFilter | filter: tagFilter | startFrom: currentPage*pageSize | limitTo: pageSize" data-ng-href="#!/animeitems/{{animeitem._id}}" list_Back="{{trustAsResourceUrl(animeitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12">
+        <div data-ng-repeat="animeitem in animeitems | orderBy: sortType:sortReverse | filter: search | filter: ratingFilter | filter: tagFilter | startFrom: currentPage*pageSize | limitTo: pageSize" list_Back="{{trustAsResourceUrl(animeitem.image)}}" ng-click="viewItem===animeitem ? viewItem='' : viewItem=animeitem" class="list-group-item col-lg-12 col-md-12 col-sm-12">
 			<small class="list-group-item-text">
 <!--				<span data-ng-bind="animeitem.latest | date:'yyyy-MMM-dd'"></span>-->
                 <time title="{{animeitem.latest | date: 'yyyy-MMM-dd'}}" ng-bind="latestDate(animeitem.latest)"></time>
 			</small>
 			<h4 class="list-group-item-heading" data-ng-bind="animeitem.title"></h4>
             <p class="list-group-item-text">
-                Episodes
-                <span data-ng-bind="animeitem.episodes"></span>
+                <span data-ng-bind="animeitem.episodes"></span>/<span data-ng-bind="animeitem.finalEpisode"></span> Episodes
+                <span class="item-icons" ng-if="animeitem.status===true"><i class="fa fa-check"></i></span>
+                <span class="item-icons" ng-if="animeitem.disc===true"><i class="glyphicon glyphicon-cd"></i></span>
+                <span class="item-icons" ng-if="animeitem.reWatching===true"><i class="fa fa-repeat"></i></span>
             </p>
-<!--            <span ng-repeat="tag in animeitem.tags" data-ng-init="createUsedTags(tag.text)"></span> for typeahead -->
-        </a>
-    </div>
+            <div class="view-item-detail" ng-if="viewItem===animeitem">
+                <div class="item-detail">
+                    <p>
+                        <em class="text-muted" data-ng-if="animeitem.rating==0">No rating.</em>
+                        <rating data-ng-if="animeitem.rating!=0" data-ng-model="animeitem.rating" style="color: blue; font-size: 14px;" readonly="true" max="maxRating" id="rating" name="rating"></rating>
+                    </p>
+                    <p ng-if="animeitem.reWatchCount!=0">{{animeitem.reWatchCount}} re-watches.</p>
+                </div>
+                <div class="item-dates">
+                    <small>
+                        <span data-ng-bind="animeitem.start | date:'yyyy-MMM-dd'"></span> started.<br/>
+                        <span ng-if="animeitem.end!==undefined">{{animeitem.end | date:'yyyy-MMM-dd'}} ended.</span>
+                    </small>
+                </div>
+                <div class="item-actions" data-ng-show="((authentication.user) && (authentication.user._id == animeitem.user._id))">
+                    <a class="btn btn-success" href="/#!/animeitems/{{animeitem._id}}">
+                        <i class="fa fa-eye"></i>
+                    </a>
+                    <a class="btn btn-primary" href="/#!/animeitems/{{animeitem._id}}/edit">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                </div>
+            </div><!-- VIEW ITEM END-->
+        </div><!-- LIST ITEM END -->
     <div class="alert alert-warning text-center" data-ng-hide="!animeitems.$resolved || animeitems.length">
     	No animeitems yet, why don't you <a href="/#!/animeitems/create">create one</a>?
     </div>

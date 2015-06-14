@@ -91,7 +91,7 @@
                         <input type="checkbox" class="form-control" data-ng-model="animeitem.status" data-ng-checked="animeitem.end!=null || animeitem.episodes === animeitem.finalEpisode" data-ng-true-value="true" id="status" name="status" disabled>
                     </div>
                 </div>
-                <div class="form-group text-right" data-ng-hide="animeitem.finalEpisode!=0">
+                <div class="form-group text-right" data-ng-hide="animeitem.status===true">
                     <a class="btn btn-primary" id="finalNumbers" name="finalNumbers" data-ng-click="finalNumbers = !finalNumbers">Toggle final numbers</a>
                 </div>
                 <div class="form-group" ng-show="finalNumbers">

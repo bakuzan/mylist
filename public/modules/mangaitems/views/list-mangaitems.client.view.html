@@ -234,8 +234,8 @@
 			</small>
 			<h4 class="list-group-item-heading" data-ng-bind="mangaitem.title"></h4>
             <p class="list-group-item-text">
-                <span data-ng-bind="mangaitem.chapters"></span>/<span data-ng-bind="mangaitem.finalChapter"></span> Chapters, 
-                <span data-ng-bind="mangaitem.volumes"></span>/<span data-ng-bind="mangaitem.finalVolume"></span> Volumes
+                <span data-ng-bind="mangaitem.chapters"></span><span ng-if="mangaitem.finalChapter!==0">/{{mangaitem.finalChapter}}</span> Chapters, 
+                <span data-ng-bind="mangaitem.volumes"></span><span ng-if="mangaitem.finalVolume!==0">/{{mangaitem.finalVolume}}</span> Volumes
                 <span class="item-icons" ng-if="mangaitem.status===true"><i class="fa fa-check"></i></span>
                 <span class="item-icons" ng-if="mangaitem.hardcopy===true"><i class="fa fa-book"></i></span>
                 <span class="item-icons" ng-if="mangaitem.reReading===true"><i class="fa fa-repeat"></i></span>

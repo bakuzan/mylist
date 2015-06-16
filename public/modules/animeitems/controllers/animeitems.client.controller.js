@@ -25,9 +25,10 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.showDetail = false; //show month detail.
         $scope.statTagSortType = 'tag'; //stat tag sort
         $scope.statTagSortReverse = false; //stat tag sort direction.
-        $scope.sortType = ['latest', 'meta.updated']; //default sort type
+//        $scope.sortType = ['latest', 'meta.updated']; //default sort type
         $scope.sortOptions = [
-            { v: 'title', n: 'Title' },{ v: 'episodes', n: 'Episodes' },{ v: 'start', n: 'Start date' },{ v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' }
+            { v: 'title', n: 'Title' },{ v: 'episodes', n: 'Episodes' },{ v: 'start', n: 'Start date' },
+            { v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' }
         ];
 	    $scope.sortReverse = true; // default sort order
         $scope.finalNumbers = false; //default show status of final number fields in edit view.

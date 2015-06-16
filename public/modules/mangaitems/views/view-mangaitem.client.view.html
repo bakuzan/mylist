@@ -12,6 +12,9 @@
                 <div class="relatedMedia text-muted">
                     <p data-ng-show="mangaitem.anime!==undefined">Related anime: <a href="/#!/animeitems/{{mangaitem.anime._id}}">{{mangaitem.anime.title}}</a></p>
                 </div>
+                <div class="col-md-6 item-tags">
+                    <span class="tagBubble" ng-repeat="tag in mangaitem.tags">{{tag.text}}.</span>
+                </div>
             </div>
         </div>
         <div class="text-right">

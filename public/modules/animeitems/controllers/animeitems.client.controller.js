@@ -403,8 +403,8 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 //          console.log(latest, updated);
             var today = moment(new Date());
             if (latest.substring(0,10)===updated.substring(0,10)) {
-                var latestDate = moment(updated);
-                var diff = today.diff(latestDate, 'minutes');
+//                var latestDate = moment(updated);
+//                var diff = today.diff(latestDate, 'minutes');
                 return updated;
             } else {
                 var latestDate = moment(latest);

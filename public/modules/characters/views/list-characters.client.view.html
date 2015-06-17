@@ -235,7 +235,7 @@
         </div>
     </div>
     <div class="list-group col-lg-8 col-md-8 col-sm-8" data-ng-show="isList==='list'">
-        <a data-ng-repeat="character in characters | orderBy: sortType:sortReverse | filter: search | filter: mediaFilter | filter: tagFilter | startFrom: currentPage*pageSize | limitTo: pageSize" data-ng-href="#!/characters/{{character._id}}" character_Back="{{trustAsResourceUrl(character.image)}}" class="list-group-item col-lg-6 col-md-6 col-sm-6" style="height: 150px;">
+        <a data-ng-repeat="character in characters | orderBy: sortType:sortReverse | filter: search | filter: mediaFilter | filter: tagFilter | startFrom: currentPage*pageSize | limitTo: pageSize" character_Back="{{trustAsResourceUrl(character.image)}}" class="list-group-item" ng-class="viewItem===character ? 'col-lg-12 col-md-12 col-sm-12' : ' col-lg-6 col-md-6 col-sm-6'" ng-click="viewItem===character ? viewItem='' : viewItem=character" style="height:150px;">
 			<h4 class="darkBorderedFontHeading" data-ng-bind="character.name"></h4>
             <p class="list-group-item-text">
                 <span class="darkBorderedFont" data-ng-bind="character.voice"></span>

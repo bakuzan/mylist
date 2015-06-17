@@ -404,7 +404,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             }
             
 			character.$update(function() {
-				$location.path('characters/' + character._id);
+				$location.path('characters');
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});

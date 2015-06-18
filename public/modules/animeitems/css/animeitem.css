@@ -75,10 +75,11 @@
 .item-tags {
     color: #777;
     font-style: italic;
-    margin: 5px 0;
+    margin: 10px 0;
+    padding: 5px 0;
     padding-left: 0;
 }
 
 .item-actions {
-    margin: 5px 0;
+    margin: 10px 0;
 }

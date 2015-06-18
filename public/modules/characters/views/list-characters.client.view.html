@@ -235,15 +235,28 @@
         </div>
     </div>
     <div class="list-group col-lg-8 col-md-8 col-sm-8" data-ng-show="isList==='list'">
-        <a data-ng-repeat="character in characters | orderBy: sortType:sortReverse | filter: search | filter: mediaFilter | filter: tagFilter | startFrom: currentPage*pageSize | limitTo: pageSize" character_Back="{{trustAsResourceUrl(character.image)}}" class="list-group-item" ng-class="viewItem===character ? 'col-lg-12 col-md-12 col-sm-12' : ' col-lg-6 col-md-6 col-sm-6'" ng-click="viewItem===character ? viewItem='' : viewItem=character" style="height:150px;">
+        <div data-ng-repeat="character in characters | orderBy: sortType:sortReverse | filter: search | filter: mediaFilter | filter: tagFilter | startFrom: currentPage*pageSize | limitTo: pageSize" character_Back="{{trustAsResourceUrl(character.image)}}" class="list-group-item" ng-class="viewItem===character ? 'col-lg-12 col-md-12 col-sm-12 characterExpanded' : ' col-lg-6 col-md-6 col-sm-6 characterDefault'" ng-click="viewItem===character ? viewItem='' : viewItem=character">
 			<h4 class="darkBorderedFontHeading" data-ng-bind="character.name"></h4>
             <p class="list-group-item-text">
                 <span class="darkBorderedFont" data-ng-bind="character.voice"></span>
             </p>
             <span class="darkBorderedFont" data-ng-show="character.manga!==undefined && character.manga!==null" data-ng-bind="character.manga.title"></span>
             <span class="darkBorderedFont" data-ng-show="character.anime!==undefined && character.manga===null" data-ng-bind="character.anime.title"></span>
-        </a>
-    </div>
+            <div class="view-item-detail" ng-if="viewItem===character">
+                <div class="col-lg-12 col-md-12 col-sm-12 item-tags">
+                    <span class="tagBubble" ng-repeat="tag in character.tags">{{tag.text}}</span>
+                </div>
+                <div class="item-actions" data-ng-show="((authentication.user) && (authentication.user._id == character.user._id))">
+                    <a class="btn btn-success" href="/#!/characters/{{character._id}}">
+                        <i class="fa fa-eye"></i>
+                    </a>
+                    <a class="btn btn-primary" href="/#!/characters/{{character._id}}/edit">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                </div>
+            </div><!-- VIEW ITEM END-->
+        </div><!-- LIST ITEM END -->
+    </div><!-- LIST END -->
     <div class="characterCarousel col-lg-8 col-md-8 col-sm-8" style="height: 300px;" data-ng-show="isList==='carousel'">
         <carousel interval="myInterval" style="height: 300px;" disable-ng-animate>
             <slide ng-repeat="character in characters | filter: search | filter: mediaFilter | filter: tagFilter" active="character.active">

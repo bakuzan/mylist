@@ -10,7 +10,7 @@
                 <p><span><b>Manga: </b></span><a data-ng-show="character.manga!==undefined" href="/#!/mangaitems/{{character.manga._id}}">{{character.manga.title}}</a></p>
                 <p><span><b>VA: </b></span><span data-ng-bind="character.voice"></span></p>
                 <div class="col-md-12 item-tags">
-                    <span class="tagBubble" ng-repeat="tag in character.tags">{{tag.text}}</span>
+                    <span class="tag-bubble" ng-repeat="tag in character.tags">{{tag.text}}</span>
                 </div>
             </div>
         </div>

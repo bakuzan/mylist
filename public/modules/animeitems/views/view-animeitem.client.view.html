@@ -8,11 +8,11 @@
                 <h1 data-ng-bind="animeitem.title"></h1>
                 <span class="glyphicon glyphicon-cd" data-ng-show="animeitem.disc"></span> <span class="text-muted" data-ng-show="animeitem.status">(Completed)</span> <span class="text-muted" data-ng-show="animeitem.reWatching">(Watching)</span>
                 <h3>Episode </h3><span data-ng-bind="animeitem.episodes"></span>/<span data-ng-bind="animeitem.finalEpisode"></span>
-                <div class="relatedMedia">
+                <div class="related-media">
                     <p data-ng-show="animeitem.manga!==undefined">Related manga: <a href="/#!/mangaitems/{{animeitem.manga._id}}">{{animeitem.manga.title}}</a></p>
                 </div>
                 <div class="col-md-6 item-tags">
-                    <span class="tagBubble" ng-repeat="tag in animeitem.tags">{{tag.text}}</span>
+                    <span class="tag-bubble" ng-repeat="tag in animeitem.tags">{{tag.text}}</span>
                 </div>
             </div>
         </div>

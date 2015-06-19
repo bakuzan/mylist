@@ -199,6 +199,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             //if the one already selected is clicked, hide the detail.
             if ($scope.detailSeasonYear===year && $scope.detailSeason===month) {
                     $scope.showSeasonDetail = !$scope.showSeasonDetail;
+                    $scope.showDetail = false;
             } else {
                 $scope.detailSeasonYear = year;
                 $scope.detailSeason = month;
@@ -219,6 +220,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             //if the one already selected is clicked, hide the detail.
             if ($scope.detailYear===year && $scope.detailMonth===month) {
                     $scope.showDetail = !$scope.showDetail;
+                    $scope.showSeasonDetail = false;
             } else {
                 $scope.detailYear = year;
                 $scope.detailMonth = month;

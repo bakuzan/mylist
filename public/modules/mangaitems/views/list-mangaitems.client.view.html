@@ -1,8 +1,8 @@
 <section data-ng-controller="MangaitemsController" data-ng-init="find()" data-ng-show="authentication.user">
     <div class="page-header">
         <div class="view-buttons text-right pull-right">
-            <label class="btn btn-primary" ng-model="isList" btn-radio="'true'" ng-click="view = 'list'" uncheckable>List</label>
-            <label class="btn btn-primary" ng-model="isList" btn-radio="'false'" ng-click="view = 'statistics'" uncheckable>Stats</label>
+            <label class="btn btn-primary" ng-model="isList" btn-radio="true" ng-click="view = 'list'" >List</label>
+            <label class="btn btn-primary" ng-model="isList" btn-radio="false" ng-click="view = 'statistics'" >Stats</label>
         </div>
         <h1>Manga {{view}}</h1>
     </div>

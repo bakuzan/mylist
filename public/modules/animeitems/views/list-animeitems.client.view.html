@@ -1,8 +1,8 @@
 <section data-ng-controller="AnimeitemsController" data-ng-init="find()" data-ng-show="authentication.user">
     <div class="page-header">
         <div class="view-buttons text-right pull-right">
-            <label class="btn btn-primary" ng-model="isList" btn-radio="'true'" ng-click="view = 'list'">List</label>
-            <label class="btn btn-primary" ng-model="isList" btn-radio="'false'" ng-click="view = 'statistics'">Stats</label>
+            <label class="btn btn-primary" ng-model="isList" btn-radio="true" ng-click="view = 'list'">List</label>
+            <label class="btn btn-primary" ng-model="isList" btn-radio="false" ng-click="view = 'statistics'">Stats</label>
         </div>
         <h1>Anime {{view}}</h1>
     </div>
@@ -40,7 +40,7 @@
                 <tbody>
                     <tr ng-repeat="animeitem in animeitems | unique: 'end.substring(0,4)' | orderBy: '-end.substring(0,4)' | limitTo: 4">
                         <th ng-hide="animeitem.end==='' || animeitem.end===null || animeitem.end===undefined"><span>{{animeitem.end.substring(0,4)}}</span></th>
-                        <td  class="stat-month-box" ng-hide="animeitem.end==='' || animeitem.end===null || animeitem.end===undefined" ng-repeat="season in seasons" ng-click="seasonDetail(animeitem.end.substring(0,4), season.number)" popover="{{ (animeitems | filter: endedSeason(animeitem.end.substring(0,4), season.number)).length }} anime completed {{season.text}} {{animeitem.end.substring(0,4)}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': (animeitems | filter: endedSeason(animeitem.end.substring(0,4), season.number)).length / animeitems.length}">
+                        <td  class="stat-month-box" ng-hide="animeitem.end==='' || animeitem.end===null || animeitem.end===undefined" ng-repeat="season in seasons" ng-click="seasonDetail(animeitem.end.substring(0,4), season.number)" popover="{{ (animeitems | filter: endedSeason(animeitem.end.substring(0,4), season.number)).length }} anime completed {{season.text}} {{animeitem.end.substring(0,4)}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': (animeitems | filter: endedSeason(animeitem.end.substring(0,4), season.number)).length / maxCompleteMonth }">
                         </td>
                     </tr>
                 </tbody>

@@ -1,17 +1,21 @@
 <section data-ng-controller="AnimeitemsController" data-ng-init="find()" data-ng-show="authentication.user">
     <div class="page-header">
         <div class="view-buttons text-right pull-right">
-            <label class="btn btn-primary" ng-model="isList" btn-radio="'true'" ng-click="view = 'list'" uncheckable>List</label>
-            <label class="btn btn-primary" ng-model="isList" btn-radio="'false'" ng-click="view = 'statistics'" uncheckable>Stats</label>
+            <label class="btn btn-primary" ng-model="isList" btn-radio="'true'" ng-click="view = 'list'">List</label>
+            <label class="btn btn-primary" ng-model="isList" btn-radio="'false'" ng-click="view = 'statistics'">Stats</label>
         </div>
         <h1>Anime {{view}}</h1>
     </div>
     <div class="col-lg-12 col-md-12 col-sm-12" ng-hide="isList">
         <div class="col-lg-12 col-md-12 col-sm-12 stat-history">
             <div class="stat-header">
-                <h3>History</h3>
+                <div class="stat-header-label-container">
+                    <h3>History - </h3>
+                    <h3 class="btn stat-header-label" ng-model="historicalView" btn-radio="'month'">Month</h3>
+                    <h3 class="btn stat-header-label" ng-model="historicalView" btn-radio="'season'">Season</h3>
+                </div>
             </div>
-            <table class="col-lg-12 col-md-12 col-sm-12">
+            <table class="col-lg-12 col-md-12 col-sm-12" ng-show="historicalView === 'month'">
                 <thead>
                     <tr>
                         <th></th>
@@ -25,7 +29,22 @@
                         </td>
                     </tr>
                 </tbody>
-            </table>
+            </table><!-- MONTH HISTORY TABLE END -->
+            <table class="col-lg-12 col-md-12 col-sm-12" ng-show="historicalView === 'season'">
+                <thead>
+                    <tr>
+                        <th class=""></th>
+                        <th class="text-center stat-season-header" ng-repeat="season in seasons">{{season.text}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="animeitem in animeitems | unique: 'end.substring(0,4)' | orderBy: '-end.substring(0,4)' | limitTo: 4">
+                        <th ng-hide="animeitem.end==='' || animeitem.end===null || animeitem.end===undefined"><span>{{animeitem.end.substring(0,4)}}</span></th>
+                        <td  class="stat-month-box" ng-hide="animeitem.end==='' || animeitem.end===null || animeitem.end===undefined" ng-repeat="season in seasons" ng-click="seasonDetail(animeitem.end.substring(0,4), season.number)" popover="{{ (animeitems | filter: endedSeason(animeitem.end.substring(0,4), season.number)).length }} anime completed {{season.text}} {{animeitem.end.substring(0,4)}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': (animeitems | filter: endedSeason(animeitem.end.substring(0,4), season.number)).length / animeitems.length}">
+                        </td>
+                    </tr>
+                </tbody>
+            </table><!-- SEASON HISTORY TABLE END -->
         </div><!-- HISTORY PANEL END -->
         <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="showDetail">
             <div class="col-lg-6 col-md-6 col-sm-6 stat-detail">
@@ -38,7 +57,20 @@
                     </li>
                 </ul>
             </div>
-        </div><!-- DETAIL PANEL END -->
+        </div><!-- MONTH DETAIL PANEL END -->
+        <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="showSeasonDetail">
+            <div class="col-lg-6 col-md-6 col-sm-6 stat-detail">
+                <div class="stat-detail-header">
+                    <h3>Anime Completed {{detailSeasonName}} {{detailSeasonYear}}</h3>
+                </div>
+                <ul class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
+                    <li ng-repeat="anime in animeitems | filter: endedSeason(detailSeasonYear, detailSeason) | orderBy: 'title'">
+                        <a href="/#!/animeitems/{{anime._id}}"><span>{{anime.title}}</span></a> - <span>{{anime.rating}}</span>
+                        <p>{{anime.start | date: 'MM/yyyy'}} - {{anime.end | date: 'MM/yyyy'}}</p>
+                    </li>
+                </ul>
+            </div>
+        </div><!-- SEASON DETAIL PANEL END -->
         <div class="col-lg-6 col-md-6 col-sm-6 stat-rating-panel">
             <div class="stat-header">
                 <h3>Ratings</h3><span class="stat-summary-info pull-right"><small class="text-muted">&nbsp;{{averageAnimeRating | number: 2}} average rating.</small></span>

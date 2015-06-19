@@ -27,6 +27,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         
         $scope.itemUpdate = new Date().toISOString().substring(0,10); //today's date as 'yyyy-MM-dd'
         $scope.view = 'list'; //dynamic page title.
+        $scope.historicalView = 'month'; //default historical view in stats.
         $scope.isList = true; //list view as default.
         $scope.maxAnimeCount = 0; //number of anime.
         $scope.maxAnimeRatedCount = 0; //number of anime with a rating i.e not 0.
@@ -141,6 +142,12 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             }
         };
         
+        $scope.seasons = [
+            { number: '03', text: 'Winter' },
+            { number: '06', text: 'Spring' },
+            { number: '09', text: 'Summer' },
+            { number: '12', text: 'Fall' }
+        ];
         $scope.months = [
             { number: '01', text: 'January' },
             { number: '02', text: 'February' },
@@ -156,6 +163,23 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             { number: '12', text: 'December' }
         ];
         
+        //ended stat season filter
+        $scope.endedSeason = function(year, month){
+            return function(item) {
+                if (item.end!==undefined) {
+                    if (item.end.substring(0,4) === year) {
+                        if (item.end.substr(5,2) === month) {
+                            var pad = '00';
+                            var startMonth = (pad + (month - 2)).slice(-pad.length);
+                            if (item.start.substr(5,2) === startMonth) {
+                                return item;
+                            }
+                        }
+                    }
+                }
+            };
+        };
+        
         //ended stat month filter
         $scope.endedMonth = function(year, month){
             return function(item) {
@@ -167,6 +191,26 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                     }
                 }
             };
+        };
+        
+        //show season detail.
+        $scope.seasonDetail = function(year, month) {
+//            console.log(year+'-'+month);
+            //if the one already selected is clicked, hide the detail.
+            if ($scope.detailSeasonYear===year && $scope.detailSeason===month) {
+                    $scope.showSeasonDetail = !$scope.showSeasonDetail;
+            } else {
+                $scope.detailSeasonYear = year;
+                $scope.detailSeason = month;
+                //get month name also, cause why not.
+                angular.forEach($scope.seasons, function(mmm) {
+                    if ($scope.detailSeason===mmm.number) {
+                        $scope.detailSeasonName = mmm.text;
+                    }
+                });
+                $scope.showSeasonDetail = true;
+                $scope.showDetail = false;
+            }
         };
         
         //show month detail.
@@ -185,6 +229,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                     }
                 });
                 $scope.showDetail = true;
+                $scope.showSeasonDetail = false;
             }
         };
         

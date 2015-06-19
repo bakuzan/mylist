@@ -314,20 +314,10 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             }
         });
         
-        
         //rating 'tooltip' function
         $scope.hoveringOver = function(value) {
             $scope.overStar = value;
             $scope.percent = 100 * (value / $scope.maxRating);
-        };
-        
-        //filter for rating stars
-        $scope.ratingFilter = function(item) {
-            if (item.rating===$scope.ratingLevel) {
-                return item;
-            } else if ($scope.ratingLevel===undefined) {
-                return item;
-            }
         };
 
 		// Create new Animeitem

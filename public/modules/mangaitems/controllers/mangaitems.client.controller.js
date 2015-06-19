@@ -271,15 +271,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             $scope.percent = 100 * (value / $scope.maxRating);
         };
         
-        //filter for rating stars
-        $scope.ratingFilter = function(item) {
-            if (item.rating===$scope.ratingLevel) {
-                return item;
-            } else if ($scope.ratingLevel===undefined) {
-                return item;
-            }
-        };
-        
         // Create new Mangaitem
 		$scope.create = function() {
             

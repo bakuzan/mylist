@@ -22,7 +22,7 @@ angular.module('characters').directive('fileModel', ['$parse', function ($parse)
             'background-image': 'url(' + url +')',
             'background-size' : '100%',
             'background-repeat': 'no-repeat',
-            'background-position': 'right'
+            'background-position': 'center'
         });
     };
 })

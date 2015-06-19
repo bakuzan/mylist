@@ -387,7 +387,7 @@ footer a {
 
 /** FAVOURITES STYLING **/
 
-.favouriteHeader {
+.favourite-header {
   padding-bottom: 5px;
   margin-bottom: 10px;
   border-bottom: 1px solid #eee; 
@@ -395,31 +395,29 @@ footer a {
   white-space: nowrap;
 }
 
-.favouriteLink {
+.favourite-link {
     color: inherit;
 }
-.favouriteLink:hover,
-.favouriteLink:focus {
+.favourite-link:hover,
+.favourite-link:focus {
     color: inherit;
     text-decoration: none;
 }
 
-.favouriteLink:hover h2:before {
+.favourite-link:hover h2:before {
     content: 'Go to ';
 }
-.favouriteLink:hover h2:after {
+.favourite-link:hover h2:after {
     content: '?';
 }
 
-.collapseBar {
+.collapse-bar {
     cursor: pointer;
     background-color: #e6e6e6;
     font-weight: bold;
 }
 
-
-
-.keepCursor {
+.keep-cursor {
     cursor: default;
 }
 
@@ -427,47 +425,45 @@ footer a {
     cursor: pointer;
 }
 
-.showNav .pushWrap {
+.show-nav .push-wrap {
     -webkit-transform: translate(50%, 0);
-    -moz-transform: translate(50%, 0);
-    -ms-transform: translate(50%, 0);
-    -o-transform: translate(50%, 0);
-    transform: translate(50%, 0);
-
     -webkit-transform: translate3d(50%, 0, 0);
+    -moz-transform: translate(50%, 0);
     -moz-transform: translate3d(50%, 0, 0);
+    -ms-transform: translate(50%, 0);
     -ms-transform: translate3d(50%, 0, 0);
+    -o-transform: translate(50%, 0);
     -o-transform: translate3d(50%, 0, 0);
+    transform: translate(50%, 0);
     transform: translate3d(50%, 0, 0);
 }
 
 /* Adds a transition and the resting translate state */
-.pushWrap {
+.push-wrap {
     -webkit-transition: all 300ms ease 0;
     -moz-transition: all 300ms ease 0;
     -o-transition: all 300ms ease 0;
     transition: all 300ms ease 0;
 
     -webkit-transform: translate(0, 0);
-    -moz-transform: translate(0, 0);
-    -ms-transform: translate(0, 0);
-    -o-transform: translate(0, 0);
-    transform: translate(0, 0);
-
     -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate(0, 0);
     -moz-transform: translate3d(0, 0, 0);
+    -ms-transform: translate(0, 0);
     -ms-transform: translate3d(0, 0, 0);
+    -o-transform: translate(0, 0);
     -o-transform: translate3d(0, 0, 0);
+    transform: translate(0, 0);    
     transform: translate3d(0, 0, 0);
 }
 
-.siteWrap {
+.site-wrap {
     overflow: hidden;
     width: 100%;
     height: 100%;
 }
 
-.addTaskPopout {
+.add-task-popout {
   width: 50%;
   height: 100vh;
   position: fixed;
@@ -481,7 +477,7 @@ footer a {
     z-index: 100;
 }
 
-.toggleAddTask {
+.toggle-add-task {
 /*    float: left;*/
 /*    left: 0;*/
     font-size: 20px;

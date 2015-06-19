@@ -3,13 +3,13 @@
         <h1>Edit Anime Favourites</h1>
     </div>
     <div class="col-md-12">
-        <div class="favouriteAnime col-md-4">
-            <div class="favouriteHeader">
-                <a class="favouriteLink" href="/#!/animeitems">
+        <div class="favourite-anime col-md-4">
+            <div class="favourite-header">
+                <a class="favourite-link" href="/#!/animeitems">
                     <h2>Anime</h2>
                 </a>
             </div>
-            <div class="favouriteContent col-sm-12">
+            <div class="favourite-content col-sm-12">
             <form name="favouriteForm" class="form-horizontal" novalidate>
                 <fieldset>
                     <div class="form-group">
@@ -57,7 +57,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="favouriteActions text-center">
+                    <div class="favourite-actions text-center">
                         <button class="btn btn-primary" ng-click="updateAnimeFavouriteOne();updateAnimeFavouriteTwo();updateAnimeFavouriteThree();updateAnimeFavouriteFour();updateAnimeFavouriteFive();" ng-disabled="favouriteForm.$invalid">Update favourite anime</button>
 &nbsp;-&nbsp;<a href="/#!/favourites">Back</a>
                     </div>
@@ -66,12 +66,12 @@
             </div>
         </div>
         <div class="col-md-8">
-            <div class="favouriteHeader">
+            <div class="favourite-header">
                 <p>
                     <h2>Current favourite anime</h2>
                 </p>
             </div>
-            <div class="favouriteContent col-sm-12">
+            <div class="favourite-content col-sm-12">
                 <div class="list-group col-sm-12">
                     <a data-ng-repeat="favouriteAnimeitem in favouriteAnimeitem | orderBy: 'rank'" ng-click="reorderFavourites(favouriteAnimeitem)" list_Back="{{trustAsResourceUrl(favouriteAnimeitem.anime.image)}}" data-ng-model="favouriteAnimeitem" class="list-group-item" ng-class="{ selected: favouriteAnimeitem === selectedFavourite }">
 			             <h4 class="list-group-item-heading" data-ng-bind="favouriteAnimeitem.anime.title"></h4><span data-ng-bind="favouriteAnimeitem.date.substring(0,10)"></span>

@@ -1,17 +1,17 @@
-.darkBorderedFont {
+.dark-bordered-font {
     color: #ffffff;
     font-size: 12px;
     font-weight: 500;
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
-.darkBorderedFontHeading {
+.dark-bordered-font-heading {
     color: #ffffff;
     font-size: 16px;
     font-weight: 500;
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 
-.tagBubble {
+.tag-bubble {
     border-radius: 10px;
     border: 2px solid lightblue;
     padding: 10px;
@@ -22,17 +22,29 @@
     background-color: aliceblue;
 }
 
-.statMediaPanel {
+.stat-media-panel {
     margin-top: 10px;
     border-top: 1px solid #eee;
 }
 
-.statTableRow:hover {
+.stat-table-row:hover {
     background-color: #337ab7;
     color: #FFFFFF;
 }
 
-.pagingControls {
+.paging-controls {
     text-align: center;
     margin-bottom: 10px;
+}
+
+.mt {
+    margin-top: 15px;
+}
+
+.character-default {
+    height: 150px;
+}
+
+.character-expanded {
+    height: 300px;
 }

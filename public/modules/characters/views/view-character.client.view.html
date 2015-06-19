@@ -1,25 +1,18 @@
 <section data-ng-controller="CharactersController" data-ng-init="findOne()" data-ng-show="authentication.user">
 	<div class="page-header">
         <div class="col-md-12">
-            <div class="col-md-3 pull-left">
+            <div class="col-md-3 pull-left mt">
                 <img ng-src="{{trustAsResourceUrl(character.image)}}" height="100%" width="100%"/>
             </div>
             <div class="col-md-9 pull-left">
                 <h1 data-ng-bind="character.name"></h1>
-                <br/><span><b>Anime: </b></span><a data-ng-show="character.anime!==undefined" href="/#!/animeitems/{{character.anime._id}}">{{character.anime.title}}</a>
-                <br/><span><b>Manga: </b></span><a data-ng-show="character.manga!==undefined" href="/#!/mangaitems/{{character.manga._id}}">{{character.manga.title}}</a>
-                <br/><span><b>VA: </b></span><span data-ng-bind="character.voice"></span>
+                <p><span><b>Anime: </b></span><a data-ng-show="character.anime!==undefined" href="/#!/animeitems/{{character.anime._id}}">{{character.anime.title}}</a></p>
+                <p><span><b>Manga: </b></span><a data-ng-show="character.manga!==undefined" href="/#!/mangaitems/{{character.manga._id}}">{{character.manga.title}}</a></p>
+                <p><span><b>VA: </b></span><span data-ng-bind="character.voice"></span></p>
+                <div class="col-md-12 item-tags">
+                    <span class="tag-bubble" ng-repeat="tag in character.tags">{{tag.text}}</span>
+                </div>
             </div>
-        </div>
-        <div class="col=md-12">
-            <small>
-                <em class="text-muted">
-                    Tags<br/>
-                    <ul data-ng-repeat="tag in character.tags">
-                        <li>{{tag.text}}</li>
-                    </ul>
-                </em>
-            </small>
         </div>
 	</div>
 	<div class="pull-right" data-ng-show="((authentication.user) && (authentication.user._id == character.user._id))">

@@ -112,7 +112,7 @@
                 </div>
                 <div class="form-group">
                     <ul class="taskList col-md-12">
-                        <li class="tagBubble col-md-2" ng-repeat="tag in tagArray track by $index">
+                        <li class="tag-bubble col-md-2" ng-repeat="tag in tagArray track by $index">
                             {{tag.text}}
                             <a class="clickable pull-right" aria-hidden="true" ng-click="deleteTag(tag.text)"><i class="fa fa-trash-o" style="color: red;"></i></a>
                         </li>

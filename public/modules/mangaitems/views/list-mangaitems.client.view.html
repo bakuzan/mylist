@@ -1,14 +1,14 @@
 <section data-ng-controller="MangaitemsController" data-ng-init="find()" data-ng-show="authentication.user">
     <div class="page-header">
-        <div class="viewButtons text-right pull-right">
+        <div class="view-buttons text-right pull-right">
             <label class="btn btn-primary" ng-model="isList" btn-radio="'true'" ng-click="view = 'list'" uncheckable>List</label>
             <label class="btn btn-primary" ng-model="isList" btn-radio="'false'" ng-click="view = 'statistics'" uncheckable>Stats</label>
         </div>
         <h1>Manga {{view}}</h1>
     </div>
     <div class="col-lg-12 col-md-12 col-sm-12" ng-hide="isList">
-        <div class="col-lg-12 col-md-12 col-sm-12 statHistory">
-            <div class="statHeader">
+        <div class="col-lg-12 col-md-12 col-sm-12 stat-history">
+            <div class="stat-header">
                 <h3>History</h3>
             </div>
             <table class="col-lg-12 col-md-12 col-sm-12">
@@ -21,37 +21,37 @@
                 <tbody>
                     <tr ng-repeat="mangaitem in mangaitems | unique: 'end.substring(0,4)' | orderBy: '-end.substring(0,4)' | limitTo: 4">
                         <th ng-hide="mangaitem.end==='' || mangaitem.end===null || mangaitem.end===undefined"><span>{{mangaitem.end.substring(0,4)}}</span></th>
-                        <td  class="statMonthBox" ng-hide="mangaitem.end==='' || mangaitem.end===null || mangaitem.end===undefined" ng-repeat="month in months" ng-click="monthDetail(mangaitem.end.substring(0,4), month.number);"  popover="{{ (mangaitems | filter: endedMonth(mangaitem.end.substring(0,4), month.number)).length }} manga completed {{month.text}} {{mangaitem.end.substring(0,4)}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': (mangaitems | filter: endedMonth(mangaitem.end.substring(0,4), month.number)).length / maxCompleteMonth }">
+                        <td  class="stat-month-box" ng-hide="mangaitem.end==='' || mangaitem.end===null || mangaitem.end===undefined" ng-repeat="month in months" ng-click="monthDetail(mangaitem.end.substring(0,4), month.number);"  popover="{{ (mangaitems | filter: endedMonth(mangaitem.end.substring(0,4), month.number)).length }} manga completed {{month.text}} {{mangaitem.end.substring(0,4)}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': (mangaitems | filter: endedMonth(mangaitem.end.substring(0,4), month.number)).length / maxCompleteMonth }">
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div><!-- HISTORY PANEL END -->
-        <div class="col-lg-12 col-md-12 col-sm-12 statMonthDetail" ng-show="showDetail">
-            <div class="col-lg-6 col-md-6 col-sm-6 statDetail">
-                <div class="statDetailHeader">
+        <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="showDetail">
+            <div class="col-lg-6 col-md-6 col-sm-6 stat-detail">
+                <div class="stat-detail-header">
                     <h3>Manga Completed {{detailMonthName }} {{detailYear}}</h3>
                 </div>
-                <ul class="col-lg-12 col-md-12 col-sm-12 statDetailList">
+                <ul class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
                     <li ng-repeat="manga in mangaitems | filter: endedMonth(detailYear, detailMonth) | orderBy: 'title'">
                         <a href="/#!/mangaitems/{{manga._id}}"><span>{{manga.title}}</span></a> - <span>{{manga.rating}}</span>
                     </li>
                 </ul>
             </div>
         </div><!-- DETAIL PANEL END -->
-        <div class="col-lg-6 col-md-6 col-sm-6 statRatingPanel">
-            <div class="statHeader">
-                <h3>Ratings</h3><span class="statSummaryInfo pull-right"><small class="text-muted">&nbsp;{{averageMangaRating | number: 2}} average rating.</small></span>
+        <div class="col-lg-6 col-md-6 col-sm-6 stat-rating-panel">
+            <div class="stat-header">
+                <h3>Ratings</h3><span class="stat-summary-info pull-right"><small class="text-muted">&nbsp;{{averageMangaRating | number: 2}} average rating.</small></span>
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <table class="col-lg-12 col-md-12 col-sm-12 statRatingTable">
+                <table class="col-lg-12 col-md-12 col-sm-12 stat-rating-table">
                     <tbody>
                         <tr ng-repeat="i in [10,9,8,7,6,5,4,3,2,1,0]">
                             <th class="col-lg-1 col-md-1 col-sm-1 text-right mb"><span ng-show="i!==0">{{i}}</span><span ng-show="i===0">-</span></th>
-                            <td class="col-lg-5 col-md-5 col-sm-5 statRatingBox">
-                                <div class="progressContainer">
-                                    <progressbar class="progressBar" ng-show="i!==0" max="100" value="((mangaitems | filter: { rating: i }:true).length / maxMangaCount)*100" popover="{{(mangaitems | filter: { rating: i }:true).length}} manga rated {{i}}." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">{{((mangaitems | filter: { rating: i }:true).length / maxMangaCount)*100 | number: 2}}%</progressbar>
-                                    <progressbar class="progressBar" ng-show="i===0" max="100" value="((mangaitems | filter: { rating: i }:true).length / maxMangaCount)*100" popover="{{(mangaitems | filter: { rating: i }:true).length}} anime unrated." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">{{((mangaitems | filter: { rating: i }:true).length / maxMangaCount)*100 | number: 2}}%</progressbar>
+                            <td class="col-lg-5 col-md-5 col-sm-5 stat-rating-box">
+                                <div class="progress-container">
+                                    <progressbar class="progress-bar-placement" ng-show="i!==0" max="100" value="((mangaitems | filter: { rating: i }:true).length / maxMangaCount)*100" popover="{{(mangaitems | filter: { rating: i }:true).length}} manga rated {{i}}." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">{{((mangaitems | filter: { rating: i }:true).length / maxMangaCount)*100 | number: 2}}%</progressbar>
+                                    <progressbar class="progress-bar-placement" ng-show="i===0" max="100" value="((mangaitems | filter: { rating: i }:true).length / maxMangaCount)*100" popover="{{(mangaitems | filter: { rating: i }:true).length}} anime unrated." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">{{((mangaitems | filter: { rating: i }:true).length / maxMangaCount)*100 | number: 2}}%</progressbar>
                                 </div>
                             </td>
                         </tr>
@@ -59,9 +59,9 @@
                 </table>
             </div>
         </div><!-- RATING PANEL END -->
-        <div class="col-lg-6 col-md-6 col-sm-6 statTagPanel">
-            <div class="statHeader">
-                <h3>Tags</h3><span class="statSummaryInfo pull-right"><small class="text-muted">&nbsp;{{statTags.length}} unique tags.</small></span>
+        <div class="col-lg-6 col-md-6 col-sm-6 stat-tag-panel">
+            <div class="stat-header">
+                <h3>Tags</h3><span class="stat-summary-info pull-right"><small class="text-muted">&nbsp;{{statTags.length}} unique tags.</small></span>
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="input-group">
@@ -70,7 +70,7 @@
                     </div>
                     <input type="text" ng-model="statSearch" placeholder="search tags" class="form-control">
                 </div>
-                <table class="col-lg-12 col-md-12 col-sm-12 statTagTable table table-bordered table-striped">
+                <table class="col-lg-12 col-md-12 col-sm-12 stat-tag-table table table-bordered table-striped">
                     <thead>
                         <tr>
                             <td class="text-right">#</td>
@@ -107,7 +107,7 @@
         </div><!-- TAG PANEL END -->
     </div><!-- STAT VIEW END -->
     <div class="form-group col-lg-4 col-md-4 col-sm-4" ng-show="isList">
-        <div class="pagingControls col-lg-12 col-md-12 col-sm-12">
+        <div class="paging-controls col-lg-12 col-md-12 col-sm-12">
             <button class="btn btn-success" ng-click="currentPage=0">First</button>
             <button class="btn btn-primary" ng-disabled="currentPage <= 0" ng-click="currentPage=currentPage-1">
                 Previous
@@ -134,7 +134,7 @@
        <div class="input-group" ng-hide="searchTags===undefined || searchTags==='' || searchTags===null">
            <ul class="taskList col-lg-12 col-md-12">
                <br/>
-                <li class="tagBubble col-lg-12 col-md-12" ng-repeat="tag in tagsForFilter track by $index">
+                <li class="tag-bubble col-lg-12 col-md-12" ng-repeat="tag in tagsForFilter track by $index">
                     {{tag}}
                     <a class="clickable pull-right" aria-hidden="true" ng-click="deleteSearchTag(tag)"><i class="fa fa-trash-o" style="color: red;"></i></a>
                 </li>
@@ -152,7 +152,8 @@
 		  <div class="input-group-addon">
 		      <i class="fa fa-sort"></i>
           </div>
-            <select class="form-control" ng-model="sortType">
+            <select class="form-control" ng-model="sortType" ng-init="sortType = sortOptions[5].v" ng-options="so.v as so.n for so in sortOptions">
+<!--
                         <option value="">-- choose sort type --</option>
                         <option value="title">Title</option>
                         <option value="chapters">Chapters</option>
@@ -161,6 +162,7 @@
                         <option value="end">End Date</option>
                         <option value="latest">Latest</option>
                         <option value="rating">Rating</option>
+-->
             </select>
         </div>
         <br/>
@@ -227,19 +229,43 @@
         </div>
     </div>
     <div class="list-group col-lg-8 col-md-8 col-sm-8" ng-show="isList">
-        <a data-ng-repeat="mangaitem in mangaitems | orderBy: sortType:sortReverse | filter: search | filter: ratingFilter | filter: tagFilter | startFrom: currentPage*pageSize | limitTo: pageSize" data-ng-href="#!/mangaitems/{{mangaitem._id}}" list_Back="{{trustAsResourceUrl(mangaitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12">
+        <div data-ng-repeat="mangaitem in mangaitems | orderBy: sortType:sortReverse | filter: search | filter: ratingFilter | filter: tagFilter | startFrom: currentPage*pageSize | limitTo: pageSize" data-ng- list_Back="{{trustAsResourceUrl(mangaitem.image)}}" ng-click="viewItem===mangaitem ? viewItem='' : viewItem=mangaitem" class="list-group-item col-lg-12 col-md-12 col-sm-12">
 			<small class="list-group-item-text">
-                <time title="{{mangaitem.latest | date: 'yyyy-MMM-dd'}}" ng-bind="latestDate(mangaitem.latest)"></time>
-<!--				<span data-ng-bind="mangaitem.latest | date:'yyyy-MMM-dd'"></span>-->
+                <time ng-if="mangaitem.latest.substring(0,10)===mangaitem.meta.updated.substring(0,10)" title="{{mangaitem.meta.updated | date: 'yyyy-MMM-dd HH:mm'}}" am-time-ago="latestDate(mangaitem.latest, mangaitem.meta.updated)"></time>
+                <time ng-if="mangaitem.latest.substring(0,10)!==mangaitem.meta.updated.substring(0,10)" title="{{mangaitem.latest | date: 'yyyy-MMM-dd'}}" ng-bind="latestDate(mangaitem.latest, mangaitem.meta.updated)"></time>
 			</small>
 			<h4 class="list-group-item-heading" data-ng-bind="mangaitem.title"></h4>
             <p class="list-group-item-text">
-                Chapters
-                <span data-ng-bind="mangaitem.chapters"></span>, 
-                Volumes
-                <span data-ng-bind="mangaitem.volumes"></span>
+                <span data-ng-bind="mangaitem.chapters"></span><span ng-if="mangaitem.finalChapter!==0">/{{mangaitem.finalChapter}}</span> Chapters, 
+                <span data-ng-bind="mangaitem.volumes"></span><span ng-if="mangaitem.finalVolume!==0">/{{mangaitem.finalVolume}}</span> Volumes
+                <span class="item-icons" ng-if="mangaitem.status===true"><i class="fa fa-check"></i></span>
+                <span class="item-icons" ng-if="mangaitem.hardcopy===true"><i class="fa fa-book"></i></span>
+                <span class="item-icons" ng-if="mangaitem.reReading===true"><i class="fa fa-repeat"></i></span>
             </p>
-        </a>
+            <div class="view-item-detail" ng-if="viewItem===mangaitem">
+                <div class="item-detail">
+                    <p>
+                        <em class="text-muted" data-ng-if="mangaitem.rating==0">No rating.</em>
+                        <rating data-ng-if="mangaitem.rating!=0" data-ng-model="mangaitem.rating" style="color: blue; font-size: 14px;" readonly="true" max="maxRating" id="rating" name="rating"></rating>
+                    </p>
+                    <p ng-if="mangaitem.reReadCount!=0">{{mangaitem.reReadCount}} re-reads.</p>
+                </div>
+                <div class="item-dates">
+                    <small>
+                        <span data-ng-bind="mangaitem.start | date:'yyyy-MMM-dd'"></span> started.<br/>
+                        <span ng-if="mangaitem.end!==undefined">{{mangaitem.end | date:'yyyy-MMM-dd'}} ended.</span>
+                    </small>
+                </div>
+                <div class="item-actions" data-ng-show="((authentication.user) && (authentication.user._id == mangaitem.user._id))">
+                    <a class="btn btn-success" href="/#!/mangaitems/{{mangaitem._id}}">
+                        <i class="fa fa-eye"></i>
+                    </a>
+                    <a class="btn btn-primary" href="/#!/mangaitems/{{mangaitem._id}}/edit">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                </div>
+            </div><!-- VIEW ITEM END-->
+        </div>
     </div>
     <div class="alert alert-warning text-center" data-ng-hide="!mangaitems.$resolved || mangaitems.length">
     	No Mangaitems yet, why don't you <a href="/#!/mangaitems/create">create one</a>?

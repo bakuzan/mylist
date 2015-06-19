@@ -35,7 +35,11 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.showDetail = false; //show month detail.
         $scope.statTagSortType = 'tag'; //stat tag sort
         $scope.statTagSortReverse = false; //stat tag sort direction.
-        $scope.sortType = 'latest'; //default sort type
+//        $scope.sortType = ['latest', 'meta.updated']; //default sort type
+        $scope.sortOptions = [
+            { v: 'title', n: 'Title' },{ v: 'episodes', n: 'Episodes' },{ v: 'start', n: 'Start date' },
+            { v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' }
+        ];
 	    $scope.sortReverse = true; // default sort order
         $scope.finalNumbers = false; //default show status of final number fields in edit view.
         $scope.ratingLevel = undefined; //default rating filter
@@ -370,7 +374,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             }
 
 			animeitem.$update(function() {
-				$location.path('animeitems/' + animeitem._id);
+				$location.path('animeitems');
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});
@@ -379,7 +383,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		// Find a list of Animeitems
 		$scope.find = function() {
 			$scope.animeitems = Animeitems.query();
-            //console.log($scope.animeitems);
+            console.log($scope.animeitems);
 		};
 
 		// Find existing Animeitem
@@ -405,19 +409,25 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         };
         
         //latest date display format.
-        $scope.latestDate = function(latest) {
-//          console.log(latest);
+        $scope.latestDate = function(latest, updated) {
+//          console.log(latest, updated);
             var today = moment(new Date());
-            var latestDate = moment(latest);
-            var diff = today.diff(latestDate, 'days');
-            
-            //for 0 and 1 day(s) ago use the special term.
-            if (diff===0) {
-                return 'Today';
-            } else if (diff===1) {
-                return 'Yesterday';
+            if (latest.substring(0,10)===updated.substring(0,10)) {
+//                var latestDate = moment(updated);
+//                var diff = today.diff(latestDate, 'minutes');
+                return updated;
             } else {
-                return diff + ' days ago.';
+                var latestDate = moment(latest);
+                var diff = today.diff(latestDate, 'days');
+                
+                //for 0 and 1 day(s) ago use the special term.
+                if (diff===0) {
+                    return 'Today';
+                } else if (diff===1) {
+                    return 'Yesterday';
+                } else {
+                    return diff + ' days ago.';
+                }
             }
         };
 	}

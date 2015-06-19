@@ -123,7 +123,7 @@
                 </div>
                 <div class="form-group">
                     <ul class="taskList col-md-12">
-                        <li class="tagBubble col-md-2" ng-repeat="tag in animeitem.tags">
+                        <li class="tag-bubble col-md-2" ng-repeat="tag in animeitem.tags">
                             {{tag.text}}
                             <a class="clickable pull-right" aria-hidden="true" ng-click="removeTag(tag)"><i class="fa fa-times" style="color: red;"></i></a>
                         </li>
@@ -131,14 +131,14 @@
                 </div>
                 <div class="form-group">
                     <ul class="taskList col-md-12">
-                        <li class="tagBubble col-md-2" ng-repeat="tag in tagArray track by $index">
+                        <li class="tag-bubble col-md-2" ng-repeat="tag in tagArray track by $index">
                             {{tag.text}}
                             <a class="clickable pull-right" aria-hidden="true" ng-click="deleteTag(tag.text)"><i class="fa fa-trash-o" style="color: red;"></i></a>
                         </li>
                     </ul>
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Update" class="btn btn-default" ng-disabled="animeForm.$invalid">&nbsp; - &nbsp;<a href="/#!/animeitems/{{animeitem._id}}">Back</a>
+                    <input type="submit" value="Update" class="btn btn-default" ng-disabled="animeForm.$invalid">&nbsp; - &nbsp;<a href="/#!/animeitems">Back</a>
                 </div>
 				<div data-ng-show="error" class="text-danger">
 					<strong data-ng-bind="error"></strong>

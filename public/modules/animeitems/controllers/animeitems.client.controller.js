@@ -8,6 +8,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
+        
         //paging controls for the list view.
         $scope.currentPage = 0;
         $scope.pageSize = 10;
@@ -22,6 +23,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             if (numPages!==0 && $scope.currentPage < 0) {
                 $scope.currentPage = 0;
             }
+            $scope.pageCount = numPages;
             return numPages;
         };
         

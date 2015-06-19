@@ -1,4 +1,5 @@
 <section data-ng-controller="AnimeitemsController" data-ng-init="find()" data-ng-show="authentication.user">
+    <keycuts></keycuts>
     <div class="page-header">
         <div class="view-buttons text-right pull-right">
             <label class="btn btn-primary" ng-model="isList" btn-radio="true" ng-click="view = 'list'">List</label>
@@ -49,7 +50,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="showDetail">
             <div class="col-lg-6 col-md-6 col-sm-6 stat-detail">
                 <div class="stat-detail-header">
-                    <h3>Anime Completed {{detailMonthName }} {{detailYear}}</h3>
+                    <h3>Anime Completed {{detailMonthName}} {{detailYear}}</h3>
                 </div>
                 <ul class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
                     <li ng-repeat="anime in animeitems | filter: endedMonth(detailYear, detailMonth) | orderBy: 'title'">

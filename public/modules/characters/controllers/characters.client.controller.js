@@ -22,6 +22,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             if (numPages!==0 && $scope.currentPage < 0) {
                 $scope.currentPage = 0;
             }
+            $scope.pageCount = numPages;
             return numPages;
         };
         

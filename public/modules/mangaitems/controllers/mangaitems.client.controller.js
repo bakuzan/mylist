@@ -22,6 +22,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             if (numPages!==0 && $scope.currentPage < 0) {
                 $scope.currentPage = 0;
             }
+            $scope.pageCount = numPages;
             return numPages;
         };
         

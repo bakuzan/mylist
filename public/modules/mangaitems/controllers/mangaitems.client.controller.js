@@ -25,22 +25,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             return numPages;
         };
         
-         
-//        //on keydown for changing view and pages.
-//        angular.element($window).on('keydown', function (e) {
-//                if (e.ctrlKey && e.keyCode===39 && $scope.currentPage < $scope.pageSize) {
-//                    $scope.currentPage = $scope.currentPage + 1;
-//                } else if (e.ctrlKey && e.keyCode===37 && $scope.currentPage > 0) {
-//                    $scope.currentPage = $scope.currentPage - 1;
-//                } else if (e.altKey && e.keyCode===86) {
-//                    if ($scope.isList===true) {
-//                        $scope.isList = false;
-//                    } else if ($scope.isList===false) {
-//                        $scope.isList = true;
-//                    }
-//                }
-//        });
-        
         $scope.itemUpdate = new Date().toISOString().substring(0,10); //today's date as 'yyyy-MM-dd'
         $scope.view = 'list'; //dynamic page title.
         $scope.isList = true; //list view as default.
@@ -93,8 +77,11 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         
         //for adding/removing tags.
         $scope.addTag = function () {
+//            console.log($scope.newTag);
+            if ($scope.newTag!=='' && $scope.newTag!==undefined) {
                 $scope.tagArray.push({ text: $scope.newTag });
-                $scope.newTag = '';
+            }
+            $scope.newTag = '';
         };
         $scope.deleteTag = function(text) {
         

@@ -76,8 +76,11 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         
         //for adding/removing tags.
         $scope.addTag = function () {
+//            console.log($scope.newTag);
+            if ($scope.newTag!=='' && $scope.newTag!==undefined) {
                 $scope.tagArray.push({ text: $scope.newTag });
-                $scope.newTag = '';
+            }
+            $scope.newTag = '';
         };
         $scope.deleteTag = function(text) {
         

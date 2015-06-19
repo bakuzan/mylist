@@ -167,12 +167,30 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.endedSeason = function(year, month){
             return function(item) {
                 if (item.end!==undefined) {
-                    if (item.end.substring(0,4) === year) {
-                        if (item.end.substr(5,2) === month) {
-                            var pad = '00';
-                            var startMonth = (pad + (month - 2)).slice(-pad.length);
-                            if (item.start.substr(5,2) === startMonth) {
-                                return item;
+                    /**
+                     *  Can currently handle shows of 1 or 2 seasons with 'standard' lengths (10-13) / (22-26) that
+                     *  start and finish in the 'normal' season months (J-M,A-J,J-S,O-D) / (J-J,A-S,J-D,O-M).
+                     */
+                    if (9 < item.finalEpisode && item.finalEpisode < 14) {
+                        if (item.end.substring(0,4) === year) {
+                            if (item.end.substr(5,2) === month) {
+                                var pad = '00';
+                                var startMonth = (pad + (month - 2)).slice(-pad.length);
+                                if (item.start.substr(5,2) === startMonth) {
+                                    return item;
+                                }
+                            }
+                        }
+                    } else if (13 < item.finalEpisode && item.finalEpisode < 26) {
+                        if (item.end.substring(0,4) === year) {
+                            if (item.end.substr(5,2) === month) {
+                                var pad = '00';
+                                var num = (month - 5) > 0 ? (month - 5) : 10;
+                                var startMonth = (pad + num).slice(-pad.length);
+//                                console.log(startMonth);
+                                if (item.start.substr(5,2) === startMonth) {
+                                    return item;
+                                }
                             }
                         }
                     }

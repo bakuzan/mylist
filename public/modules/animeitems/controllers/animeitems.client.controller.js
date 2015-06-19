@@ -200,19 +200,6 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             };
         };
         
-        //ended stat month filter
-        $scope.endedMonth = function(year, month){
-            return function(item) {
-                if (item.end!==undefined) {
-                    if (item.end.substring(0,4)===year) {
-                        if (item.end.substr(5,2)===month) {
-                            return item;
-                        }
-                    }
-                }
-            };
-        };
-        
         //show season detail.
         $scope.seasonDetail = function(year, month) {
 //            console.log(year+'-'+month);

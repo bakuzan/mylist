@@ -174,19 +174,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             { number: '12', text: 'December' }
         ];
         
-        //ended stat month filter
-        $scope.endedMonth = function(year, month){
-            return function(item) {
-                if (item.end!==undefined) {
-                    if (item.end.substring(0,4)===year) {
-                        if (item.end.substr(5,2)===month) {
-                            return item;
-                        }
-                    }
-                }
-            };
-        };
-        
         //show month detail.
         $scope.monthDetail = function(year, month) {
 //            console.log(year+'-'+month);

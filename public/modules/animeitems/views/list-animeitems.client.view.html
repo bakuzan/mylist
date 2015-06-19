@@ -26,7 +26,7 @@
                 <tbody>
                     <tr ng-repeat="animeitem in animeitems | unique: 'end.substring(0,4)' | orderBy: '-end.substring(0,4)' | limitTo: 4">
                         <th ng-hide="animeitem.end==='' || animeitem.end===null || animeitem.end===undefined"><span>{{animeitem.end.substring(0,4)}}</span></th>
-                        <td  class="stat-month-box" ng-hide="animeitem.end==='' || animeitem.end===null || animeitem.end===undefined" ng-repeat="month in months" ng-click="monthDetail(animeitem.end.substring(0,4), month.number);"  popover="{{ (animeitems | filter: endedMonth(animeitem.end.substring(0,4), month.number)).length }} anime completed {{month.text}} {{animeitem.end.substring(0,4)}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': (animeitems | filter: endedMonth(animeitem.end.substring(0,4), month.number)).length / maxCompleteMonth }">
+                        <td  class="stat-month-box" ng-hide="animeitem.end==='' || animeitem.end===null || animeitem.end===undefined" ng-repeat="month in months" ng-click="monthDetail(animeitem.end.substring(0,4), month.number);"  popover="{{ (animeitems | endedMonth: animeitem.end.substring(0,4):month.number).length }} anime completed {{month.text}} {{animeitem.end.substring(0,4)}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': (animeitems | endedMonth: animeitem.end.substring(0,4): month.number).length / maxCompleteMonth }">
                         </td>
                     </tr>
                 </tbody>
@@ -53,7 +53,7 @@
                     <h3>Anime Completed {{detailMonthName}} {{detailYear}}</h3>
                 </div>
                 <ul class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
-                    <li ng-repeat="anime in animeitems | filter: endedMonth(detailYear, detailMonth) | orderBy: 'title'">
+                    <li ng-repeat="anime in animeitems | endedMonth: detailYear:detailMonth | orderBy: 'title'">
                         <a href="/#!/animeitems/{{anime._id}}"><span>{{anime.title}}</span></a> - <span>{{anime.rating}}</span>
                     </li>
                 </ul>

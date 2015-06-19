@@ -18,4 +18,18 @@ angular.module('animeitems').filter('startFrom', function() {
             }
         });
     };
+})
+.filter('endedMonth', function() {
+    return function(array, year, month) {
+        return array.filter(function(item) {
+        //ended stat month filter
+                if (item.end!==undefined) {
+                    if (item.end.substring(0,4)===year) {
+                        if (item.end.substr(5,2)===month) {
+                            return item;
+                        }
+                    }
+                }
+        });
+    };
 });

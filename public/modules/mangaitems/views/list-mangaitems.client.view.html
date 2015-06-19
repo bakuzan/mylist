@@ -22,7 +22,7 @@
                 <tbody>
                     <tr ng-repeat="mangaitem in mangaitems | unique: 'end.substring(0,4)' | orderBy: '-end.substring(0,4)' | limitTo: 4">
                         <th ng-hide="mangaitem.end==='' || mangaitem.end===null || mangaitem.end===undefined"><span>{{mangaitem.end.substring(0,4)}}</span></th>
-                        <td  class="stat-month-box" ng-hide="mangaitem.end==='' || mangaitem.end===null || mangaitem.end===undefined" ng-repeat="month in months" ng-click="monthDetail(mangaitem.end.substring(0,4), month.number);"  popover="{{ (mangaitems | filter: endedMonth(mangaitem.end.substring(0,4), month.number)).length }} manga completed {{month.text}} {{mangaitem.end.substring(0,4)}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': (mangaitems | filter: endedMonth(mangaitem.end.substring(0,4), month.number)).length / maxCompleteMonth }">
+                        <td  class="stat-month-box" ng-hide="mangaitem.end==='' || mangaitem.end===null || mangaitem.end===undefined" ng-repeat="month in months" ng-click="monthDetail(mangaitem.end.substring(0,4), month.number);"  popover="{{ (mangaitems | endedMonth: mangaitem.end.substring(0,4):month.number).length }} manga completed {{month.text}} {{mangaitem.end.substring(0,4)}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': (mangaitems | endedMonth: mangaitem.end.substring(0,4): month.number).length / maxCompleteMonth }">
                         </td>
                     </tr>
                 </tbody>
@@ -34,7 +34,7 @@
                     <h3>Manga Completed {{detailMonthName }} {{detailYear}}</h3>
                 </div>
                 <ul class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
-                    <li ng-repeat="manga in mangaitems | filter: endedMonth(detailYear, detailMonth) | orderBy: 'title'">
+                    <li ng-repeat="manga in mangaitems | endedMonth: detailYear:detailMonth | orderBy: 'title'">
                         <a href="/#!/mangaitems/{{manga._id}}"><span>{{manga.title}}</span></a> - <span>{{manga.rating}}</span>
                     </li>
                 </ul>

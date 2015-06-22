@@ -143,33 +143,33 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                 $scope.searchTags += tag + ',';
             }
         };
-        $scope.deleteSearchTag = function(tag) {
-            $scope.searchTags = $scope.searchTags.replace(tag + ',', '');
-            
-            var index = $scope.tagsForFilter.indexOf(tag);
-            $scope.tagsForFilter.splice(index, 1);
-        };
+//        $scope.deleteSearchTag = function(tag) {
+//            $scope.searchTags = $scope.searchTags.replace(tag + ',', '');
+//            
+//            var index = $scope.tagsForFilter.indexOf(tag);
+//            $scope.tagsForFilter.splice(index, 1);
+//        };
         
         //for adding/removing tags.
         $scope.addTag = function () {
                 $scope.tagArray.push({ text: $scope.newTag });
                 $scope.newTag = '';
         };
-        $scope.deleteTag = function(text) {
-        
-            var removal = $window.confirm('Are you sure you want to delete this tag?');
-            if (removal) {
-                var deletingItem = $scope.tagArray;
-                $scope.tagArray = [];
-
-                //update the complete task.
-                angular.forEach(deletingItem, function(tag) {
-                    if (tag.text !== text) {
-                        $scope.tagArray.push(tag);
-                    }
-                });
-            }
-        };
+//        $scope.deleteTag = function(text) {
+//        
+//            var removal = $window.confirm('Are you sure you want to delete this tag?');
+//            if (removal) {
+//                var deletingItem = $scope.tagArray;
+//                $scope.tagArray = [];
+//
+//                //update the complete task.
+//                angular.forEach(deletingItem, function(tag) {
+//                    if (tag.text !== text) {
+//                        $scope.tagArray.push(tag);
+//                    }
+//                });
+//            }
+//        };
         //remove existing tag.
         $scope.removeTag = function(tag) {
             var removal = $window.confirm('Are you sure you want to delete this tag?');

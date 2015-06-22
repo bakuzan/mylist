@@ -49,7 +49,7 @@ angular.module('characters').directive('fileModel', ['$parse', function ($parse)
 .directive('clearTagValues', function() {
     return function (scope, element, attrs) {
         element.bind('click', function(event) {
-            console.log('clear tags');
+//            console.log('clear tags');
             scope.$apply(function() {
                 scope.searchTags = '';
                 scope.characterTags = '';
@@ -57,4 +57,40 @@ angular.module('characters').directive('fileModel', ['$parse', function ($parse)
             });
         });
     };
-});
+}) 
+/**
+ *  Below here doesn't work -- why? 
+ */
+.directive('deleteSearchTag', function() {
+    return function(scope, element, attrs) {
+        element.bind('click', function(event) {
+            var tag = attrs.deleteSearchTag;
+            var index = scope.tagsForFilter.indexOf(attrs.deleteSearchTag);
+            console.log(tag, index);
+            scope.$apply(function() {
+                scope.searchTags = scope.searchTags.replace(tag + ',', '');
+                scope.tagsForFilter.splice(index, 1);
+            });
+        });
+    };
+})
+.directive('dropTag', ['$window', function($window) {
+    return function(scope, element, attrs) {
+        element.bind('click', function(event) {    
+            var text = attrs.dropTag;
+            var removal = $window.confirm('Are you sure you want to drop this tag?');
+            if (removal) {
+                    var deletingItem = scope.tagArray;
+                    scope.tagArray = [];
+                    console.log('dropping tag - ', text);
+                    //update the complete task.
+                    angular.forEach(deletingItem, function(tag) {
+                        if (tag.text !== text) {
+                            scope.tagArray.push(tag);
+                        }
+                    });
+                scope.$apply();
+            }
+        });
+    };
+}]);

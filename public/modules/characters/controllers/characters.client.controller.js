@@ -143,10 +143,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                 $scope.searchTags += tag + ',';
             }
         };
-        $scope.clearTagValues = function() {
-            $scope.searchTags = '';
-            $scope.tagsForFilter = [];
-        };
         $scope.deleteSearchTag = function(tag) {
             $scope.searchTags = $scope.searchTags.replace(tag + ',', '');
             

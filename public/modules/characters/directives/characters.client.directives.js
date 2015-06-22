@@ -41,9 +41,20 @@ angular.module('characters').directive('fileModel', ['$parse', function ($parse)
                 scope.$apply(function (){
                     scope.$eval(attrs.enterTag);
                 });
-
                 event.preventDefault();
             }
+        });
+    };
+})
+.directive('clearTagValues', function() {
+    return function (scope, element, attrs) {
+        element.bind('click', function(event) {
+            console.log('clear tags');
+            scope.$apply(function() {
+                scope.searchTags = '';
+                scope.characterTags = '';
+                scope.tagsForFilter = [];
+            });
         });
     };
 });

@@ -1,5 +1,5 @@
 <section data-ng-controller="AnimeitemsController" data-ng-init="find()" data-ng-show="authentication.user">
-    <keycuts></keycuts>
+    <span keycuts></span>
     <div class="page-header">
         <div class="view-buttons text-right pull-right">
             <label class="btn btn-primary" ng-model="isList" btn-radio="true" ng-click="view = 'list'">List</label>
@@ -159,7 +159,7 @@
 	   </div>
         <br/>
         <div class="input-group">
-            <div class="input-group-addon clickable" ng-click="clearTagValues(); characterTags = ''">
+            <div class="input-group-addon clickable" clear-tag-values>
                 <i class="fa fa-tags"></i>
             </div>
            <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags" typeahead="stat.tag for stat in statTags | filter: $viewValue" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
@@ -264,7 +264,7 @@
         <div data-ng-repeat="animeitem in animeitems | orderBy: sortType:sortReverse | filter: search | ratingFilter: ratingLevel | filter: tagFilter | startFrom: currentPage*pageSize | limitTo: pageSize" list_Back="{{trustAsResourceUrl(animeitem.image)}}" ng-click="viewItem===animeitem ? viewItem='' : viewItem=animeitem" class="list-group-item col-lg-12 col-md-12 col-sm-12">
 			<small class="list-group-item-text">
 <!--				<span data-ng-bind="animeitem.latest | date:'yyyy-MMM-dd'"></span>-->
-                <time ng-if="animeitem.latest.substring(0,10)===animeitem.meta.updated.substring(0,10)" title="{{animeitem.meta.updated | date: 'yyyy-MMM-dd HH:mm'}}" am-time-ago="latestDate(animeitem.latest, animeitem.meta.updated)"></time>
+                <time ng-if="animeitem.latest.substring(0,10)===animeitem.meta.updated.substring(0,10)" title="{{animeitem.meta.updated | date: 'yyyy-MMM-dd HH:mm'}}" ng-bind="latestDate(animeitem.latest, animeitem.meta.updated)"></time>
                 <time ng-if="animeitem.latest.substring(0,10)!==animeitem.meta.updated.substring(0,10)" title="{{animeitem.latest | date: 'yyyy-MMM-dd'}}" ng-bind="latestDate(animeitem.latest, animeitem.meta.updated)"></time>
 			</small>
 			<h4 class="list-group-item-heading" data-ng-bind="animeitem.title"></h4>

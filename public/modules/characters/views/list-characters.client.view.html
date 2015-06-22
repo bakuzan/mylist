@@ -1,5 +1,5 @@
 <section data-ng-controller="CharactersController" data-ng-init="find()" data-ng-show="authentication.user">
-    <keycuts></keycuts>
+    <span keycuts></span>
     <div class="page-header">
         <div class="view-buttons text-right pull-right">
             <label class="btn btn-primary" ng-model="isList" btn-radio="'list'">List</label>
@@ -170,7 +170,7 @@
 	   </div>
        <br/>
        <div class="input-group">
-            <div class="input-group-addon clickable" ng-click="clearTagValues(); characterTags = ''">
+            <div class="input-group-addon clickable" clear-tag-values>
                 <i class="fa fa-tags"></i>
             </div>
            <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags" typeahead="stat.tag for stat in statTags | filter: $viewValue" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->

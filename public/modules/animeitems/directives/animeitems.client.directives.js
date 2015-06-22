@@ -28,7 +28,7 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
 })
 .directive('keycuts', function() {
     return {
-        restrict: 'E',
+        restrict: 'A',
         link: function postLink(scope, element, attrs) {
             //keydown catch - alt+v for view, ctrl+left/right for list page.
             scope.$on('my:keydown', function(event, e) {

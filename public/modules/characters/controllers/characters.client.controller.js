@@ -227,19 +227,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             }
         };
         
-        //filter stat series detail.
-        $scope.seriesDetailFilter = function(item) {
-            if (item.anime!==null) {
-                if (item.anime.title===$scope.detailSeriesName) {
-                    return item;
-                }
-            } else if (item.manga!==null) {
-                if (item.manga.title===$scope.detailSeriesName) {
-                    return item;
-                }
-            }
-        };
-        
         //show stat series detail.
         $scope.seriesDetail = function(name) {
             if ($scope.detailSeriesName===name) {
@@ -288,28 +275,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                     }
                     return found;
                 }
-            }
-        };
-        
-        //special media filter
-        $scope.mediaFilter = function(item) {
-            if ($scope.media==='anime') {
-                if (item.anime!==null && item.manga===null) {
-                    return true;
-                }
-                return false;
-            } else if ($scope.media==='manga') {
-                if (item.manga!==null && item.anime===null) {
-                    return true;
-                }
-                return false;
-            } else if ($scope.media==='both') {
-                if (item.anime!==null && item.manga!==null) {
-                    return true;
-                }
-                return false;
-            } else {
-                return true;
             }
         };
         

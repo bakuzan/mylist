@@ -41,7 +41,7 @@
                 <tbody>
                     <tr ng-repeat="animeitem in animeitems | unique: 'end.substring(0,4)' | orderBy: '-end.substring(0,4)' | limitTo: 4">
                         <th ng-hide="animeitem.end==='' || animeitem.end===null || animeitem.end===undefined"><span>{{animeitem.end.substring(0,4)}}</span></th>
-                        <td  class="stat-month-box" ng-hide="animeitem.end==='' || animeitem.end===null || animeitem.end===undefined" ng-repeat="season in seasons" ng-click="seasonDetail(animeitem.end.substring(0,4), season.number)" popover="{{ (animeitems | filter: endedSeason(animeitem.end.substring(0,4), season.number)).length }} anime completed {{season.text}} {{animeitem.end.substring(0,4)}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': (animeitems | filter: endedSeason(animeitem.end.substring(0,4), season.number)).length / maxCompleteMonth }">
+                        <td  class="stat-month-box" ng-hide="animeitem.end==='' || animeitem.end===null || animeitem.end===undefined" ng-repeat="season in seasons" ng-click="seasonDetail(animeitem.end.substring(0,4), season.number)" popover="{{ (animeitems | endedSeason: animeitem.end.substring(0,4):season.number).length }} anime completed {{season.text}} {{animeitem.end.substring(0,4)}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': (animeitems | endedSeason: animeitem.end.substring(0,4): season.number).length / maxCompleteMonth }">
                         </td>
                     </tr>
                 </tbody>
@@ -65,7 +65,7 @@
                     <h3>Anime Completed {{detailSeasonName}} {{detailSeasonYear}}</h3>
                 </div>
                 <ul class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
-                    <li ng-repeat="anime in animeitems | filter: endedSeason(detailSeasonYear, detailSeason) | orderBy: 'title'">
+                    <li ng-repeat="anime in animeitems | endedSeason: detailSeasonYear:detailSeason | orderBy: 'title'">
                         <a href="/#!/animeitems/{{anime._id}}"><span>{{anime.title}}</span></a> - <span>{{anime.rating}}</span>
                         <p>{{anime.start | date: 'MM/yyyy'}} - {{anime.end | date: 'MM/yyyy'}}</p>
                     </li>
@@ -178,7 +178,7 @@
 		  <div class="input-group-addon">
 		      <i class="fa fa-list-ol"></i>
           </div>
-            <input type="text" class="form-control" value="Showing {{ (showingCount = (animeitems | filter: search | filter: ratingFilter | filter: tagFilter).length) }} anime." disabled>
+            <input type="text" class="form-control" value="Showing {{ (showingCount = (animeitems | filter: search | ratingFilter: ratingLevel | filter: tagFilter).length) }} anime." disabled>
         </div>
         <br/>
         <div class="input-group">

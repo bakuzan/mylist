@@ -146,7 +146,7 @@
 		  <div class="input-group-addon">
 		      <i class="fa fa-list-ol"></i>
           </div>
-            <input type="text" class="form-control" value="Showing {{ (showingCount = (mangaitems | filter: search | filter: ratingFilter | filter: tagFilter).length) }} manga." disabled>
+            <input type="text" class="form-control" value="Showing {{ (showingCount = (mangaitems | filter: search | ratingFilter: ratingLevel | filter: tagFilter).length) }} manga." disabled>
         </div>
         <br/>
         <div class="input-group">

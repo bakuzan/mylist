@@ -32,4 +32,40 @@ angular.module('animeitems').filter('startFrom', function() {
                 }
         });
     };
+})
+.filter('endedSeason', function() {
+    return function(array, year, month) {
+        return array.filter(function(item) {
+        //ended stat season filter
+                if (item.end!==undefined) {
+                    /**
+                     *  Can currently handle shows of 1 or 2 seasons with 'standard' lengths (10-13) / (22-26) that
+                     *  start and finish in the 'normal' season months (J-M,A-J,J-S,O-D) / (J-J,A-S,J-D,O-M).
+                     */
+                    var pad = '00';
+                    var startMonth;
+                    if (9 < item.finalEpisode && item.finalEpisode < 14) {
+                        if (item.end.substring(0,4) === year) {
+                            if (item.end.substr(5,2) === month) {
+                                startMonth = (pad + (month - 2)).slice(-pad.length);
+                                if (item.start.substr(5,2) === startMonth) {
+                                    return item;
+                                }
+                            }
+                        }
+                    } else if (13 < item.finalEpisode && item.finalEpisode < 26) {
+                        if (item.end.substring(0,4) === year) {
+                            if (item.end.substr(5,2) === month) {
+                                var num = (month - 5) > 0 ? (month - 5) : 10;
+                                startMonth = (pad + num).slice(-pad.length);
+//                                console.log(startMonth);
+                                if (item.start.substr(5,2) === startMonth) {
+                                    return item;
+                                }
+                            }
+                        }
+                    }
+                }
+        });
+    };
 });

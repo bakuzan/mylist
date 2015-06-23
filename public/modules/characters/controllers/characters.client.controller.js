@@ -145,8 +145,8 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         };
         //for adding/removing tags.
         $scope.addTag = function () {
-                $scope.tagArray.push({ text: $scope.newTag });
-                $scope.newTag = '';
+            $scope.tagArray.push({ text: $scope.newTag });
+            $scope.newTag = '';
         };
         
         //show stat tag detail.

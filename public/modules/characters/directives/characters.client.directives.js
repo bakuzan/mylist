@@ -35,15 +35,18 @@ angular.module('characters').directive('fileModel', ['$parse', function ($parse)
   };
 }])
 .directive('enterTag', function () {
-    return function (scope, element, attrs) {
-        element.bind('keydown keypress', function (event) {
-            if(event.which === 13) {
-                scope.$apply(function (){
-                    scope.$eval(attrs.enterTag);
-                });
-                event.preventDefault();
-            }
-        });
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            element.bind('keydown keypress', function (event) {
+                if(event.which === 13) {
+                    scope.$apply(function (){
+                        scope.$eval(attrs.enterTag);
+                    });
+                    event.preventDefault();
+                 }
+            });
+        }
     };
 })
 .directive('clearTagValues', function() {
@@ -113,7 +116,7 @@ angular.module('characters').directive('fileModel', ['$parse', function ($parse)
                                 if (scope.character.tags[i].text === tag) {
                                     index = i;
                                 }
-                                console.log(index);
+//                                console.log(index);
                             }
                             scope.$parent.character.tags.splice(index, 1);
                         } else if (entry_type === 'animeitem') {
@@ -121,7 +124,7 @@ angular.module('characters').directive('fileModel', ['$parse', function ($parse)
                                 if (scope.animeitem.tags[i].text === tag) {
                                     index = i;
                                 }
-                                console.log(index);
+//                                console.log(index);
                             }
                             scope.$parent.animeitem.tags.splice(index, 1);
                         } else if (entry_type === 'mangaitem') {
@@ -129,7 +132,7 @@ angular.module('characters').directive('fileModel', ['$parse', function ($parse)
                                 if (scope.mangaitem.tags[i].text === tag) {
                                     index = i;
                                 }
-                                console.log(index);
+//                                console.log(index);
                             }
                             scope.$parent.mangaitem.tags.splice(index, 1);
                         }

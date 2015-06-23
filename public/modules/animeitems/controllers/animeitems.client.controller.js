@@ -8,7 +8,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
-        
+        $scope.whichController = 'animeitem';
         //paging controls for the list view.
         $scope.currentPage = 0;
         $scope.pageSize = 10;
@@ -66,40 +66,10 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 $scope.searchTags += tag + ',';
             }
         };
-        $scope.deleteSearchTag = function(tag) {
-            $scope.searchTags = $scope.searchTags.replace(tag + ',', '');
-            
-            var index = $scope.tagsForFilter.indexOf(tag);
-            $scope.tagsForFilter.splice(index, 1);
-        };
-        
         //for adding/removing tags.
         $scope.addTag = function () {
                 $scope.tagArray.push({ text: $scope.newTag });
                 $scope.newTag = '';
-        };
-        $scope.deleteTag = function(text) {
-        
-            var removal = $window.confirm('Are you sure you want to delete this tag?');
-            if (removal) {
-                var deletingItem = $scope.tagArray;
-                $scope.tagArray = [];
-
-                //update the complete task.
-                angular.forEach(deletingItem, function(tag) {
-                    if (tag.text !== text) {
-                        $scope.tagArray.push(tag);
-                    }
-                });
-            }
-        };
-        //remove existing tag.
-        $scope.removeTag = function(tag) {
-            var removal = $window.confirm('Are you sure you want to delete this tag?');
-            if (removal) {
-                var index = $scope.animeitem.tags.indexOf(tag);
-                $scope.animeitem.tags.splice(index, 1);
-            }
         };
         
         //special tag filter

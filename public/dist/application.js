@@ -111,6 +111,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
+        $scope.whichController = 'animeitem';
         //paging controls for the list view.
         $scope.currentPage = 0;
         $scope.pageSize = 10;
@@ -125,11 +126,13 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             if (numPages!==0 && $scope.currentPage < 0) {
                 $scope.currentPage = 0;
             }
+            $scope.pageCount = numPages;
             return numPages;
         };
         
         $scope.itemUpdate = new Date().toISOString().substring(0,10); //today's date as 'yyyy-MM-dd'
         $scope.view = 'list'; //dynamic page title.
+        $scope.historicalView = 'month'; //default historical view in stats.
         $scope.isList = true; //list view as default.
         $scope.maxAnimeCount = 0; //number of anime.
         $scope.maxAnimeRatedCount = 0; //number of anime with a rating i.e not 0.
@@ -166,44 +169,10 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 $scope.searchTags += tag + ',';
             }
         };
-        $scope.clearTagValues = function() {
-            $scope.searchTags = '';
-            $scope.tagsForFilter = [];
-        };
-        $scope.deleteSearchTag = function(tag) {
-            $scope.searchTags = $scope.searchTags.replace(tag + ',', '');
-            
-            var index = $scope.tagsForFilter.indexOf(tag);
-            $scope.tagsForFilter.splice(index, 1);
-        };
-        
         //for adding/removing tags.
         $scope.addTag = function () {
                 $scope.tagArray.push({ text: $scope.newTag });
                 $scope.newTag = '';
-        };
-        $scope.deleteTag = function(text) {
-        
-            var removal = $window.confirm('Are you sure you want to delete this tag?');
-            if (removal) {
-                var deletingItem = $scope.tagArray;
-                $scope.tagArray = [];
-
-                //update the complete task.
-                angular.forEach(deletingItem, function(tag) {
-                    if (tag.text !== text) {
-                        $scope.tagArray.push(tag);
-                    }
-                });
-            }
-        };
-        //remove existing tag.
-        $scope.removeTag = function(tag) {
-            var removal = $window.confirm('Are you sure you want to delete this tag?');
-            if (removal) {
-                var index = $scope.animeitem.tags.indexOf(tag);
-                $scope.animeitem.tags.splice(index, 1);
-            }
         };
         
         //special tag filter
@@ -244,6 +213,12 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             }
         };
         
+        $scope.seasons = [
+            { number: '03', text: 'Winter' },
+            { number: '06', text: 'Spring' },
+            { number: '09', text: 'Summer' },
+            { number: '12', text: 'Fall' }
+        ];
         $scope.months = [
             { number: '01', text: 'January' },
             { number: '02', text: 'February' },
@@ -259,25 +234,34 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             { number: '12', text: 'December' }
         ];
         
-        //ended stat month filter
-        $scope.endedMonth = function(year, month){
-            return function(item) {
-                if (item.end!==undefined) {
-                    if (item.end.substring(0,4)===year) {
-                        if (item.end.substr(5,2)===month) {
-                            return item;
-                        }
+        //show season detail.
+        $scope.seasonDetail = function(year, month) {
+//            console.log(year+'-'+month);
+            //if the one already selected is clicked, hide the detail.
+            if ($scope.detailSeasonYear===year && $scope.detailSeason===month) {
+                    $scope.showSeasonDetail = !$scope.showSeasonDetail;
+                    $scope.showDetail = false;
+            } else {
+                $scope.detailSeasonYear = year;
+                $scope.detailSeason = month;
+                //get month name also, cause why not.
+                angular.forEach($scope.seasons, function(mmm) {
+                    if ($scope.detailSeason===mmm.number) {
+                        $scope.detailSeasonName = mmm.text;
                     }
-                }
-            };
+                });
+                $scope.showSeasonDetail = true;
+                $scope.showDetail = false;
+            }
         };
         
-        //show month detail.
+//        //show month detail.
         $scope.monthDetail = function(year, month) {
 //            console.log(year+'-'+month);
             //if the one already selected is clicked, hide the detail.
             if ($scope.detailYear===year && $scope.detailMonth===month) {
                     $scope.showDetail = !$scope.showDetail;
+                    $scope.showSeasonDetail = false;
             } else {
                 $scope.detailYear = year;
                 $scope.detailMonth = month;
@@ -288,6 +272,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                     }
                 });
                 $scope.showDetail = true;
+                $scope.showSeasonDetail = false;
             }
         };
         
@@ -350,20 +335,10 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             }
         });
         
-        
         //rating 'tooltip' function
         $scope.hoveringOver = function(value) {
             $scope.overStar = value;
             $scope.percent = 100 * (value / $scope.maxRating);
-        };
-        
-        //filter for rating stars
-        $scope.ratingFilter = function(item) {
-            if (item.rating===$scope.ratingLevel) {
-                return item;
-            } else if ($scope.ratingLevel===undefined) {
-                return item;
-            }
         };
 
 		// Create new Animeitem
@@ -515,13 +490,19 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.latestDate = function(latest, updated) {
 //          console.log(latest, updated);
             var today = moment(new Date());
+            var latestDate, diff;
             if (latest.substring(0,10)===updated.substring(0,10)) {
-//                var latestDate = moment(updated);
-//                var diff = today.diff(latestDate, 'minutes');
-                return updated;
+                 latestDate = moment(updated);
+                 diff = latestDate.fromNow();
+                
+                if (diff==='a day ago') {
+                    return 'Yesterday';
+                } else {
+                    return diff;
+                }
             } else {
-                var latestDate = moment(latest);
-                var diff = today.diff(latestDate, 'days');
+                 latestDate = moment(latest);
+                 diff = today.diff(latestDate, 'days');
                 
                 //for 0 and 1 day(s) ago use the special term.
                 if (diff===0) {
@@ -562,6 +543,36 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
             'background-position': 'right'
         });
     };
+})
+.directive('keycuts', function() {
+    return {
+        restrict: 'A',
+        link: function postLink(scope, element, attrs) {
+            //keydown catch - alt+v for view, ctrl+left/right for list page.
+            scope.$on('my:keydown', function(event, e) {
+//                console.log(event, e);
+                if (e.ctrlKey && e.keyCode===39 && scope.currentPage < scope.pageCount) {
+                    scope.currentPage = scope.currentPage + 1;
+                } else if (e.ctrlKey && e.keyCode===37 && scope.currentPage > 0) {
+                    scope.currentPage = scope.currentPage - 1;
+                } else if (e.altKey && e.keyCode===86) {
+                    if (scope.isList===true) {
+                        scope.isList = false;
+                    } else if (scope.isList===false) {
+                        scope.isList = true;
+                    } else {
+                        if (scope.isList==='list') {
+                            scope.isList = 'carousel';
+                        } else if (scope.isList==='carousel') {
+                            scope.isList = 'statistics';
+                        } else if (scope.isList==='statistics') {
+                            scope.isList = 'list';
+                        }
+                    }
+                }
+            });
+        }
+    };
 });
 
 'use strict';
@@ -570,6 +581,69 @@ angular.module('animeitems').filter('startFrom', function() {
     return function(input, start) {
         start = +start; //parse to int
         return input.slice(start);
+    };
+})
+.filter('ratingFilter', function() {
+    return function(array, rating) {
+        //filter for rating stars
+        return array.filter(function(item) {
+//            console.log(item);
+            if (item.rating===rating) {
+                return item;
+            } else if (rating===undefined) {
+                return item;
+            }
+        });
+    };
+})
+.filter('endedMonth', function() {
+    return function(array, year, month) {
+        return array.filter(function(item) {
+        //ended stat month filter
+                if (item.end!==undefined) {
+                    if (item.end.substring(0,4)===year) {
+                        if (item.end.substr(5,2)===month) {
+                            return item;
+                        }
+                    }
+                }
+        });
+    };
+})
+.filter('endedSeason', function() {
+    return function(array, year, month) {
+        return array.filter(function(item) {
+        //ended stat season filter
+                if (item.end!==undefined) {
+                    /**
+                     *  Can currently handle shows of 1 or 2 seasons with 'standard' lengths (10-13) / (22-26) that
+                     *  start and finish in the 'normal' season months (J-M,A-J,J-S,O-D) / (J-J,A-S,J-D,O-M).
+                     */
+                    var pad = '00';
+                    var startMonth;
+                    if (9 < item.finalEpisode && item.finalEpisode < 14) {
+                        if (item.end.substring(0,4) === year) {
+                            if (item.end.substr(5,2) === month) {
+                                startMonth = (pad + (month - 2)).slice(-pad.length);
+                                if (item.start.substr(5,2) === startMonth) {
+                                    return item;
+                                }
+                            }
+                        }
+                    } else if (13 < item.finalEpisode && item.finalEpisode < 26) {
+                        if (item.end.substring(0,4) === year) {
+                            if (item.end.substr(5,2) === month) {
+                                var num = (month - 5) > 0 ? (month - 5) : 10;
+                                startMonth = (pad + num).slice(-pad.length);
+//                                console.log(startMonth);
+                                if (item.start.substr(5,2) === startMonth) {
+                                    return item;
+                                }
+                            }
+                        }
+                    }
+                }
+        });
     };
 });
 'use strict';
@@ -647,6 +721,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
+        $scope.whichController = 'character';
         //paging controls for the list view.
         $scope.currentPage = 0;
         $scope.pageSize = 10;
@@ -661,6 +736,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             if (numPages!==0 && $scope.currentPage < 0) {
                 $scope.currentPage = 0;
             }
+            $scope.pageCount = numPages;
             return numPages;
         };
         
@@ -774,51 +850,16 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             }
         });
         
-        
         $scope.searchTags = '';
         $scope.passTag = function(tag) {
             if ($scope.searchTags.indexOf(tag) === -1) {
                 $scope.searchTags += tag + ',';
             }
         };
-        $scope.clearTagValues = function() {
-            $scope.searchTags = '';
-            $scope.tagsForFilter = [];
-        };
-        $scope.deleteSearchTag = function(tag) {
-            $scope.searchTags = $scope.searchTags.replace(tag + ',', '');
-            
-            var index = $scope.tagsForFilter.indexOf(tag);
-            $scope.tagsForFilter.splice(index, 1);
-        };
-        
         //for adding/removing tags.
         $scope.addTag = function () {
                 $scope.tagArray.push({ text: $scope.newTag });
                 $scope.newTag = '';
-        };
-        $scope.deleteTag = function(text) {
-        
-            var removal = $window.confirm('Are you sure you want to delete this tag?');
-            if (removal) {
-                var deletingItem = $scope.tagArray;
-                $scope.tagArray = [];
-
-                //update the complete task.
-                angular.forEach(deletingItem, function(tag) {
-                    if (tag.text !== text) {
-                        $scope.tagArray.push(tag);
-                    }
-                });
-            }
-        };
-        //remove existing tag.
-        $scope.removeTag = function(tag) {
-            var removal = $window.confirm('Are you sure you want to delete this tag?');
-            if (removal) {
-                var index = $scope.character.tags.indexOf(tag);
-                $scope.character.tags.splice(index, 1);
-            }
         };
         
         //show stat tag detail.
@@ -862,19 +903,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                     });
 //                    console.log($scope.tagDetailResult);
                 });
-            }
-        };
-        
-        //filter stat series detail.
-        $scope.seriesDetailFilter = function(item) {
-            if (item.anime!==null) {
-                if (item.anime.title===$scope.detailSeriesName) {
-                    return item;
-                }
-            } else if (item.manga!==null) {
-                if (item.manga.title===$scope.detailSeriesName) {
-                    return item;
-                }
             }
         };
         
@@ -926,28 +954,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                     }
                     return found;
                 }
-            }
-        };
-        
-        //special media filter
-        $scope.mediaFilter = function(item) {
-            if ($scope.media==='anime') {
-                if (item.anime!==null && item.manga===null) {
-                    return true;
-                }
-                return false;
-            } else if ($scope.media==='manga') {
-                if (item.manga!==null && item.anime===null) {
-                    return true;
-                }
-                return false;
-            } else if ($scope.media==='both') {
-                if (item.anime!==null && item.manga!==null) {
-                    return true;
-                }
-                return false;
-            } else {
-                return true;
             }
         };
         
@@ -1154,18 +1160,145 @@ angular.module('characters').directive('fileModel', ['$parse', function ($parse)
                 scope.$apply(function (){
                     scope.$eval(attrs.enterTag);
                 });
-
                 event.preventDefault();
             }
         });
     };
-});
+})
+.directive('clearTagValues', function() {
+    return function (scope, element, attrs) {
+        element.bind('click', function(event) {
+//            console.log('clear tags');
+            scope.$apply(function() {
+                scope.searchTags = '';
+                scope.characterTags = '';
+                scope.tagsForFilter = [];
+            });
+        });
+    };
+}) 
+.directive('deleteSearchTag', function() {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            element.bind('click', function(event) {
+                scope.$apply(function() { 
+                    var tag = attrs.deleteSearchTag;
+                    var index = scope.tagsForFilter.indexOf(tag);
+//                    console.log(tag, index);
+                    scope.$parent.searchTags = scope.searchTags.replace(tag + ',', '');
+                    scope.$parent.tagsForFilter.splice(index, 1);
+//                    console.log(scope.searchTags, scope.tagsForFilter);
+                });
+            });
+        }
+    };
+})
+.directive('dropTag', ['$window', function($window) {
+    return function(scope, element, attrs) {
+        element.bind('click', function(event) {    
+            var text = attrs.dropTag;
+            var removal = $window.confirm('Are you sure you don\'t want to add this tag?');
+            if (removal) {
+                scope.$apply(function() {
+                    var deletingItem = scope.tagArray;
+                    scope.$parent.tagArray = [];
+//                    console.log('dropping tag - ', text);
+                    //update the complete task.
+                    angular.forEach(deletingItem, function(tag) {
+                        if (tag.text !== text) {
+                            scope.$parent.tagArray.push(tag);
+                        }
+                    });
+                });
+            }
+        });
+    };
+}])
+.directive('removeTag', ['$window', function($window) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            element.bind('click', function(event) {
+                var tag = attrs.removeTag;
+                var i;
+                var entry_type = scope.whichController;
+                var removal = $window.confirm('Are you sure you want to remove this tag from the entry?');
+                if (removal) {
+                    scope.$apply(function () {
+                        var index;
+                        if (entry_type === 'character') {
+                            for(i=0; i < scope.character.tags.length; i++) {
+                                if (scope.character.tags[i].text === tag) {
+                                    index = i;
+                                }
+                                console.log(index);
+                            }
+                            scope.$parent.character.tags.splice(index, 1);
+                        } else if (entry_type === 'animeitem') {
+                            for(i=0; i < scope.animeitem.tags.length; i++) {
+                                if (scope.animeitem.tags[i].text === tag) {
+                                    index = i;
+                                }
+                                console.log(index);
+                            }
+                            scope.$parent.animeitem.tags.splice(index, 1);
+                        } else if (entry_type === 'mangaitem') {
+                            for(i=0; i < scope.mangaitem.tags.length; i++) {
+                                if (scope.mangaitem.tags[i].text === tag) {
+                                    index = i;
+                                }
+                                console.log(index);
+                            }
+                            scope.$parent.mangaitem.tags.splice(index, 1);
+                        }
+//                        console.log(index, tag);
+                    });
+                }
+            });
+        }
+    };
+}]);
 'use strict';
 
-angular.module('characters').filter('startFrom', function() {
-    return function(input, start) {
-        start = +start; //parse to int
-        return input.slice(start);
+angular.module('characters').filter('seriesDetailFilter', function() {
+    return function(array, detailSeriesName) {
+        return array.filter(function(item) {
+            //filter stat series detail.
+            if (item.anime!==null) {
+                if (item.anime.title===detailSeriesName) {
+                    return item;
+                }
+            } else if (item.manga!==null) {
+                if (item.manga.title===detailSeriesName) {
+                    return item;
+                }
+            }
+        });
+    };
+})
+.filter('mediaFilter', function() {
+    return function(array, media) {
+        return array.filter(function(item) {
+            if (media==='anime') {
+                if (item.anime!==null && item.manga===null) {
+                    return true;
+                }
+                return false;
+            } else if (media==='manga') {
+                if (item.manga!==null && item.anime===null) {
+                    return true;
+                }
+                return false;
+            } else if (media==='both') {
+                if (item.anime!==null && item.manga!==null) {
+                    return true;
+                }
+                return false;
+            } else {
+                return true;
+            }
+        });
     };
 });
 'use strict';
@@ -1988,6 +2121,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
+        $scope.whichController = 'mangaitem';
         //paging controls for the list view.
         $scope.currentPage = 0;
         $scope.pageSize = 10;
@@ -2002,24 +2136,9 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             if (numPages!==0 && $scope.currentPage < 0) {
                 $scope.currentPage = 0;
             }
+            $scope.pageCount = numPages;
             return numPages;
         };
-        
-         
-//        //on keydown for changing view and pages.
-//        angular.element($window).on('keydown', function (e) {
-//                if (e.ctrlKey && e.keyCode===39 && $scope.currentPage < $scope.pageSize) {
-//                    $scope.currentPage = $scope.currentPage + 1;
-//                } else if (e.ctrlKey && e.keyCode===37 && $scope.currentPage > 0) {
-//                    $scope.currentPage = $scope.currentPage - 1;
-//                } else if (e.altKey && e.keyCode===86) {
-//                    if ($scope.isList===true) {
-//                        $scope.isList = false;
-//                    } else if ($scope.isList===false) {
-//                        $scope.isList = true;
-//                    }
-//                }
-//        });
         
         $scope.itemUpdate = new Date().toISOString().substring(0,10); //today's date as 'yyyy-MM-dd'
         $scope.view = 'list'; //dynamic page title.
@@ -2060,44 +2179,10 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                 $scope.searchTags += tag + ',';
             }
         };
-        $scope.clearTagValues = function() {
-            $scope.searchTags = '';
-            $scope.tagsForFilter = [];
-        };
-        $scope.deleteSearchTag = function(tag) {
-            $scope.searchTags = $scope.searchTags.replace(tag + ',', '');
-            
-            var index = $scope.tagsForFilter.indexOf(tag);
-            $scope.tagsForFilter.splice(index, 1);
-        };
-        
         //for adding/removing tags.
         $scope.addTag = function () {
                 $scope.tagArray.push({ text: $scope.newTag });
                 $scope.newTag = '';
-        };
-        $scope.deleteTag = function(text) {
-        
-            var removal = $window.confirm('Are you sure you want to delete this tag?');
-            if (removal) {
-                var deletingItem = $scope.tagArray;
-                $scope.tagArray = [];
-
-                //update the complete task.
-                angular.forEach(deletingItem, function(tag) {
-                    if (tag.text !== text) {
-                        $scope.tagArray.push(tag);
-                    }
-                });
-            }
-        };
-        //remove existing tag.
-        $scope.removeTag = function(tag) {
-            var removal = $window.confirm('Are you sure you want to delete this tag?');
-            if (removal) {
-                var index = $scope.mangaitem.tags.indexOf(tag);
-                $scope.mangaitem.tags.splice(index, 1);
-            }
         };
         
         //special tag filter
@@ -2152,19 +2237,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             { number: '11', text: 'November' },
             { number: '12', text: 'December' }
         ];
-        
-        //ended stat month filter
-        $scope.endedMonth = function(year, month){
-            return function(item) {
-                if (item.end!==undefined) {
-                    if (item.end.substring(0,4)===year) {
-                        if (item.end.substr(5,2)===month) {
-                            return item;
-                        }
-                    }
-                }
-            };
-        };
         
         //show month detail.
         $scope.monthDetail = function(year, month) {
@@ -2248,15 +2320,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         $scope.hoveringOver = function(value) {
             $scope.overStar = value;
             $scope.percent = 100 * (value / $scope.maxRating);
-        };
-        
-        //filter for rating stars
-        $scope.ratingFilter = function(item) {
-            if (item.rating===$scope.ratingLevel) {
-                return item;
-            } else if ($scope.ratingLevel===undefined) {
-                return item;
-            }
         };
         
         // Create new Mangaitem
@@ -2414,13 +2477,19 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         $scope.latestDate = function(latest, updated) {
 //          console.log(latest, updated);
             var today = moment(new Date());
+            var latestDate, diff;
             if (latest.substring(0,10)===updated.substring(0,10)) {
-//                var latestDate = moment(updated);
-//                var diff = today.diff(latestDate, 'minutes');
-                return updated;
+                 latestDate = moment(updated);
+                 diff = latestDate.fromNow();
+                
+                if (diff==='a day ago') {
+                    return 'Yesterday';
+                } else {
+                    return diff;
+                }
             } else {
-                var latestDate = moment(latest);
-                var diff = today.diff(latestDate, 'days');
+                 latestDate = moment(latest);
+                 diff = today.diff(latestDate, 'days');
                 
                 //for 0 and 1 day(s) ago use the special term.
                 if (diff===0) {
@@ -2451,27 +2520,27 @@ angular.module('mangaitems').directive('fileModel', ['$parse', function ($parse)
             });
         }
     };
-}])
-.directive('listBack', function(){
-    return function(scope, element, attrs){
-        var url = attrs.listBack;
-        element.css({
-            'background-image': 'url(' + url +')',
-            'background-size' : '50%',
-            'background-repeat': 'no-repeat',
-            'background-position': 'right'
-        });
-    };
-});
+}]);
+//.directive('listBack', function(){
+//    return function(scope, element, attrs){
+//        var url = attrs.listBack;
+//        element.css({
+//            'background-image': 'url(' + url +')',
+//            'background-size' : '50%',
+//            'background-repeat': 'no-repeat',
+//            'background-position': 'right'
+//        });
+//    };
+//});
 
 'use strict';
 
-angular.module('mangaitems').filter('startFrom', function() {
-    return function(input, start) {
-        start = +start; //parse to int
-        return input.slice(start);
-    };
-});
+//angular.module('mangaitems').filter('startFrom', function() {
+//    return function(input, start) {
+//        start = +start; //parse to int
+//        return input.slice(start);
+//    };
+//});
 'use strict';
 
 //Mangaitems service used to communicate Mangaitems REST endpoints

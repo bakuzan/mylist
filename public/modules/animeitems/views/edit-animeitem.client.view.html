@@ -125,7 +125,7 @@
                     <ul class="taskList col-md-12">
                         <li class="tag-bubble col-md-2" ng-repeat="tag in animeitem.tags">
                             {{tag.text}}
-                            <a class="clickable pull-right" aria-hidden="true" ng-click="removeTag(tag)"><i class="fa fa-times" style="color: red;"></i></a>
+                            <a class="clickable pull-right" aria-hidden="true" remove-tag="{{tag.text}}"><i class="fa fa-times" style="color: red;"></i></a>
                         </li>
                     </ul>
                 </div>
@@ -133,7 +133,7 @@
                     <ul class="taskList col-md-12">
                         <li class="tag-bubble col-md-2" ng-repeat="tag in tagArray track by $index">
                             {{tag.text}}
-                            <a class="clickable pull-right" aria-hidden="true" ng-click="deleteTag(tag.text)"><i class="fa fa-trash-o" style="color: red;"></i></a>
+                            <a class="clickable pull-right" aria-hidden="true" drop-tag="{{tag.text}}"><i class="fa fa-trash-o" style="color: red;"></i></a>
                         </li>
                     </ul>
                 </div>

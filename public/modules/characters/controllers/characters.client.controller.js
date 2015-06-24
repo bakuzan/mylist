@@ -141,6 +141,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.passTag = function(tag) {
             if ($scope.searchTags.indexOf(tag) === -1) {
                 $scope.searchTags += tag + ',';
+                $scope.tagsForFilter = $scope.searchTags.substring(0, $scope.searchTags.length - 1).split(',');
             }
         };
         //for adding/removing tags.
@@ -203,44 +204,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                 $scope.seriesSearch = name;
                 $scope.detailSeriesName = name;
                 $scope.showSeriesDetail = true;
-            }
-        };
-        
-        //special tag filter
-        $scope.tagFilter = function(item) {
-            var found = false;
-            var i = 0;
-            var tagsToSearch = [];
-            
-            //if tagless is checked return tagless and nothing else.
-            if ($scope.taglessItem===true) {
-                if (item.tags.length===0) {
-                    return item;
-                }
-            } else {
-                if ($scope.searchTags===undefined || $scope.searchTags==='') {
-                    return true;
-                } else {
-                    //get tags that are being looked for
-                    //                var tagsForFilter = $scope.characterTags.split(',');
-                    $scope.tagsForFilter = $scope.searchTags.substring(0, $scope.searchTags.length - 1).split(',');
-                    //                console.log($scope.tagsForFilter);
-                
-                    //get tags of items to filter
-                    angular.forEach(item.tags, function(tag) {
-                        tagsToSearch.push(tag.text);
-                    });
-                
-                    //filter: check in 'query' is in tags.
-                    for(i = 0; i < $scope.tagsForFilter.length; i++) {
-                        if (tagsToSearch.indexOf($scope.tagsForFilter[i]) !== -1) {
-                            found = true;
-                        } else {
-                            return false;
-                        }
-                    }
-                    return found;
-                }
             }
         };
         

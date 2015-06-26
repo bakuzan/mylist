@@ -8,6 +8,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
+        $scope.whichController = 'animeitem';
         //paging controls for the list view.
         $scope.currentPage = 0;
         $scope.pageSize = 10;
@@ -22,11 +23,13 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             if (numPages!==0 && $scope.currentPage < 0) {
                 $scope.currentPage = 0;
             }
+            $scope.pageCount = numPages;
             return numPages;
         };
         
         $scope.itemUpdate = new Date().toISOString().substring(0,10); //today's date as 'yyyy-MM-dd'
         $scope.view = 'list'; //dynamic page title.
+        $scope.historicalView = 'month'; //default historical view in stats.
         $scope.isList = true; //list view as default.
         $scope.maxAnimeCount = 0; //number of anime.
         $scope.maxAnimeRatedCount = 0; //number of anime with a rating i.e not 0.
@@ -61,19 +64,9 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.passTag = function(tag) {
             if ($scope.searchTags.indexOf(tag) === -1) {
                 $scope.searchTags += tag + ',';
+                $scope.tagsForFilter = $scope.searchTags.substring(0, $scope.searchTags.length - 1).split(',');
             }
         };
-        $scope.clearTagValues = function() {
-            $scope.searchTags = '';
-            $scope.tagsForFilter = [];
-        };
-        $scope.deleteSearchTag = function(tag) {
-            $scope.searchTags = $scope.searchTags.replace(tag + ',', '');
-            
-            var index = $scope.tagsForFilter.indexOf(tag);
-            $scope.tagsForFilter.splice(index, 1);
-        };
-        
         //for adding/removing tags.
         $scope.addTag = function () {
 //            console.log($scope.newTag);
@@ -82,68 +75,13 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             }
             $scope.newTag = '';
         };
-        $scope.deleteTag = function(text) {
         
-            var removal = $window.confirm('Are you sure you want to delete this tag?');
-            if (removal) {
-                var deletingItem = $scope.tagArray;
-                $scope.tagArray = [];
-
-                //update the complete task.
-                angular.forEach(deletingItem, function(tag) {
-                    if (tag.text !== text) {
-                        $scope.tagArray.push(tag);
-                    }
-                });
-            }
-        };
-        //remove existing tag.
-        $scope.removeTag = function(tag) {
-            var removal = $window.confirm('Are you sure you want to delete this tag?');
-            if (removal) {
-                var index = $scope.animeitem.tags.indexOf(tag);
-                $scope.animeitem.tags.splice(index, 1);
-            }
-        };
-        
-        //special tag filter
-        $scope.tagFilter = function(item) {
-            var found = false;
-            var i = 0;
-            var tagsToSearch = [];
-            
-            //if tagless is checked return tagless and nothing else.
-            if ($scope.taglessItem===true) {
-                if (item.tags.length===0) {
-                    return item;
-                }
-            } else {
-                if ($scope.searchTags===undefined || $scope.searchTags==='') {
-                    return true;
-                } else {
-                    //get tags that are being looked for
-                    //                var tagsForFilter = $scope.characterTags.split(',');
-                    $scope.tagsForFilter = $scope.searchTags.substring(0, $scope.searchTags.length - 1).split(',');
-                    //                console.log($scope.tagsForFilter);
-                
-                    //get tags of items to filter
-                    angular.forEach(item.tags, function(tag) {
-                        tagsToSearch.push(tag.text);
-                    });
-                
-                    //filter: check in 'query' is in tags.
-                    for(i = 0; i < $scope.tagsForFilter.length; i++) {
-                        if (tagsToSearch.indexOf($scope.tagsForFilter[i]) !== -1) {
-                            found = true;
-                        } else {
-                            return false;
-                        }
-                    }
-                    return found;
-                }
-            }
-        };
-        
+        $scope.seasons = [
+            { number: '03', text: 'Winter' },
+            { number: '06', text: 'Spring' },
+            { number: '09', text: 'Summer' },
+            { number: '12', text: 'Fall' }
+        ];
         $scope.months = [
             { number: '01', text: 'January' },
             { number: '02', text: 'February' },
@@ -159,25 +97,34 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             { number: '12', text: 'December' }
         ];
         
-        //ended stat month filter
-        $scope.endedMonth = function(year, month){
-            return function(item) {
-                if (item.end!==undefined) {
-                    if (item.end.substring(0,4)===year) {
-                        if (item.end.substr(5,2)===month) {
-                            return item;
-                        }
+        //show season detail.
+        $scope.seasonDetail = function(year, month) {
+//            console.log(year+'-'+month);
+            //if the one already selected is clicked, hide the detail.
+            if ($scope.detailSeasonYear===year && $scope.detailSeason===month) {
+                    $scope.showSeasonDetail = !$scope.showSeasonDetail;
+                    $scope.showDetail = false;
+            } else {
+                $scope.detailSeasonYear = year;
+                $scope.detailSeason = month;
+                //get month name also, cause why not.
+                angular.forEach($scope.seasons, function(mmm) {
+                    if ($scope.detailSeason===mmm.number) {
+                        $scope.detailSeasonName = mmm.text;
                     }
-                }
-            };
+                });
+                $scope.showSeasonDetail = true;
+                $scope.showDetail = false;
+            }
         };
         
-        //show month detail.
+//        //show month detail.
         $scope.monthDetail = function(year, month) {
 //            console.log(year+'-'+month);
             //if the one already selected is clicked, hide the detail.
             if ($scope.detailYear===year && $scope.detailMonth===month) {
                     $scope.showDetail = !$scope.showDetail;
+                    $scope.showSeasonDetail = false;
             } else {
                 $scope.detailYear = year;
                 $scope.detailMonth = month;
@@ -188,6 +135,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                     }
                 });
                 $scope.showDetail = true;
+                $scope.showSeasonDetail = false;
             }
         };
         
@@ -250,20 +198,10 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             }
         });
         
-        
         //rating 'tooltip' function
         $scope.hoveringOver = function(value) {
             $scope.overStar = value;
             $scope.percent = 100 * (value / $scope.maxRating);
-        };
-        
-        //filter for rating stars
-        $scope.ratingFilter = function(item) {
-            if (item.rating===$scope.ratingLevel) {
-                return item;
-            } else if ($scope.ratingLevel===undefined) {
-                return item;
-            }
         };
 
 		// Create new Animeitem
@@ -415,13 +353,19 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.latestDate = function(latest, updated) {
 //          console.log(latest, updated);
             var today = moment(new Date());
+            var latestDate, diff;
             if (latest.substring(0,10)===updated.substring(0,10)) {
-//                var latestDate = moment(updated);
-//                var diff = today.diff(latestDate, 'minutes');
-                return updated;
+                 latestDate = moment(updated);
+                 diff = latestDate.fromNow();
+                
+                if (diff==='a day ago') {
+                    return 'Yesterday';
+                } else {
+                    return diff;
+                }
             } else {
-                var latestDate = moment(latest);
-                var diff = today.diff(latestDate, 'days');
+                 latestDate = moment(latest);
+                 diff = today.diff(latestDate, 'days');
                 
                 //for 0 and 1 day(s) ago use the special term.
                 if (diff===0) {

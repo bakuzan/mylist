@@ -5,6 +5,17 @@
                 <img ng-src="{{trustAsResourceUrl(mangaitem.image)}}" height="100%" width="100%"/>
             </div>
             <div class="col-md-9 pull-left">
+                <div class="pull-right" data-ng-show="((authentication.user) && (authentication.user._id == mangaitem.user._id))">
+		          <a class="btn btn-success" href="/#!/mangaitems">
+			         <i class="glyphicon glyphicon-chevron-left"></i>
+		          </a>
+                  <a class="btn btn-primary" href="/#!/mangaitems/{{mangaitem._id}}/edit">
+			         <i class="glyphicon glyphicon-edit"></i>
+		          </a>
+		          <a class="btn btn-danger" data-ng-click="remove();">
+			         <i class="glyphicon glyphicon-trash"></i>
+		          </a>
+	            </div>
                 <h1 data-ng-bind="mangaitem.title"></h1>
                 <span class="glyphicon glyphicon-book" data-ng-show="mangaitem.hardcopy"></span> <span class="text-muted" data-ng-show="mangaitem.status">(Completed)</span> <span class="text-muted" data-ng-show="mangaitem.reReading">(Reading)</span>
                 <h3>Chapter </h3><span data-ng-bind="mangaitem.chapters"></span>/<span data-ng-bind="mangaitem.finalChapter"></span>
@@ -12,8 +23,8 @@
                 <div class="related-media text-muted">
                     <p data-ng-show="mangaitem.anime!==undefined">Related anime: <a href="/#!/animeitems/{{mangaitem.anime._id}}">{{mangaitem.anime.title}}</a></p>
                 </div>
-                <div class="col-md-6 item-tags">
-                    <span class="tag-bubble" ng-repeat="tag in mangaitem.tags">{{tag.text}}</span>
+                <div class="col-md-9 item-tags">
+                    <span class="col-md-3 tag-bubble" ng-repeat="tag in mangaitem.tags">{{tag.text}}</span>
                 </div>
             </div>
         </div>
@@ -24,17 +35,6 @@
             <em class="text-muted" data-ng-show="mangaitem.rating==0">No rating</em>
             <rating data-ng-model="mangaitem.rating" style="color: blue; font-size: 16px;" readonly="true" max="maxRating" id="rating" name="rating"></rating>
         </div>
-	</div>
-	<div class="pull-right" data-ng-show="((authentication.user) && (authentication.user._id == mangaitem.user._id))">
-		<a class="btn btn-success" href="/#!/mangaitems">
-			<i class="glyphicon glyphicon-chevron-left"></i>
-		</a>
-        <a class="btn btn-primary" href="/#!/mangaitems/{{mangaitem._id}}/edit">
-			<i class="glyphicon glyphicon-edit"></i>
-		</a>
-		<a class="btn btn-danger" data-ng-click="remove();">
-			<i class="glyphicon glyphicon-trash"></i>
-		</a>
 	</div>
 	<small>
 		<em class="text-muted">

@@ -1,9 +1,10 @@
 <section data-ng-controller="CharactersController" data-ng-init="find()" data-ng-show="authentication.user">
+    <span keycuts></span>
     <div class="page-header">
         <div class="view-buttons text-right pull-right">
-            <label class="btn btn-primary" ng-model="isList" btn-radio="'list'" uncheckable>List</label>
-            <label class="btn btn-primary" ng-model="isList" btn-radio="'carousel'" uncheckable>Carousel</label>
-            <label class="btn btn-primary" ng-model="isList" btn-radio="'statistics'" uncheckable>Stats</label>
+            <label class="btn btn-primary" ng-model="isList" btn-radio="'list'">List</label>
+            <label class="btn btn-primary" ng-model="isList" btn-radio="'carousel'">Carousel</label>
+            <label class="btn btn-primary" ng-model="isList" btn-radio="'statistics'">Stats</label>
         </div>
         <h1>Characters {{isList}}</h1>
     </div>
@@ -18,7 +19,7 @@
             </div>
         </div><!-- GENDER PERCENTAGE BAR END -->
         <div class="col-lg-6 col-md-6 col-sm-6 stat-tag-container">
-        <div class="col-lg-12 col-md-12 col-sm-12 statTagPanel">
+        <div class="col-lg-12 col-md-12 col-sm-12 stat-tag-panel">
             <div class="stat-header">
                 <h3>Tags</h3><span class="stat-summary-info pull-right"><small class="text-muted">&nbsp;{{statTags.length}} unique tags.</small></span>
             </div>
@@ -142,7 +143,7 @@
                     <h3>Characters in {{detailSeriesName}}</h3>
                 </div>
                 <ul class="col-lg-12 col-md-12 col-sm-12 statMediaDetailList">
-                    <li ng-repeat="character in characters | orderBy: 'name' | filter: seriesDetailFilter">
+                    <li ng-repeat="character in characters | orderBy: 'name' | seriesDetailFilter: detailSeriesName">
                         <a href="/#!/characters/{{character._id}}"><span>{{character.name}}</span></a>
                     </li>
                 </ul>
@@ -169,7 +170,7 @@
 	   </div>
        <br/>
        <div class="input-group">
-            <div class="input-group-addon clickable" ng-click="clearTagValues(); characterTags = ''">
+            <div class="input-group-addon clickable" clear-tag-values>
                 <i class="fa fa-tags"></i>
             </div>
            <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags" typeahead="stat.tag for stat in statTags | filter: $viewValue" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
@@ -179,7 +180,7 @@
                <br/>
                 <li class="tag-bubble col-lg-12 col-md-12 col-sm-12" ng-repeat="tag in tagsForFilter track by $index">
                     {{tag}}
-                    <a class="clickable pull-right" aria-hidden="true" ng-click="deleteSearchTag(tag)"><i class="fa fa-trash-o" style="color: red;"></i></a>
+                    <a class="clickable pull-right" aria-hidden="true" delete-search-tag="{{tag}}"><i class="fa fa-trash-o" style="color: red;"></i></a>
                 </li>
             </ul>
        </div>
@@ -188,7 +189,7 @@
 		  <div class="input-group-addon">
 		      <i class="fa fa-list-ol"></i>
           </div>
-            <input type="text" class="form-control" value="Showing {{ (showingCount = (characters | filter: search | filter: mediaFilter | filter: tagFilter).length) }} character(s)." disabled>
+            <input type="text" class="form-control" value="Showing {{ (showingCount = (characters | filter: search | mediaFilter: media | tagFilter: searchTags:taglessItem).length) }} character(s)." disabled>
         </div>
         <br/>
         <div class="input-group">
@@ -243,7 +244,7 @@
         </div>
     </div>
     <div class="list-group col-lg-8 col-md-8 col-sm-8" data-ng-show="isList==='list'">
-        <div data-ng-repeat="character in characters | orderBy: sortType:sortReverse | filter: search | filter: mediaFilter | filter: tagFilter | startFrom: currentPage*pageSize | limitTo: pageSize" character_Back="{{trustAsResourceUrl(character.image)}}" class="list-group-item" ng-class="viewItem===character ? 'col-lg-12 col-md-12 col-sm-12 character-expanded' : ' col-lg-6 col-md-6 col-sm-6 character-default'" ng-click="viewItem===character ? viewItem='' : viewItem=character">
+        <div data-ng-repeat="character in characters | orderBy: sortType:sortReverse | filter: search | mediaFilter: media | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" character_Back="{{trustAsResourceUrl(character.image)}}" class="list-group-item clickable" ng-class="viewItem===character ? 'col-lg-12 col-md-12 col-sm-12 character-expanded' : ' col-lg-6 col-md-6 col-sm-6 character-default'" ng-click="viewItem===character ? viewItem='' : viewItem=character">
 			<h4 class="dark-bordered-font-heading" data-ng-bind="character.name"></h4>
             <p class="list-group-item-text">
                 <span class="dark-bordered-font" data-ng-bind="character.voice"></span>
@@ -252,7 +253,7 @@
             <span class="dark-bordered-font" data-ng-show="character.anime!==undefined && character.manga===null" data-ng-bind="character.anime.title"></span>
             <div class="view-item-detail" ng-if="viewItem===character">
                 <div class="col-lg-12 col-md-12 col-sm-12 item-tags">
-                    <span class="tag-bubble" ng-repeat="tag in character.tags">{{tag.text}}</span>
+                    <span class="col-md-2 tag-bubble" ng-repeat="tag in character.tags">{{tag.text}}</span>
                 </div>
                 <div class="item-actions" data-ng-show="((authentication.user) && (authentication.user._id == character.user._id))">
                     <a class="btn btn-success" href="/#!/characters/{{character._id}}">
@@ -267,7 +268,7 @@
     </div><!-- LIST END -->
     <div class="characterCarousel col-lg-8 col-md-8 col-sm-8" style="height: 300px;" data-ng-show="isList==='carousel'">
         <carousel interval="myInterval" style="height: 300px;" disable-ng-animate>
-            <slide ng-repeat="character in characters | filter: search | filter: mediaFilter | filter: tagFilter" active="character.active">
+            <slide ng-repeat="character in characters | filter: search | mediaFilter: media | tagFilter: searchTags:taglessItem" active="character.active">
                 <a href="/#!/characters/{{character._id}}">
                     <img ng-src="{{trustAsResourceUrl(character.image)}}" style="height: 300px; width: auto; margin: auto;">
                     <div class="carousel-caption">

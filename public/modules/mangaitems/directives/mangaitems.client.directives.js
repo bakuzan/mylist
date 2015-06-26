@@ -14,15 +14,15 @@ angular.module('mangaitems').directive('fileModel', ['$parse', function ($parse)
             });
         }
     };
-}])
-.directive('listBack', function(){
-    return function(scope, element, attrs){
-        var url = attrs.listBack;
-        element.css({
-            'background-image': 'url(' + url +')',
-            'background-size' : '50%',
-            'background-repeat': 'no-repeat',
-            'background-position': 'right'
-        });
-    };
-});
+}]);
+//.directive('listBack', function(){
+//    return function(scope, element, attrs){
+//        var url = attrs.listBack;
+//        element.css({
+//            'background-image': 'url(' + url +')',
+//            'background-size' : '50%',
+//            'background-repeat': 'no-repeat',
+//            'background-position': 'right'
+//        });
+//    };
+//});

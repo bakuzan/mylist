@@ -1,12 +1,16 @@
 <section data-ng-controller="MangaitemsController" data-ng-init="find()" data-ng-show="authentication.user">
+    <span keycuts></span>
     <div class="page-header">
         <div class="view-buttons text-right pull-right">
-            <label class="btn btn-primary" ng-model="isList" btn-radio="'true'" ng-click="view = 'list'" uncheckable>List</label>
-            <label class="btn btn-primary" ng-model="isList" btn-radio="'false'" ng-click="view = 'statistics'" uncheckable>Stats</label>
+            <label class="btn btn-primary" ng-model="isList" btn-radio="true" ng-click="view = 'list'" >List</label>
+            <label class="btn btn-primary" ng-model="isList" btn-radio="false" ng-click="view = 'statistics'" >Stats</label>
         </div>
         <h1>Manga {{view}}</h1>
     </div>
     <div class="col-lg-12 col-md-12 col-sm-12" ng-hide="isList">
+        <div class="col-lg-12 col-md-12 col-sm-12 stat-overview">
+            <span class="blue-text">{{(mangaitems | filter: {status: false }).length }} reading</span> - <span class="green-text">{{(mangaitems | filter: {status: true }).length }}  completed</span>
+        </div><!-- OVERVIEW STATS END -->
         <div class="col-lg-12 col-md-12 col-sm-12 stat-history">
             <div class="stat-header">
                 <h3>History</h3>
@@ -21,19 +25,19 @@
                 <tbody>
                     <tr ng-repeat="mangaitem in mangaitems | unique: 'end.substring(0,4)' | orderBy: '-end.substring(0,4)' | limitTo: 4">
                         <th ng-hide="mangaitem.end==='' || mangaitem.end===null || mangaitem.end===undefined"><span>{{mangaitem.end.substring(0,4)}}</span></th>
-                        <td  class="stat-month-box" ng-hide="mangaitem.end==='' || mangaitem.end===null || mangaitem.end===undefined" ng-repeat="month in months" ng-click="monthDetail(mangaitem.end.substring(0,4), month.number);"  popover="{{ (mangaitems | filter: endedMonth(mangaitem.end.substring(0,4), month.number)).length }} manga completed {{month.text}} {{mangaitem.end.substring(0,4)}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': (mangaitems | filter: endedMonth(mangaitem.end.substring(0,4), month.number)).length / maxCompleteMonth }">
+                        <td  class="stat-month-box" ng-hide="mangaitem.end==='' || mangaitem.end===null || mangaitem.end===undefined" ng-repeat="month in months" ng-click="monthDetail(mangaitem.end.substring(0,4), month.number);"  popover="{{ (mangaitems | endedMonth: mangaitem.end.substring(0,4):month.number).length }} manga completed {{month.text}} {{mangaitem.end.substring(0,4)}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': (mangaitems | endedMonth: mangaitem.end.substring(0,4): month.number).length / maxCompleteMonth }">
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div><!-- HISTORY PANEL END -->
         <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="showDetail">
-            <div class="col-lg-6 col-md-6 col-sm-6 stat-detail">
+            <div class="col-lg-9 col-md-9 col-sm-9 stat-detail">
                 <div class="stat-detail-header">
                     <h3>Manga Completed {{detailMonthName }} {{detailYear}}</h3>
                 </div>
                 <ul class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
-                    <li ng-repeat="manga in mangaitems | filter: endedMonth(detailYear, detailMonth) | orderBy: 'title'">
+                    <li ng-repeat="manga in mangaitems | endedMonth: detailYear:detailMonth | orderBy: 'title'">
                         <a href="/#!/mangaitems/{{manga._id}}"><span>{{manga.title}}</span></a> - <span>{{manga.rating}}</span>
                     </li>
                 </ul>
@@ -126,7 +130,7 @@
 	   </div>
         <br/>
         <div class="input-group">
-            <div class="input-group-addon clickable" ng-click="clearTagValues(); characterTags = ''">
+            <div class="input-group-addon clickable" clear-tag-values>
                 <i class="fa fa-tags"></i>
             </div>
            <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags" typeahead="stat.tag for stat in statTags | filter: $viewValue" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
@@ -136,7 +140,7 @@
                <br/>
                 <li class="tag-bubble col-lg-12 col-md-12" ng-repeat="tag in tagsForFilter track by $index">
                     {{tag}}
-                    <a class="clickable pull-right" aria-hidden="true" ng-click="deleteSearchTag(tag)"><i class="fa fa-trash-o" style="color: red;"></i></a>
+                    <a class="clickable pull-right" aria-hidden="true" delete-search-tag="{{tag}}"><i class="fa fa-trash-o" style="color: red;"></i></a>
                 </li>
             </ul>
        </div>
@@ -145,7 +149,7 @@
 		  <div class="input-group-addon">
 		      <i class="fa fa-list-ol"></i>
           </div>
-            <input type="text" class="form-control" value="Showing {{ (showingCount = (mangaitems | filter: search | filter: ratingFilter | filter: tagFilter).length) }} manga." disabled>
+            <input type="text" class="form-control" value="Showing {{ (showingCount = (mangaitems | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem).length) }} manga." disabled>
         </div>
         <br/>
         <div class="input-group">
@@ -229,9 +233,9 @@
         </div>
     </div>
     <div class="list-group col-lg-8 col-md-8 col-sm-8" ng-show="isList">
-        <div data-ng-repeat="mangaitem in mangaitems | orderBy: sortType:sortReverse | filter: search | filter: ratingFilter | filter: tagFilter | startFrom: currentPage*pageSize | limitTo: pageSize" data-ng- list_Back="{{trustAsResourceUrl(mangaitem.image)}}" ng-click="viewItem===mangaitem ? viewItem='' : viewItem=mangaitem" class="list-group-item col-lg-12 col-md-12 col-sm-12">
+        <div data-ng-repeat="mangaitem in mangaitems | orderBy: sortType:sortReverse | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" list_Back="{{trustAsResourceUrl(mangaitem.image)}}" ng-click="viewItem===mangaitem ? viewItem='' : viewItem=mangaitem" class="list-group-item clickable col-lg-12 col-md-12 col-sm-12">
 			<small class="list-group-item-text">
-                <time ng-if="mangaitem.latest.substring(0,10)===mangaitem.meta.updated.substring(0,10)" title="{{mangaitem.meta.updated | date: 'yyyy-MMM-dd HH:mm'}}" am-time-ago="latestDate(mangaitem.latest, mangaitem.meta.updated)"></time>
+                <time ng-if="mangaitem.latest.substring(0,10)===mangaitem.meta.updated.substring(0,10)" title="{{mangaitem.meta.updated | date: 'yyyy-MMM-dd HH:mm'}}" ng-bind="latestDate(mangaitem.latest, mangaitem.meta.updated)"></time>
                 <time ng-if="mangaitem.latest.substring(0,10)!==mangaitem.meta.updated.substring(0,10)" title="{{mangaitem.latest | date: 'yyyy-MMM-dd'}}" ng-bind="latestDate(mangaitem.latest, mangaitem.meta.updated)"></time>
 			</small>
 			<h4 class="list-group-item-heading" data-ng-bind="mangaitem.title"></h4>

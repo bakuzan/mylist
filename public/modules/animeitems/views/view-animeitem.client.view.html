@@ -1,18 +1,29 @@
 <section data-ng-controller="AnimeitemsController" data-ng-init="findOne()" data-ng-show="authentication.user">
 	<div class="page-header">
         <div class="col-md-12">
-            <div class="col-md-3 pull-left" >
+            <div class="col-md-3 pull-left">
                 <img ng-src="{{trustAsResourceUrl(animeitem.image)}}" height="100%" width="100%"/>
             </div>
             <div class="col-md-9 pull-left">
+                <div class="pull-right" data-ng-show="((authentication.user) && (authentication.user._id == animeitem.user._id))">
+                    <a class="btn btn-success" href="/#!/animeitems">
+                        <i class="glyphicon glyphicon-chevron-left"></i>
+                    </a>
+                    <a class="btn btn-primary" href="/#!/animeitems/{{animeitem._id}}/edit">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    <a class="btn btn-danger" data-ng-click="remove();">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+                </div>
                 <h1 data-ng-bind="animeitem.title"></h1>
                 <span class="glyphicon glyphicon-cd" data-ng-show="animeitem.disc"></span> <span class="text-muted" data-ng-show="animeitem.status">(Completed)</span> <span class="text-muted" data-ng-show="animeitem.reWatching">(Watching)</span>
                 <h3>Episode </h3><span data-ng-bind="animeitem.episodes"></span>/<span data-ng-bind="animeitem.finalEpisode"></span>
                 <div class="related-media">
                     <p data-ng-show="animeitem.manga!==undefined">Related manga: <a href="/#!/mangaitems/{{animeitem.manga._id}}">{{animeitem.manga.title}}</a></p>
                 </div>
-                <div class="col-md-6 item-tags">
-                    <span class="tag-bubble" ng-repeat="tag in animeitem.tags">{{tag.text}}</span>
+                <div class="col-md-9 item-tags">
+                    <span class="col-md-3 tag-bubble" ng-repeat="tag in animeitem.tags">{{tag.text}}</span>
                 </div>
             </div>
         </div>
@@ -23,17 +34,6 @@
             <em class="text-muted" data-ng-show="animeitem.rating==0">No rating</em>
             <rating data-ng-model="animeitem.rating" style="color: blue; font-size: 16px;" readonly="true" max="maxRating" id="rating" name="rating"></rating>
         </div>
-	</div>
-	<div class="pull-right" data-ng-show="((authentication.user) && (authentication.user._id == animeitem.user._id))">
-		<a class="btn btn-success" href="/#!/animeitems">
-			<i class="glyphicon glyphicon-chevron-left"></i>
-		</a>
-        <a class="btn btn-primary" href="/#!/animeitems/{{animeitem._id}}/edit">
-			<i class="glyphicon glyphicon-edit"></i>
-		</a>
-		<a class="btn btn-danger" data-ng-click="remove();">
-			<i class="glyphicon glyphicon-trash"></i>
-		</a>
 	</div>
 	<small>
 		<em class="text-muted">

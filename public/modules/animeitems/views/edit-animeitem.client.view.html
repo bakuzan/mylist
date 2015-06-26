@@ -26,7 +26,7 @@
                         <input type="number" class="form-control" data-ng-model="animeitem.episodes" ng-change="animeitem.latest=itemUpdate" id="episodes" name="episodes" placeholder="0" required>
                     </div>
                     <div class="col-md-4">
-						<p ng-show="animeForm.episodes.$invalid && !animeForm.episodes.$pristine" class="help-block" >Chapters is a whole number and is required.</p>
+						<p ng-show="animeForm.episodes.$invalid && !animeForm.episodes.$pristine" class="help-block" >Episodes is a whole number and is required.</p>
                         <!--<p ng-show="!isNumber(animeForm.chapters)" class="help-block">Chapter number should be a full number.</p>-->
 						<span ng-show="animeForm.episodes.$valid" class="glyphicon glyphicon-ok" style="color: green;"></span>
 					</div>
@@ -37,7 +37,7 @@
                         <input type="date" class="form-control" data-ng-model="animeitem.latest" id="latest" name="latest" placeholder="" required>
                     </div>
                     <div class="col-md-4">
-						<p ng-show="animeForm.latest.$invalid && !animeForm.latest.$pristine" class="help-block" >Latest date is required.</p>
+						<p ng-show="animeForm.latest.$invalid && !animeForm.latest.$pristine" class="help-block" >Latest date must be 'dd/mm/yyyy' and is required.</p>
 						<span ng-show="animeForm.latest.$valid && !animeForm.latest.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
 					</div>
                 </div>
@@ -69,30 +69,17 @@
 						<span ng-show="animeForm.manga.$valid && !animeForm.manga.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
 					</div>
                 </div>
-                <div class="form-group">
-                    <label for="disc" class="col-md-2 control-label">Disc?</label>
-                    <div class="col-md-6">
-                        <input type="checkbox" class="form-control" data-ng-model="animeitem.disc" id="disc" name="disc">
-                    </div>
-                </div>
-                <hr/>
+                <span class="clickable blue-text" ng-click="showOthers=!showOthers"><i class="fa" ng-class="showOthers ? 'fa-minus-square' : 'fa-plus-square'"></i> Additional properties</span>
+                <div ng-show="showOthers">
                 <div class="form-group" data-ng-hide="animeitem.end!=null" ng-class="{ 'has-error' : animeForm.end.$invalid }">
                     <label for="end" class="col-md-2 control-label">End</label>
                     <div class="col-md-6">
                         <input type="date" class="form-control" data-ng-model="animeitem.end" id="end" name="end" placeholder="">
                     </div>
                     <div class="col-md-4">
+                        <a class="btn btn-primary" id="finalNumbers" name="finalNumbers" data-ng-click="finalNumbers = !finalNumbers"  data-ng-hide="animeitem.status===true">Toggle final numbers</a>
 						<span ng-show="animeForm.end.$valid && !animeForm.end.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
 					</div>
-                </div>
-                <div class="form-group">
-                    <label for="status" class="col-md-2 control-label">Completed?</label>
-                    <div class="col-md-6">
-                        <input type="checkbox" class="form-control" data-ng-model="animeitem.status" data-ng-checked="animeitem.end!=null || animeitem.episodes === animeitem.finalEpisode" data-ng-true-value="true" id="status" name="status" disabled>
-                    </div>
-                </div>
-                <div class="form-group text-right" data-ng-hide="animeitem.status===true">
-                    <a class="btn btn-primary" id="finalNumbers" name="finalNumbers" data-ng-click="finalNumbers = !finalNumbers">Toggle final numbers</a>
                 </div>
                 <div class="form-group" ng-show="finalNumbers">
                 <div class="form-group" ng-class="{ 'has-error' : animeForm.finalEpisode.$invalid && !animeForm.finalEpisode.$pristine }">
@@ -101,10 +88,23 @@
                         <input type="number" class="form-control" data-ng-model="animeitem.finalEpisode" id="finalEpisode" name="finalEpisode" placeholder="0">
                     </div>
                     <div class="col-md-4">
+                        <p ng-show="animeForm.finalEpisode.$invalid && !animeForm.finalEpisode.$pristine" class="help-block" >Final episode is a whole number and is required.</p>
                         <!--<p ng-show="isNumber(animeForm.chapters)" class="help-block">Chapter number should be a full number.</p>-->
 						<span ng-show="animeForm.finalEpisode.$valid && !animeForm.finalEpisode.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
 					</div>
                 </div>
+                </div>
+                <div class="form-group">
+                    <label for="status" class="col-md-2 control-label">Completed?</label>
+                    <div class="col-md-6">
+                        <input type="checkbox" class="form-control" data-ng-model="animeitem.status" data-ng-checked="animeitem.end!=null || animeitem.episodes === animeitem.finalEpisode" data-ng-true-value="true" id="status" name="status" disabled>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="disc" class="col-md-2 control-label">Disc?</label>
+                    <div class="col-md-6">
+                        <input type="checkbox" class="form-control" data-ng-model="animeitem.disc" id="disc" name="disc">
+                    </div>
                 </div>
                 <div class="form-group" data-ng-show="animeitem.status==true">
                     <label for="reWatching" class="col-md-2 control-label">Re-watching?</label>
@@ -121,7 +121,8 @@
                         <a class="btn btn-primary" data-ng-click="addTag()" data-ng-disabled="newTag==='' || newTag===null || newTag===undefined">Add Tag</a>
                     </div>
                 </div>
-                <div class="form-group">
+                </div>
+                <div class="form-group mt">
                     <ul class="taskList col-md-12">
                         <li class="tag-bubble col-md-2" ng-repeat="tag in animeitem.tags">
                             {{tag.text}}

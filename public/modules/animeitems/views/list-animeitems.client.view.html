@@ -9,7 +9,7 @@
     </div>
     <div class="col-lg-12 col-md-12 col-sm-12" ng-hide="isList">
         <div class="col-lg-12 col-md-12 col-sm-12 stat-overview">
-            <span class="blue-text">{{(animeitems | filter: {status: false }).length }} watching or dropped</span> - <span class="green-text">{{(animeitems | filter: {status: true }).length }}  completed</span>
+            <span class="blue-text">{{(animeitems | filter: {status: false }).length }} watching</span> - <span class="green-text">{{(animeitems | filter: {status: true }).length }}  completed</span>
         </div><!-- OVERVIEW STATS END -->
         <div class="col-lg-12 col-md-12 col-sm-12 stat-history" ng-init="showHistory = true">
             <div class="stat-header">

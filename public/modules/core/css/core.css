@@ -330,9 +330,9 @@ footer a {
 .add-task-popout {
   position: fixed;
   top: 10vh;
-  left: 17vw;
-  width: 66vw;
-  height: 75vh;
+  left: 20vw;
+  width: 60vw;
+  height: auto;
   border: 5px solid #337ab7;
   margin-top: 10px; 
   background-color: #FFF;
@@ -341,8 +341,6 @@ footer a {
 }
 
 .toggle-add-task {
-/*    float: left;*/
-/*    left: 0;*/
     font-size: 20px;
 }
 

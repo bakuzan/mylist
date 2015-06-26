@@ -8,6 +8,9 @@
         <h1>Manga {{view}}</h1>
     </div>
     <div class="col-lg-12 col-md-12 col-sm-12" ng-hide="isList">
+        <div class="col-lg-12 col-md-12 col-sm-12 stat-overview">
+            <span class="blue-text">{{(mangaitems | filter: {status: false }).length }} reading or dropped</span> - <span class="green-text">{{(mangaitems | filter: {status: true }).length }}  completed</span>
+        </div><!-- OVERVIEW STATS END -->
         <div class="col-lg-12 col-md-12 col-sm-12 stat-history">
             <div class="stat-header">
                 <h3>History</h3>
@@ -230,7 +233,7 @@
         </div>
     </div>
     <div class="list-group col-lg-8 col-md-8 col-sm-8" ng-show="isList">
-        <div data-ng-repeat="mangaitem in mangaitems | orderBy: sortType:sortReverse | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" list_Back="{{trustAsResourceUrl(mangaitem.image)}}" ng-click="viewItem===mangaitem ? viewItem='' : viewItem=mangaitem" class="list-group-item col-lg-12 col-md-12 col-sm-12">
+        <div data-ng-repeat="mangaitem in mangaitems | orderBy: sortType:sortReverse | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" list_Back="{{trustAsResourceUrl(mangaitem.image)}}" ng-click="viewItem===mangaitem ? viewItem='' : viewItem=mangaitem" class="list-group-item clickable col-lg-12 col-md-12 col-sm-12">
 			<small class="list-group-item-text">
                 <time ng-if="mangaitem.latest.substring(0,10)===mangaitem.meta.updated.substring(0,10)" title="{{mangaitem.meta.updated | date: 'yyyy-MMM-dd HH:mm'}}" ng-bind="latestDate(mangaitem.latest, mangaitem.meta.updated)"></time>
                 <time ng-if="mangaitem.latest.substring(0,10)!==mangaitem.meta.updated.substring(0,10)" title="{{mangaitem.latest | date: 'yyyy-MMM-dd'}}" ng-bind="latestDate(mangaitem.latest, mangaitem.meta.updated)"></time>

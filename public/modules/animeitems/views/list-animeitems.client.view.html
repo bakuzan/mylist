@@ -8,15 +8,18 @@
         <h1>Anime {{view}}</h1>
     </div>
     <div class="col-lg-12 col-md-12 col-sm-12" ng-hide="isList">
-        <div class="col-lg-12 col-md-12 col-sm-12 stat-history">
+        <div class="col-lg-12 col-md-12 col-sm-12 stat-overview">
+            <span class="blue-text">{{(animeitems | filter: {status: false }).length }} watching or dropped</span> - <span class="green-text">{{(animeitems | filter: {status: true }).length }}  completed</span>
+        </div><!-- OVERVIEW STATS END -->
+        <div class="col-lg-12 col-md-12 col-sm-12 stat-history" ng-init="showHistory = true">
             <div class="stat-header">
                 <div class="stat-header-label-container">
-                    <h3>History - </h3>
-                    <h3 class="btn stat-header-label" ng-model="historicalView" btn-radio="'month'">Month</h3>
-                    <h3 class="btn stat-header-label" ng-model="historicalView" btn-radio="'season'">Season</h3>
+                    <h3 class="clickable" ng-click="showHistory = !showHistory"><i class="fa" ng-class="showHistory ? 'fa-minus-square' : 'fa-plus-square'"></i> History</h3>
+                    <h3 class="btn stat-header-label" ng-model="historicalView" btn-radio="'month'">by month</h3>
+                    <h3 class="btn stat-header-label" ng-model="historicalView" btn-radio="'season'">by season</h3>
                 </div>
             </div>
-            <table class="col-lg-12 col-md-12 col-sm-12" ng-show="historicalView === 'month'">
+            <table class="col-lg-12 col-md-12 col-sm-12" ng-show="historicalView === 'month' && showHistory">
                 <thead>
                     <tr>
                         <th></th>
@@ -31,7 +34,7 @@
                     </tr>
                 </tbody>
             </table><!-- MONTH HISTORY TABLE END -->
-            <table class="col-lg-12 col-md-12 col-sm-12" ng-show="historicalView === 'season'">
+            <table class="col-lg-12 col-md-12 col-sm-12" ng-show="historicalView === 'season' && showHistory">
                 <thead>
                     <tr>
                         <th class=""></th>
@@ -47,7 +50,7 @@
                 </tbody>
             </table><!-- SEASON HISTORY TABLE END -->
         </div><!-- HISTORY PANEL END -->
-        <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="showDetail">
+        <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="showDetail && showHistory">
             <div class="col-lg-9 col-md-9 col-sm-9 stat-detail">
                 <div class="stat-detail-header">
                     <h3>Anime Completed {{detailMonthName}} {{detailYear}}</h3>
@@ -59,7 +62,7 @@
                 </ul>
             </div>
         </div><!-- MONTH DETAIL PANEL END -->
-        <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="showSeasonDetail">
+        <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="showSeasonDetail && showHistory">
             <div class="col-lg-9 col-md-9 col-sm-9 stat-detail">
                 <div class="stat-detail-header">
                     <h3>Anime Completed {{detailSeasonName}} {{detailSeasonYear}}</h3>
@@ -261,7 +264,7 @@
         </div>
     </div><!-- FILTER SIDEBAR END -->
     <div class="list-group col-lg-8 col-md-8 col-sm-8" ng-show="isList">
-        <div data-ng-repeat="animeitem in animeitems | orderBy: sortType:sortReverse | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" list_Back="{{trustAsResourceUrl(animeitem.image)}}" ng-click="viewItem===animeitem ? viewItem='' : viewItem=animeitem" class="list-group-item col-lg-12 col-md-12 col-sm-12">
+        <div data-ng-repeat="animeitem in animeitems | orderBy: sortType:sortReverse | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" list_Back="{{trustAsResourceUrl(animeitem.image)}}" ng-click="viewItem===animeitem ? viewItem='' : viewItem=animeitem" class="list-group-item clickable col-lg-12 col-md-12 col-sm-12">
 			<small class="list-group-item-text">
 <!--				<span data-ng-bind="animeitem.latest | date:'yyyy-MMM-dd'"></span>-->
                 <time ng-if="animeitem.latest.substring(0,10)===animeitem.meta.updated.substring(0,10)" title="{{animeitem.meta.updated | date: 'yyyy-MMM-dd HH:mm'}}" ng-bind="latestDate(animeitem.latest, animeitem.meta.updated)"></time>

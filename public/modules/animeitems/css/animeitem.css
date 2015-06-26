@@ -23,7 +23,7 @@
 
 .stat-rating-panel {
     margin-top: 10px;
-    border-top: 1px solid #eee;
+/*    border-top: 1px solid #eee;*/
 }
 
 .stat-history {
@@ -54,7 +54,7 @@
 
 .stat-tag-panel {
     margin-top: 10px;
-    border-top: 1px solid #eee;
+/*    border-top: 1px solid #eee;*/
 }
 
 .view-item-detail {
@@ -99,4 +99,18 @@
 
 .stat-season-header {
     width: 24%;
+}
+
+.stat-overview {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.blue-text {
+    color: #337ab7;
+}
+
+.green-text {
+    color: #47a447;
 }

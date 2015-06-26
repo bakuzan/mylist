@@ -244,7 +244,7 @@
         </div>
     </div>
     <div class="list-group col-lg-8 col-md-8 col-sm-8" data-ng-show="isList==='list'">
-        <div data-ng-repeat="character in characters | orderBy: sortType:sortReverse | filter: search | mediaFilter: media | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" character_Back="{{trustAsResourceUrl(character.image)}}" class="list-group-item" ng-class="viewItem===character ? 'col-lg-12 col-md-12 col-sm-12 character-expanded' : ' col-lg-6 col-md-6 col-sm-6 character-default'" ng-click="viewItem===character ? viewItem='' : viewItem=character">
+        <div data-ng-repeat="character in characters | orderBy: sortType:sortReverse | filter: search | mediaFilter: media | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" character_Back="{{trustAsResourceUrl(character.image)}}" class="list-group-item clickable" ng-class="viewItem===character ? 'col-lg-12 col-md-12 col-sm-12 character-expanded' : ' col-lg-6 col-md-6 col-sm-6 character-default'" ng-click="viewItem===character ? viewItem='' : viewItem=character">
 			<h4 class="dark-bordered-font-heading" data-ng-bind="character.name"></h4>
             <p class="list-group-item-text">
                 <span class="dark-bordered-font" data-ng-bind="character.voice"></span>
@@ -253,7 +253,7 @@
             <span class="dark-bordered-font" data-ng-show="character.anime!==undefined && character.manga===null" data-ng-bind="character.anime.title"></span>
             <div class="view-item-detail" ng-if="viewItem===character">
                 <div class="col-lg-12 col-md-12 col-sm-12 item-tags">
-                    <span class="tag-bubble" ng-repeat="tag in character.tags">{{tag.text}}</span>
+                    <span class="col-md-2 tag-bubble" ng-repeat="tag in character.tags">{{tag.text}}</span>
                 </div>
                 <div class="item-actions" data-ng-show="((authentication.user) && (authentication.user._id == character.user._id))">
                     <a class="btn btn-success" href="/#!/characters/{{character._id}}">

@@ -1,8 +1,8 @@
 'use strict';
 
 // Mangaitems controller
-angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'moment',
-	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, moment) {
+angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService',
+	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -328,31 +328,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         
         //latest date display format.
         $scope.latestDate = function(latest, updated) {
-//          console.log(latest, updated);
-            var today = moment(new Date());
-            var latestDate, diff;
-            if (latest.substring(0,10)===updated.substring(0,10)) {
-                 latestDate = moment(updated);
-                 diff = latestDate.fromNow();
-                
-                if (diff==='a day ago') {
-                    return 'Yesterday';
-                } else {
-                    return diff;
-                }
-            } else {
-                 latestDate = moment(latest);
-                 diff = today.diff(latestDate, 'days');
-                
-                //for 0 and 1 day(s) ago use the special term.
-                if (diff===0) {
-                    return 'Today';
-                } else if (diff===1) {
-                    return 'Yesterday';
-                } else {
-                    return diff + ' days ago.';
-                }
-            }
+            return ItemService.latestDate(latest, updated);
         };
 	}
 ]);

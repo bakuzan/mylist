@@ -193,6 +193,10 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         if ($scope.newTaskDate === null || $scope.newTaskDate === '' || $scope.newTaskDate === undefined) {
             $scope.newTaskDate = $scope.today.toISOString().substring(0,10); // 'yyyy-MM-dd'
         }
+        //not allowed to be tied to a day if a daily task -- daily takes precedence.
+        if ($scope.newTaskDaily === true) {
+            $scope.newTaskDay.name = 'Any';
+        }
         
         //if created on a monday set updated=true - without this task could be deleted/un-completed by the check status method.
         var day = $scope.today.getDay(); //new Date('2015-05-04').getDay();

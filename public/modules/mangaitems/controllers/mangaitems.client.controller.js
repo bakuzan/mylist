@@ -35,8 +35,8 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         $scope.averageMangaRating = 0; //average rating for anime.
         $scope.maxCompleteMonth = 0; //used to find the max number of ends in 1 month.
         $scope.showDetail = false; //show month detail.
-        $scope.statTagSortType = 'tag'; //stat tag sort
-        $scope.statTagSortReverse = false; //stat tag sort direction.
+        $scope.statTagSortType = 'count'; //stat tag sort
+        $scope.statTagSortReverse = true; //stat tag sort direction.
 //        $scope.sortType = 'latest'; //default sort type
         $scope.sortOptions = [
             { v: 'title', n: 'Title' },{ v: 'chapters', n: 'Chapters' },{ v: 'volumes', n: 'Volumes' },{ v: 'start', n: 'Start date' },
@@ -144,6 +144,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                 $scope.maxCompleteMonth = maxCount;
                 
                 var add = true;
+                var checkedRating;
                 //is tag in array?
                 angular.forEach($scope.mangaitems, function(manga) { 
                     if (manga.tags.length===0) {
@@ -153,14 +154,16 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                         for(var i=0; i < $scope.statTags.length; i++) {
                             if ($scope.statTags[i].tag===tag.text) {
                                 add = false;
-                                    $scope.statTags[i].count += 1; 
+                                    $scope.statTags[i].count += 1;
+                                    $scope.statTags[i].ratedCount += manga.rating === 0 ? 0 : 1;
                                     $scope.statTags[i].ratingAdded += manga.rating;
-                                    $scope.statTags[i].ratingAvg = $scope.statTags[i].ratingAdded / $scope.statTags[i].count;
+                                    $scope.statTags[i].ratingAvg = $scope.statTags[i].ratingAdded === 0 ? 0 : $scope.statTags[i].ratingAdded / $scope.statTags[i].ratedCount;
                             }
                         }
                         // add if not in
                         if (add===true) {
-                            $scope.statTags.push({ tag: tag.text, count: 1, ratingAdded: manga.rating, ratingAvg: manga.rating });
+                            checkedRating = manga.rating === 0 ? 0 : 1;
+                            $scope.statTags.push({ tag: tag.text, count: 1, ratedCount: checkedRating, ratingAdded: manga.rating, ratingAvg: manga.rating });
                         }
                         add = true; //reset add status.
                     });

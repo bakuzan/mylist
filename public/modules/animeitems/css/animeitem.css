@@ -114,3 +114,7 @@
 .green-text {
     color: #47a447;
 }
+
+.padded-medium {
+    padding: 10px;
+}

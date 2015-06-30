@@ -27,7 +27,8 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             return numPages;
         };
         
-        $scope.itemUpdate = new Date().toISOString().substring(0,10); //today's date as 'yyyy-MM-dd'
+        //today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
+        $scope.itemUpdate = new Date().toISOString().substring(0,10);
         $scope.view = 'list'; //dynamic page title.
         $scope.historicalView = 'month'; //default historical view in stats.
         $scope.isList = true; //list view as default.
@@ -154,7 +155,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 var modeMap = {};
                 var maxCount = 0;
                 for(var i = 0; i < $scope.animeitems.length; i++) {
-    	           if ($scope.animeitems[i].end!==undefined) {
+    	           if ($scope.animeitems[i].end!==undefined && $scope.animeitems[i].end!==null) {
                         var end = $scope.animeitems[i].end.substring(0,7);
 
     	               if(modeMap[end] === null || modeMap[end] === undefined) {
@@ -279,7 +280,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		// Update existing Animeitem
 		$scope.update = function() {
 			var animeitem = $scope.animeitem;
-
+//            console.log(animeitem);
             //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
             if ($scope.animeitem.manga!==null && $scope.animeitem.manga!==undefined) {
                 animeitem.manga = $scope.animeitem.manga._id;
@@ -302,12 +303,18 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                     animeitem.end = animeitem.latest.substring(0,10);
 //                    console.log(animeitem.end);
                 }
+            } else {
+                //in the event the 'complete-ness' of an entry needs to be undone.
+                //this will undo the end date.
+                animeitem.end = null;
+//                console.log(animeitem.end);
             }
             
             //handle status: completed.
-            if(animeitem.end!==undefined) {
+            if(animeitem.end!==undefined && animeitem.end!==null) {
                 animeitem.status = true;
             } else {
+                //if no end date, not complete.
                 animeitem.status = false;
             }
             

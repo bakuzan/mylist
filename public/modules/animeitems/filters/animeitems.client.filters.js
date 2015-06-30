@@ -23,7 +23,7 @@ angular.module('animeitems').filter('startFrom', function() {
     return function(array, year, month) {
         return array.filter(function(item) {
         //ended stat month filter
-                if (item.end!==undefined) {
+                if (item.end!==undefined && item.end!==null) {
                     if (item.end.substring(0,4)===year) {
                         if (item.end.substr(5,2)===month) {
                             return item;
@@ -37,7 +37,7 @@ angular.module('animeitems').filter('startFrom', function() {
     return function(array, year, month) {
         return array.filter(function(item) {
         //ended stat season filter
-                if (item.end!==undefined) {
+                if (item.end!==undefined && item.end!==null) {
                     /**
                      *  Can currently handle shows of 1 or 2 seasons with 'standard' lengths (10-13) / (22-26) that
                      *  start and finish in the 'normal' season months (J-M,A-J,J-S,O-D) / (J-J,A-S,J-D,O-M).

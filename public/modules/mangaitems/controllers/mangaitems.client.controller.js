@@ -27,7 +27,8 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             return numPages;
         };
         
-        $scope.itemUpdate = new Date().toISOString().substring(0,10); //today's date as 'yyyy-MM-dd'
+        //today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
+        $scope.itemUpdate = new Date().toISOString().substring(0,10);
         $scope.view = 'list'; //dynamic page title.
         $scope.isList = true; //list view as default.
         $scope.maxMangaCount = 0; //number of anime.

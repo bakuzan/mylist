@@ -196,15 +196,6 @@
 		      <i class="fa fa-sort"></i>
           </div>
             <select class="form-control" ng-model="sortType" ng-init="sortType = sortOptions[4].v" ng-options="so.v as so.n for so in sortOptions">
-                <!--
-                        <option value="">-- choose sort type --</option>
-                        <option value="title">Title</option>
-                        <option value="episodes">Episodes</option>
-                        <option value="start">Start Date</option>
-                        <option value="end">End Date</option>
-                        <option value="latest,meta.updated">Latest</option>
-                        <option value="rating">Rating</option>
--->
             </select>
         </div>
         <br/>
@@ -295,7 +286,7 @@
                 <div class="item-dates">
                     <small>
                         <span data-ng-bind="animeitem.start | date:'yyyy-MMM-dd'"></span> started.<br/>
-                        <span ng-if="animeitem.end!==undefined">{{animeitem.end | date:'yyyy-MMM-dd'}} ended.</span>
+                        <span ng-if="animeitem.end!==undefined && animeitem.end!==null">{{animeitem.end | date:'yyyy-MMM-dd'}} ended.</span>
                     </small>
                 </div>
                 <div class="item-actions" data-ng-show="((authentication.user) && (authentication.user._id == animeitem.user._id))">

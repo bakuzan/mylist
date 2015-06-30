@@ -126,7 +126,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                 var modeMap = {};
                 var maxCount = 0;
                 for(var i = 0; i < $scope.mangaitems.length; i++) {
-    	           if ($scope.mangaitems[i].end!==undefined) {
+    	           if ($scope.mangaitems[i].end!==undefined && $scope.mangaitems[i].end!==null) {
                         var end = $scope.mangaitems[i].end.substring(0,7);
 
     	               if(modeMap[end] === null || modeMap[end] === undefined) {
@@ -274,15 +274,17 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             //console.log(mangaitem.image);
             
             //handle end date
-            if (mangaitem.chapters===mangaitem.finalChapter && mangaitem.volumes===mangaitem.finalVolume) {
+            if (mangaitem.chapters===mangaitem.finalChapter && mangaitem.volumes===mangaitem.finalVolume && mangaitem.finalChapter!==0) {
                 if (mangaitem.end===undefined) {
                     mangaitem.end = mangaitem.latest.substring(0,10);
                     //console.log(animeitem.end);
                 }
+            } else {
+                mangaitem.end = null;
             }
             
             //handle status: completed.
-            if(mangaitem.end!==undefined) {
+            if(mangaitem.end!==undefined && mangaitem.end!==null) {
                 mangaitem.status = true;
             } else {
                 mangaitem.status = false;

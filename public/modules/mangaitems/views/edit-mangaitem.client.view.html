@@ -18,7 +18,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : mangaForm.chapters.$invalid && !mangaForm.chapters.$pristine }">
                     <label for="chapters" class="col-md-2 control-label">Chapters</label>
                     <div class="col-md-6">
-                        <input type="number" class="form-control" data-ng-model="mangaitem.chapters" ng-change="mangaitem.latest=itemUpdate" id="chapters" name="chapters" placeholder="0" required>
+                        <input type="number" class="form-control" data-ng-model="mangaitem.chapters" min="0" ng-change="mangaitem.latest=itemUpdate; mangaitem.chapters === mangaitem.finalChapter && mangaitem.finalChapter!=0 && mangaitem.reReading===false ? mangaitem.end=itemUpdate : ''; mangaitem.chapters > mangaitem.finalChapter && mangaitem.finalChapter!=0 ? mangaitem.chapters=mangaitem.finalChapter : ''" id="chapters" name="chapters" placeholder="0" required>
                     </div>
                     <div class="col-md-4">
 						<p ng-show="mangaForm.chapters.$invalid && !mangaForm.chapters.$pristine" class="help-block" >Chapters is a whole number and is required.</p>
@@ -28,18 +28,12 @@
                 <div class="form-group" ng-class="{ 'has-error' : mangaForm.volumes.$invalid && !mangaForm.volumes.$pristine }">
                     <label for="volumes" class="col-md-2 control-label">Volumes</label>
                     <div class="col-md-6">
-                        <input type="number" class="form-control" data-ng-model="mangaitem.volumes" id="volumes" name="volumes" placeholder="0" required>
+                        <input type="number" class="form-control" data-ng-model="mangaitem.volumes" min="0" ng-change="mangaitem.volumes > mangaitem.finalVolume && mangaitem.finalVolume!=0 ? mangaitem.volumes=mangaitem.finalVolume : ''" id="volumes" name="volumes" placeholder="0" required>
                     </div>
                     <div class="col-md-4">
 						<p ng-show="mangaForm.volumes.$invalid && !mangaForm.volumes.$pristine" class="help-block" >Volumes is a whole number and is required.</p>
 						<span ng-show="mangaForm.volumes.$valid" class="glyphicon glyphicon-ok" style="color: green;"></span>
 					</div>
-                </div>
-                <div class="form-group" style="display: none;">
-                    <label for="start" class="col-md-2 control-label">Start</label>
-                    <div class="col-md-6">
-                        <input type="text" class="form-control" data-ng-model="mangaitem.start" id="start" placeholder="" required disabled>
-                    </div>
                 </div>
                 <div class="form-group" ng-class="{ 'has-error' : mangaForm.latest.$invalid }">
                     <label for="latest" class="col-md-2 control-label">Latest</label>
@@ -51,6 +45,14 @@
 						<span ng-show="mangaForm.latest.$valid && !mangaForm.latest.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
 					</div>
                 </div>
+                <div class="form-group">
+                    <label for="status" class="col-md-2 control-label">Completed?</label>
+                    <div class="col-md-6">
+                        <input type="checkbox" class="form-control" data-ng-model="mangaitem.status" data-ng-checked="mangaitem.chapters===mangaitem.finalChapter && mangaitem.volumes===mangaitem.finalVolume && mangaitem.finalChapter!==0 || mangaitem.end!==null && mangaitem.reReading===true" data-ng-true-value="true" id="status" name="status" disabled>
+                    </div>
+                </div>
+                <p class="clickable blue-text" ng-init="showAdditionals = false" ng-click="showAdditionals=!showAdditionals"><i class="fa" ng-class="showAdditionals ? 'fa-minus-square' : 'fa-plus-square'"></i> Additional properties</p>
+                <div ng-show="showAdditionals">
                 <div class="form-group">
                     <label for="rating" class="col-md-2 control-label">Rating</label>
                     <div class="col-md-6">
@@ -79,20 +81,25 @@
 						<span ng-show="mangaForm.anime.$valid && !mangaForm.anime.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
 					</div>
                 </div>
-                <span class="clickable blue-text" ng-click="showOthers=!showOthers"><i class="fa" ng-class="showOthers ? 'fa-minus-square' : 'fa-plus-square'"></i> Additional properties</span>
+                <div class="form-group">
+                    <label for="hardcopy" class="col-md-2 control-label">Hardcopy?</label>
+                    <div class="col-md-6">
+                        <input type="checkbox" class="form-control" data-ng-model="mangaitem.hardcopy" id="hardcopy" name="hardcopy">
+                    </div>
+                </div>
+                </div>
+                <p class="clickable blue-text" ng-init="showOthers = false" ng-click="showOthers=!showOthers"><i class="fa" ng-class="showOthers ? 'fa-minus-square' : 'fa-plus-square'"></i> Completion properties</p>
                 <div ng-show="showOthers">
-                <div class="form-group" data-ng-hide="mangaitem.end!=null" ng-class="{ 'has-error' : mangaForm.end.$invalid }">
+                <div class="form-group" ng-class="{ 'has-error' : mangaForm.end.$invalid }">
                     <label for="end" class="col-md-2 control-label">End</label>
                     <div class="col-md-6">
                         <input type="date" class="form-control" data-ng-model="mangaitem.end" id="end" name="end" placeholder="">
                     </div>
                     <div class="col-md-4">
-                        <a class="btn btn-primary" id="finalNumbers" name="finalNumbers" data-ng-click="finalNumbers = !finalNumbers" data-ng-hide="mangaitem.status===true">Toggle final numbers</a>
 						<span ng-show="mangaForm.end.$valid && !mangaForm.end.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
 					</div>
                 </div>
-                <div class="form-group" data-ng-show="finalNumbers">
-                <div class="form-group" ng-class="{ 'has-error' : mangaForm.finalChapter.$invalid && !mangaForm.finalChapter.$pristine }">
+                <div class="form-group" ng-class="{ 'has-error' : mangaForm.finalChapter.$invalid && !mangaForm.finalChapter.$pristine }" ng-hide="mangaitem.end!=null && mangaitem.chapters===mangaitem.finalChapter || mangaitem.end!=null && mangaitem.reReading===true ">
                     <label for="finalChapter" class="col-md-2 control-label">Final chapter</label>
                     <div class="col-md-6">
                         <input type="number" class="form-control" data-ng-model="mangaitem.finalChapter" id="finalChapter" name="finalChapter" placeholder="0">
@@ -102,7 +109,7 @@
 						<span ng-show="mangaForm.finalChapter.$valid && !mangaForm.finalChapter.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
 					</div>
                 </div>
-                <div class="form-group" ng-class="{ 'has-error' : mangaForm.finalVolume.$invalid && !mangaForm.finalVolume.$pristine }">
+                <div class="form-group" ng-class="{ 'has-error' : mangaForm.finalVolume.$invalid && !mangaForm.finalVolume.$pristine }" ng-hide="mangaitem.end!=null && mangaitem.volumes===mangaitem.finalVolume || mangaitem.end!=null && mangaitem.reReading===true ">
                     <label for="finalVolume" class="col-md-2 control-label">Final volume</label>
                     <div class="col-md-6">
                         <input type="number" class="form-control" data-ng-model="mangaitem.finalVolume" id="finalVolume" name="finalVolume" placeholder="0">
@@ -112,25 +119,15 @@
 						<span ng-show="mangaForm.finalVolume.$valid && !mangaForm.finalVolume.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
 					</div>
                 </div>
-                </div>
-                <div class="form-group">
-                    <label for="status" class="col-md-2 control-label">Completed?</label>
-                    <div class="col-md-6">
-                        <input type="checkbox" class="form-control" data-ng-model="mangaitem.status" data-ng-checked="mangaitem.end!=null || mangaitem.chapters===mangaitem.finalChapter && mangaitem.volumes===mangaitem.finalVolume" data-ng-true-value="true" id="status" name="status" disabled>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="hardcopy" class="col-md-2 control-label">Hardcopy?</label>
-                    <div class="col-md-6">
-                        <input type="checkbox" class="form-control" data-ng-model="mangaitem.hardcopy" id="hardcopy" name="hardcopy">
-                    </div>
-                </div>
                 <div class="form-group" data-ng-show="mangaitem.status==true">
                     <label for="reReading" class="col-md-2 control-label">Re-reading?</label>
                     <div class="col-md-6">
                         <input type="checkbox" class="form-control" data-ng-model="mangaitem.reReading" data-ng-disabled="mangaitem.reReading" data-ng-change="mangaitem.chapters=0; mangaitem.volumes=0" id="reReading" name="reReading">
                     </div>
                 </div>
+                </div>
+                <p class="clickable blue-text" ng-init="showItemTags = false" ng-click="showItemTags=!showItemTags"><i class="fa" ng-class="showItemTags ? 'fa-minus-square' : 'fa-plus-square'"></i> Tag properties</p>
+                <div ng-show="showItemTags">
                 <div class="form-group" ng-class="{ 'has-error' : mangaForm.tags.$invalid && !mangaForm.tags.$pristine }">
                     <label for="tags" class="col-md-2 control-label">Tags</label>
                     <div class="col-md-6">
@@ -139,7 +136,6 @@
                     <div class="col-md-4 form-group">
                         <a class="btn btn-primary" data-ng-click="addTag()" data-ng-disabled="newTag==='' || newTag===null || newTag===undefined">Add Tag</a>
                     </div>
-                </div>
                 </div>
                 <div class="form-group mt">
                     <ul class="taskList col-md-12">
@@ -157,7 +153,8 @@
                         </li>
                     </ul>
                 </div>
-                <div class="form-group">
+                </div>
+                <div class="form-group padded-medium">
                     <input type="submit" value="Update" class="btn btn-default" ng-disabled="mangaForm.$invalid">&nbsp; - &nbsp;<a href="/#!/mangaitems">Back</a>
                 </div>
 				<div data-ng-show="error" class="text-danger">

@@ -39,7 +39,7 @@
                 <div class="form-group">
                     <label for="status" class="col-md-2 control-label">Completed?</label>
                     <div class="col-md-6">
-                        <input type="checkbox" class="form-control" data-ng-model="animeitem.status" data-ng-checked="animeitem.end!=null || animeitem.episodes === animeitem.finalEpisode && animeitem.finalEpisode!=0" data-ng-true-value="true" id="status" name="status" disabled>
+                        <input type="checkbox" class="form-control" data-ng-model="animeitem.status" data-ng-checked="animeitem.episodes === animeitem.finalEpisode && animeitem.finalEpisode!=0 || animeitem.end!==null && animeitem.reWatching===true" data-ng-true-value="true" id="status" name="status" disabled>
                     </div>
                 </div>
                 <p class="clickable blue-text" ng-init="showAdditionals = false" ng-click="showAdditionals=!showAdditionals"><i class="fa" ng-class="showAdditionals ? 'fa-minus-square' : 'fa-plus-square'"></i> Additional properties</p>

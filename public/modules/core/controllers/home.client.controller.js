@@ -85,7 +85,7 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
 //            console.log('day: ' + day);
 //            console.log('date: ' + $scope.today.getDate());
 //            console.log('diff: ' + diff);
-              console.log('wk-end: ' + currentWkEnd); // 0123-56-89
+//              console.log('wk-end: ' + currentWkEnd); // 0123-56-89
 
         if ($scope.datesSelected==='current') {
             if (item.date.substr(0,4) < currentWkEnd.substr(0,4)) {
@@ -127,7 +127,7 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         //var day = new Date('2015-05-04').getDay();
         var day = $scope.today.getDay();
         //console.log(day);
-        console.log($scope.taskItem);
+//        console.log($scope.taskItem);
         //Is it monday?
         if (day===1) {
             var refreshItems = $scope.taskItem;
@@ -140,11 +140,11 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
                             taskItem.complete = false;
                             taskItem.updated = true;
                             $scope.taskItem.push(taskItem);
-                            console.log('updated set to true');
+//                            console.log('updated set to true');
                         }
                     } else {
                         $scope.taskItem.push(taskItem);
-                        console.log('updated already true');
+//                        console.log('updated already true');
                     }
             });
             localStorage.setItem('taskItems', JSON.stringify($scope.taskItem)); 
@@ -177,7 +177,7 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
                         $scope.taskItem.push(taskItem);
                     }
                 });
-            console.log('updated set to false');
+//            console.log('updated set to false');
             localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
         }
     };
@@ -270,22 +270,6 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         });
         return count;
     };
-        
-//    $scope.buildRecent = function() {
-//        $scope.recentUpdates = [];
-//        $scope.animeitems = Animeitems.query();
-//        //console.log($scope.animeitems);
-//        $scope.mangaitems = Mangaitems.query();
-//        //console.log($scope.mangaitems);
-//        
-//        var animelist = $scope.animeitems;
-//        var mangalist = $scope.mangaitems; 
-//        angular.forEach($scope.animeitems, function(item) {
-//            $scope.recentUpdates.push(item);
-//        });
-//        console.log($scope.recentUpdates);
-//    };
-
 
 	}
 ]);

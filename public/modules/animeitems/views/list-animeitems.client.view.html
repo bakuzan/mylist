@@ -123,16 +123,16 @@
                                 <i ng-show="statTagSortType == 'count'" class="fa" ng-class="statTagSortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                             </td>
                             <td class="text-right">
-                                <a href="" ng-click="statTagSortType = 'ratedCount'; statTagSortReverse = !statTagSortReverse ">
-					               Rated count
-					            </a>
-                                <i ng-show="statTagSortType == 'ratedCount'" class="fa" ng-class="statTagSortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
-                            </td>
-                            <td class="text-right">
                                 <a href="" ng-click="statTagSortType = 'ratingAvg'; statTagSortReverse = !statTagSortReverse ">
 					               Rating (Avg.)
 					            </a>
                                 <i ng-show="statTagSortType == 'ratingAvg'" class="fa" ng-class="statTagSortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                            </td>
+                            <td class="text-right">
+                                <a href="" ng-click="statTagSortType = 'ratingWeighted'; statTagSortReverse = !statTagSortReverse ">
+					               Rating (WAvg.)
+					            </a>
+                                <i ng-show="statTagSortType == 'ratingWeighted'" class="fa" ng-class="statTagSortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                             </td>
                         </tr>
                     </thead>
@@ -141,8 +141,8 @@
                             <td class="text-right">{{$index+1}}</td>
                             <td>{{stat.tag}}</td>
                             <td class="text-right">{{stat.count}}</td>
-                            <td class="text-right">{{stat.ratedCount}}</td>
                             <td class="text-right">{{stat.ratingAvg | number: 2}}</td>
+                            <td class="text-right">{{stat.ratingWeighted | number: 2}}</td>
                         </tr>
                     </tbody>
                 </table>

@@ -190,17 +190,6 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         });
         localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
     };
-        
-    $scope.remaining = function() {
-        var count = 0;
-        var dateFilter = $filter('dateFilter');
-        angular.forEach($scope.taskItem, function(taskItem) {
-            if (dateFilter(taskItem)) {
-                count += taskItem.complete ? 0 : 1;
-            }
-        });
-        return count;
-    };
 
 	}
 ]);

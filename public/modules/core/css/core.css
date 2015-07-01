@@ -99,10 +99,11 @@
 .taskList {
     list-style: none;
     padding: 0 20px;
+    border-top: 1px solid #e5e5e5;
 }
 
 .taskItem {
-    border-top: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
     padding: 15px 0;
     color: #777;
     font-weight: 600;
@@ -348,3 +349,4 @@ footer a {
 .btn-primary.ng-valid.ng-dirty {
     border-color: #245580;
 }
+

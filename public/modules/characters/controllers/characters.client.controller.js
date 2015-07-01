@@ -298,7 +298,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             if ($scope.character.manga!==null && $scope.character.manga!==undefined) {
                 character.manga = $scope.character.manga._id;
             }
-            console.log($scope.character.anime);
+//            console.log($scope.character.anime);
             if ($scope.character.anime!==null && $scope.character.anime!==undefined) {
                 character.anime = $scope.character.anime._id;
             }
@@ -330,7 +330,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 			$scope.character = Characters.get({ 
 				characterId: $stateParams.characterId
 			});
-            console.log($scope.character);
+//            console.log($scope.character);
 		};
         
         // Find a list of Animeitems

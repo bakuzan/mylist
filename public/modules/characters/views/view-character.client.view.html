@@ -17,8 +17,8 @@
                     </a>
 	            </div>
                 <h1 data-ng-bind="character.name"></h1>
-                <p><span><b>Anime: </b></span><a data-ng-show="character.anime!==undefined" href="/#!/animeitems/{{character.anime._id}}">{{character.anime.title}}</a></p>
-                <p><span><b>Manga: </b></span><a data-ng-show="character.manga!==undefined" href="/#!/mangaitems/{{character.manga._id}}">{{character.manga.title}}</a></p>
+                <p data-ng-show="character.anime!==undefined"><span><b>Anime: </b></span><a href="/#!/animeitems/{{character.anime._id}}">{{character.anime.title}}</a></p>
+                <p data-ng-show="character.manga!==undefined"><span><b>Manga: </b></span><a href="/#!/mangaitems/{{character.manga._id}}">{{character.manga.title}}</a></p>
                 <p><span><b>VA: </b></span><span data-ng-bind="character.voice"></span></p>
             </div>
         </div>

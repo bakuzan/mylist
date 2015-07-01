@@ -1,10 +1,9 @@
 <section data-ng-controller="HomeController" data-ng-show="authentication.user" data-ng-init="checkStatus();" class="site-wrap" ng-class="{ 'show-nav' : isAddTask }">
     <div class="col-lg-12 col-md-12 col-sm-12 add-task-popout" ng-show="isAddTask">
             <a class="list-group-item collapse-bar mt" data-ng-click="isAddTask=!isAddTask"><i class="fa fa-minus-square"></i> Hide add task</a>
-            <div class="col-md-12">
+            <div class="col-md-12 mt">
             <form name="scheduleForm" class="form-horizontal" novalidate>
                 <fieldset>
-                    <br/>
                 <div class="form-group">
                     <label for="description" class="col-md-2 control-label">Description</label>
                     <div class="col-md-8">
@@ -60,8 +59,7 @@
 	<div class="row col-lg-12 col-md-12 col-sm-12 push-wrap">
         <h3>Week Beginning {{weekBeginning() | date: 'dd MMMM yyyy'}}</h3>
 	</div>
-    <div class="col-lg-4 col-md-4 col-sm-4 push-wrap">
-    <br/>
+    <div class="col-lg-4 col-md-4 col-sm-4 mt push-wrap">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <a class="list-group-item collapse-bar" ng-click="isAddTask=!isAddTask"><i class="fa fa-plus-square"></i> Add task</a>
         <a class="list-group-item collapse-bar" data-ng-click="isCollapseFilter=!isCollapseFilter">Filters</a>
@@ -71,17 +69,21 @@
 		        <div class="input-group-addon">
 		          <i class="fa fa-list-ol"></i>
                 </div>
-                <input type="text" class="form-control" value="{{ remaining() }} remaining of {{ (taskItem | filter: dateFilter).length }} total." disabled>
+                <input type="text" class="form-control" value="Showing {{ filteredTasks.length }} tasks." disabled>
             </div>
-            <br/>
-            <div class="col-lg-12 col-md-12 col-sm-12 input-group">
+            <div class="col-lg-12 col-md-12 col-sm-12 mt input-group">
+                <div class="input-group-addon">
+                  <i class="fa fa-check-square"></i>
+                </div>
+                <input type="text" class="form-control" value="{{ (taskItem | filter: {complete: false } | dateFilter: 'current').length }} remaining of {{ (taskItem | dateFilter: 'current').length }} current tasks." disabled>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 mt input-group">
                 <div class="input-group-addon">
                     <i class="fa fa-search"></i>
                 </div>
                 <input type="text" class="form-control" placeholder="search tasks" ng-model="search.description">
             </div><!-- search.description -->
-            <br/>
-            <div class="col-lg-12 col-md-12 col-sm-12 input-group">
+            <div class="col-lg-12 col-md-12 col-sm-12 mt input-group">
 		       <div class="input-group-addon">
 		          <i class="fa fa-check"></i>
                 </div>
@@ -91,10 +93,9 @@
                         <option value="true">Completed</option>
                 </select>
             </div><!-- search.complete -->
-            <br/>
-            <div class="col-lg-12 col-md-12 col-sm-12 input-group">
+            <div class="col-lg-12 col-md-12 col-sm-12 mt input-group">
 		       <div class="input-group-addon">
-		          <i class="fa fa-calendar"></i>
+		          <i class="fa fa-calendar-o"></i>
                 </div>
                 <select class="form-control" ng-model="daySelected">
                     <option value="">All</option>
@@ -108,10 +109,9 @@
                     <option value="0">Sunday</option>
                 </select>
             </div><!-- search.days -->
-            <br/>
-            <div class="col-lg-12 col-md-12 col-sm-12 input-group">
+            <div class="col-lg-12 col-md-12 col-sm-12 mt input-group">
 		       <div class="input-group-addon">
-		          <i class="fa fa-calendar"></i>
+		          <i class="fa fa-calendar-o"></i>
                 </div>
                 <select class="form-control" ng-model="datesSelected">
                     <option value="current">Current</option>
@@ -119,19 +119,15 @@
                 </select>
             </div><!-- search.days -->
         </div><!-- collapse FILTERS -->
-        <br/>
     </div><!-- col-md-12 FILTERS -->
     </div><!-- col-md-6 ACTIONS+FILTERS -->
-    <br/>
-    <div class="row col-lg-8 col-md-8 col-sm-8 push-wrap">
-        <br/>
-            <ul  class="taskList col-lg-12 col-md-12 col-sm-12">
-                <li class="taskItem" ng-repeat="taskItem in (taskItem | filter: search | filter: dayFilter | filter: dateFilter) track by $index" ng-model="taskItem"><input type="checkbox" class="taskCheckbox" ng-model="taskItem.complete" ng-change="save(taskItem.description)" ng-disabled="taskItem.complete">
+    <div class="row col-lg-8 col-md-8 col-sm-8 mt push-wrap">
+            <ul class="taskList col-lg-12 col-md-12 col-sm-12">
+                <li class="taskItem" ng-repeat="taskItem in (filteredTasks = (taskItem | filter: search | dayFilter: daySelected | dateFilter: datesSelected)) track by $index" ng-model="taskItem"><input type="checkbox" class="taskCheckbox" ng-model="taskItem.complete" ng-change="save(taskItem.description)" ng-disabled="taskItem.complete">
                     <span class="complete-{{taskItem.complete}}">{{taskItem.description}}</span> - <span class="complete-{{taskItem.complete}}">{{taskItem.completeTimes}}/{{taskItem.repeat}}</span>
                     <span class="category-{{taskItem.category}}">{{taskItem.category}}</span><a class="clickable" aria-hidden="true" ng-click="deleteTask(taskItem.description)"><i class="fa fa-trash-o" style="color: red;"></i></a>
                     <strong class="taskDate complete-{{taskItem.complete}}"><i class="fa fa-calendar" popover="{{taskItem.date}}" popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true"></i><span ng-hide="taskItem.daily">{{taskItem.day}}</span><span ng-show="taskItem.daily" class="complete-{{taskItem.complete}}">DAILY</span></strong><!--<span class="taskDate complete-{{taskItem.complete}}">{{taskItem.date}}</span>-->
                 </li>
-                <hr/>
             </ul>
     </div><!-- TASK ROW -->
 </section>

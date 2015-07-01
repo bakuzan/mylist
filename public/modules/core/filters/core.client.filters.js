@@ -4,7 +4,7 @@ angular.module('core').filter('dayFilter', function() {
     return function(array, daySelected) {
         return array.filter(function(item) {
             //special day filter
-            console.log(item);
+//            console.log(item);
             var ds = daySelected;
             if (ds==='1' && item.day==='Monday') {
                 return item;
@@ -47,7 +47,7 @@ angular.module('core').filter('dayFilter', function() {
 //            console.log('day: ' + day);
 //            console.log('date: ' + $scope.today.getDate());
 //            console.log('diff: ' + diff);
-              console.log('wk-end: ' + currentWkEnd); // 0123-56-89
+//              console.log('wk-end: ' + currentWkEnd); // 0123-56-89
 
             if (datesSelected==='current') {
                 if (item.date.substr(0,4) < currentWkEnd.substr(0,4)) {

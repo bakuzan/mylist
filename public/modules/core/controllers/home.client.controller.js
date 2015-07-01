@@ -1,8 +1,8 @@
 'use strict';
 
 
-angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Authentication', '$window', '$location', 'Animeitems', 'Mangaitems',
-	function($scope, $rootScope, Authentication, $window, $location, Animeitems, Mangaitems) {
+angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Authentication', '$window', '$location', 'Animeitems', 'Mangaitems', '$filter',
+	function($scope, $rootScope, Authentication, $window, $location, Animeitems, Mangaitems, $filter) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
         
@@ -43,76 +43,6 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         {name: 'Sunday'}
     ];
     $scope.newTaskDay = $scope.days;
-    
-    //special day filter
-    $scope.dayFilter = function(item) {
-        var ds = $scope.daySelected;
-        if (ds==='1' && item.day==='Monday') {
-                return item;
-        } else if (ds==='2' && item.day==='Tuesday') {
-                return item;
-        } else if (ds==='3' && item.day==='Wednesday') {
-                return item;
-        } else if (ds==='4' && item.day==='Thursday') {
-                return item;
-        } else if (ds==='5' && item.day==='Friday') {
-                return item;
-        } else if (ds==='6' && item.day==='Saturday') {
-                return item;
-        } else if (ds==='0' && item.day==='Sunday') {
-                return item;
-        } else if (ds==='' || ds===null || ds===undefined) {
-                return item;
-        } else if (ds==='Any' && item.day==='Any') {
-                return item;
-        }
-    };
-        
-    //date filter
-    $scope.dateFilter = function(item) {
-        if (item.date===null || item.date===undefined) {
-            if ($scope.datesSelected==='current') {
-                return item;
-            }
-            return false;
-        }
-            //console.log(item.date);
-            var day = $scope.today.getDay(),
-            diff = $scope.today.getDate() - day + (day === 0 ? 0:7);
-            var temp = new Date();
-            var wkEnd = new Date(temp.setDate(diff));
-            var currentWkEnd = wkEnd.toISOString().substring(0,10);
-//            console.log('day: ' + day);
-//            console.log('date: ' + $scope.today.getDate());
-//            console.log('diff: ' + diff);
-//              console.log('wk-end: ' + currentWkEnd); // 0123-56-89
-
-        if ($scope.datesSelected==='current') {
-            if (item.date.substr(0,4) < currentWkEnd.substr(0,4)) {
-                return item;
-            } else if (item.date.substr(0,4) === currentWkEnd.substr(0,4)) {
-                if (item.date.substr(5,2) < currentWkEnd.substr(5,2)) {
-                    return item;
-                } else if (item.date.substr(5,2) === currentWkEnd.substr(5,2)) {
-                    if (item.date.substr(8,2) <= currentWkEnd.substr(8,2)) {
-                        return item;
-                    }
-                }
-            }
-        } else if ($scope.datesSelected==='future') {
-            if (item.date.substr(0,4) > currentWkEnd.substr(0,4)) {
-                return item;
-            } else if (item.date.substr(0,4) === currentWkEnd.substr(0,4)) {
-                if (item.date.substr(5,2) > currentWkEnd.substr(5,2)) {
-                    return item;
-                } else if (item.date.substr(5,2) === currentWkEnd.substr(5,2)) {
-                    if (item.date.substr(8,2) > currentWkEnd.substr(8,2)) {
-                        return item;
-                    }
-                }
-            }
-        }
-    };
     
     //get monday!
     $scope.weekBeginning = function() {
@@ -263,8 +193,9 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         
     $scope.remaining = function() {
         var count = 0;
+        var dateFilter = $filter('dateFilter');
         angular.forEach($scope.taskItem, function(taskItem) {
-            if ($scope.dateFilter(taskItem)) {
+            if (dateFilter(taskItem)) {
                 count += taskItem.complete ? 0 : 1;
             }
         });

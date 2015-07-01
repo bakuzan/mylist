@@ -160,13 +160,13 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                                     $scope.statTags[i].ratings.push(manga.rating);
                                     $scope.statTags[i].ratingAdded += manga.rating;
                                     $scope.statTags[i].ratingAvg = $scope.statTags[i].ratingAdded === 0 ? 0 : $scope.statTags[i].ratingAdded / $scope.statTags[i].ratedCount;
-                                    $scope.statTags[i].ratingWeighted = ItemService.ratingsWeighted($scope.statTags[i].ratings);
+                                    $scope.statTags[i].ratingWeighted = ItemService.ratingsWeighted($scope.statTags[i].ratings, $scope.averageMangaRating);
                             }
                         }
                         // add if not in
                         if (add===true) {
                             checkedRating = manga.rating === 0 ? 0 : 1;
-                            $scope.statTags.push({ tag: tag.text, count: 1, ratedCount: checkedRating, ratings: [manga.rating], ratingAdded: manga.rating, ratingAvg: manga.rating, ratingWeighted: manga.rating });
+                            $scope.statTags.push({ tag: tag.text, count: 1, ratedCount: checkedRating, ratings: [manga.rating], ratingAdded: manga.rating, ratingAvg: manga.rating, ratingWeighted: ItemService.ratingsWeighted([manga.rating], $scope.averageMangaRating) });
                         }
                         add = true; //reset add status.
                     });

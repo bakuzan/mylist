@@ -189,14 +189,14 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                                     $scope.statTags[i].ratings.push(anime.rating);
                                     $scope.statTags[i].ratingAdded += anime.rating;
                                     $scope.statTags[i].ratingAvg = $scope.statTags[i].ratingAdded === 0 ? 0 : $scope.statTags[i].ratingAdded / $scope.statTags[i].ratedCount;
-                                    $scope.statTags[i].ratingWeighted = ItemService.ratingsWeighted($scope.statTags[i].ratings);
+                                    $scope.statTags[i].ratingWeighted = ItemService.ratingsWeighted($scope.statTags[i].ratings, $scope.averageAnimeRating);
                             }
                                     
                         }
                         // add if not in
                         if (add===true) {
                             checkedRating = anime.rating === 0 ? 0 : 1;
-                            $scope.statTags.push({ tag: tag.text, count: 1, ratedCount: checkedRating, ratings: [anime.rating], ratingAdded: anime.rating, ratingAvg: anime.rating, ratingWeighted: anime.rating });
+                            $scope.statTags.push({ tag: tag.text, count: 1, ratedCount: checkedRating, ratings: [anime.rating], ratingAdded: anime.rating, ratingAvg: anime.rating, ratingWeighted: ItemService.ratingsWeighted([anime.rating], $scope.averageAnimeRating) });
                         }
                         add = true; //reset add status.
                     }); 

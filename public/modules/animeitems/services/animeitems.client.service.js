@@ -59,11 +59,12 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         };
         
         //function to calculate the weighted mean ratings for the genre tags.
-        this.ratingsWeighted = function(ratings) {
+        this.ratingsWeighted = function(ratings, listAverage) {
             var values = [];
             var weights = [];
             var total = 0;
             var count = 0;
+            var someValue = 0; //a value to augment weighted average.
             
             /**
              *  create array (weights) with key(rating) and value(weight).
@@ -91,8 +92,14 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 }
             }
             
+            /**
+             *  count = number of ratings for it. total/count = average rating for tag.
+             *  someValue = minimum score to get weighted. listAverage = average rating for all tags.
+             */
+            someValue = count / 50; //set someValue now that count is calculated - it SHOULD favour those with more ratings -> needs work.
+            return count > 1 ? (count / (count + someValue)) * (total / count) + (someValue / (count + someValue)) * listAverage : 0;
             //most likely unecessary due to earlier 0 check. returns weighted average.
-            return count ? (total / count) : 0;
+//            return count ? (total / count) : 0;
             
         };
         

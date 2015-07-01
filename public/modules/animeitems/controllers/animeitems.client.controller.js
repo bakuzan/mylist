@@ -200,7 +200,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                         }
                         add = true; //reset add status.
                     }); 
-                    console.log($scope.statTags);
+//                    console.log($scope.statTags);
                 });
             }
         });

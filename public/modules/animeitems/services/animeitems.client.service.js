@@ -41,7 +41,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 if (diff==='a day ago') {
                     return 'Yesterday';
                 } else {
-                    return diff;
+                    return diff + '.';
                 }
             } else {
                  latestDate = moment(latest);
@@ -91,15 +91,13 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     count += weights[k];
                 }
             }
-            
+            //set someValue now that count is calculated - it SHOULD favour those with more ratings -> needs work.
+            someValue = count / 50;
             /**
              *  count = number of ratings for it. total/count = average rating for tag.
              *  someValue = minimum score to get weighted. listAverage = average rating for all tags.
              */
-            someValue = count / 50; //set someValue now that count is calculated - it SHOULD favour those with more ratings -> needs work.
             return count > 1 ? (count / (count + someValue)) * (total / count) + (someValue / (count + someValue)) * listAverage : 0;
-            //most likely unecessary due to earlier 0 check. returns weighted average.
-//            return count ? (total / count) : 0;
             
         };
         

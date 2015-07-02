@@ -118,3 +118,34 @@
 .padded-medium {
     padding: 10px;
 }
+
+.item-history-popout {
+  position: fixed;
+  top: 10vh;
+  left: 20vw;
+  width: 60vw;
+  height: 50vh;
+  background-color: #FFF;
+  align-content: center;
+  border: 5px solid #337ab7;
+  margin-top: 10px;
+  overflow-y: scroll;
+  z-index: 200;
+}
+
+.close-button {
+    position: absolute;
+    top: 0;
+    left: 94%;
+    width: 4%;
+    background-color: #FFF;
+    color: #FF0000;
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    background-color: #FF0000;
+    color: #FFF;
+}

@@ -32,6 +32,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.view = 'list'; //dynamic page title.
         $scope.historicalView = 'month'; //default historical view in stats.
         $scope.isList = true; //list view as default.
+        $scope.viewItemHistory = false; //default stat of item history popout.
         $scope.maxAnimeCount = 0; //number of anime.
         $scope.maxAnimeRatedCount = 0; //number of anime with a rating i.e not 0.
         $scope.averageAnimeRating = 0; //average rating for anime.
@@ -294,6 +295,9 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 animeitem.tags = temp.concat($scope.tagArray);
             }
             
+            //update the item history.
+            animeitem = ItemService.itemHistory(animeitem, $scope.updateHistory, 'anime');
+            
             if ($scope.imgPath!==undefined && $scope.imgPath!==null && $scope.imgPath!=='') {
                 animeitem.image = $scope.imgPath;
             }
@@ -337,7 +341,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		// Find a list of Animeitems
 		$scope.find = function() {
 			$scope.animeitems = Animeitems.query();
-//            console.log($scope.animeitems);
+            console.log($scope.animeitems);
 		};
 
 		// Find existing Animeitem
@@ -345,7 +349,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 			$scope.animeitem = Animeitems.get({ 
 				animeitemId: $stateParams.animeitemId
 			});
-//            console.log($scope.animeitem);
+            console.log($scope.animeitem);
 		};
         
         // Find list of mangaitems for dropdown.

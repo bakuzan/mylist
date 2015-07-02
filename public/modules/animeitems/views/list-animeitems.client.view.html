@@ -262,8 +262,9 @@
         </div>
     </div><!-- FILTER SIDEBAR END -->
     <div class="list-group col-lg-8 col-md-8 col-sm-8" ng-show="isList">
-        <div data-ng-repeat="animeitem in animeitems | orderBy: sortType:sortReverse | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" list_Back="{{trustAsResourceUrl(animeitem.image)}}" ng-click="viewItem===animeitem ? viewItem='' : viewItem=animeitem" class="list-group-item clickable col-lg-12 col-md-12 col-sm-12">
-			<small class="list-group-item-text">
+        <div data-ng-repeat="animeitem in animeitems | orderBy: sortType:sortReverse | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" list_Back="{{trustAsResourceUrl(animeitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12">
+			<div class="view-item-top clickable" ng-click="viewItem===animeitem ? viewItem='' : viewItem=animeitem">
+            <small class="list-group-item-text">
 <!--				<span data-ng-bind="animeitem.latest | date:'yyyy-MMM-dd'"></span>-->
                 <time ng-if="animeitem.latest.substring(0,10)===animeitem.meta.updated.substring(0,10)" title="{{animeitem.meta.updated | date: 'yyyy-MMM-dd HH:mm'}}" ng-bind="latestDate(animeitem.latest, animeitem.meta.updated)"></time>
                 <time ng-if="animeitem.latest.substring(0,10)!==animeitem.meta.updated.substring(0,10)" title="{{animeitem.latest | date: 'yyyy-MMM-dd'}}" ng-bind="latestDate(animeitem.latest, animeitem.meta.updated)"></time>
@@ -275,7 +276,8 @@
                 <span class="item-icons" ng-if="animeitem.disc===true"><i class="glyphicon glyphicon-cd"></i></span>
                 <span class="item-icons" ng-if="animeitem.reWatching===true"><i class="fa fa-repeat"></i></span>
             </p>
-            <div class="view-item-detail" ng-if="viewItem===animeitem">
+            </div>
+            <div class="view-item-detail" ng-show="viewItem===animeitem">
                 <div class="item-detail">
                     <p>
                         <em class="text-muted" data-ng-if="animeitem.rating==0">No rating.</em>
@@ -289,6 +291,7 @@
                         <span ng-if="animeitem.end!==undefined && animeitem.end!==null">{{animeitem.end | date:'yyyy-MMM-dd'}} ended.</span>
                     </small>
                 </div>
+                <a class="clickable" ng-click="viewItemHistory = true;">View history</a>
                 <div class="item-actions" data-ng-show="((authentication.user) && (authentication.user._id == animeitem.user._id))">
                     <a class="btn btn-success" href="/#!/animeitems/{{animeitem._id}}">
                         <i class="fa fa-eye"></i>
@@ -297,8 +300,21 @@
                         <i class="glyphicon glyphicon-edit"></i>
                     </a>
                 </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 item-history-popout" draggable="true" ondragover="event.preventDefault()" ondrop="" ng-show="viewItemHistory">
+                    <div class="item-history-container">
+                        <a class="close-button mt" data-ng-click="viewItemHistory=!viewItemHistory"><i class="fa fa-times"></i></a>
+                        <h4 class="mt">History</h4>
+                        <div ng-if="viewItem.meta.history.length === 0">No recorded history.</div>
+                        <div class="item-history-list" ng-if="viewItem.meta.history.length > 0">
+                            <div class="item-history mt" ng-repeat="history in viewItem.meta.history | orderBy: '-value'">
+                                <span>{{history.date | date : 'dd-MM-yyyy HH:mm'}}</span><span> - Episode {{history.value}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div><!-- VIEW ITEM END-->
         </div><!-- LIST ITEM END -->
+    </div>
     <div class="alert alert-warning text-center" data-ng-hide="!animeitems.$resolved || animeitems.length">
     	No animeitems yet, why don't you <a href="/#!/animeitems/create">create one</a>?
     </div>

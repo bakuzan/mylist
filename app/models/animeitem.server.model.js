@@ -78,7 +78,11 @@ var AnimeitemSchema = new Schema({
 	   created: {
 		type: Date,
 		default: Date.now
-	   }
+	   },
+       history: {
+         type: Array,
+         default: []
+       }
     },
    user: {
 		type: Schema.ObjectId,

@@ -165,7 +165,7 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         $scope.newTaskDaily = false;
         localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
     };
-    $scope.deleteTask = function  (description) {
+    $scope.deleteTask = function (description) {
         //are you sure option...
         var removal = $window.confirm('Are you sure you want to delete this task?');
         var deletingItem = $scope.taskItem;

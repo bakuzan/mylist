@@ -269,6 +269,9 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                 mangaitem.tags = temp.concat($scope.tagArray);
             }
             
+            //update the item history.
+            mangaitem = ItemService.itemHistory(mangaitem, $scope.updateHistory, 'manga');
+            
             if ($scope.imgPath!==undefined && $scope.imgPath!==null && $scope.imgPath!=='') {
                 mangaitem.image = $scope.imgPath;
             }

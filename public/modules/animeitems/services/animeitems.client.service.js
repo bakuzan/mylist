@@ -27,6 +27,26 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         });
     };
 }]).service('ItemService', ['moment', function(moment) {
+        
+        //add history entry to item.
+        this.itemHistory = function(item, updateHistory, type) {
+            //populate the history of when each part was 'checked' off.
+            if (item.meta.history.length !== 0) {
+                var latestHistory = item.meta.history[item.meta.history.length - 1].value;
+                var length = type === 'anime' ? item.episodes - latestHistory : item.chapters - latestHistory;
+                if (latestHistory !== (type === 'anime' ? item.episodes : item.chapters) && (type === 'anime' ? item.reWatching === false : item.reReading === false)) {
+                    for(var i = 1; i <= length; i++) {
+                        item.meta.history.push({ date: Date.now(), value: latestHistory + i });
+                    }
+                }
+            } else {
+                if (updateHistory && (type === 'anime' ? item.reWatching === false : item.reReading === false)) {
+                    item.meta.history.push({ date: Date.now(), value: (type === 'anime' ? item.episodes : item.chapters) });
+                }
+            }
+            
+            return item;
+        };
     
         //function to display relative time - using latest or updated date.
         this.latestDate = function(latest, updated) {

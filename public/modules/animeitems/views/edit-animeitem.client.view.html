@@ -18,7 +18,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : animeForm.episodes.$invalid && !animeForm.episodes.$pristine }">
                     <label for="episodes" class="col-md-2 control-label">Episodes</label>
                     <div class="col-md-6">
-                        <input type="number" class="col-md-6 form-control" data-ng-model="animeitem.episodes" min="0" ng-change="animeitem.latest=itemUpdate; animeitem.episodes === animeitem.finalEpisode && animeitem.finalEpisode!=0 && animeitem.reWatching===false ? animeitem.end=itemUpdate : ''; animeitem.episodes > animeitem.finalEpisode && animeitem.finalEpisode!=0 ? animeitem.episodes=animeitem.finalEpisode : ''" id="episodes" name="episodes" placeholder="0" required>
+                        <input type="number" class="col-md-6 form-control" data-ng-model="animeitem.episodes" min="0" ng-change="animeitem.latest=itemUpdate; animeitem.episodes === animeitem.finalEpisode && animeitem.finalEpisode!=0 && animeitem.reWatching===false ? animeitem.end=itemUpdate : ''; animeitem.episodes > animeitem.finalEpisode && animeitem.finalEpisode!=0 ? animeitem.episodes=animeitem.finalEpisode : ''; updateHistory = true;" id="episodes" name="episodes" placeholder="0" required>
                     </div>
                     <div class="col-md-4">
 						<p ng-show="animeForm.episodes.$invalid && !animeForm.episodes.$pristine" class="help-block" >Episodes is a whole number and is required.</p>

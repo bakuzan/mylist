@@ -230,8 +230,9 @@
         </div>
     </div>
     <div class="list-group col-lg-8 col-md-8 col-sm-8" ng-show="isList">
-        <div data-ng-repeat="mangaitem in mangaitems | orderBy: sortType:sortReverse | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" list_Back="{{trustAsResourceUrl(mangaitem.image)}}" ng-click="viewItem===mangaitem ? viewItem='' : viewItem=mangaitem" class="list-group-item clickable col-lg-12 col-md-12 col-sm-12">
-			<small class="list-group-item-text">
+        <div data-ng-repeat="mangaitem in mangaitems | orderBy: sortType:sortReverse | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" list_Back="{{trustAsResourceUrl(mangaitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12">
+			<div class="view-item-top clickable" ng-click="viewItem===mangaitem ? viewItem='' : viewItem=mangaitem">
+            <small class="list-group-item-text">
                 <time ng-if="mangaitem.latest.substring(0,10)===mangaitem.meta.updated.substring(0,10)" title="{{mangaitem.meta.updated | date: 'yyyy-MMM-dd HH:mm'}}" ng-bind="latestDate(mangaitem.latest, mangaitem.meta.updated)"></time>
                 <time ng-if="mangaitem.latest.substring(0,10)!==mangaitem.meta.updated.substring(0,10)" title="{{mangaitem.latest | date: 'yyyy-MMM-dd'}}" ng-bind="latestDate(mangaitem.latest, mangaitem.meta.updated)"></time>
 			</small>
@@ -243,6 +244,7 @@
                 <span class="item-icons" ng-if="mangaitem.hardcopy===true"><i class="fa fa-book"></i></span>
                 <span class="item-icons" ng-if="mangaitem.reReading===true"><i class="fa fa-repeat"></i></span>
             </p>
+            </div>
             <div class="view-item-detail" ng-if="viewItem===mangaitem">
                 <div class="item-detail">
                     <p>
@@ -257,6 +259,7 @@
                         <span ng-if="mangaitem.end!==undefined && mangaitem.end!==null">{{mangaitem.end | date:'yyyy-MMM-dd'}} ended.</span>
                     </small>
                 </div>
+                <a class="clickable" ng-click="viewItemHistory = true;">View history</a>
                 <div class="item-actions" data-ng-show="((authentication.user) && (authentication.user._id == mangaitem.user._id))">
                     <a class="btn btn-success" href="/#!/mangaitems/{{mangaitem._id}}">
                         <i class="fa fa-eye"></i>
@@ -264,6 +267,18 @@
                     <a class="btn btn-primary" href="/#!/mangaitems/{{mangaitem._id}}/edit">
                         <i class="glyphicon glyphicon-edit"></i>
                     </a>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 item-history-popout" draggable="true" ondragover="event.preventDefault()" ondrop="" ng-show="viewItemHistory">
+                    <div class="item-history-container">
+                        <a class="close-button mt" data-ng-click="viewItemHistory=!viewItemHistory"><i class="fa fa-times"></i></a>
+                        <h4 class="mt">History</h4>
+                        <div ng-if="viewItem.meta.history.length === 0">No recorded history.</div>
+                        <div class="item-history-list" ng-if="viewItem.meta.history.length > 0">
+                            <div class="item-history mt" ng-repeat="history in viewItem.meta.history | orderBy: '-value'">
+                                <span>{{history.date | date : 'dd-MM-yyyy HH:mm'}}</span><span> - Chapter {{history.value}}</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div><!-- VIEW ITEM END-->
         </div>

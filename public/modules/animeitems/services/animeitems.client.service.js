@@ -26,7 +26,26 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             alert('File Upload Failed: ' + err.message);
         });
     };
-}]).service('ItemService', ['moment', function(moment) {
+}])
+.service('ListService', function() {
+        //get number of pages for list.
+        this.numberOfPages = function(showingCount, pageSize, currentPage) {
+            var pageCount = Math.ceil(showingCount/pageSize);
+            
+            //reset number of pages to be the final page if the number of pages
+            //becomes less than the one you are on.
+            if (currentPage + 1 > pageCount) {
+                currentPage = pageCount-1;
+            }
+            if (pageCount!==0 && currentPage < 0) {
+                currentPage = 0;
+            }
+            var pagingDetails = { currentPage: currentPage, pageCount: pageCount };
+            return pagingDetails;
+        };
+    
+})
+.service('ItemService', ['moment', function(moment) {
         
         //add history entry to item.
         this.itemHistory = function(item, updateHistory, type) {
@@ -34,7 +53,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             if (item.meta.history.length !== 0) {
                 var latestHistory = item.meta.history[item.meta.history.length - 1].value;
                 var length = type === 'anime' ? item.episodes - latestHistory : item.chapters - latestHistory;
-                if (latestHistory !== (type === 'anime' ? item.episodes : item.chapters) && (type === 'anime' ? item.reWatching === false : item.reReading === false)) {
+                if (length > 0 && (type === 'anime' ? item.reWatching === false : item.reReading === false)) {
                     for(var i = 1; i <= length; i++) {
                         item.meta.history.push({ date: Date.now(), value: latestHistory + i });
                     }

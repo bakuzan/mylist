@@ -3,7 +3,7 @@
         <h1>Edit Manga Favourites</h1>
     </div>
     <div class="col-md-12">
-        <div class="favourite-manga col-md-4">
+        <div class="favourite-manga col-md-5">
             <div class="favourite-header">
                 <a class="favourite-link" href="/#!/mangaitems">
                     <h2>Manga</h2>
@@ -13,59 +13,22 @@
             <form name="favouriteForm" class="form-horizontal" novalidate>
                 <fieldset>
                     <div class="form-group">
-                        <label for="favouriteMangaOne" class="col-md-4 control-label">Favourite 1</label>
-                        <!--<i class="fa fa-caret-down selectArrow"></i>-->
+                        <label for="favourite" class="col-md-4 control-label">Select favourite</label>
                         <div class="col-md-8">
-                            <select id="favouriteMangaOne" class="form-control" ng-model="favouriteMangaOne" ng-options="manga.title for manga in mangaitems | orderBy: 'title'">
-                                <option class="disabled" value="">Choose a manga</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="favouriteMangaTwo" class="col-md-4 control-label">Favourite 2</label>
-                        <!--<i class="fa fa-caret-down selectArrow"></i>-->
-                        <div class="col-md-8">
-                            <select id="favouriteMangaTwo" class="form-control" ng-model="favouriteMangaTwo" ng-options="manga.title for manga in mangaitems | orderBy: 'title'">
-                                <option class="disabled" value="">Choose a manga</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="favouriteMangaThree" class="col-md-4 control-label">Favourite 3</label>
-                        <!--<i class="fa fa-caret-down selectArrow"></i>-->
-                        <div class="col-md-8">
-                            <select id="favouriteMangaThree" class="form-control" ng-model="favouriteMangaThree" ng-options="manga.title for manga in mangaitems | orderBy: 'title'">
-                                <option class="disabled" value="">Choose a manga</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="favouriteMangaFour" class="col-md-4 control-label">Favourite 4</label>
-                        <!--<i class="fa fa-caret-down selectArrow"></i>-->
-                        <div class="col-md-8">
-                            <select id="favouriteMangaFour" class="form-control" ng-model="favouriteMangaFour" ng-options="manga.title for manga in mangaitems | orderBy: 'title'">
-                                <option class="disabled" value="">Choose a manga</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="favouriteMangaFive" class="col-md-4 control-label">Favourite 5</label>
-                        <!--<i class="fa fa-caret-down selectArrow"></i>-->
-                        <div class="col-md-8">
-                            <select id="favouriteMangaFive" class="form-control" ng-model="favouriteMangaFive" ng-options="manga.title for manga in mangaitems | orderBy: 'title'">
+                            <select required id="favourite" class="form-control" ng-model="favourite" ng-options="manga.title for manga in mangaitems | orderBy: 'title'">
                                 <option class="disabled" value="">Choose a manga</option>
                             </select>
                         </div>
                     </div>
                     <div class="favourite-actions text-center">
-                        <button class="btn btn-primary" ng-click="updateMangaFavouriteOne();updateMangaFavouriteTwo();updateMangaFavouriteThree();updateMangaFavouriteFour();updateMangaFavouriteFive();" ng-disabled="favouriteForm.$invalid">Update favourite manga</button>
+                        <button class="btn btn-primary" ng-click="addFavourite('manga');" ng-disabled="favouriteForm.$invalid || favouriteForm.$pristine">Add favourite</button>
 &nbsp;-&nbsp;<a href="/#!/favourites">Back</a>
                     </div>
                 </fieldset>
             </form>
             </div>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-7">
             <div class="favourite-header">
                 <p>
                     <h2>Current favourite manga</h2>
@@ -73,9 +36,10 @@
             </div>
             <div class="favourite-content col-sm-12">
                 <div class="list-group col-sm-12">
-                    <a data-ng-repeat="favouriteMangaitem in favouriteMangaitem | orderBy: 'rank'" ng-click="reorderFavourites(favouriteMangaitem)" list_Back="{{trustAsResourceUrl(favouriteMangaitem.manga.image)}}" data-ng-model="favouriteMangaitem" class="list-group-item" ng-class="{ selected: favouriteMangaitem === selectedFavourite }">
+                    <div data-ng-repeat="favouriteMangaitem in favouriteMangaitem" ng-click="reorderFavourites(favouriteMangaitem)" list_Back="{{trustAsResourceUrl(favouriteMangaitem.manga.image)}}" data-ng-model="favouriteMangaitem" class="list-group-item clickable" ng-class="{ selected: favouriteMangaitem === selectedFavourite }">
 			             <h4 class="list-group-item-heading" data-ng-bind="favouriteMangaitem.manga.title"></h4><span data-ng-bind="favouriteMangaitem.date.substring(0,10)"></span>
-                    </a>
+                         <a class="bin-style clickable" aria-hidden="true" ng-click="removeFavourite(favouriteMangaitem)"><i class="fa fa-trash-o"></i></a>
+                    </div>
                 </div>
             </div>
         </div>

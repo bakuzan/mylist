@@ -134,15 +134,15 @@
 }
 
 .close-button {
-    position: absolute;
-    top: 0;
-    left: 94%;
-    width: 4%;
-    background-color: #FFF;
-    color: #FF0000;
-    font-size: 20px;
-    text-align: center;
-    cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 2px 4px;
+  margin: 0 20px;
+  color: #FF0000;
+  font-size: 20px;
+  text-align: center;
+  cursor: pointer;
 }
 
 .close-button:hover {

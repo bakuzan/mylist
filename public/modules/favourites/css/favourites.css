@@ -8,9 +8,7 @@
 .trophy-3 {
     color: rosybrown;
 }
-.trophy-4 {
-    color: white;
-}
+.trophy-4,
 .trophy-5 {
     color: white;
 }
@@ -21,4 +19,17 @@
 
 .selected {
     border: 3px solid #FF0000;
+}
+
+.bin-style {
+    position: absolute;
+    right: 0;
+    color: #FF0000;
+    padding: 2px 4px;
+    margin: 5px;
+}
+
+.bin-style:hover {
+    background-color: #FF0000;
+    color: #FFF;
 }

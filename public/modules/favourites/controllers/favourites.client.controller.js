@@ -32,7 +32,6 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
 			$scope.animeitems = Animeitems.query();
             //console.log($scope.characters);
 		};
-        
         // Find a list of Manga
 		$scope.findManga = function() {
 			$scope.mangaitems = Mangaitems.query();
@@ -40,131 +39,58 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
 		};
         
         /**
-         *  UPDATE ANIME FAVOURITES
+         *  Add, reorder, remove FAVOURITES
          */
-        $scope.updateAnimeFavouriteOne = function() {
-            if ($scope.favouriteOne) {
-                angular.forEach($scope.favouriteAnimeitem, function (favouriteAnimeitem) {
-                    if (favouriteAnimeitem.rank === '1') {
-                        favouriteAnimeitem.anime = $scope.favouriteOne;
-                        favouriteAnimeitem.date = $scope.today;
-                    }
-                });
-                localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
-                $scope.favouriteOne = '';
-            } 
-        };
-        $scope.updateAnimeFavouriteTwo = function() {
-            if ($scope.favouriteTwo) {
-                angular.forEach($scope.favouriteAnimeitem, function (favouriteAnimeitem) {
-                    if (favouriteAnimeitem.rank === '2') {
-                        favouriteAnimeitem.anime = $scope.favouriteTwo;
-                        favouriteAnimeitem.date = $scope.today;
-                    }
-                });
-                localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
-                $scope.favouriteTwo = '';
-            } 
-        };
-        $scope.updateAnimeFavouriteThree = function() {
-            if ($scope.favouriteThree) {
-                angular.forEach($scope.favouriteAnimeitem, function (favouriteAnimeitem) {
-                    if (favouriteAnimeitem.rank === '3') {
-                        favouriteAnimeitem.anime = $scope.favouriteThree;
-                        favouriteAnimeitem.date = $scope.today;
-                    }
-                });
-                localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
-                $scope.favouriteThree = '';
-            } 
-        };
-        $scope.updateAnimeFavouriteFour = function() {
-            if ($scope.favouriteFour) {
-                angular.forEach($scope.favouriteAnimeitem, function (favouriteAnimeitem) {
-                    if (favouriteAnimeitem.rank === '4') {
-                        favouriteAnimeitem.anime = $scope.favouriteFour;
-                        favouriteAnimeitem.date = $scope.today;
-                    }
-                });
-                localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
-                $scope.favouriteFour = '';
-            } 
-        };
-        $scope.updateAnimeFavouriteFive = function() {
-            if ($scope.favouriteFive) {
-                angular.forEach($scope.favouriteAnimeitem, function (favouriteAnimeitem) {
-                    if (favouriteAnimeitem.rank === '5') {
-                        favouriteAnimeitem.anime = $scope.favouriteFive;
-                        favouriteAnimeitem.date = $scope.today;
-                    }
-                });
-                localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
-                $scope.favouriteFive = '';
-            } 
+        $scope.addFavourite = function(type) {
+            if (type === 'anime') {
+                if ($scope.favouriteAnimeitem.length < 5) {
+                    $scope.favouriteAnimeitem.push({ date: $scope.today, anime: $scope.favourite });
+                    localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
+                    $scope.favourite = '';
+                } else {
+                    alert('Only allowed 5 favourites! Remove one.');
+                }
+            } else if (type === 'manga') {
+                if ($scope.favouriteMangaitem.length < 5) {
+                    $scope.favouriteMangaitem.push({ date: $scope.today, manga: $scope.favourite });
+                    localStorage.setItem('favouriteMangaitems', JSON.stringify($scope.favouriteMangaitem));
+                    $scope.favourite = '';
+                } else {
+                    alert('Only allowed 5 favourites! Remove one.');
+                    console.log('here');
+                }
+            }
         };
         
-        /**
-         *  UPDATE MANGA FAVOURITES
-         */
-        $scope.updateMangaFavouriteOne = function() {
-            if ($scope.favouriteMangaOne) {
-                angular.forEach($scope.favouriteMangaitem, function (favouriteMangaitem) {
-                    if (favouriteMangaitem.rank === '1') {
-                        favouriteMangaitem.manga = $scope.favouriteMangaOne;
-                        favouriteMangaitem.date = $scope.today;
-                    }
-                });
-                localStorage.setItem('favouriteMangaitems', JSON.stringify($scope.favouriteMangaitem));
-                $scope.favouriteMangaOne = '';
-            } 
-        };
-        $scope.updateMangaFavouriteTwo = function() {
-            if ($scope.favouriteMangaTwo) {
-                angular.forEach($scope.favouriteMangaitem, function (favouriteMangaitem) {
-                    if (favouriteMangaitem.rank === '2') {
-                        favouriteMangaitem.manga = $scope.favouriteMangaTwo;
-                        favouriteMangaitem.date = $scope.today;
-                    }
-                });
-                localStorage.setItem('favouriteMangaitems', JSON.stringify($scope.favouriteMangaitem));
-                $scope.favouriteMangaTwo = '';
-            } 
-        };
-        $scope.updateMangaFavouriteThree = function() {
-            if ($scope.favouriteMangaThree) {
-                angular.forEach($scope.favouriteMangaitem, function (favouriteMangaitem) {
-                    if (favouriteMangaitem.rank === '3') {
-                        favouriteMangaitem.manga = $scope.favouriteMangaThree;
-                        favouriteMangaitem.date = $scope.today;
-                    }
-                });
-                localStorage.setItem('favouriteMangaitems', JSON.stringify($scope.favouriteMangaitem));
-                $scope.favouriteMangaThree = '';
-            } 
-        };
-        $scope.updateMangaFavouriteFour = function() {
-            if ($scope.favouriteMangaFour) {
-                angular.forEach($scope.favouriteMangaitem, function (favouriteMangaitem) {
-                    if (favouriteMangaitem.rank === '4') {
-                        favouriteMangaitem.manga = $scope.favouriteMangaFour;
-                        favouriteMangaitem.date = $scope.today;
-                    }
-                });
-                localStorage.setItem('favouriteMangaitems', JSON.stringify($scope.favouriteMangaitem));
-                $scope.favouriteMangaFour = '';
-            } 
-        };
-        $scope.updateMangaFavouriteFive = function() {
-            if ($scope.favouriteMangaFive) {
-                angular.forEach($scope.favouriteMangaitem, function (favouriteMangaitem) {
-                    if (favouriteMangaitem.rank === '5') {
-                        favouriteMangaitem.manga = $scope.favouriteMangaFive;
-                        favouriteMangaitem.date = $scope.today;
-                    }
-                });
-                localStorage.setItem('favouriteMangaitems', JSON.stringify($scope.favouriteMangaitem));
-                $scope.favouriteMangaFive = '';
-            } 
+        $scope.removeFavourite = function(kill) {
+            //are you sure option...
+            var removal = $window.confirm('Are you sure you want to delete this task?');
+            var deletingItem;
+            if (kill.anime !== undefined) {
+                deletingItem = $scope.favouriteAnimeitem;
+                $scope.favouriteAnimeitem = [];
+                if (removal) {
+                    //update the complete task.
+                    angular.forEach(deletingItem, function (item) {
+                        if (item !== kill) {
+                            $scope.favouriteAnimeitem.push(item);
+                        }
+                    });
+                    localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
+                }
+            } else if (kill.manga !== undefined) {
+                deletingItem = $scope.favouriteMangaitem;
+                $scope.favouriteMangaitem = [];
+                if (removal) {
+                    //update the complete task.
+                    angular.forEach(deletingItem, function (item) {
+                        if (item !== kill) {
+                            $scope.favouriteMangaitem.push(item);
+                        }
+                    });
+                    localStorage.setItem('favouriteMangaitems', JSON.stringify($scope.favouriteMangaitem));
+                }
+            }
         };
         
         $scope.reorderFavourites = function(favourite) {
@@ -177,33 +103,27 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
                     $scope.selectedFavourite = favourite;
                 } else {
                     $scope.selectedFavouriteTwo = favourite;
-                    var temprank1 = $scope.selectedFavourite.rank;
-                    var temprank2 = $scope.selectedFavouriteTwo.rank;
-                    
+                    var ind1, ind2, hold;
                     if ($scope.selectedFavourite.anime!==undefined) {
 //                        console.log('change places');
-                        angular.forEach($scope.favouriteAnimeitem, function(favouriteAnimeitem) {
-                            if (favouriteAnimeitem.anime.title===$scope.selectedFavourite.anime.title) {
-                                favouriteAnimeitem.rank = temprank2;
-                            } else if (favouriteAnimeitem.anime.title===$scope.selectedFavouriteTwo.anime.title) {
-                                favouriteAnimeitem.rank = temprank1;
-                            }
-//                            console.log('final=' + favouriteAnimeitem.anime.title + ' - ' + favouriteAnimeitem.rank);
-                        });
+                        ind1 = $scope.favouriteAnimeitem.indexOf($scope.selectedFavourite);
+                        ind2 = $scope.favouriteAnimeitem.indexOf($scope.selectedFavouriteTwo);
+                        hold = $scope.favouriteAnimeitem[ind1];
+                        $scope.favouriteAnimeitem[ind1] = $scope.favouriteAnimeitem[ind2];
+                        $scope.favouriteAnimeitem[ind2] = hold;
+                        
 //                        console.log($scope.favouriteAnimeitem);
                         localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
                         $scope.selectedFavourite = undefined;
                         $scope.selectedFavouriteTwo = undefined;
                     } else if ($scope.selectedFavourite.manga!==undefined) {
 //                        console.log('change places');
-                        angular.forEach($scope.favouriteMangaitem, function(favouriteMangaitem) {
-                            if (favouriteMangaitem.manga.title===$scope.selectedFavourite.manga.title) {
-                                favouriteMangaitem.rank = temprank2;
-                            } else if (favouriteMangaitem.manga.title===$scope.selectedFavouriteTwo.manga.title) {
-                                favouriteMangaitem.rank = temprank1;
-                            }
-//                            console.log('final=' + favouriteMangaitem.manga.title + ' - ' + favouriteMangaitem.rank);
-                        });
+                        ind1 = $scope.favouriteMangaitem.indexOf($scope.selectedFavourite);
+                        ind2 = $scope.favouriteMangaitem.indexOf($scope.selectedFavouriteTwo);
+                        hold = $scope.favouriteMangaitem[ind1];
+                        $scope.favouriteMangaitem[ind1] = $scope.favouriteMangaitem[ind2];
+                        $scope.favouriteMangaitem[ind2] = hold;
+                        
 //                        console.log($scope.favouriteMangaitem);
                         localStorage.setItem('favouriteMangaitems', JSON.stringify($scope.favouriteMangaitem));
                         $scope.selectedFavourite = undefined;

@@ -1,8 +1,8 @@
 'use strict';
 
 // Animeitems controller
-angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService) {
+angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -12,20 +12,12 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         //paging controls for the list view.
         $scope.currentPage = 0;
         $scope.pageSize = 10;
-        $scope.numberOfPages = function(value){
-            var numPages = Math.ceil(value/$scope.pageSize);
-            
-            //reset number of pages to be the final page if the number of pages
-            //becomes less than the one you are on.
-            if ($scope.currentPage + 1 > numPages) {
-                $scope.currentPage = numPages-1;
-            }
-            if (numPages!==0 && $scope.currentPage < 0) {
-                $scope.currentPage = 0;
-            }
-            $scope.pageCount = numPages;
-            return numPages;
-        };
+        $scope.pageCount = 0;
+        $scope.$watch('showingCount', function() {
+            var pagingDetails = ListService.numberOfPages($scope.showingCount, $scope.pageSize, $scope.currentPage);
+            $scope.currentPage = pagingDetails.currentPage;
+            $scope.pageCount = pagingDetails.pageCount;
+        });
         
         //today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
         $scope.itemUpdate = new Date().toISOString().substring(0,10);
@@ -341,7 +333,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		// Find a list of Animeitems
 		$scope.find = function() {
 			$scope.animeitems = Animeitems.query();
-            console.log($scope.animeitems);
+//            console.log($scope.animeitems);
 		};
 
 		// Find existing Animeitem
@@ -349,7 +341,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 			$scope.animeitem = Animeitems.get({ 
 				animeitemId: $stateParams.animeitemId
 			});
-            console.log($scope.animeitem);
+//            console.log($scope.animeitem);
 		};
         
         // Find list of mangaitems for dropdown.
@@ -357,13 +349,10 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             $scope.mangaitems = Mangaitems.query();
         };
         
-                //image upload
+        //image upload
         $scope.uploadFile = function(){
-            var file = $scope.myFile;
-            $scope.imgPath = '/modules/animeitems/img/' + file.name;
-            console.log('file is ' + JSON.stringify(file));
-            var uploadUrl = '/fileUploadAnime';
-            fileUpload.uploadFileToUrl(file, uploadUrl);
+            $scope.imgPath = '/modules/animeitems/img/' + $scope.myFile.name;
+            fileUpload.uploadFileToUrl($scope.myFile, '/fileUploadAnime');
         };
 
         //latest date display format.

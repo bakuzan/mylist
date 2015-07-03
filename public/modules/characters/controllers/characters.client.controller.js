@@ -1,8 +1,8 @@
 'use strict';
 
 // Characters controller
-angular.module('characters').controller('CharactersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Characters', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window',
-	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window) {
+angular.module('characters').controller('CharactersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Characters', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ListService',
+	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window, ListService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -12,20 +12,12 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         //paging controls for the list view.
         $scope.currentPage = 0;
         $scope.pageSize = 10;
-        $scope.numberOfPages = function(value){
-            var numPages = Math.ceil(value/$scope.pageSize);
-            
-            //reset number of pages to be the final page if the number of pages
-            //becomes less than the one you are on.
-            if ($scope.currentPage + 1 > numPages) {
-                $scope.currentPage = numPages-1;
-            }
-            if (numPages!==0 && $scope.currentPage < 0) {
-                $scope.currentPage = 0;
-            }
-            $scope.pageCount = numPages;
-            return numPages;
-        };
+        $scope.pageCount = 0;
+        $scope.$watch('showingCount', function() {
+            var pagingDetails = ListService.numberOfPages($scope.showingCount, $scope.pageSize, $scope.currentPage);
+            $scope.currentPage = pagingDetails.currentPage;
+            $scope.pageCount = pagingDetails.pageCount;
+        });
         
         $scope.isList = 'list'; //show list? or carousel.
         $scope.maxItemCount = 0; //number of characters.
@@ -358,14 +350,10 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 			});
 		};
         
-        
-        // Image upload
+        //image upload
         $scope.uploadFile = function(){
-            var file = $scope.myFile;
-            $scope.imgPath = '/modules/characters/img/' + file.name;
-            console.log('file is ' + JSON.stringify(file));
-            var uploadUrl = '/fileUploadCharacter';
-            fileUpload.uploadFileToUrl(file, uploadUrl);
+            $scope.imgPath = '/modules/characters/img/' + $scope.myFile.name;
+            fileUpload.uploadFileToUrl($scope.myFile, '/fileUploadCharacter');
         };
 	}
 ]);

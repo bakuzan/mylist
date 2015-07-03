@@ -28,7 +28,7 @@ exports.postImage = function(req, res) {
         //uuid for unique filenames.
         //var filename = uuid.v4() + extension;
         var filename = file.originalFilename;
-        var destPath = 'c:/users/steven/documents/whispering-lowlands-3953/public/modules/mangaitems/img/' + filename;
+        var destPath = 'public/modules/mangaitems/img/' + filename;
         
         //server-side file type check.
         if (contentType !== 'image/png' && contentType !== 'image/jpeg') {

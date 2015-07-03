@@ -1,8 +1,8 @@
 'use strict';
 
 // Mangaitems controller
-angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService',
-	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService) {
+angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService',
+	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -12,20 +12,12 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         //paging controls for the list view.
         $scope.currentPage = 0;
         $scope.pageSize = 10;
-        $scope.numberOfPages = function(value){
-            var numPages = Math.ceil(value/$scope.pageSize);
-            
-            //reset number of pages to be the final page if the number of pages
-            //becomes less than the one you are on.
-            if ($scope.currentPage + 1 > numPages) {
-                $scope.currentPage = numPages-1;
-            }
-            if (numPages!==0 && $scope.currentPage < 0) {
-                $scope.currentPage = 0;
-            }
-            $scope.pageCount = numPages;
-            return numPages;
-        };
+        $scope.pageCount = 0;
+        $scope.$watch('showingCount', function() {
+            var pagingDetails = ListService.numberOfPages($scope.showingCount, $scope.pageSize, $scope.currentPage);
+            $scope.currentPage = pagingDetails.currentPage;
+            $scope.pageCount = pagingDetails.pageCount;
+        });
         
         //today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
         $scope.itemUpdate = new Date().toISOString().substring(0,10);
@@ -330,11 +322,8 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         
         //image upload
         $scope.uploadFile = function(){
-            var file = $scope.myFile;
-            $scope.imgPath = '/modules/mangaitems/img/' + file.name;
-            console.log('file is ' + JSON.stringify(file));
-            var uploadUrl = '/fileUpload';
-            fileUpload.uploadFileToUrl(file, uploadUrl);
+            $scope.imgPath = '/modules/mangaitems/img/' + $scope.myFile.name;
+            fileUpload.uploadFileToUrl($scope.myFile, '/fileUpload');
         };
         
         //latest date display format.

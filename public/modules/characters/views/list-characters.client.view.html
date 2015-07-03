@@ -168,31 +168,27 @@
             </div>
            <input type="text" class="form-control" placeholder="search characters" ng-model="search.name"><!-- typeahead="animeitem.title for animeitem in animeitems | filter: { title:$viewValue } " -->
 	   </div>
-       <br/>
-       <div class="input-group">
+       <div class="input-group mt">
             <div class="input-group-addon clickable" clear-tag-values>
                 <i class="fa fa-tags"></i>
             </div>
            <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags" typeahead="stat.tag for stat in statTags | filter: $viewValue" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
 	   </div>
-       <div class="input-group" ng-hide="searchTags===undefined || searchTags==='' || searchTags===null">
-           <ul class="taskList col-lg-12 col-md-12 col-sm-12">
-               <br/>
+       <div class="input-group mt" ng-hide="searchTags===undefined || searchTags==='' || searchTags===null">
+           <ul class="tag-list col-lg-12 col-md-12 col-sm-12">
                 <li class="tag-bubble col-lg-12 col-md-12 col-sm-12" ng-repeat="tag in tagsForFilter track by $index">
                     {{tag}}
                     <a class="clickable pull-right" aria-hidden="true" delete-search-tag="{{tag}}"><i class="fa fa-trash-o" style="color: red;"></i></a>
                 </li>
             </ul>
        </div>
-        <br/>
-        <div class="input-group">
+        <div class="input-group mt">
 		  <div class="input-group-addon">
 		      <i class="fa fa-list-ol"></i>
           </div>
             <input type="text" class="form-control" value="Showing {{ (showingCount = (characters | filter: search | mediaFilter: media | tagFilter: searchTags:taglessItem).length) }} character(s)." disabled>
         </div>
-        <br/>
-        <div class="input-group">
+        <div class="input-group mt">
 		  <div class="input-group-addon">
 		      <i class="fa fa-sort"></i>
           </div>
@@ -204,8 +200,7 @@
                         <option value="voice">Voice</option>
             </select>
         </div>
-        <br/>
-        <div class="input-group clickable" ng-click="sortReverse = !sortReverse">
+        <div class="input-group mt clickable" ng-click="sortReverse = !sortReverse">
 		  <div class="input-group-addon">
 		      <i class="fa" ng-class="sortReverse ? 'fa-sort-amount-desc' : 'fa-sort-amount-asc' "></i>
           </div>
@@ -213,8 +208,7 @@
             <input type="text" class="form-control" value="Descending" ng-show="sortReverse" disabled>
             <!--<input type="checkbox" class="form-control" data-ng-model="sortReverse" id="sortReverse">-->
         </div>
-        <br/>
-        <div class="input-group">
+        <div class="input-group mt">
 		  <div class="input-group-addon">
 		      <i class="fa fa-book"></i>
           </div>
@@ -225,15 +219,13 @@
                         <option value="both">Both</option>
             </select>
         </div>
-        <br/>
-        <div class="input-group">
+        <div class="input-group mt">
             <div class="input-group-addon">
                 <i class="fa fa-microphone"></i>
             </div>
             <input type="text" class="form-control" placeholder="search voice" ng-model="search.voice" typeahead="voice for voice in voiceActors | filter: $viewValue "><!-- -->
 	    </div>
-        <br/>
-        <div class="input-group" data-ng-show="areTagless">
+        <div class="input-group mt" data-ng-show="areTagless">
             <div class="input-group-addon clickable">
                 <span class="fa-stack fa-md">
                     <i class="fa fa-tag fa-stack-1x"></i>

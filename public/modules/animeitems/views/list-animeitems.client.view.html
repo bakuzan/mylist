@@ -167,39 +167,34 @@
             </div>
            <input type="text" class="form-control" placeholder="search anime" ng-model="search.title"><!-- typeahead="animeitem.title for animeitem in animeitems | filter: { title:$viewValue } " -->
 	   </div>
-        <br/>
-        <div class="input-group">
+        <div class="input-group mt">
             <div class="input-group-addon clickable" clear-tag-values>
                 <i class="fa fa-tags"></i>
             </div>
            <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags" typeahead="stat.tag for stat in statTags | filter: $viewValue" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
 	   </div>
-       <div class="input-group" ng-hide="searchTags===undefined || searchTags==='' || searchTags===null">
-           <ul class="taskList col-lg-12 col-md-12">
-               <br/>
+       <div class="input-group mt" ng-hide="searchTags===undefined || searchTags==='' || searchTags===null">
+           <ul class="tag-list col-lg-12 col-md-12">
                 <li class="tag-bubble col-lg-12 col-md-12" ng-repeat="tag in tagsForFilter track by $index">
                     {{tag}}
                     <a class="clickable pull-right" aria-hidden="true" delete-search-tag="{{tag}}"><i class="fa fa-trash-o" style="color: red;"></i></a>
                 </li>
             </ul>
        </div>
-        <br/>
-        <div class="input-group">
+        <div class="input-group mt">
 		  <div class="input-group-addon">
 		      <i class="fa fa-list-ol"></i>
           </div>
             <input type="text" class="form-control" value="Showing {{ (showingCount = (animeitems | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem).length) }} anime." disabled>
         </div>
-        <br/>
-        <div class="input-group">
+        <div class="input-group mt">
 		  <div class="input-group-addon">
 		      <i class="fa fa-sort"></i>
           </div>
             <select class="form-control" ng-model="sortType" ng-init="sortType = sortOptions[4].v" ng-options="so.v as so.n for so in sortOptions">
             </select>
         </div>
-        <br/>
-        <div class="input-group clickable" ng-click="sortReverse = !sortReverse">
+        <div class="input-group mt clickable" ng-click="sortReverse = !sortReverse">
 		  <div class="input-group-addon">
 		      <i class="fa" ng-class="sortReverse ? 'fa-sort-amount-desc' : 'fa-sort-amount-asc' "></i>
           </div>
@@ -207,8 +202,7 @@
             <input type="text" class="form-control" value="Descending" ng-show="sortReverse" disabled>
             <!--<input type="checkbox" class="form-control" data-ng-model="sortReverse" id="sortReverse">-->
         </div>
-        <br/>
-        <div class="input-group">
+        <div class="input-group mt">
 		  <div class="input-group-addon">
 		      <i class="fa fa-check"></i>
           </div>
@@ -218,8 +212,7 @@
                         <option value="true">Completed</option>
             </select>
         </div>
-        <br/>
-        <div class="input-group">
+        <div class="input-group mt">
 		  <div class="input-group-addon">
 		      <i class="glyphicon glyphicon-cd"></i>
           </div>
@@ -229,8 +222,7 @@
                         <option value="true">Disc</option>
             </select>
         </div>
-        <br/>
-        <div class="input-group">
+        <div class="input-group mt">
 		  <div class="input-group-addon">
 		      <i class="fa fa-repeat"></i>
           </div>
@@ -240,8 +232,7 @@
                         <option value="true">Re-watching</option>
             </select>
         </div>
-        <br/>
-        <div class="input-group">
+        <div class="input-group mt">
             <div class="input-group-addon clickable" data-ng-click="ratingLevel=undefined">
                 <i class="fa fa-star"></i>
             </div>
@@ -250,8 +241,7 @@
                 <span data-ng-show="overStar!=null" class="label" ng-class="{'label-warning': percent<40, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}">{{percent}}%</span>
             </div>
         </div>
-        <br/>
-        <div class="input-group" data-ng-show="areTagless">
+        <div class="input-group mt" data-ng-show="areTagless">
             <div class="input-group-addon clickable">
                 <span class="fa-stack fa-md">
                     <i class="fa fa-tag fa-stack-1x"></i>

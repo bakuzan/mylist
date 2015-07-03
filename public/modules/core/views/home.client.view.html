@@ -48,7 +48,6 @@
                         <input type="checkbox" id="daily" class="form-control" ng-model="newTaskDaily">
                     </div>
                 </div>
-                <br/>
                 <div class="form-group pull-left">
                     <button class="btn btn-primary" ng-click="addNew()" ng-disabled="scheduleForm.$invalid">Add task</button>
                     <!--<button class="btn btn-danger" ng-click="deleteTask()">Delete Tasks</button>-->
@@ -64,8 +63,7 @@
     <div class="col-lg-12 col-md-12 col-sm-12">
         <a class="list-group-item collapse-bar" ng-click="isAddTask=!isAddTask"><i class="fa fa-plus-square"></i> Add task</a>
         <a class="list-group-item collapse-bar" data-ng-click="isCollapseFilter=!isCollapseFilter">Filters</a>
-        <br/>
-        <div class="col-lg-12 col-md-12 col-sm-12" data-ng-hide="isCollapseFilter">
+        <div class="col-lg-12 col-md-12 col-sm-12 mt" data-ng-hide="isCollapseFilter">
             <div class="col-lg-12 col-md-12 col-sm-12 input-group">
 		        <div class="input-group-addon">
 		          <i class="fa fa-list-ol"></i>

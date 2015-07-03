@@ -104,8 +104,8 @@ angular.module('animeitems').config(['$stateProvider',
 'use strict';
 
 // Animeitems controller
-angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'moment',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, moment) {
+angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -115,32 +115,26 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         //paging controls for the list view.
         $scope.currentPage = 0;
         $scope.pageSize = 10;
-        $scope.numberOfPages = function(value){
-            var numPages = Math.ceil(value/$scope.pageSize);
-            
-            //reset number of pages to be the final page if the number of pages
-            //becomes less than the one you are on.
-            if ($scope.currentPage + 1 > numPages) {
-                $scope.currentPage = numPages-1;
-            }
-            if (numPages!==0 && $scope.currentPage < 0) {
-                $scope.currentPage = 0;
-            }
-            $scope.pageCount = numPages;
-            return numPages;
-        };
+        $scope.pageCount = 0;
+        $scope.$watch('showingCount', function() {
+            var pagingDetails = ListService.numberOfPages($scope.showingCount, $scope.pageSize, $scope.currentPage);
+            $scope.currentPage = pagingDetails.currentPage;
+            $scope.pageCount = pagingDetails.pageCount;
+        });
         
-        $scope.itemUpdate = new Date().toISOString().substring(0,10); //today's date as 'yyyy-MM-dd'
+        //today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
+        $scope.itemUpdate = new Date().toISOString().substring(0,10);
         $scope.view = 'list'; //dynamic page title.
         $scope.historicalView = 'month'; //default historical view in stats.
         $scope.isList = true; //list view as default.
+        $scope.viewItemHistory = false; //default stat of item history popout.
         $scope.maxAnimeCount = 0; //number of anime.
         $scope.maxAnimeRatedCount = 0; //number of anime with a rating i.e not 0.
         $scope.averageAnimeRating = 0; //average rating for anime.
         $scope.maxCompleteMonth = 0; //used to find the max number of ends in 1 month.
         $scope.showDetail = false; //show month detail.
-        $scope.statTagSortType = 'tag'; //stat tag sort
-        $scope.statTagSortReverse = false; //stat tag sort direction.
+        $scope.statTagSortType = 'count'; //stat tag sort
+        $scope.statTagSortReverse = true; //stat tag sort direction.
 //        $scope.sortType = ['latest', 'meta.updated']; //default sort type
         $scope.sortOptions = [
             { v: 'title', n: 'Title' },{ v: 'episodes', n: 'Episodes' },{ v: 'start', n: 'Start date' },
@@ -257,7 +251,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 var modeMap = {};
                 var maxCount = 0;
                 for(var i = 0; i < $scope.animeitems.length; i++) {
-    	           if ($scope.animeitems[i].end!==undefined) {
+    	           if ($scope.animeitems[i].end!==undefined && $scope.animeitems[i].end!==null) {
                         var end = $scope.animeitems[i].end.substring(0,7);
 
     	               if(modeMap[end] === null || modeMap[end] === undefined) {
@@ -276,6 +270,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 $scope.maxCompleteMonth = maxCount;
                 
                 var add = true;
+                var checkedRating;
                 //is tag in array?
                 angular.forEach($scope.animeitems, function(anime) { 
                     if (anime.tags.length===0) {
@@ -285,17 +280,22 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                         for(var i=0; i < $scope.statTags.length; i++) {
                             if ($scope.statTags[i].tag===tag.text) {
                                 add = false;
-                                    $scope.statTags[i].count += 1; 
+                                    $scope.statTags[i].count += 1;
+                                    $scope.statTags[i].ratedCount += anime.rating === 0 ? 0 : 1;
+                                    $scope.statTags[i].ratings.push(anime.rating);
                                     $scope.statTags[i].ratingAdded += anime.rating;
-                                    $scope.statTags[i].ratingAvg = $scope.statTags[i].ratingAdded / $scope.statTags[i].count;
+                                    $scope.statTags[i].ratingAvg = $scope.statTags[i].ratingAdded === 0 ? 0 : $scope.statTags[i].ratingAdded / $scope.statTags[i].ratedCount;
+                                    $scope.statTags[i].ratingWeighted = ItemService.ratingsWeighted($scope.statTags[i].ratings, $scope.averageAnimeRating);
                             }
+                                    
                         }
                         // add if not in
                         if (add===true) {
-                            $scope.statTags.push({ tag: tag.text, count: 1, ratingAdded: anime.rating, ratingAvg: anime.rating });
+                            checkedRating = anime.rating === 0 ? 0 : 1;
+                            $scope.statTags.push({ tag: tag.text, count: 1, ratedCount: checkedRating, ratings: [anime.rating], ratingAdded: anime.rating, ratingAvg: anime.rating, ratingWeighted: ItemService.ratingsWeighted([anime.rating], $scope.averageAnimeRating) });
                         }
                         add = true; //reset add status.
-                    });
+                    }); 
 //                    console.log($scope.statTags);
                 });
             }
@@ -379,7 +379,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		// Update existing Animeitem
 		$scope.update = function() {
 			var animeitem = $scope.animeitem;
-
+//            console.log(animeitem);
             //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
             if ($scope.animeitem.manga!==null && $scope.animeitem.manga!==undefined) {
                 animeitem.manga = $scope.animeitem.manga._id;
@@ -390,6 +390,9 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 animeitem.tags = temp.concat($scope.tagArray);
             }
             
+            //update the item history.
+            animeitem = ItemService.itemHistory(animeitem, $scope.updateHistory, 'anime');
+            
             if ($scope.imgPath!==undefined && $scope.imgPath!==null && $scope.imgPath!=='') {
                 animeitem.image = $scope.imgPath;
             }
@@ -397,17 +400,23 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             //console.log(animeitem.image);
             
             //handle end date
-            if (animeitem.episodes===animeitem.finalEpisode) {
+            if (animeitem.episodes===animeitem.finalEpisode && animeitem.finalEpisode!==0) {
                 if (animeitem.end===undefined) {
                     animeitem.end = animeitem.latest.substring(0,10);
 //                    console.log(animeitem.end);
                 }
+            } else {
+                //in the event the 'complete-ness' of an entry needs to be undone.
+                //this will undo the end date.
+                animeitem.end = null;
+//                console.log(animeitem.end);
             }
             
             //handle status: completed.
-            if(animeitem.end!==undefined) {
+            if(animeitem.end!==undefined && animeitem.end!==null) {
                 animeitem.status = true;
             } else {
+                //if no end date, not complete.
                 animeitem.status = false;
             }
             
@@ -427,7 +436,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		// Find a list of Animeitems
 		$scope.find = function() {
 			$scope.animeitems = Animeitems.query();
-            console.log($scope.animeitems);
+//            console.log($scope.animeitems);
 		};
 
 		// Find existing Animeitem
@@ -443,42 +452,15 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             $scope.mangaitems = Mangaitems.query();
         };
         
-                //image upload
+        //image upload
         $scope.uploadFile = function(){
-            var file = $scope.myFile;
-            $scope.imgPath = '/modules/animeitems/img/' + file.name;
-            console.log('file is ' + JSON.stringify(file));
-            var uploadUrl = '/fileUploadAnime';
-            fileUpload.uploadFileToUrl(file, uploadUrl);
+            $scope.imgPath = '/modules/animeitems/img/' + $scope.myFile.name;
+            fileUpload.uploadFileToUrl($scope.myFile, '/fileUploadAnime');
         };
-        
+
         //latest date display format.
         $scope.latestDate = function(latest, updated) {
-//          console.log(latest, updated);
-            var today = moment(new Date());
-            var latestDate, diff;
-            if (latest.substring(0,10)===updated.substring(0,10)) {
-                 latestDate = moment(updated);
-                 diff = latestDate.fromNow();
-                
-                if (diff==='a day ago') {
-                    return 'Yesterday';
-                } else {
-                    return diff;
-                }
-            } else {
-                 latestDate = moment(latest);
-                 diff = today.diff(latestDate, 'days');
-                
-                //for 0 and 1 day(s) ago use the special term.
-                if (diff===0) {
-                    return 'Today';
-                } else if (diff===1) {
-                    return 'Yesterday';
-                } else {
-                    return diff + ' days ago.';
-                }
-            }
+            return ItemService.latestDate(latest, updated);
         };
 	}
 ]);
@@ -565,7 +547,7 @@ angular.module('animeitems').filter('startFrom', function() {
     return function(array, year, month) {
         return array.filter(function(item) {
         //ended stat month filter
-                if (item.end!==undefined) {
+                if (item.end!==undefined && item.end!==null) {
                     if (item.end.substring(0,4)===year) {
                         if (item.end.substr(5,2)===month) {
                             return item;
@@ -575,42 +557,44 @@ angular.module('animeitems').filter('startFrom', function() {
         });
     };
 })
-.filter('endedSeason', function() {
+.filter('endedSeason', ['moment', function(moment) {
+    //ended stat season filter
     return function(array, year, month) {
         return array.filter(function(item) {
-        //ended stat season filter
-                if (item.end!==undefined) {
+                var start = moment(item.start);
+                var end = moment(item.end);
+                var num, startMonth, startYear, diff, weeks;
+                var pad = '00';
+                if (item.end!==undefined && item.end!==null) {
                     /**
                      *  Can currently handle shows of 1 or 2 seasons with 'standard' lengths (10-13) / (22-26) that
                      *  start and finish in the 'normal' season months (J-M,A-J,J-S,O-D) / (J-J,A-S,J-D,O-M).
                      */
-                    var pad = '00';
-                    var startMonth;
                     if (9 < item.finalEpisode && item.finalEpisode < 14) {
-                        if (item.end.substring(0,4) === year) {
-                            if (item.end.substr(5,2) === month) {
-                                startMonth = (pad + (month - 2)).slice(-pad.length);
-                                if (item.start.substr(5,2) === startMonth) {
-                                    return item;
-                                }
+                        startMonth = (pad + (month - 2)).slice(-pad.length);
+                        if ((item.end.substring(0,4) === year && item.end.substr(5,2) === month) || (item.start.substring(0,4) === year && item.start.substr(5,2) === startMonth)) {
+                            diff = end.diff(start, 'days');
+                            weeks = Math.ceil(diff / 7) + 1; //add one to correct for the first ep. counting as week 0 in an equation.
+                            if (weeks >= item.episodes) {
+                                return item;
                             }
                         }
                     } else if (13 < item.finalEpisode && item.finalEpisode < 26) {
-                        if (item.end.substring(0,4) === year) {
-                            if (item.end.substr(5,2) === month) {
-                                var num = (month - 5) > 0 ? (month - 5) : 10;
-                                startMonth = (pad + num).slice(-pad.length);
-//                                console.log(startMonth);
-                                if (item.start.substr(5,2) === startMonth) {
-                                    return item;
-                                }
+                        num = (month - 5) > 0 ? (month - 5) : 10;
+                        startYear = (month - 5) > 0 ? year : year - 1;
+                        startMonth = (pad + num).slice(-pad.length);
+                        if ((item.end.substring(0,4) === year && item.end.substr(5,2) === month) || (item.start.substring(0,4) === startYear && item.start.substr(5,2) === startMonth)) {
+                            diff = end.diff(start, 'days');
+                            weeks = Math.ceil(diff / 7) + 1; //add one to correct for the first ep. counting as week 0 in an equation.
+                            if (weeks >= item.episodes) {
+                                return item;
                             }
                         }
                     }
                 }
         });
     };
-});
+}]);
 'use strict';
 
 //Animeitems service used to communicate Animeitems REST endpoints
@@ -639,7 +623,124 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             alert('File Upload Failed: ' + err.message);
         });
     };
+}])
+.service('ListService', function() {
+        //get number of pages for list.
+        this.numberOfPages = function(showingCount, pageSize, currentPage) {
+            var pageCount = Math.ceil(showingCount/pageSize);
+            
+            //reset number of pages to be the final page if the number of pages
+            //becomes less than the one you are on.
+            if (currentPage + 1 > pageCount) {
+                currentPage = pageCount-1;
+            }
+            if (pageCount!==0 && currentPage < 0) {
+                currentPage = 0;
+            }
+            var pagingDetails = { currentPage: currentPage, pageCount: pageCount };
+            return pagingDetails;
+        };
+    
+})
+.service('ItemService', ['moment', function(moment) {
+        
+        //add history entry to item.
+        this.itemHistory = function(item, updateHistory, type) {
+            //populate the history of when each part was 'checked' off.
+            if (item.meta.history.length !== 0) {
+                var latestHistory = item.meta.history[item.meta.history.length - 1].value;
+                var length = type === 'anime' ? item.episodes - latestHistory : item.chapters - latestHistory;
+                if (length > 0 && (type === 'anime' ? item.reWatching === false : item.reReading === false)) {
+                    for(var i = 1; i <= length; i++) {
+                        item.meta.history.push({ date: Date.now(), value: latestHistory + i });
+                    }
+                }
+            } else {
+                if (updateHistory && (type === 'anime' ? item.reWatching === false : item.reReading === false)) {
+                    item.meta.history.push({ date: Date.now(), value: (type === 'anime' ? item.episodes : item.chapters) });
+                }
+            }
+            
+            return item;
+        };
+    
+        //function to display relative time - using latest or updated date.
+        this.latestDate = function(latest, updated) {
+            //latest date display format.
+//          console.log(latest, updated);
+            var today = moment(new Date());
+            var latestDate, diff;
+            if (latest.substring(0,10)===updated.substring(0,10)) {
+                 latestDate = moment(updated);
+                 diff = latestDate.fromNow();
+                
+                if (diff==='a day ago') {
+                    return 'Yesterday';
+                } else {
+                    return diff + '.';
+                }
+            } else {
+                 latestDate = moment(latest);
+                 diff = today.diff(latestDate, 'days');
+                
+                //for 0 and 1 day(s) ago use the special term.
+                if (diff===0) {
+                    return 'Today';
+                } else if (diff===1) {
+                    return 'Yesterday';
+                } else {
+                    return diff + ' days ago.';
+                }
+            }
+        };
+        
+        //function to calculate the weighted mean ratings for the genre tags.
+        this.ratingsWeighted = function(ratings, listAverage) {
+            var values = [];
+            var weights = [];
+            var total = 0;
+            var count = 0;
+            var someValue = 0; //a value to augment weighted average.
+            
+            /**
+             *  create array (weights) with key(rating) and value(weight).
+             *  uses values as a control.
+             */
+            for (var i=0; i < ratings.length; i++) {
+                if (ratings[i]!==0) {
+                    if (ratings[i] in values) {
+                        weights[ratings[i]]++;
+                    } else {
+                        values.push(ratings[i]);
+                        weights[ratings[i]] = 1;
+                    }
+                }
+            }
+//            console.log(values,weights);
+            /**
+             *  using the key(rating) multiply by the value(weight).
+             *  calculated weighted total and count.
+             */
+            for (var k in weights){
+                if (typeof weights[k] !== 'function') {
+                    total += k * weights[k];
+                    count += weights[k];
+                }
+            }
+            //set someValue now that count is calculated - it SHOULD favour those with more ratings -> needs work.
+            someValue = count / 50;
+            /**
+             *  count = number of ratings for it. total/count = average rating for tag.
+             *  someValue = minimum score to get weighted. listAverage = average rating for all tags.
+             */
+            return count > 1 ? (count / (count + someValue)) * (total / count) + (someValue / (count + someValue)) * listAverage : 0;
+            
+        };
+        
 }]);
+
+
+
 'use strict';
 
 // Configuring the Articles module
@@ -679,8 +780,8 @@ angular.module('characters').config(['$stateProvider',
 'use strict';
 
 // Characters controller
-angular.module('characters').controller('CharactersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Characters', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window',
-	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window) {
+angular.module('characters').controller('CharactersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Characters', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ListService',
+	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window, ListService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -690,20 +791,12 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         //paging controls for the list view.
         $scope.currentPage = 0;
         $scope.pageSize = 10;
-        $scope.numberOfPages = function(value){
-            var numPages = Math.ceil(value/$scope.pageSize);
-            
-            //reset number of pages to be the final page if the number of pages
-            //becomes less than the one you are on.
-            if ($scope.currentPage + 1 > numPages) {
-                $scope.currentPage = numPages-1;
-            }
-            if (numPages!==0 && $scope.currentPage < 0) {
-                $scope.currentPage = 0;
-            }
-            $scope.pageCount = numPages;
-            return numPages;
-        };
+        $scope.pageCount = 0;
+        $scope.$watch('showingCount', function() {
+            var pagingDetails = ListService.numberOfPages($scope.showingCount, $scope.pageSize, $scope.currentPage);
+            $scope.currentPage = pagingDetails.currentPage;
+            $scope.pageCount = pagingDetails.pageCount;
+        });
         
         $scope.isList = 'list'; //show list? or carousel.
         $scope.maxItemCount = 0; //number of characters.
@@ -976,7 +1069,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             if ($scope.character.manga!==null && $scope.character.manga!==undefined) {
                 character.manga = $scope.character.manga._id;
             }
-            console.log($scope.character.anime);
+//            console.log($scope.character.anime);
             if ($scope.character.anime!==null && $scope.character.anime!==undefined) {
                 character.anime = $scope.character.anime._id;
             }
@@ -1008,7 +1101,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 			$scope.character = Characters.get({ 
 				characterId: $stateParams.characterId
 			});
-            console.log($scope.character);
+//            console.log($scope.character);
 		};
         
         // Find a list of Animeitems
@@ -1036,35 +1129,16 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 			});
 		};
         
-        
-        // Image upload
+        //image upload
         $scope.uploadFile = function(){
-            var file = $scope.myFile;
-            $scope.imgPath = '/modules/characters/img/' + file.name;
-            console.log('file is ' + JSON.stringify(file));
-            var uploadUrl = '/fileUploadCharacter';
-            fileUpload.uploadFileToUrl(file, uploadUrl);
+            $scope.imgPath = '/modules/characters/img/' + $scope.myFile.name;
+            fileUpload.uploadFileToUrl($scope.myFile, '/fileUploadCharacter');
         };
 	}
 ]);
 'use strict';
 
-angular.module('characters').directive('fileModel', ['$parse', function ($parse) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-            var model = $parse(attrs.fileModel);
-            var modelSetter = model.assign;
-            
-            element.bind('change', function(){
-                scope.$apply(function(){
-                    modelSetter(scope, element[0].files[0]);
-                });
-            });
-        }
-    };
-}])
-.directive('characterBack', function(){
+angular.module('characters').directive('characterBack', function(){
     return function(scope, element, attrs){
         var url = attrs.characterBack;
         element.css({
@@ -1287,23 +1361,7 @@ angular.module('characters').factory('Characters', ['$resource',
 			}
 		});
 	}
-])
-.service('fileUpload', ['$http', function ($http) {
-    this.uploadFileToUrl = function(file, uploadUrl){
-        var fd = new FormData();
-        fd.append('file', file);
-        $http.post(uploadUrl, fd, {
-            transformRequest: angular.identity,
-            headers: {'Content-Type': undefined}
-        })
-        .success(function(response){
-            alert('File Uploaded!');
-        })
-        .error(function(err){
-            alert('File Upload Failed: ' + err.message);
-        });
-    };
-}]);
+]);
 'use strict';
 
 // Setting up route
@@ -1342,8 +1400,8 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
 'use strict';
 
 
-angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Authentication', '$window', '$location', 'Animeitems', 'Mangaitems',
-	function($scope, $rootScope, Authentication, $window, $location, Animeitems, Mangaitems) {
+angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Authentication', '$window', '$location', 'Animeitems', 'Mangaitems', '$filter',
+	function($scope, $rootScope, Authentication, $window, $location, Animeitems, Mangaitems, $filter) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
         
@@ -1385,76 +1443,6 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
     ];
     $scope.newTaskDay = $scope.days;
     
-    //special day filter
-    $scope.dayFilter = function(item) {
-        var ds = $scope.daySelected;
-        if (ds==='1' && item.day==='Monday') {
-                return item;
-        } else if (ds==='2' && item.day==='Tuesday') {
-                return item;
-        } else if (ds==='3' && item.day==='Wednesday') {
-                return item;
-        } else if (ds==='4' && item.day==='Thursday') {
-                return item;
-        } else if (ds==='5' && item.day==='Friday') {
-                return item;
-        } else if (ds==='6' && item.day==='Saturday') {
-                return item;
-        } else if (ds==='0' && item.day==='Sunday') {
-                return item;
-        } else if (ds==='' || ds===null || ds===undefined) {
-                return item;
-        } else if (ds==='Any' && item.day==='Any') {
-                return item;
-        }
-    };
-        
-    //date filter
-    $scope.dateFilter = function(item) {
-        if (item.date===null || item.date===undefined) {
-            if ($scope.datesSelected==='current') {
-                return item;
-            }
-            return false;
-        }
-            //console.log(item.date);
-            var day = $scope.today.getDay(),
-            diff = $scope.today.getDate() - day + (day === 0 ? 0:7);
-            var temp = new Date();
-            var wkEnd = new Date(temp.setDate(diff));
-            var currentWkEnd = wkEnd.toISOString().substring(0,10);
-//            console.log('day: ' + day);
-//            console.log('date: ' + $scope.today.getDate());
-//            console.log('diff: ' + diff);
-              console.log('wk-end: ' + currentWkEnd); // 0123-56-89
-
-        if ($scope.datesSelected==='current') {
-            if (item.date.substr(0,4) < currentWkEnd.substr(0,4)) {
-                return item;
-            } else if (item.date.substr(0,4) === currentWkEnd.substr(0,4)) {
-                if (item.date.substr(5,2) < currentWkEnd.substr(5,2)) {
-                    return item;
-                } else if (item.date.substr(5,2) === currentWkEnd.substr(5,2)) {
-                    if (item.date.substr(8,2) <= currentWkEnd.substr(8,2)) {
-                        return item;
-                    }
-                }
-            }
-        } else if ($scope.datesSelected==='future') {
-            if (item.date.substr(0,4) > currentWkEnd.substr(0,4)) {
-                return item;
-            } else if (item.date.substr(0,4) === currentWkEnd.substr(0,4)) {
-                if (item.date.substr(5,2) > currentWkEnd.substr(5,2)) {
-                    return item;
-                } else if (item.date.substr(5,2) === currentWkEnd.substr(5,2)) {
-                    if (item.date.substr(8,2) > currentWkEnd.substr(8,2)) {
-                        return item;
-                    }
-                }
-            }
-        }
-    };
-    
     //get monday!
     $scope.weekBeginning = function() {
         var day = $scope.today.getDay(),
@@ -1468,7 +1456,7 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         //var day = new Date('2015-05-04').getDay();
         var day = $scope.today.getDay();
         //console.log(day);
-        console.log($scope.taskItem);
+//        console.log($scope.taskItem);
         //Is it monday?
         if (day===1) {
             var refreshItems = $scope.taskItem;
@@ -1481,11 +1469,11 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
                             taskItem.complete = false;
                             taskItem.updated = true;
                             $scope.taskItem.push(taskItem);
-                            console.log('updated set to true');
+//                            console.log('updated set to true');
                         }
                     } else {
                         $scope.taskItem.push(taskItem);
-                        console.log('updated already true');
+//                        console.log('updated already true');
                     }
             });
             localStorage.setItem('taskItems', JSON.stringify($scope.taskItem)); 
@@ -1518,7 +1506,7 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
                         $scope.taskItem.push(taskItem);
                     }
                 });
-            console.log('updated set to false');
+//            console.log('updated set to false');
             localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
         }
     };
@@ -1533,6 +1521,10 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         }
         if ($scope.newTaskDate === null || $scope.newTaskDate === '' || $scope.newTaskDate === undefined) {
             $scope.newTaskDate = $scope.today.toISOString().substring(0,10); // 'yyyy-MM-dd'
+        }
+        //not allowed to be tied to a day if a daily task -- daily takes precedence.
+        if ($scope.newTaskDaily === true) {
+            $scope.newTaskDay.name = 'Any';
         }
         
         //if created on a monday set updated=true - without this task could be deleted/un-completed by the check status method.
@@ -1572,7 +1564,7 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         $scope.newTaskDaily = false;
         localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
     };
-    $scope.deleteTask = function  (description) {
+    $scope.deleteTask = function (description) {
         //are you sure option...
         var removal = $window.confirm('Are you sure you want to delete this task?');
         var deletingItem = $scope.taskItem;
@@ -1597,35 +1589,88 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         });
         localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
     };
-        
-    $scope.remaining = function() {
-        var count = 0;
-        angular.forEach($scope.taskItem, function(taskItem) {
-            if ($scope.dateFilter(taskItem)) {
-                count += taskItem.complete ? 0 : 1;
-            }
-        });
-        return count;
-    };
-        
-//    $scope.buildRecent = function() {
-//        $scope.recentUpdates = [];
-//        $scope.animeitems = Animeitems.query();
-//        //console.log($scope.animeitems);
-//        $scope.mangaitems = Mangaitems.query();
-//        //console.log($scope.mangaitems);
-//        
-//        var animelist = $scope.animeitems;
-//        var mangalist = $scope.mangaitems; 
-//        angular.forEach($scope.animeitems, function(item) {
-//            $scope.recentUpdates.push(item);
-//        });
-//        console.log($scope.recentUpdates);
-//    };
-
 
 	}
 ]);
+'use strict';
+
+angular.module('core').filter('dayFilter', function() {
+    return function(array, daySelected) {
+        return array.filter(function(item) {
+            //special day filter
+//            console.log(item);
+            var ds = daySelected;
+            if (ds==='1' && item.day==='Monday') {
+                return item;
+            } else if (ds==='2' && item.day==='Tuesday') {
+                return item;
+            } else if (ds==='3' && item.day==='Wednesday') {
+                return item;
+            } else if (ds==='4' && item.day==='Thursday') {
+                return item;
+            } else if (ds==='5' && item.day==='Friday') {
+                return item;
+            } else if (ds==='6' && item.day==='Saturday') {
+                return item;
+            } else if (ds==='0' && item.day==='Sunday') {
+                return item;
+            } else if (ds==='' || ds===null || ds===undefined) {
+                return item;
+            } else if (ds==='Any' && item.day==='Any') {
+                return item;
+            }
+        });
+    };
+})
+.filter('dateFilter', function() {
+    return function(array, datesSelected) {
+        return array.filter(function(item) {
+            //date filter
+            if (item.date===null || item.date===undefined) {
+                if (datesSelected==='current') {
+                    return item;
+                }
+                return false;
+            }
+            //console.log(item.date);
+            var day = new Date().getDay(),
+            diff = new Date().getDate() - day + (day === 0 ? 0:7);
+            var temp = new Date();
+            var wkEnd = new Date(temp.setDate(diff));
+            var currentWkEnd = wkEnd.toISOString().substring(0,10);
+//            console.log('day: ' + day);
+//            console.log('date: ' + $scope.today.getDate());
+//            console.log('diff: ' + diff);
+//              console.log('wk-end: ' + currentWkEnd); // 0123-56-89
+
+            if (datesSelected==='current') {
+                if (item.date.substr(0,4) < currentWkEnd.substr(0,4)) {
+                    return item;
+                } else if (item.date.substr(0,4) === currentWkEnd.substr(0,4)) {
+                    if (item.date.substr(5,2) < currentWkEnd.substr(5,2)) {
+                        return item;
+                    } else if (item.date.substr(5,2) === currentWkEnd.substr(5,2)) {
+                        if (item.date.substr(8,2) <= currentWkEnd.substr(8,2)) {
+                            return item;
+                        }
+                    }
+                }
+            } else if (datesSelected==='future') {
+                if (item.date.substr(0,4) > currentWkEnd.substr(0,4)) {
+                    return item;
+                } else if (item.date.substr(0,4) === currentWkEnd.substr(0,4)) {
+                    if (item.date.substr(5,2) > currentWkEnd.substr(5,2)) {
+                        return item;
+                    } else if (item.date.substr(5,2) === currentWkEnd.substr(5,2)) {
+                        if (item.date.substr(8,2) > currentWkEnd.substr(8,2)) {
+                            return item;
+                        }
+                    }
+                }
+            }
+        });
+    };
+});
 'use strict';
 
 //Menu service used for managing  menus
@@ -1854,7 +1899,6 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
 			$scope.animeitems = Animeitems.query();
             //console.log($scope.characters);
 		};
-        
         // Find a list of Manga
 		$scope.findManga = function() {
 			$scope.mangaitems = Mangaitems.query();
@@ -1862,131 +1906,58 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
 		};
         
         /**
-         *  UPDATE ANIME FAVOURITES
+         *  Add, reorder, remove FAVOURITES
          */
-        $scope.updateAnimeFavouriteOne = function() {
-            if ($scope.favouriteOne) {
-                angular.forEach($scope.favouriteAnimeitem, function (favouriteAnimeitem) {
-                    if (favouriteAnimeitem.rank === '1') {
-                        favouriteAnimeitem.anime = $scope.favouriteOne;
-                        favouriteAnimeitem.date = $scope.today;
-                    }
-                });
-                localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
-                $scope.favouriteOne = '';
-            } 
-        };
-        $scope.updateAnimeFavouriteTwo = function() {
-            if ($scope.favouriteTwo) {
-                angular.forEach($scope.favouriteAnimeitem, function (favouriteAnimeitem) {
-                    if (favouriteAnimeitem.rank === '2') {
-                        favouriteAnimeitem.anime = $scope.favouriteTwo;
-                        favouriteAnimeitem.date = $scope.today;
-                    }
-                });
-                localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
-                $scope.favouriteTwo = '';
-            } 
-        };
-        $scope.updateAnimeFavouriteThree = function() {
-            if ($scope.favouriteThree) {
-                angular.forEach($scope.favouriteAnimeitem, function (favouriteAnimeitem) {
-                    if (favouriteAnimeitem.rank === '3') {
-                        favouriteAnimeitem.anime = $scope.favouriteThree;
-                        favouriteAnimeitem.date = $scope.today;
-                    }
-                });
-                localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
-                $scope.favouriteThree = '';
-            } 
-        };
-        $scope.updateAnimeFavouriteFour = function() {
-            if ($scope.favouriteFour) {
-                angular.forEach($scope.favouriteAnimeitem, function (favouriteAnimeitem) {
-                    if (favouriteAnimeitem.rank === '4') {
-                        favouriteAnimeitem.anime = $scope.favouriteFour;
-                        favouriteAnimeitem.date = $scope.today;
-                    }
-                });
-                localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
-                $scope.favouriteFour = '';
-            } 
-        };
-        $scope.updateAnimeFavouriteFive = function() {
-            if ($scope.favouriteFive) {
-                angular.forEach($scope.favouriteAnimeitem, function (favouriteAnimeitem) {
-                    if (favouriteAnimeitem.rank === '5') {
-                        favouriteAnimeitem.anime = $scope.favouriteFive;
-                        favouriteAnimeitem.date = $scope.today;
-                    }
-                });
-                localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
-                $scope.favouriteFive = '';
-            } 
+        $scope.addFavourite = function(type) {
+            if (type === 'anime') {
+                if ($scope.favouriteAnimeitem.length < 5) {
+                    $scope.favouriteAnimeitem.push({ date: $scope.today, anime: $scope.favourite });
+                    localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
+                    $scope.favourite = '';
+                } else {
+                    alert('Only allowed 5 favourites! Remove one.');
+                }
+            } else if (type === 'manga') {
+                if ($scope.favouriteMangaitem.length < 5) {
+                    $scope.favouriteMangaitem.push({ date: $scope.today, manga: $scope.favourite });
+                    localStorage.setItem('favouriteMangaitems', JSON.stringify($scope.favouriteMangaitem));
+                    $scope.favourite = '';
+                } else {
+                    alert('Only allowed 5 favourites! Remove one.');
+                    console.log('here');
+                }
+            }
         };
         
-        /**
-         *  UPDATE MANGA FAVOURITES
-         */
-        $scope.updateMangaFavouriteOne = function() {
-            if ($scope.favouriteMangaOne) {
-                angular.forEach($scope.favouriteMangaitem, function (favouriteMangaitem) {
-                    if (favouriteMangaitem.rank === '1') {
-                        favouriteMangaitem.manga = $scope.favouriteMangaOne;
-                        favouriteMangaitem.date = $scope.today;
-                    }
-                });
-                localStorage.setItem('favouriteMangaitems', JSON.stringify($scope.favouriteMangaitem));
-                $scope.favouriteMangaOne = '';
-            } 
-        };
-        $scope.updateMangaFavouriteTwo = function() {
-            if ($scope.favouriteMangaTwo) {
-                angular.forEach($scope.favouriteMangaitem, function (favouriteMangaitem) {
-                    if (favouriteMangaitem.rank === '2') {
-                        favouriteMangaitem.manga = $scope.favouriteMangaTwo;
-                        favouriteMangaitem.date = $scope.today;
-                    }
-                });
-                localStorage.setItem('favouriteMangaitems', JSON.stringify($scope.favouriteMangaitem));
-                $scope.favouriteMangaTwo = '';
-            } 
-        };
-        $scope.updateMangaFavouriteThree = function() {
-            if ($scope.favouriteMangaThree) {
-                angular.forEach($scope.favouriteMangaitem, function (favouriteMangaitem) {
-                    if (favouriteMangaitem.rank === '3') {
-                        favouriteMangaitem.manga = $scope.favouriteMangaThree;
-                        favouriteMangaitem.date = $scope.today;
-                    }
-                });
-                localStorage.setItem('favouriteMangaitems', JSON.stringify($scope.favouriteMangaitem));
-                $scope.favouriteMangaThree = '';
-            } 
-        };
-        $scope.updateMangaFavouriteFour = function() {
-            if ($scope.favouriteMangaFour) {
-                angular.forEach($scope.favouriteMangaitem, function (favouriteMangaitem) {
-                    if (favouriteMangaitem.rank === '4') {
-                        favouriteMangaitem.manga = $scope.favouriteMangaFour;
-                        favouriteMangaitem.date = $scope.today;
-                    }
-                });
-                localStorage.setItem('favouriteMangaitems', JSON.stringify($scope.favouriteMangaitem));
-                $scope.favouriteMangaFour = '';
-            } 
-        };
-        $scope.updateMangaFavouriteFive = function() {
-            if ($scope.favouriteMangaFive) {
-                angular.forEach($scope.favouriteMangaitem, function (favouriteMangaitem) {
-                    if (favouriteMangaitem.rank === '5') {
-                        favouriteMangaitem.manga = $scope.favouriteMangaFive;
-                        favouriteMangaitem.date = $scope.today;
-                    }
-                });
-                localStorage.setItem('favouriteMangaitems', JSON.stringify($scope.favouriteMangaitem));
-                $scope.favouriteMangaFive = '';
-            } 
+        $scope.removeFavourite = function(kill) {
+            //are you sure option...
+            var removal = $window.confirm('Are you sure you want to delete this task?');
+            var deletingItem;
+            if (kill.anime !== undefined) {
+                deletingItem = $scope.favouriteAnimeitem;
+                $scope.favouriteAnimeitem = [];
+                if (removal) {
+                    //update the complete task.
+                    angular.forEach(deletingItem, function (item) {
+                        if (item !== kill) {
+                            $scope.favouriteAnimeitem.push(item);
+                        }
+                    });
+                    localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
+                }
+            } else if (kill.manga !== undefined) {
+                deletingItem = $scope.favouriteMangaitem;
+                $scope.favouriteMangaitem = [];
+                if (removal) {
+                    //update the complete task.
+                    angular.forEach(deletingItem, function (item) {
+                        if (item !== kill) {
+                            $scope.favouriteMangaitem.push(item);
+                        }
+                    });
+                    localStorage.setItem('favouriteMangaitems', JSON.stringify($scope.favouriteMangaitem));
+                }
+            }
         };
         
         $scope.reorderFavourites = function(favourite) {
@@ -1999,33 +1970,27 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
                     $scope.selectedFavourite = favourite;
                 } else {
                     $scope.selectedFavouriteTwo = favourite;
-                    var temprank1 = $scope.selectedFavourite.rank;
-                    var temprank2 = $scope.selectedFavouriteTwo.rank;
-                    
+                    var ind1, ind2, hold;
                     if ($scope.selectedFavourite.anime!==undefined) {
 //                        console.log('change places');
-                        angular.forEach($scope.favouriteAnimeitem, function(favouriteAnimeitem) {
-                            if (favouriteAnimeitem.anime.title===$scope.selectedFavourite.anime.title) {
-                                favouriteAnimeitem.rank = temprank2;
-                            } else if (favouriteAnimeitem.anime.title===$scope.selectedFavouriteTwo.anime.title) {
-                                favouriteAnimeitem.rank = temprank1;
-                            }
-//                            console.log('final=' + favouriteAnimeitem.anime.title + ' - ' + favouriteAnimeitem.rank);
-                        });
+                        ind1 = $scope.favouriteAnimeitem.indexOf($scope.selectedFavourite);
+                        ind2 = $scope.favouriteAnimeitem.indexOf($scope.selectedFavouriteTwo);
+                        hold = $scope.favouriteAnimeitem[ind1];
+                        $scope.favouriteAnimeitem[ind1] = $scope.favouriteAnimeitem[ind2];
+                        $scope.favouriteAnimeitem[ind2] = hold;
+                        
 //                        console.log($scope.favouriteAnimeitem);
                         localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
                         $scope.selectedFavourite = undefined;
                         $scope.selectedFavouriteTwo = undefined;
                     } else if ($scope.selectedFavourite.manga!==undefined) {
 //                        console.log('change places');
-                        angular.forEach($scope.favouriteMangaitem, function(favouriteMangaitem) {
-                            if (favouriteMangaitem.manga.title===$scope.selectedFavourite.manga.title) {
-                                favouriteMangaitem.rank = temprank2;
-                            } else if (favouriteMangaitem.manga.title===$scope.selectedFavouriteTwo.manga.title) {
-                                favouriteMangaitem.rank = temprank1;
-                            }
-//                            console.log('final=' + favouriteMangaitem.manga.title + ' - ' + favouriteMangaitem.rank);
-                        });
+                        ind1 = $scope.favouriteMangaitem.indexOf($scope.selectedFavourite);
+                        ind2 = $scope.favouriteMangaitem.indexOf($scope.selectedFavouriteTwo);
+                        hold = $scope.favouriteMangaitem[ind1];
+                        $scope.favouriteMangaitem[ind1] = $scope.favouriteMangaitem[ind2];
+                        $scope.favouriteMangaitem[ind2] = hold;
+                        
 //                        console.log($scope.favouriteMangaitem);
                         localStorage.setItem('favouriteMangaitems', JSON.stringify($scope.favouriteMangaitem));
                         $scope.selectedFavourite = undefined;
@@ -2088,8 +2053,8 @@ angular.module('mangaitems').config(['$stateProvider',
 'use strict';
 
 // Mangaitems controller
-angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'moment',
-	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, moment) {
+angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService',
+	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -2099,22 +2064,15 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         //paging controls for the list view.
         $scope.currentPage = 0;
         $scope.pageSize = 10;
-        $scope.numberOfPages = function(value){
-            var numPages = Math.ceil(value/$scope.pageSize);
-            
-            //reset number of pages to be the final page if the number of pages
-            //becomes less than the one you are on.
-            if ($scope.currentPage + 1 > numPages) {
-                $scope.currentPage = numPages-1;
-            }
-            if (numPages!==0 && $scope.currentPage < 0) {
-                $scope.currentPage = 0;
-            }
-            $scope.pageCount = numPages;
-            return numPages;
-        };
+        $scope.pageCount = 0;
+        $scope.$watch('showingCount', function() {
+            var pagingDetails = ListService.numberOfPages($scope.showingCount, $scope.pageSize, $scope.currentPage);
+            $scope.currentPage = pagingDetails.currentPage;
+            $scope.pageCount = pagingDetails.pageCount;
+        });
         
-        $scope.itemUpdate = new Date().toISOString().substring(0,10); //today's date as 'yyyy-MM-dd'
+        //today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
+        $scope.itemUpdate = new Date().toISOString().substring(0,10);
         $scope.view = 'list'; //dynamic page title.
         $scope.isList = true; //list view as default.
         $scope.maxMangaCount = 0; //number of anime.
@@ -2122,8 +2080,8 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         $scope.averageMangaRating = 0; //average rating for anime.
         $scope.maxCompleteMonth = 0; //used to find the max number of ends in 1 month.
         $scope.showDetail = false; //show month detail.
-        $scope.statTagSortType = 'tag'; //stat tag sort
-        $scope.statTagSortReverse = false; //stat tag sort direction.
+        $scope.statTagSortType = 'count'; //stat tag sort
+        $scope.statTagSortReverse = true; //stat tag sort direction.
 //        $scope.sortType = 'latest'; //default sort type
         $scope.sortOptions = [
             { v: 'title', n: 'Title' },{ v: 'chapters', n: 'Chapters' },{ v: 'volumes', n: 'Volumes' },{ v: 'start', n: 'Start date' },
@@ -2212,7 +2170,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                 var modeMap = {};
                 var maxCount = 0;
                 for(var i = 0; i < $scope.mangaitems.length; i++) {
-    	           if ($scope.mangaitems[i].end!==undefined) {
+    	           if ($scope.mangaitems[i].end!==undefined && $scope.mangaitems[i].end!==null) {
                         var end = $scope.mangaitems[i].end.substring(0,7);
 
     	               if(modeMap[end] === null || modeMap[end] === undefined) {
@@ -2231,6 +2189,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                 $scope.maxCompleteMonth = maxCount;
                 
                 var add = true;
+                var checkedRating;
                 //is tag in array?
                 angular.forEach($scope.mangaitems, function(manga) { 
                     if (manga.tags.length===0) {
@@ -2240,14 +2199,18 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                         for(var i=0; i < $scope.statTags.length; i++) {
                             if ($scope.statTags[i].tag===tag.text) {
                                 add = false;
-                                    $scope.statTags[i].count += 1; 
+                                    $scope.statTags[i].count += 1;
+                                    $scope.statTags[i].ratedCount += manga.rating === 0 ? 0 : 1;
+                                    $scope.statTags[i].ratings.push(manga.rating);
                                     $scope.statTags[i].ratingAdded += manga.rating;
-                                    $scope.statTags[i].ratingAvg = $scope.statTags[i].ratingAdded / $scope.statTags[i].count;
+                                    $scope.statTags[i].ratingAvg = $scope.statTags[i].ratingAdded === 0 ? 0 : $scope.statTags[i].ratingAdded / $scope.statTags[i].ratedCount;
+                                    $scope.statTags[i].ratingWeighted = ItemService.ratingsWeighted($scope.statTags[i].ratings, $scope.averageMangaRating);
                             }
                         }
                         // add if not in
                         if (add===true) {
-                            $scope.statTags.push({ tag: tag.text, count: 1, ratingAdded: manga.rating, ratingAvg: manga.rating });
+                            checkedRating = manga.rating === 0 ? 0 : 1;
+                            $scope.statTags.push({ tag: tag.text, count: 1, ratedCount: checkedRating, ratings: [manga.rating], ratingAdded: manga.rating, ratingAvg: manga.rating, ratingWeighted: ItemService.ratingsWeighted([manga.rating], $scope.averageMangaRating) });
                         }
                         add = true; //reset add status.
                     });
@@ -2350,6 +2313,9 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                 mangaitem.tags = temp.concat($scope.tagArray);
             }
             
+            //update the item history.
+            mangaitem = ItemService.itemHistory(mangaitem, $scope.updateHistory, 'manga');
+            
             if ($scope.imgPath!==undefined && $scope.imgPath!==null && $scope.imgPath!=='') {
                 mangaitem.image = $scope.imgPath;
             }
@@ -2357,15 +2323,17 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             //console.log(mangaitem.image);
             
             //handle end date
-            if (mangaitem.chapters===mangaitem.finalChapter && mangaitem.volumes===mangaitem.finalVolume) {
+            if (mangaitem.chapters===mangaitem.finalChapter && mangaitem.volumes===mangaitem.finalVolume && mangaitem.finalChapter!==0) {
                 if (mangaitem.end===undefined) {
                     mangaitem.end = mangaitem.latest.substring(0,10);
                     //console.log(animeitem.end);
                 }
+            } else {
+                mangaitem.end = null;
             }
             
             //handle status: completed.
-            if(mangaitem.end!==undefined) {
+            if(mangaitem.end!==undefined && mangaitem.end!==null) {
                 mangaitem.status = true;
             } else {
                 mangaitem.status = false;
@@ -2406,61 +2374,35 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         
         //image upload
         $scope.uploadFile = function(){
-            var file = $scope.myFile;
-            $scope.imgPath = '/modules/mangaitems/img/' + file.name;
-            console.log('file is ' + JSON.stringify(file));
-            var uploadUrl = '/fileUpload';
-            fileUpload.uploadFileToUrl(file, uploadUrl);
+            $scope.imgPath = '/modules/mangaitems/img/' + $scope.myFile.name;
+            fileUpload.uploadFileToUrl($scope.myFile, '/fileUpload');
         };
         
         //latest date display format.
         $scope.latestDate = function(latest, updated) {
-//          console.log(latest, updated);
-            var today = moment(new Date());
-            var latestDate, diff;
-            if (latest.substring(0,10)===updated.substring(0,10)) {
-                 latestDate = moment(updated);
-                 diff = latestDate.fromNow();
-                
-                if (diff==='a day ago') {
-                    return 'Yesterday';
-                } else {
-                    return diff;
-                }
-            } else {
-                 latestDate = moment(latest);
-                 diff = today.diff(latestDate, 'days');
-                
-                //for 0 and 1 day(s) ago use the special term.
-                if (diff===0) {
-                    return 'Today';
-                } else if (diff===1) {
-                    return 'Yesterday';
-                } else {
-                    return diff + ' days ago.';
-                }
-            }
+            return ItemService.latestDate(latest, updated);
         };
 	}
 ]);
 
-'use strict';
-
-angular.module('mangaitems').directive('fileModel', ['$parse', function ($parse) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-            var model = $parse(attrs.fileModel);
-            var modelSetter = model.assign;
-            
-            element.bind('change', function(){
-                scope.$apply(function(){
-                    modelSetter(scope, element[0].files[0]);
-                });
-            });
-        }
-    };
-}]);
+//'use strict';
+//
+//angular.module('mangaitems')
+//.directive('fileModel', ['$parse', function ($parse) {
+//    return {
+//        restrict: 'A',
+//        link: function(scope, element, attrs) {
+//            var model = $parse(attrs.fileModel);
+//            var modelSetter = model.assign;
+//            
+//            element.bind('change', function(){
+//                scope.$apply(function(){
+//                    modelSetter(scope, element[0].files[0]);
+//                });
+//            });
+//        }
+//    };
+//}]);
 //.directive('listBack', function(){
 //    return function(scope, element, attrs){
 //        var url = attrs.listBack;
@@ -2493,23 +2435,7 @@ angular.module('mangaitems').factory('Mangaitems', ['$resource',
 			}
 		});
 	}
-])
-.service('fileUpload', ['$http', function ($http) {
-    this.uploadFileToUrl = function(file, uploadUrl){
-        var fd = new FormData();
-        fd.append('file', file);
-        $http.post(uploadUrl, fd, {
-            transformRequest: angular.identity,
-            headers: {'Content-Type': undefined}
-        })
-        .success(function(response){
-            alert('File Uploaded!');
-        })
-        .error(function(err){
-            alert('File Upload Failed: ' + err.message);
-        });
-    };
-}]);
+]);
 'use strict';
 
 // Config HTTP Error Handling
@@ -2559,10 +2485,10 @@ angular.module('users').config(['$stateProvider',
 			url: '/settings/accounts',
 			templateUrl: 'modules/users/views/settings/social-accounts.client.view.html'
 		}).
-		state('signup', {
-			url: '/signup',
-			templateUrl: 'modules/users/views/authentication/signup.client.view.html'
-		}).
+//		state('signup', {
+//			url: '/signup',
+//			templateUrl: 'modules/users/views/authentication/signup.client.view.html'
+//		}).
 		state('signin', {
 			url: '/signin',
 			templateUrl: 'modules/users/views/authentication/signin.client.view.html'

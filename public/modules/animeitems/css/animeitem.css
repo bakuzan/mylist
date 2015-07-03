@@ -149,3 +149,7 @@
     background-color: #FF0000;
     color: #FFF;
 }
+.tag-list {
+    list-style-type: none;
+    padding: 0 20px;
+}

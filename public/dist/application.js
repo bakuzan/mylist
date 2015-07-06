@@ -167,9 +167,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         //for adding/removing tags.
         $scope.addTag = function () {
 //            console.log($scope.newTag);
-            if ($scope.newTag!=='' && $scope.newTag!==undefined) {
-                $scope.tagArray.push({ text: $scope.newTag });
-            }
+            $scope.tagArray = ListService.addTag($scope.tagArray, $scope.newTag);
             $scope.newTag = '';
         };
         
@@ -386,8 +384,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             }
             
             if ($scope.tagArray!==undefined) {
-                var temp = animeitem.tags ;
-                animeitem.tags = temp.concat($scope.tagArray);
+                animeitem.tags = ListService.concatenateTagArrays(animeitem.tags, $scope.tagArray);
             }
             
             //update the item history.
@@ -639,6 +636,53 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             }
             var pagingDetails = { currentPage: currentPage, pageCount: pageCount };
             return pagingDetails;
+        };
+    
+        this.addTag = function(tagArray, newTag) {
+            if (newTag!=='' && newTag!==undefined) {
+                var i = 0;
+                var alreadyAdded = false;
+                if (tagArray.length > 0) {
+                    while(i < tagArray.length) {
+                        if (tagArray[i].text === newTag) {
+                            alreadyAdded = true;
+                        }
+                        i++;
+                    }
+                    //if not in array add it.
+                    if (alreadyAdded === false) {
+                        tagArray.push({ text: newTag });
+                    }
+                } else {
+                    tagArray.push({ text: newTag });
+                }
+            }
+            return tagArray;
+        };
+    
+        this.concatenateTagArrays = function(itemTags, tagArray) {
+            if (itemTags.length > 0) {
+                var i = 0;
+                var alreadyAdded = false;
+                while(i < tagArray.length) {
+                    for(var j = 0; j < itemTags.length; j++) {
+                        if (itemTags[j].text === tagArray[i].text) {
+                            alreadyAdded = true;
+                        }
+                    }
+                    //add if isn't already in the array.
+                    if (alreadyAdded === false) {
+                        itemTags.push(tagArray[i]);
+                    }
+                    i++;
+                    alreadyAdded = false;
+                }
+                console.log(itemTags);
+                return itemTags;
+            } else {
+                //if there are no tags for item, then just return the new tags.
+                return tagArray;
+            }
         };
     
 })
@@ -917,10 +961,9 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         };
         //for adding/removing tags.
         $scope.addTag = function () {
-            if ($scope.newTag!=='' && $scope.newTag!==undefined) {
-                $scope.tagArray.push({ text: $scope.newTag });
-                $scope.newTag = '';
-            }
+//            console.log($scope.newTag);
+            $scope.tagArray = ListService.addTag($scope.tagArray, $scope.newTag);
+            $scope.newTag = '';
         };
         
         //show stat tag detail.
@@ -1075,8 +1118,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             }
             
             if ($scope.tagArray!==undefined) {
-                var temp = character.tags ;
-                character.tags = temp.concat($scope.tagArray);
+                character.tags = ListService.concatenateTagArrays(character.tags, $scope.tagArray);
             }
             
             if ($scope.imgPath!==undefined && $scope.imgPath!==null && $scope.imgPath!=='') {
@@ -1456,7 +1498,7 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         //var day = new Date('2015-05-04').getDay();
         var day = $scope.today.getDay();
         //console.log(day);
-//        console.log($scope.taskItem);
+        console.log($scope.taskItem);
         //Is it monday?
         if (day===1) {
             var refreshItems = $scope.taskItem;
@@ -1510,6 +1552,43 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
             localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
         }
     };
+    $scope.optionArray = [];
+    //for adding/removing options.
+    $scope.addOption = function () {
+            if ($scope.newOption!=='' && $scope.newOption!==undefined) {
+                var i = 0;
+                var alreadyAdded = false;
+                if ($scope.optionArray.length > 0) {
+                    while(i < $scope.optionArray.length) {
+                        if ($scope.optionArray[i].text === $scope.newOption) {
+                            alreadyAdded = true;
+                        }
+                        i++;
+                    }
+                    //if not in array add it.
+                    if (alreadyAdded === false) {
+                        $scope.optionArray.push({ text: $scope.newOption, complete: false });
+                    }
+                } else {
+                    $scope.optionArray.push({ text: $scope.newOption, complete: false });
+                }
+            }
+            $scope.newOption = '';
+    };
+    
+    $scope.dropOption = function(text) {
+        var removal = $window.confirm('Are you sure you don\'t want to add this option?');
+        if (removal) {
+            var deletingItem = $scope.optionArray;
+            $scope.optionArray = [];
+            //update the task.
+            angular.forEach(deletingItem, function(item) {
+                if (item.text !== text) {
+                    $scope.optionArray.push(item);
+                }
+            });
+        }
+    };
         
     $scope.addNew = function () {
         //console.log($scope.newTaskDay.name);
@@ -1526,42 +1605,36 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         if ($scope.newTaskDaily === true) {
             $scope.newTaskDay.name = 'Any';
         }
+        //if is a checklist, cannot be daily and only repeats once.
+        if ($scope.newTaskChecklist === true) {
+            $scope.newTaskDaily = false;
+            $scope.newTaskRepeat = 1;
+        }
         
         //if created on a monday set updated=true - without this task could be deleted/un-completed by the check status method.
         var day = $scope.today.getDay(); //new Date('2015-05-04').getDay();
-        if (day===1) {
-            $scope.taskItem.push({
-                description: $scope.newTask,
-                day: $scope.newTaskDay.name,
-                date: $scope.newTaskDate,
-                repeat: $scope.newTaskRepeat,
-                completeTimes: 0,
-                updated: true,
-                complete: false,
-                category: $scope.newTaskCategory.name,
-                daily: $scope.newTaskDaily,
-                dailyRefresh: $scope.today.getDate()
-            });
-        } else {
-            $scope.taskItem.push({
-                description: $scope.newTask,
-                day: $scope.newTaskDay.name,
-                date: $scope.newTaskDate,
-                repeat: $scope.newTaskRepeat,
-                completeTimes: 0,
-                updated: false,
-                complete: false,
-                category: $scope.newTaskCategory.name,
-                daily: $scope.newTaskDaily,
-                dailyRefresh: $scope.today.getDate()
-            });
-        }
+        $scope.taskItem.push({
+            description: $scope.newTask,
+            day: $scope.newTaskDay.name,
+            date: $scope.newTaskDate,
+            repeat: $scope.newTaskRepeat,
+            completeTimes: 0,
+            updated: day === 1 ? true : false,
+            complete: false,
+            category: $scope.newTaskCategory.name,
+            daily: $scope.newTaskDaily,
+            dailyRefresh: $scope.today.getDate(),
+            checklist: $scope.newTaskChecklist,
+            checklistOptions: $scope.optionArray
+        });
         $scope.newTask = '';
         $scope.newTaskDay = $scope.days;
         $scope.newTaskDate = '';
         $scope.newTaskCategory = $scope.categories;
         $scope.newTaskRepeat = '';
         $scope.newTaskDaily = false;
+        $scope.newTaskChecklist = false;
+        $scope.optionArray = [];
         localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
     };
     $scope.deleteTask = function (description) {
@@ -1585,6 +1658,31 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         angular.forEach($scope.taskItem, function (taskItem) {
             if (taskItem.description === description && taskItem.complete === true) {
                 taskItem.completeTimes += 1;
+            }
+        });
+        localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
+    };
+        
+    $scope.tickOff = function(itemText, optionText) {
+        //update the option for the task.
+        angular.forEach($scope.taskItem, function (taskItem) {
+            if (taskItem.description === itemText) {
+                var i = 0;
+                var optionsCompleted = 0;
+                while(i < taskItem.checklistOptions.length) {
+                    if (taskItem.checklistOptions[i].text === optionText) {
+                        taskItem.checklistOptions[i].complete = true;
+                    }
+                    if (taskItem.checklistOptions[i].complete === true) {
+                        optionsCompleted += 1;
+                    }
+                    i++;
+                }
+                //if all options complete, complete the task.
+                if (taskItem.checklistOptions.length === optionsCompleted) {
+                    taskItem.completeTimes += 1;
+                    taskItem.complete = true;
+                }
             }
         });
         localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
@@ -2115,9 +2213,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         //for adding/removing tags.
         $scope.addTag = function () {
 //            console.log($scope.newTag);
-            if ($scope.newTag!=='' && $scope.newTag!==undefined) {
-                $scope.tagArray.push({ text: $scope.newTag });
-            }
+            $scope.tagArray = ListService.addTag($scope.tagArray, $scope.newTag);
             $scope.newTag = '';
         };
         
@@ -2309,8 +2405,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             }
             
             if ($scope.tagArray!==undefined) {
-                var temp = mangaitem.tags ;
-                mangaitem.tags = temp.concat($scope.tagArray);
+                mangaitem.tags = ListService.concatenateTagArrays(mangaitem.tags, $scope.tagArray);
             }
             
             //update the item history.

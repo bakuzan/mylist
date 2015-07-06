@@ -41,6 +41,7 @@
                         <th class="text-center stat-season-header" ng-repeat="season in seasons">{{season.text}}</th>
                     </tr>
                 </thead>
+<!--
                 <tbody>
                     <tr ng-repeat="animeitem in animeitems | unique: 'end.substring(0,4)' | orderBy: '-end.substring(0,4)'">
                         <th ng-hide="animeitem.end==='' || animeitem.end===null || animeitem.end===undefined"><span>{{animeitem.end.substring(0,4)}}</span></th>
@@ -48,6 +49,7 @@
                         </td>
                     </tr>
                 </tbody>
+-->
             </table><!-- SEASON HISTORY TABLE END -->
         </div><!-- HISTORY PANEL END -->
         <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="showDetail && showHistory">
@@ -83,11 +85,11 @@
                 <table class="col-lg-12 col-md-12 col-sm-12 stat-rating-table">
                     <tbody>
                         <tr ng-repeat="i in [10,9,8,7,6,5,4,3,2,1,0]">
-                            <th class="col-lg-1 col-md-1 col-sm-1 text-right mb"><span ng-show="i!==0">{{i}}</span><span ng-show="i===0">-</span></th>
+                            <th class="col-lg-1 col-md-1 col-sm-1 text-right mb"><span ng-if="i!==0">{{i}}</span><span ng-if="i===0">-</span></th>
                             <td class="col-lg-11 col-md-11 col-sm-11 col-xs-11 stat-rating-box">
                                 <div class="progress-container">
-                                    <progressbar class="progress-bar-placement" ng-show="i!==0" max="100" value="((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100" popover="{{(animeitems | filter: { rating: i }:true).length}} anime rated {{i}}." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">{{((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100 | number: 2}}%</progressbar>
-                                    <progressbar class="progress-bar-placement" ng-show="i===0" max="100" value="((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100" popover="{{(animeitems | filter: { rating: i }:true).length}} anime unrated." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">{{((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100 | number: 2}}%</progressbar>
+                                    <progressbar class="progress-bar-placement" ng-if="i!==0" max="100" value="((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100" popover="{{(animeitems | filter: { rating: i }:true).length}} anime rated {{i}}." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">{{((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100 | number: 2}}%</progressbar>
+                                    <progressbar class="progress-bar-placement" ng-if="i===0" max="100" value="((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100" popover="{{(animeitems | filter: { rating: i }:true).length}} anime unrated." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">{{((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100 | number: 2}}%</progressbar>
                                 </div>
                             </td>
                         </tr>

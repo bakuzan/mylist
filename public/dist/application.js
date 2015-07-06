@@ -116,25 +116,11 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.currentPage = 0;
         $scope.pageSize = 10;
         $scope.pageCount = 0;
-        $scope.numberOfPages = function(showingCount) {
-            var pageCount = Math.ceil(showingCount/$scope.pageSize);
-            
-            //reset number of pages to be the final page if the number of pages
-            //becomes less than the one you are on.
-            if ($scope.currentPage + 1 > pageCount) {
-                $scope.currentPage = pageCount-1;
-            }
-            if (pageCount!==0 && $scope.currentPage < 0) {
-                $scope.currentPage = 0;
-            }
-            $scope.pageCount = pageCount;
-            return pageCount;
-        };
-//        $scope.$watch('showingCount', function() {
-//            var pagingDetails = ListService.numberOfPages($scope.showingCount, $scope.pageSize, $scope.currentPage);
-//            $scope.currentPage = pagingDetails.currentPage;
-//            $scope.pageCount = pagingDetails.pageCount;
-//        });
+        $scope.$watch('showingCount', function() {
+            var pagingDetails = ListService.numberOfPages($scope.showingCount, $scope.pageSize, $scope.currentPage);
+            $scope.currentPage = pagingDetails.currentPage;
+            $scope.pageCount = pagingDetails.pageCount;
+        });
         
         //today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
         $scope.itemUpdate = new Date().toISOString().substring(0,10);
@@ -850,25 +836,11 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.currentPage = 0;
         $scope.pageSize = 10;
         $scope.pageCount = 0;
-        $scope.numberOfPages = function(showingCount) {
-            var pageCount = Math.ceil(showingCount/$scope.pageSize);
-            
-            //reset number of pages to be the final page if the number of pages
-            //becomes less than the one you are on.
-            if ($scope.currentPage + 1 > pageCount) {
-                $scope.currentPage = pageCount-1;
-            }
-            if (pageCount!==0 && $scope.currentPage < 0) {
-                $scope.currentPage = 0;
-            }
-            $scope.pageCount = pageCount;
-            return pageCount;
-        };
-//        $scope.$watch('showingCount', function() {
-//            var pagingDetails = ListService.numberOfPages($scope.showingCount, $scope.pageSize, $scope.currentPage);
-//            $scope.currentPage = pagingDetails.currentPage;
-//            $scope.pageCount = pagingDetails.pageCount;
-//        });
+        $scope.$watch('showingCount', function() {
+            var pagingDetails = ListService.numberOfPages($scope.showingCount, $scope.pageSize, $scope.currentPage);
+            $scope.currentPage = pagingDetails.currentPage;
+            $scope.pageCount = pagingDetails.pageCount;
+        });
         
         $scope.isList = 'list'; //show list? or carousel.
         $scope.maxItemCount = 0; //number of characters.
@@ -2203,25 +2175,11 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         $scope.currentPage = 0;
         $scope.pageSize = 10;
         $scope.pageCount = 0;
-        $scope.numberOfPages = function(showingCount) {
-            var pageCount = Math.ceil(showingCount/$scope.pageSize);
-            
-            //reset number of pages to be the final page if the number of pages
-            //becomes less than the one you are on.
-            if ($scope.currentPage + 1 > pageCount) {
-                $scope.currentPage = pageCount-1;
-            }
-            if (pageCount!==0 && $scope.currentPage < 0) {
-                $scope.currentPage = 0;
-            }
-            $scope.pageCount = pageCount;
-            return pageCount;
-        };
-//        $scope.$watch('showingCount', function() {
-//            var pagingDetails = ListService.numberOfPages($scope.showingCount, $scope.pageSize, $scope.currentPage);
-//            $scope.currentPage = pagingDetails.currentPage;
-//            $scope.pageCount = pagingDetails.pageCount;
-//        });
+        $scope.$watch('showingCount', function() {
+            var pagingDetails = ListService.numberOfPages($scope.showingCount, $scope.pageSize, $scope.currentPage);
+            $scope.currentPage = pagingDetails.currentPage;
+            $scope.pageCount = pagingDetails.pageCount;
+        });
         
         //today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
         $scope.itemUpdate = new Date().toISOString().substring(0,10);

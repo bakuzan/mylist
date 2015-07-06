@@ -156,7 +156,7 @@
             <button class="btn btn-primary" ng-disabled="currentPage <= 0" ng-click="currentPage=currentPage-1">
                 Previous
             </button>
-            <span>{{currentPage+1}}</span>/<span>{{pageCount}}</span>
+            <span>{{currentPage+1}}</span>/<span>{{numberOfPages(showingCount)}}</span>
             <button class="btn btn-primary" ng-disabled="currentPage >= showingCount/pageSize - 1" ng-click="currentPage=currentPage+1">
                 Next
             </button>

@@ -138,10 +138,9 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         };
         //for adding/removing tags.
         $scope.addTag = function () {
-            if ($scope.newTag!=='' && $scope.newTag!==undefined) {
-                $scope.tagArray.push({ text: $scope.newTag });
-                $scope.newTag = '';
-            }
+//            console.log($scope.newTag);
+            $scope.tagArray = ListService.addTag($scope.tagArray, $scope.newTag);
+            $scope.newTag = '';
         };
         
         //show stat tag detail.

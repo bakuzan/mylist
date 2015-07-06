@@ -64,9 +64,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         //for adding/removing tags.
         $scope.addTag = function () {
 //            console.log($scope.newTag);
-            if ($scope.newTag!=='' && $scope.newTag!==undefined) {
-                $scope.tagArray.push({ text: $scope.newTag });
-            }
+            $scope.tagArray = ListService.addTag($scope.tagArray, $scope.newTag);
             $scope.newTag = '';
         };
         
@@ -333,7 +331,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		// Find a list of Animeitems
 		$scope.find = function() {
 			$scope.animeitems = Animeitems.query();
-//            console.log($scope.animeitems);
+            console.log($scope.animeitems);
 		};
 
 		// Find existing Animeitem
@@ -341,7 +339,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 			$scope.animeitem = Animeitems.get({ 
 				animeitemId: $stateParams.animeitemId
 			});
-//            console.log($scope.animeitem);
+            console.log($scope.animeitem);
 		};
         
         // Find list of mangaitems for dropdown.

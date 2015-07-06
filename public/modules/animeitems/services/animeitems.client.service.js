@@ -44,6 +44,28 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             return pagingDetails;
         };
     
+        this.addTag = function(tagArray, newTag) {
+            if (newTag!=='' && newTag!==undefined) {
+                var i = 0;
+                var alreadyAdded = false;
+                if (tagArray.length > 0) {
+                    while(i < tagArray.length) {
+                        if (tagArray[i].text === newTag) {
+                            alreadyAdded = true;
+                        }
+                        i++;
+                    }
+                    //if not in array add it.
+                    if (alreadyAdded === false) {
+                        tagArray.push({ text: newTag });
+                    }
+                } else {
+                    tagArray.push({ text: newTag });
+                }
+            }
+            return tagArray;
+        };
+    
 })
 .service('ItemService', ['moment', function(moment) {
         

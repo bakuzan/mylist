@@ -57,7 +57,7 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         //var day = new Date('2015-05-04').getDay();
         var day = $scope.today.getDay();
         //console.log(day);
-//        console.log($scope.taskItem);
+        console.log($scope.taskItem);
         //Is it monday?
         if (day===1) {
             var refreshItems = $scope.taskItem;
@@ -164,42 +164,36 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         if ($scope.newTaskDaily === true) {
             $scope.newTaskDay.name = 'Any';
         }
+        //if is a checklist, cannot be daily and only repeats once.
+        if ($scope.newTaskChecklist === true) {
+            $scope.newTaskDaily = false;
+            $scope.newTaskRepeat = 1;
+        }
         
         //if created on a monday set updated=true - without this task could be deleted/un-completed by the check status method.
         var day = $scope.today.getDay(); //new Date('2015-05-04').getDay();
-        if (day===1) {
-            $scope.taskItem.push({
-                description: $scope.newTask,
-                day: $scope.newTaskDay.name,
-                date: $scope.newTaskDate,
-                repeat: $scope.newTaskRepeat,
-                completeTimes: 0,
-                updated: true,
-                complete: false,
-                category: $scope.newTaskCategory.name,
-                daily: $scope.newTaskDaily,
-                dailyRefresh: $scope.today.getDate()
-            });
-        } else {
-            $scope.taskItem.push({
-                description: $scope.newTask,
-                day: $scope.newTaskDay.name,
-                date: $scope.newTaskDate,
-                repeat: $scope.newTaskRepeat,
-                completeTimes: 0,
-                updated: false,
-                complete: false,
-                category: $scope.newTaskCategory.name,
-                daily: $scope.newTaskDaily,
-                dailyRefresh: $scope.today.getDate()
-            });
-        }
+        $scope.taskItem.push({
+            description: $scope.newTask,
+            day: $scope.newTaskDay.name,
+            date: $scope.newTaskDate,
+            repeat: $scope.newTaskRepeat,
+            completeTimes: 0,
+            updated: day === 1 ? true : false,
+            complete: false,
+            category: $scope.newTaskCategory.name,
+            daily: $scope.newTaskDaily,
+            dailyRefresh: $scope.today.getDate(),
+            checklist: $scope.newTaskChecklist,
+            checklistOptions: $scope.optionArray
+        });
         $scope.newTask = '';
         $scope.newTaskDay = $scope.days;
         $scope.newTaskDate = '';
         $scope.newTaskCategory = $scope.categories;
         $scope.newTaskRepeat = '';
         $scope.newTaskDaily = false;
+        $scope.newTaskChecklist = false;
+        $scope.optionArray = [];
         localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
     };
     $scope.deleteTask = function (description) {
@@ -223,6 +217,31 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         angular.forEach($scope.taskItem, function (taskItem) {
             if (taskItem.description === description && taskItem.complete === true) {
                 taskItem.completeTimes += 1;
+            }
+        });
+        localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
+    };
+        
+    $scope.tickOff = function(itemText, optionText) {
+        //update the option for the task.
+        angular.forEach($scope.taskItem, function (taskItem) {
+            if (taskItem.description === itemText) {
+                var i = 0;
+                var optionsCompleted = 0;
+                while(i < taskItem.checklistOptions.length) {
+                    if (taskItem.checklistOptions[i].text === optionText) {
+                        taskItem.checklistOptions[i].complete = true;
+                    }
+                    if (taskItem.checklistOptions[i].complete === true) {
+                        optionsCompleted += 1;
+                    }
+                    i++;
+                }
+                //if all options complete, complete the task.
+                if (taskItem.checklistOptions.length === optionsCompleted) {
+                    taskItem.completeTimes += 1;
+                    taskItem.complete = true;
+                }
             }
         });
         localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));

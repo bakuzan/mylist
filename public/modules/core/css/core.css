@@ -356,3 +356,15 @@ footer a {
   margin: 20px 0;
   border-bottom: 1px solid #337ab7;
 }
+
+.checklistItem {
+    padding: 5px;
+}
+
+
+
+.checklist-progress-bar {
+  height: 10px;
+  width: 75%;
+  margin-top: 10px;
+}

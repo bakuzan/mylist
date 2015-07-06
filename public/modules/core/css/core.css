@@ -21,6 +21,12 @@
     border-color: #ccc;
 }
 
+/* remove not-allowed cursor */
+.form-control[disabled],
+input[type="checkbox"][disabled], input[type="checkbox"].disabled {
+    cursor: default;
+}
+
 .navbar-favourites {
     color: #9d9d9d;
     padding: 15px 15px;
@@ -277,6 +283,7 @@ footer a {
 .collapse-bar {
     cursor: pointer;
     background-color: #e6e6e6;
+    color: #FFF;
     font-weight: bold;
 }
 
@@ -361,10 +368,29 @@ footer a {
     padding: 5px;
 }
 
-
-
 .checklist-progress-bar {
   height: 10px;
   width: 75%;
   margin-top: 10px;
+}
+
+.menu-header-bar {
+    position: relative;
+    display: block;
+    background-color: #337ab7;
+    color: #FFF;
+    font-weight: bold;
+    padding: 10px 15px;
+    border: 1px solid #FFF;
+    margin-bottom: -1px;
+}
+
+a.menu-header-bar,
+a.menu-header-bar:hover {
+  text-decoration: none;
+}
+
+.menu-header-bar:hover {
+    background-color: #286090;
+    color: #FFF;
 }

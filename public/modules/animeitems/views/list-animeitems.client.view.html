@@ -23,7 +23,7 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th class="text-center" ng-repeat="month in months">{{month.text.substring(0,3)}}</th>
+                        <th class="text-center stat-month-header" ng-repeat="month in months">{{month.text.substring(0,3)}}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -84,7 +84,7 @@
                     <tbody>
                         <tr ng-repeat="i in [10,9,8,7,6,5,4,3,2,1,0]">
                             <th class="col-lg-1 col-md-1 col-sm-1 text-right mb"><span ng-show="i!==0">{{i}}</span><span ng-show="i===0">-</span></th>
-                            <td class="col-lg-5 col-md-5 col-sm-5 stat-rating-box">
+                            <td class="col-lg-11 col-md-11 col-sm-11 col-xs-11 stat-rating-box">
                                 <div class="progress-container">
                                     <progressbar class="progress-bar-placement" ng-show="i!==0" max="100" value="((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100" popover="{{(animeitems | filter: { rating: i }:true).length}} anime rated {{i}}." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">{{((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100 | number: 2}}%</progressbar>
                                     <progressbar class="progress-bar-placement" ng-show="i===0" max="100" value="((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100" popover="{{(animeitems | filter: { rating: i }:true).length}} anime unrated." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">{{((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100 | number: 2}}%</progressbar>
@@ -242,7 +242,7 @@
             </div>
         </div>
         <div class="input-group mt" data-ng-show="areTagless">
-            <div class="input-group-addon clickable">
+            <div class="input-group-addon">
                 <span class="fa-stack fa-md">
                     <i class="fa fa-tag fa-stack-1x"></i>
                     <i class="fa fa-ban fa-stack-2x text-danger"></i>
@@ -255,7 +255,6 @@
         <div data-ng-repeat="animeitem in animeitems | orderBy: sortType:sortReverse | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" list_Back="{{trustAsResourceUrl(animeitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12">
 			<div class="view-item-top clickable" ng-click="viewItem===animeitem ? viewItem='' : viewItem=animeitem">
             <small class="list-group-item-text">
-<!--				<span data-ng-bind="animeitem.latest | date:'yyyy-MMM-dd'"></span>-->
                 <time ng-if="animeitem.latest.substring(0,10)===animeitem.meta.updated.substring(0,10)" title="{{animeitem.meta.updated | date: 'yyyy-MMM-dd HH:mm'}}" ng-bind="latestDate(animeitem.latest, animeitem.meta.updated)"></time>
                 <time ng-if="animeitem.latest.substring(0,10)!==animeitem.meta.updated.substring(0,10)" title="{{animeitem.latest | date: 'yyyy-MMM-dd'}}" ng-bind="latestDate(animeitem.latest, animeitem.meta.updated)"></time>
 			</small>

@@ -12,8 +12,6 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
     
-    $scope.isCollapseFilter = false;
-    $scope.isCollapseAction = true;
     $scope.isAddTask = false;
         
     $scope.today = new Date();

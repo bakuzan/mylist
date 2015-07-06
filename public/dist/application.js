@@ -1453,8 +1453,6 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
     
-    $scope.isCollapseFilter = false;
-    $scope.isCollapseAction = true;
     $scope.isAddTask = false;
         
     $scope.today = new Date();
@@ -1768,6 +1766,20 @@ angular.module('core').filter('dayFilter', function() {
             }
         });
     };
+})
+.filter('dateSuffix', function($filter) {
+  var suffixes = ['th', 'st', 'nd', 'rd'];
+  return function(input) {
+    if(input !== undefined){
+        var dtfilter = $filter('date')(input, 'MMMM d'),
+            day = parseInt(dtfilter.slice(-2)),
+            relevantDigits = (day < 30) ? day % 20 : day % 30,
+            suffix = (relevantDigits <= 3) ? suffixes[relevantDigits] : suffixes[0],
+            dateArray = dtfilter.split(' '),
+            month = dateArray[0];
+        return dateArray[1] + suffix + ' ' + month + ' ' + $filter('date')(input, 'yyyy');
+    }
+  };
 });
 'use strict';
 

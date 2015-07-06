@@ -111,6 +111,43 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
             localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
         }
     };
+    $scope.optionArray = [];
+    //for adding/removing options.
+    $scope.addOption = function () {
+            if ($scope.newOption!=='' && $scope.newOption!==undefined) {
+                var i = 0;
+                var alreadyAdded = false;
+                if ($scope.optionArray.length > 0) {
+                    while(i < $scope.optionArray.length) {
+                        if ($scope.optionArray[i].text === $scope.newOption) {
+                            alreadyAdded = true;
+                        }
+                        i++;
+                    }
+                    //if not in array add it.
+                    if (alreadyAdded === false) {
+                        $scope.optionArray.push({ text: $scope.newOption, complete: false });
+                    }
+                } else {
+                    $scope.optionArray.push({ text: $scope.newOption, complete: false });
+                }
+            }
+            $scope.newOption = '';
+    };
+    
+    $scope.dropOption = function(text) {
+        var removal = $window.confirm('Are you sure you don\'t want to add this option?');
+        if (removal) {
+            var deletingItem = $scope.optionArray;
+            $scope.optionArray = [];
+            //update the task.
+            angular.forEach(deletingItem, function(item) {
+                if (item.text !== text) {
+                    $scope.optionArray.push(item);
+                }
+            });
+        }
+    };
         
     $scope.addNew = function () {
         //console.log($scope.newTaskDay.name);

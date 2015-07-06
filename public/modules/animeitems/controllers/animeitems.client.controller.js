@@ -330,7 +330,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		// Find a list of Animeitems
 		$scope.find = function() {
 			$scope.animeitems = Animeitems.query();
-            console.log($scope.animeitems);
+//            console.log($scope.animeitems);
 		};
 
 		// Find existing Animeitem
@@ -338,7 +338,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 			$scope.animeitem = Animeitems.get({ 
 				animeitemId: $stateParams.animeitemId
 			});
-            console.log($scope.animeitem);
+//            console.log($scope.animeitem);
 		};
         
         // Find list of mangaitems for dropdown.

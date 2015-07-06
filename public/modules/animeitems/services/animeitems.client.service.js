@@ -66,6 +66,31 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             return tagArray;
         };
     
+        this.concatenateTagArrays = function(itemTags, tagArray) {
+            if (itemTags.length > 0) {
+                var i = 0;
+                var alreadyAdded = false;
+                while(i < tagArray.length) {
+                    for(var j = 0; j < itemTags.length; j++) {
+                        if (itemTags[j].text === tagArray[i].text) {
+                            alreadyAdded = true;
+                        }
+                    }
+                    //add if isn't already in the array.
+                    if (alreadyAdded === false) {
+                        itemTags.push(tagArray[i]);
+                    }
+                    i++;
+                    alreadyAdded = false;
+                }
+                console.log(itemTags);
+                return itemTags;
+            } else {
+                //if there are no tags for item, then just return the new tags.
+                return tagArray;
+            }
+        };
+    
 })
 .service('ItemService', ['moment', function(moment) {
         

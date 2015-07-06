@@ -281,8 +281,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             }
             
             if ($scope.tagArray!==undefined) {
-                var temp = animeitem.tags ;
-                animeitem.tags = temp.concat($scope.tagArray);
+                animeitem.tags = ListService.concatenateTagArrays(animeitem.tags, $scope.tagArray);
             }
             
             //update the item history.

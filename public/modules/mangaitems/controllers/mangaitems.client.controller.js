@@ -255,8 +255,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             }
             
             if ($scope.tagArray!==undefined) {
-                var temp = mangaitem.tags ;
-                mangaitem.tags = temp.concat($scope.tagArray);
+                mangaitem.tags = ListService.concatenateTagArrays(mangaitem.tags, $scope.tagArray);
             }
             
             //update the item history.

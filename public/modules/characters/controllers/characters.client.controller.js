@@ -295,8 +295,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             }
             
             if ($scope.tagArray!==undefined) {
-                var temp = character.tags ;
-                character.tags = temp.concat($scope.tagArray);
+                character.tags = ListService.concatenateTagArrays(character.tags, $scope.tagArray);
             }
             
             if ($scope.imgPath!==undefined && $scope.imgPath!==null && $scope.imgPath!=='') {

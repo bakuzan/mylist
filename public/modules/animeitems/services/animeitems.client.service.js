@@ -31,10 +31,9 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         //get number of pages for list.
         this.numberOfPages = function(showingCount, pageSize, currentPage) {
             var pageCount = Math.ceil(showingCount/pageSize);
-            
             //reset number of pages to be the final page if the number of pages
             //becomes less than the one you are on.
-            if (currentPage + 1 > pageCount) {
+            if (currentPage + 1 >= pageCount && pageCount !== 0) {
                 currentPage = pageCount-1;
             }
             if (pageCount!==0 && currentPage < 0) {

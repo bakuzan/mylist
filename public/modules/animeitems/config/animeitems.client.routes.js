@@ -5,7 +5,7 @@ angular.module('animeitems').config(['$stateProvider',
 	function($stateProvider) {
 		// Animeitems state routing
 		$stateProvider.
-		state('listAnimeitems', {
+        state('listAnimeitems', {
 			url: '/animeitems',
 			templateUrl: 'modules/animeitems/views/list-animeitems.client.view.html'
 		}).

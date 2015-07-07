@@ -35,13 +35,20 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
 //                console.log(event, e);
                 if (e.ctrlKey && e.keyCode===39 && scope.currentPage < scope.pageCount) {
                     scope.currentPage = scope.currentPage + 1;
+                    if (scope.currentPage > scope.pageCount - 1) {
+                        scope.currentPage = scope.currentPage -1;
+                    }
                 } else if (e.ctrlKey && e.keyCode===37 && scope.currentPage > 0) {
                     scope.currentPage = scope.currentPage - 1;
                 } else if (e.altKey && e.keyCode===86) {
                     if (scope.isList===true) {
                         scope.isList = false;
+                        scope.view = 'statistics';
+                        scope.includeView = '/modules/animeitems/views/stats-animeitems.client.view.html';
                     } else if (scope.isList===false) {
                         scope.isList = true;
+                        scope.view = 'list';
+                        scope.includeView = '';
                     } else {
                         if (scope.isList==='list') {
                             scope.isList = 'carousel';

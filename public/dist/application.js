@@ -83,7 +83,7 @@ angular.module('animeitems').config(['$stateProvider',
 	function($stateProvider) {
 		// Animeitems state routing
 		$stateProvider.
-		state('listAnimeitems', {
+        state('listAnimeitems', {
 			url: '/animeitems',
 			templateUrl: 'modules/animeitems/views/list-animeitems.client.view.html'
 		}).
@@ -125,6 +125,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         //today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
         $scope.itemUpdate = new Date().toISOString().substring(0,10);
         $scope.view = 'list'; //dynamic page title.
+        $scope.includeView = ''; //default included view.
         $scope.historicalView = 'month'; //default historical view in stats.
         $scope.isList = true; //list view as default.
         $scope.viewItemHistory = false; //default stat of item history popout.
@@ -498,13 +499,20 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
 //                console.log(event, e);
                 if (e.ctrlKey && e.keyCode===39 && scope.currentPage < scope.pageCount) {
                     scope.currentPage = scope.currentPage + 1;
+                    if (scope.currentPage > scope.pageCount - 1) {
+                        scope.currentPage = scope.currentPage -1;
+                    }
                 } else if (e.ctrlKey && e.keyCode===37 && scope.currentPage > 0) {
                     scope.currentPage = scope.currentPage - 1;
                 } else if (e.altKey && e.keyCode===86) {
                     if (scope.isList===true) {
                         scope.isList = false;
+                        scope.view = 'statistics';
+                        scope.includeView = '/modules/animeitems/views/stats-animeitems.client.view.html';
                     } else if (scope.isList===false) {
                         scope.isList = true;
+                        scope.view = 'list';
+                        scope.includeView = '';
                     } else {
                         if (scope.isList==='list') {
                             scope.isList = 'carousel';
@@ -625,10 +633,9 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         //get number of pages for list.
         this.numberOfPages = function(showingCount, pageSize, currentPage) {
             var pageCount = Math.ceil(showingCount/pageSize);
-            
             //reset number of pages to be the final page if the number of pages
             //becomes less than the one you are on.
-            if (currentPage + 1 > pageCount) {
+            if (currentPage + 1 >= pageCount && pageCount !== 0) {
                 currentPage = pageCount-1;
             }
             if (pageCount!==0 && currentPage < 0) {

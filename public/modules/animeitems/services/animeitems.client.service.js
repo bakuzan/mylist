@@ -28,6 +28,15 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
     };
 }])
 .service('ListService', function() {
+    
+        //show a loading gif if text doesn't exist.
+        this.loader = function(text) {
+            if (text) {
+                return false; //hide loader when value exists.
+            }
+            return true;
+        };
+        
         //get number of pages for list.
         this.numberOfPages = function(showingCount, pageSize, currentPage) {
             var pageCount = Math.ceil(showingCount/pageSize);
@@ -91,7 +100,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         };
     
 })
-.service('ItemService', ['moment', function(moment) {
+.service('ItemService', ['moment', '$filter', function(moment, $filter) {
         
         //add history entry to item.
         this.itemHistory = function(item, updateHistory, type) {
@@ -184,6 +193,36 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
              */
             return count > 1 ? (count / (count + someValue)) * (total / count) + (someValue / (count + someValue)) * listAverage : 0;
             
+        };
+    
+        //complete by month stats
+        this.completeByMonth = function(months, items) {
+            var itemYears = $filter('unique')(items, 'end.substring(0,4)'); //get unqiue years as items.
+                itemYears = $filter('orderBy')(itemYears, '-end.substring(0,4)'); //order desc.
+            var i = 0, j = 0;
+            var completeByMonth = [];
+            while(i < itemYears.length) {
+                //chuck the null end date. push the year part of the other end dates.
+                if (itemYears[i].end !== undefined && itemYears[i].end !== null) {
+                    completeByMonth.push({ year: itemYears[i].end.substring(0,4), months: months });
+                }
+                i++;
+            }
+//            console.log(completeByMonth);
+            //iterate throught the years
+            while(j < completeByMonth.length) {
+                var k = 0;
+                //iterate through the months for years[j]
+                while(k < completeByMonth[j].months.length) {
+                    var check = $filter('endedMonth')(items, completeByMonth[j].year, completeByMonth[j].months[k].number); //filter items on year and month.
+//                    console.log(completeByMonth[j].year, completeByMonth[j].months[k].number, check);
+                    completeByMonth[j].months[k].count = check.length;
+                    k++;
+                }
+                j++;
+            }
+//            console.log(completeByMonth);
+            return completeByMonth;
         };
         
 }]);

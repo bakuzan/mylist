@@ -394,3 +394,6 @@ a.menu-header-bar:hover {
     background-color: #286090;
     color: #FFF;
 }
+.footer {
+    padding-bottom: 15px;
+}

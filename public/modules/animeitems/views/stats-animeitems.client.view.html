@@ -18,9 +18,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="animeitem in animeitems | unique: 'end.substring(0,4)' | orderBy: '-end.substring(0,4)'">
-                        <th ng-hide="animeitem.end==='' || animeitem.end===null || animeitem.end===undefined"><span>{{animeitem.end.substring(0,4)}}</span></th>
-                        <td  class="stat-month-box" ng-hide="animeitem.end==='' || animeitem.end===null || animeitem.end===undefined" ng-repeat="month in months" ng-click="monthDetail(animeitem.end.substring(0,4), month.number);"  popover="{{ (animeitems | endedMonth: animeitem.end.substring(0,4):month.number).length }} anime completed {{month.text}} {{animeitem.end.substring(0,4)}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': (animeitems | endedMonth: animeitem.end.substring(0,4): month.number).length / maxCompleteMonth }">
+                    <tr ng-repeat="year in completeByMonth">
+                        <th><span>{{year.year}}</span></th>
+                        <td  class="stat-month-box" ng-repeat="month in year.months" ng-click="monthDetail(year.year, month.number);"  popover="{{month.count}} anime completed {{month.text}} {{year.year}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': month.count / maxCompleteMonth }">
                         </td>
                     </tr>
                 </tbody>

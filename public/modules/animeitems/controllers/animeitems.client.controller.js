@@ -194,6 +194,9 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                     }); 
 //                    console.log($scope.statTags);
                 });
+                
+                $scope.completeByMonth = ItemService.completeByMonth($scope.months, $scope.animeitems);
+                console.log($scope.completeByMonth);
             }
         });
         
@@ -357,5 +360,6 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.latestDate = function(latest, updated) {
             return ItemService.latestDate(latest, updated);
         };
+        
 	}
 ]);

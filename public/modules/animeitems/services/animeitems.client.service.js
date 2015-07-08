@@ -54,8 +54,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
     
         this.addTag = function(tagArray, newTag) {
             if (newTag!=='' && newTag!==undefined) {
-                var i = 0;
-                var alreadyAdded = false;
+                var i = 0, alreadyAdded = false;
                 if (tagArray.length > 0) {
                     while(i < tagArray.length) {
                         if (tagArray[i].text === newTag) {
@@ -76,8 +75,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
     
         this.concatenateTagArrays = function(itemTags, tagArray) {
             if (itemTags.length > 0) {
-                var i = 0;
-                var alreadyAdded = false;
+                var i = 0, alreadyAdded = false;
                 while(i < tagArray.length) {
                     for(var j = 0; j < itemTags.length; j++) {
                         if (itemTags[j].text === tagArray[i].text) {
@@ -126,8 +124,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         this.latestDate = function(latest, updated) {
             //latest date display format.
 //          console.log(latest, updated);
-            var today = moment(new Date());
-            var latestDate, diff;
+            var today = moment(new Date()), latestDate, diff;
             if (latest.substring(0,10)===updated.substring(0,10)) {
                  latestDate = moment(updated);
                  diff = latestDate.fromNow();
@@ -154,11 +151,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         
         //function to calculate the weighted mean ratings for the genre tags.
         this.ratingsWeighted = function(ratings, listAverage) {
-            var values = [];
-            var weights = [];
-            var total = 0;
-            var count = 0;
-            var someValue = 0; //a value to augment weighted average.
+            var values = [], weights = [], total = 0, count = 0, someValue = 50; //someValue to augment weighted average.
             
             /**
              *  create array (weights) with key(rating) and value(weight).
@@ -185,44 +178,105 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     count += weights[k];
                 }
             }
-            //set someValue now that count is calculated - it SHOULD favour those with more ratings -> needs work.
-            someValue = count / 50;
+
             /**
              *  count = number of ratings for it. total/count = average rating for tag.
-             *  someValue = minimum score to get weighted. listAverage = average rating for all tags.
+             *  someValue = random-number, listAverage = average rating for all tags.
              */
             return count > 1 ? (count / (count + someValue)) * (total / count) + (someValue / (count + someValue)) * listAverage : 0;
             
         };
     
-        //complete by month stats
-        this.completeByMonth = function(months, items) {
+        this.endingYears = function(items) {
             var itemYears = $filter('unique')(items, 'end.substring(0,4)'); //get unqiue years as items.
-                itemYears = $filter('orderBy')(itemYears, '-end.substring(0,4)'); //order desc.
-            var i = 0, j = 0;
-            var completeByMonth = [];
+            itemYears = $filter('orderBy')(itemYears, '-end.substring(0,4)'); //order desc.
+            return itemYears;
+        };
+    
+        //complete by month stats
+        this.completeByMonth = function(items) {
+            var self = this,
+            months = [
+                { number: '01', text: 'January', count: 0 },
+                { number: '02', text: 'February', count: 0 },
+                { number: '03', text: 'March', count: 0 },
+                { number: '04', text: 'April', count: 0 },
+                { number: '05', text: 'May', count: 0 },
+                { number: '06', text: 'June', count: 0 },
+                { number: '07', text: 'July', count: 0 },
+                { number: '08', text: 'August', count: 0 },
+                { number: '09', text: 'September', count: 0 },
+                { number: '10', text: 'October', count: 0 },
+                { number: '11', text: 'November', count: 0 },
+                { number: '12', text: 'December', count: 0 }
+            ],
+            i = 0, j = 0, completeByMonth = [], check = [],
+            itemYears = self.endingYears(items);
+            
             while(i < itemYears.length) {
-                //chuck the null end date. push the year part of the other end dates.
+                //chuck the null end date. push the year part of the other end dates with months array.
                 if (itemYears[i].end !== undefined && itemYears[i].end !== null) {
                     completeByMonth.push({ year: itemYears[i].end.substring(0,4), months: months });
                 }
-                i++;
+                i++; //increment
             }
-//            console.log(completeByMonth);
+            
             //iterate throught the years
             while(j < completeByMonth.length) {
-                var k = 0;
-                //iterate through the months for years[j]
-                while(k < completeByMonth[j].months.length) {
-                    var check = $filter('endedMonth')(items, completeByMonth[j].year, completeByMonth[j].months[k].number); //filter items on year and month.
-//                    console.log(completeByMonth[j].year, completeByMonth[j].months[k].number, check);
-                    completeByMonth[j].months[k].count = check.length;
-                    k++;
+                var year = completeByMonth[j], k = 0;
+                //iterate through the months for year.
+                while(k < year.months.length) {
+                    check = $filter('endedMonth')(items, year.year, year.months[k].number); //filter items on year and month.
+                        console.log(year.year, year.months[k].text, 'length', check.length, check);
+                    year.months[k].count = check.length;
+                        console.log(year.year, year.months[k].text, 'count', year.months[k].count);
+                    k++; //increment
                 }
-                j++;
+                console.log(year);
+                j++; //increment
             }
-//            console.log(completeByMonth);
+            
+            console.log('completeByMonth', completeByMonth);
             return completeByMonth;
+        };
+    
+        //complete by season stats.
+        this.completeBySeason = function(items) {
+            var self = this,
+            seasons = [
+                { number: '03', text: 'Winter', count: 0 },
+                { number: '06', text: 'Spring', count: 0 },
+                { number: '09', text: 'Summer', count: 0 },
+                { number: '12', text: 'Fall', count: 0 }
+            ], 
+            i = 0, j = 0, completeBySeason = [], check = [],
+            itemYears = self.endingYears(items);
+            
+            while(i < itemYears.length) {
+                //chuck the null end date. push the year part of the other end dates with seasons array.
+                if (itemYears[i].end !== undefined && itemYears[i].end !== null) {
+                    completeBySeason.push({ year: itemYears[i].end.substring(0,4), seasons: seasons });
+                }
+                i++; //increment
+            }
+            
+            //iterate throught the years
+            while(j < completeBySeason.length) {
+                var year = completeBySeason[j], k = 0;
+                //iterate through the seasons for year.
+                while(k < year.seasons.length) {
+                    check = $filter('endedSeason')(items, year.year, year.seasons[k].number); //filter items on year and season.
+                        console.log(year.year, year.seasons[k].text, 'length', check.length, check);
+                    year.seasons[k].count = check.length;
+                        console.log(year.year, year.seasons[k].text, 'count', year.seasons[k].count);
+                    k++; //increment
+                }
+                console.log(year);
+                j++; //increment
+            }
+            
+            console.log('completeBySeason', completeBySeason);
+            return completeBySeason;
         };
         
 }]);

@@ -340,11 +340,12 @@ footer a {
   top: 10vh;
   left: 20vw;
   width: 60vw;
-  height: auto;
+  height: 75vh;
   border: 5px solid #337ab7;
   margin-top: 10px; 
   background-color: #FFF;
   align-content: center;
+  overflow-y: scroll;
   z-index: 100;
 }
 

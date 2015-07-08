@@ -164,6 +164,8 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 //                console.log(modeMap);
 //                console.log(maxCount);
                 $scope.maxCompleteMonth = maxCount;
+                $scope.completeByMonth = ItemService.completeByMonth($scope.animeitems);
+                $scope.completeBySeason = ItemService.completeBySeason($scope.animeitems);
                 
                 var add = true;
                 var checkedRating;
@@ -195,8 +197,6 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 //                    console.log($scope.statTags);
                 });
                 
-                $scope.completeByMonth = ItemService.completeByMonth($scope.months, $scope.animeitems);
-                console.log($scope.completeByMonth);
             }
         });
         

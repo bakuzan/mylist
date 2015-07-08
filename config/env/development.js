@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-	db: 'mongodb://localhost/mylist-dev',
+	db: 'mongodb://localhost/mylist',
 	app: {
 		title: 'MyList - Development Environment'
 	},

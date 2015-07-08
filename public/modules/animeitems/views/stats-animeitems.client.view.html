@@ -33,9 +33,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="animeitem in animeitems | unique: 'end.substring(0,4)' | orderBy: '-end.substring(0,4)'">
-                        <th ng-hide="animeitem.end==='' || animeitem.end===null || animeitem.end===undefined"><span>{{animeitem.end.substring(0,4)}}</span></th>
-                        <td  class="stat-month-box" ng-hide="animeitem.end==='' || animeitem.end===null || animeitem.end===undefined" ng-repeat="season in seasons" ng-click="seasonDetail(animeitem.end.substring(0,4), season.number)" popover="{{ (animeitems | endedSeason: animeitem.end.substring(0,4):season.number).length }} anime completed {{season.text}} {{animeitem.end.substring(0,4)}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': (animeitems | endedSeason: animeitem.end.substring(0,4): season.number).length / maxCompleteMonth }">
+                    <tr ng-repeat="year in completeBySeason">
+                        <th><span>{{year.year}}</span></th>
+                        <td  class="stat-month-box" ng-repeat="season in year.seasons" ng-click="seasonDetail(year.year, season.number)" popover="{{ season.count }} anime completed {{season.text}} {{year.year}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': season.count / maxCompleteMonth }">
                         </td>
                     </tr>
                 </tbody>

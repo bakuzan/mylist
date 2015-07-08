@@ -166,6 +166,8 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         if ($scope.newTaskChecklist === true) {
             $scope.newTaskDaily = false;
             $scope.newTaskRepeat = 1;
+        } else {
+            $scope.optionArray = [];
         }
         
         //if created on a monday set updated=true - without this task could be deleted/un-completed by the check status method.

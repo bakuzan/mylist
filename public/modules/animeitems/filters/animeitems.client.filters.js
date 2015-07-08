@@ -37,10 +37,7 @@ angular.module('animeitems').filter('startFrom', function() {
     //ended stat season filter
     return function(array, year, month) {
         return array.filter(function(item) {
-                var start = moment(item.start);
-                var end = moment(item.end);
-                var num, startMonth, startYear, diff, weeks;
-                var pad = '00';
+                var start = moment(item.start), end = moment(item.end), num, startMonth, startYear, diff, weeks, pad = '00';
                 if (item.end!==undefined && item.end!==null) {
                     /**
                      *  Can currently handle shows of 1 or 2 seasons with 'standard' lengths (10-13) / (22-26) that

@@ -187,6 +187,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             
         };
     
+        // 'sub-function' of the completeBy... functions.
         this.endingYears = function(items) {
             var itemYears = $filter('unique')(items, 'end.substring(0,4)'); //get unqiue years as items.
             itemYears = $filter('orderBy')(itemYears, '-end.substring(0,4)'); //order desc.
@@ -210,8 +211,8 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 { number: '11', text: 'November', count: 0 },
                 { number: '12', text: 'December', count: 0 }
             ],
-            i = 0, j = 0, completeByMonth = [], check = [],
-            itemYears = self.endingYears(items);
+            i = 0, j = 0, completeByMonth = [], itemYears = self.endingYears(items);
+            
             
             while(i < itemYears.length) {
                 //chuck the null end date. push the year part of the other end dates with months array.
@@ -226,10 +227,8 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 var year = completeByMonth[j], k = 0;
                 //iterate through the months for year.
                 while(k < year.months.length) {
-                    check = $filter('endedMonth')(items, year.year, year.months[k].number); //filter items on year and month.
-                        console.log(year.year, year.months[k].text, 'length', check.length, check);
-                    year.months[k].count = check.length;
-                        console.log(year.year, year.months[k].text, 'count', year.months[k].count);
+                    year.months[k].count = $filter('endedMonth')(items, year.year, year.months[k].number).length; //filter items on year and month.
+                    console.log(year.year, year.months[k].text, 'count', year.months[k].count);
                     k++; //increment
                 }
                 console.log(year);
@@ -249,8 +248,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 { number: '09', text: 'Summer', count: 0 },
                 { number: '12', text: 'Fall', count: 0 }
             ], 
-            i = 0, j = 0, completeBySeason = [], check = [],
-            itemYears = self.endingYears(items);
+            i = 0, j = 0, completeBySeason = [], itemYears = self.endingYears(items);
             
             while(i < itemYears.length) {
                 //chuck the null end date. push the year part of the other end dates with seasons array.
@@ -265,10 +263,8 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 var year = completeBySeason[j], k = 0;
                 //iterate through the seasons for year.
                 while(k < year.seasons.length) {
-                    check = $filter('endedSeason')(items, year.year, year.seasons[k].number); //filter items on year and season.
-                        console.log(year.year, year.seasons[k].text, 'length', check.length, check);
-                    year.seasons[k].count = check.length;
-                        console.log(year.year, year.seasons[k].text, 'count', year.seasons[k].count);
+                    year.seasons[k].count = $filter('endedSeason')(items, year.year, year.seasons[k].number).length; //filter items on year and season.
+                    console.log(year.year, year.seasons[k].text, 'count', year.seasons[k].count);
                     k++; //increment
                 }
                 console.log(year);

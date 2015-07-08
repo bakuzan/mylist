@@ -13,13 +13,13 @@
 
 .tag-bubble {
     border-radius: 10px;
-    border: 2px solid lightblue;
+    border: 2px solid #ADD8E6;
     padding: 10px;
     color: #777;
     font-weight: 600;
     font-size: 12px;
     letter-spacing: 0.5px;
-    background-color: aliceblue;
+    background-color: #F0F8FF;
 }
 
 .stat-media-panel {

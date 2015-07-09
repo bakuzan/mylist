@@ -236,7 +236,7 @@
         </div>
     </div>
     <div class="list-group col-lg-8 col-md-8 col-sm-8" data-ng-show="isList==='list'">
-        <div data-ng-repeat="character in characters | orderBy: sortType:sortReverse | filter: search | mediaFilter: media | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" character_Back="{{trustAsResourceUrl(character.image)}}" class="list-group-item clickable" ng-class="viewItem===character ? 'col-lg-12 col-md-12 col-sm-12 character-expanded' : ' col-lg-6 col-md-6 col-sm-6 character-default'" ng-click="viewItem===character ? viewItem='' : viewItem=character">
+        <div data-ng-repeat="character in characters | orderBy: sortType:sortReverse | filter: search | mediaFilter: media | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" character_Back="{{trustAsResourceUrl(character.image)}}" class="list-group-item clickable" ng-class="viewItem===character ? 'col-lg-12 col-md-12 col-sm-12 character-expanded' : ' col-lg-6 col-md-6 col-sm-6 character-default'" ng-click="viewItem===character ? viewItem='' : viewItem=character" ng-hide="loading(character.name)">
 			<h4 class="dark-bordered-font-heading" data-ng-bind="character.name"></h4>
             <p class="list-group-item-text">
                 <span class="dark-bordered-font" data-ng-bind="character.voice"></span>
@@ -273,4 +273,5 @@
     <div class="alert alert-warning text-center" data-ng-hide="!characters.$resolved || characters.length">
     	No Characters yet, why don't you <a href="/#!/characters/create">create one</a>?
     </div>
+    <section class="loading-image" data-ng-if="isLoading"></section>
 </section>

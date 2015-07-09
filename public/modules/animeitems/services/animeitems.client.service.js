@@ -30,8 +30,8 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
 .service('ListService', function() {
     
         //show a loading gif if text doesn't exist.
-        this.loader = function(text) {
-            if (text) {
+        this.loader = function(value) {
+            if (value) {
                 return false; //hide loader when value exists.
             }
             return true;
@@ -227,8 +227,9 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 var year = completeByMonth[j], k = 0;
                 //iterate through the months for year.
                 while(k < year.months.length) {
-                    year.months[k].count = $filter('endedMonth')(items, year.year, year.months[k].number).length; //filter items on year and month.
-                    console.log(year.year, year.months[k].text, 'count', year.months[k].count);
+                    var month = year.months[k];
+                    month.count = $filter('endedMonth')(items, year.year, month.number).length; //filter items on year and month.
+                    console.log(year.year, month.text, 'count', month.count);
                     k++; //increment
                 }
                 console.log(year);
@@ -263,8 +264,9 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 var year = completeBySeason[j], k = 0;
                 //iterate through the seasons for year.
                 while(k < year.seasons.length) {
-                    year.seasons[k].count = $filter('endedSeason')(items, year.year, year.seasons[k].number).length; //filter items on year and season.
-                    console.log(year.year, year.seasons[k].text, 'count', year.seasons[k].count);
+                    var season = year.seasons[k];
+                    season.count = $filter('endedSeason')(items, year.year, season.number).length; //filter items on year and season.
+                    console.log(year.year, season.text, 'count', season.count);
                     k++; //increment
                 }
                 console.log(year);

@@ -9,6 +9,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.whichController = 'character';
+        $scope.isLoading = true;
         //paging controls for the list view.
         $scope.currentPage = 0;
         $scope.pageSize = 10;
@@ -352,6 +353,10 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.uploadFile = function(){
             $scope.imgPath = '/modules/characters/img/' + $scope.myFile.name;
             fileUpload.uploadFileToUrl($scope.myFile, '/fileUploadCharacter');
+        };
+        
+        $scope.loading = function(value) {
+            $scope.isLoading = ListService.loader(value);
         };
 	}
 ]);

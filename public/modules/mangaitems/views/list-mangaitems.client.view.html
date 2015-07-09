@@ -23,9 +23,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="mangaitem in mangaitems | unique: 'end.substring(0,4)' | orderBy: '-end.substring(0,4)'">
-                        <th ng-hide="mangaitem.end==='' || mangaitem.end===null || mangaitem.end===undefined"><span>{{mangaitem.end.substring(0,4)}}</span></th>
-                        <td  class="stat-month-box" ng-hide="mangaitem.end==='' || mangaitem.end===null || mangaitem.end===undefined" ng-repeat="month in months" ng-click="monthDetail(mangaitem.end.substring(0,4), month.number);"  popover="{{ (mangaitems | endedMonth: mangaitem.end.substring(0,4):month.number).length }} manga completed {{month.text}} {{mangaitem.end.substring(0,4)}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': (mangaitems | endedMonth: mangaitem.end.substring(0,4): month.number).length / maxCompleteMonth }">
+                    <tr ng-repeat="year in completeByMonth">
+                        <th><span>{{year.year}}</span></th>
+                        <td  class="stat-month-box" ng-repeat="month in year.months" ng-click="monthDetail(year.year, month.number);"  popover="{{month.count}} manga completed {{month.text}} {{year.year}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': month.count / maxCompleteMonth }">
                         </td>
                     </tr>
                 </tbody>
@@ -220,7 +220,7 @@
         </div>
     </div>
     <div class="list-group col-lg-8 col-md-8 col-sm-8" ng-show="isList">
-        <div data-ng-repeat="mangaitem in mangaitems | orderBy: sortType:sortReverse | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" list_Back="{{trustAsResourceUrl(mangaitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12">
+        <div data-ng-repeat="mangaitem in mangaitems | orderBy: sortType:sortReverse | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" list_Back="{{trustAsResourceUrl(mangaitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12" ng-hide="loading(mangaitem.title)">
 			<div class="view-item-top clickable" ng-click="viewItem===mangaitem ? viewItem='' : viewItem=mangaitem">
             <small class="list-group-item-text">
                 <time ng-if="mangaitem.latest.substring(0,10)===mangaitem.meta.updated.substring(0,10)" title="{{mangaitem.meta.updated | date: 'yyyy-MMM-dd HH:mm'}}" ng-bind="latestDate(mangaitem.latest, mangaitem.meta.updated)"></time>
@@ -276,4 +276,5 @@
     <div class="alert alert-warning text-center" data-ng-hide="!mangaitems.$resolved || mangaitems.length">
     	No Mangaitems yet, why don't you <a href="/#!/mangaitems/create">create one</a>?
     </div>
+    <section class="loading-image" data-ng-if="isLoading"></section>
 </section>

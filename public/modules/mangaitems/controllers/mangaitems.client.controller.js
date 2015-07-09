@@ -9,6 +9,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.whichController = 'mangaitem';
+        $scope.isLoading = true;
         //paging controls for the list view.
         $scope.currentPage = 0;
         $scope.pageSize = 10;
@@ -130,9 +131,8 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
     	               }
                    }
                 }
-//                console.log(modeMap);
-//                console.log(maxCount);
                 $scope.maxCompleteMonth = maxCount;
+                $scope.completeByMonth = ItemService.completeByMonth($scope.mangaitems);
                 
                 var add = true;
                 var checkedRating;
@@ -160,7 +160,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                         }
                         add = true; //reset add status.
                     });
-//                    console.log($scope.statTags);
                 });
             }
         });
@@ -326,6 +325,10 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         //latest date display format.
         $scope.latestDate = function(latest, updated) {
             return ItemService.latestDate(latest, updated);
+        };
+        
+        $scope.loading = function(value) {
+            $scope.isLoading = ListService.loader(value);
         };
 	}
 ]);

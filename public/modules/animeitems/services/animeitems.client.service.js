@@ -211,7 +211,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 { number: '11', text: 'November', count: 0 },
                 { number: '12', text: 'December', count: 0 }
             ],
-            i = 0, j = 0, completeByMonth = [], itemYears = self.endingYears(items), k, year, month;
+            i = 0, j = 0, completeByMonth = [], itemYears = self.endingYears(items);
             
             
             while(i < itemYears.length) {
@@ -224,19 +224,18 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             
             //iterate throught the years
             while(j < completeByMonth.length) {
-                year = completeByMonth[j];
-                k = 0;
+                var year = completeByMonth[j], k = 0;
                 //iterate through the months for year.
                 while(k < year.months.length) {
-                    month = year.months[k];
-                    month.count = $filter('endedMonth')(items, year.year, month.number).length; //filter items on year and month.
-                    console.log(year.year, month.text, 'count', month.count);
+                    (function(month, currentYear){
+                        currentYear.months[month].count = $filter('endedMonth')(items, currentYear.year,        currentYear.months[month].number).length; //filter items on year and month.
+                        console.log(currentYear.year, currentYear.months[month].text, 'count', currentYear.months[month].count);
+                    })(k, year);
                     k++; //increment
                 }
                 console.log(year);
                 j++; //increment
             }
-            
             console.log('completeByMonth', completeByMonth);
             return completeByMonth;
         };

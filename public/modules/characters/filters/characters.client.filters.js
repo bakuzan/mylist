@@ -34,6 +34,10 @@ angular.module('characters').filter('seriesDetailFilter', function() {
                     return true;
                 }
                 return false;
+            } else if (media==='none') {
+                if (item.anime===null && item.manga===null) {
+                    return true;
+                }
             } else {
                 return true;
             }

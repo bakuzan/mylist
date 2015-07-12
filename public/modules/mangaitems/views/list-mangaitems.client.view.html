@@ -23,7 +23,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="year in completeByMonth">
+                    <tr ng-repeat="year in completeByMonth | orderBy: '-year'">
                         <th><span>{{year.year}}</span></th>
                         <td  class="stat-month-box" ng-repeat="month in year.months" ng-click="monthDetail(year.year, month.number);"  popover="{{month.count}} manga completed {{month.text}} {{year.year}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': month.count / maxCompleteMonth }">
                         </td>

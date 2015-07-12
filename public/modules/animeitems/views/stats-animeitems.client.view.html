@@ -18,7 +18,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="year in completeByMonth">
+                    <tr ng-repeat="year in completeByMonth | orderBy: '-year'">
                         <th><span>{{year.year}}</span></th>
                         <td  class="stat-month-box" ng-repeat="month in year.months" ng-click="monthDetail(year.year, month.number);"  popover="{{month.count}} anime completed {{month.text}} {{year.year}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': month.count / maxCompleteMonth }">
                         </td>
@@ -33,7 +33,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="year in completeBySeason">
+                    <tr ng-repeat="year in completeBySeason | orderBy: '-year'">
                         <th><span>{{year.year}}</span></th>
                         <td  class="stat-month-box" ng-repeat="season in year.seasons" ng-click="seasonDetail(year.year, season.number)" popover="{{ season.count }} anime completed {{season.text}} {{year.year}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': season.count / maxCompleteMonth }">
                         </td>

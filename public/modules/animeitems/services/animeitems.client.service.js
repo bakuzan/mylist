@@ -196,84 +196,51 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
     
         //complete by month stats
         this.completeByMonth = function(items) {
-            var self = this,
-            months = [
-                { number: '01', text: 'January', count: 0 },
-                { number: '02', text: 'February', count: 0 },
-                { number: '03', text: 'March', count: 0 },
-                { number: '04', text: 'April', count: 0 },
-                { number: '05', text: 'May', count: 0 },
-                { number: '06', text: 'June', count: 0 },
-                { number: '07', text: 'July', count: 0 },
-                { number: '08', text: 'August', count: 0 },
-                { number: '09', text: 'September', count: 0 },
-                { number: '10', text: 'October', count: 0 },
-                { number: '11', text: 'November', count: 0 },
-                { number: '12', text: 'December', count: 0 }
-            ],
-            i = 0, j = 0, completeByMonth = [], itemYears = self.endingYears(items);
-            
-            
-            while(i < itemYears.length) {
+            var self = this, completeByMonth = [], itemYears = self.endingYears(items), i = itemYears.length;
+            //build comlpeteByMonths object.
+            while(i--) {
                 //chuck the null end date. push the year part of the other end dates with months array.
                 if (itemYears[i].end !== undefined && itemYears[i].end !== null) {
-                    completeByMonth.push({ year: itemYears[i].end.substring(0,4), months: months });
+                    completeByMonth.push({ year: itemYears[i].end.substring(0,4),
+                                          months: [
+                { number: '01', text: 'January', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '01').length  },
+                { number: '02', text: 'February', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '02').length },
+                { number: '03', text: 'March', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '03').length },
+                { number: '04', text: 'April', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '04').length },
+                { number: '05', text: 'May', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '05').length },
+                { number: '06', text: 'June', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '06').length },
+                { number: '07', text: 'July', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '07').length },
+                { number: '08', text: 'August', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '08').length },
+                { number: '09', text: 'September', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '09').length },
+                { number: '10', text: 'October', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '10').length },
+                { number: '11', text: 'November', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '11').length },
+                { number: '12', text: 'December', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '12').length }
+            ] });
                 }
-                i++; //increment
             }
-            
-            //iterate throught the years
-            while(j < completeByMonth.length) {
-                var year = completeByMonth[j], k = 0;
-                //iterate through the months for year.
-                while(k < year.months.length) {
-                    (function(month, currentYear){
-                        currentYear.months[month].count = $filter('endedMonth')(items, currentYear.year,        currentYear.months[month].number).length; //filter items on year and month.
-                        console.log(currentYear.year, currentYear.months[month].text, 'count', currentYear.months[month].count);
-                    })(k, year);
-                    k++; //increment
-                }
-                console.log(year);
-                j++; //increment
-            }
-            console.log('completeByMonth', completeByMonth);
+
+//            console.log('completeByMonth', completeByMonth);
             return completeByMonth;
         };
     
         //complete by season stats.
         this.completeBySeason = function(items) {
-            var self = this,
-            seasons = [
-                { number: '03', text: 'Winter', count: 0 },
-                { number: '06', text: 'Spring', count: 0 },
-                { number: '09', text: 'Summer', count: 0 },
-                { number: '12', text: 'Fall', count: 0 }
-            ], 
-            i = 0, j = 0, completeBySeason = [], itemYears = self.endingYears(items);
-            
-            while(i < itemYears.length) {
+            var self = this, completeBySeason = [], itemYears = self.endingYears(items), i = itemYears.length;
+            //build completeBySeason object.
+            while(i--) {
                 //chuck the null end date. push the year part of the other end dates with seasons array.
                 if (itemYears[i].end !== undefined && itemYears[i].end !== null) {
-                    completeBySeason.push({ year: itemYears[i].end.substring(0,4), seasons: seasons });
+                    completeBySeason.push({ year: itemYears[i].end.substring(0,4),
+                                            seasons: [
+                { number: '03', text: 'Winter', count: $filter('endedSeason')(items, itemYears[i].end.substring(0,4), '03').length },
+                { number: '06', text: 'Spring', count: $filter('endedSeason')(items, itemYears[i].end.substring(0,4), '06').length },
+                { number: '09', text: 'Summer', count: $filter('endedSeason')(items, itemYears[i].end.substring(0,4), '09').length },
+                { number: '12', text: 'Fall', count: $filter('endedSeason')(items, itemYears[i].end.substring(0,4), '12').length }
+            ] });
                 }
-                i++; //increment
             }
             
-            //iterate throught the years
-            while(j < completeBySeason.length) {
-                var year = completeBySeason[j], k = 0;
-                //iterate through the seasons for year.
-                while(k < year.seasons.length) {
-                    var season = year.seasons[k];
-                    season.count = $filter('endedSeason')(items, year.year, season.number).length; //filter items on year and season.
-                    console.log(year.year, season.text, 'count', season.count);
-                    k++; //increment
-                }
-                console.log(year);
-                j++; //increment
-            }
-            
-            console.log('completeBySeason', completeBySeason);
+//            console.log('completeBySeason', completeBySeason);
             return completeBySeason;
         };
         

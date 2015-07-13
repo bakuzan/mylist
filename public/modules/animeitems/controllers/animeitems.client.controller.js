@@ -300,7 +300,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                     animeitem.end = animeitem.latest.substring(0,10);
 //                    console.log(animeitem.end);
                 }
-            } else {
+            } else if (animeitem.reWatching === false) {
                 //in the event the 'complete-ness' of an entry needs to be undone.
                 //this will undo the end date.
                 animeitem.end = null;

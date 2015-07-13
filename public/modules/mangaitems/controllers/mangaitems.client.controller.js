@@ -273,7 +273,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                     mangaitem.end = mangaitem.latest.substring(0,10);
                     //console.log(animeitem.end);
                 }
-            } else {
+            } else if (mangaitem.reReading === false) {
                 mangaitem.end = null;
             }
             

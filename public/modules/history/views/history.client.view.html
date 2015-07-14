@@ -1,0 +1,14 @@
+<section data-ng-controller="HistoryController" data-ng-init="buildHistory()" data-ng-show="authentication.user">
+    <div class="page-header">
+        <div class="view-buttons text-right pull-right">
+            <label class="btn btn-primary" ng-model="view" btn-radio="'Anime'">Anime</label>
+            <label class="btn btn-primary" ng-model="view" btn-radio="'Manga'">Manga</label>
+        </div>
+        <h1>{{view}} history</h1>
+    </div>
+    <pre>
+    <p>Items checks - </p>
+        {{animeitems.length}}
+        {{mangaitems.length}}
+    </pre>
+</section>

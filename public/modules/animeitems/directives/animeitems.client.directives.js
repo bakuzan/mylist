@@ -44,11 +44,9 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
                     if (scope.isList===true) {
                         scope.isList = false;
                         scope.view = 'statistics';
-                        scope.includeView = '/modules/animeitems/views/stats-animeitems.client.view.html';
                     } else if (scope.isList===false) {
                         scope.isList = true;
                         scope.view = 'list';
-                        scope.includeView = '';
                     } else {
                         if (scope.isList==='list') {
                             scope.isList = 'carousel';

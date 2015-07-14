@@ -23,7 +23,6 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         //today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
         $scope.itemUpdate = new Date().toISOString().substring(0,10);
         $scope.view = 'list'; //dynamic page title.
-        $scope.includeView = ''; //default included view.
         $scope.historicalView = 'month'; //default historical view in stats.
         $scope.isList = true; //list view as default.
         $scope.viewItemHistory = false; //default stat of item history popout.

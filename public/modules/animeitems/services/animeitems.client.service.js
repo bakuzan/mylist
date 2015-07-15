@@ -222,7 +222,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     }
                     add = true; //reset add status.
                 }); 
-//                    console.log($scope.statTags);
+//                    console.log(statTags);
             });
             return statTags;
         };
@@ -231,8 +231,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         this.ratingsWeighted = function(ratings, maxTagCount, listAverage) {
             var values = [], weights = [], unratedCount = 0, tagMeanScore = 0, total = 0, count = 0, weight = 0, value = 0;
             /**
-             *  create array (weights) with key(rating) and value(weight).
-             *  uses values as a control.
+             *  create array (weights) with key(rating).
              */
             for (var i=0; i < ratings.length; i++) {
                 if (ratings[i] in values) {
@@ -242,15 +241,16 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     weights[ratings[i]] = 1;
                 }
             }
-//            console.log(values,weights);
             /**
              *  using the key(rating) multiply by the value(weight).
              *  calculated weighted total and count.
              */
             for (var k in weights){
                 if (typeof weights[k] !== 'function') {
-                    total += k * weights[k];
-                    count += weights[k];
+                    if (!isNaN(weights[k])) {
+                        total += k * weights[k];
+                        count += weights[k];
+                    }
                 }
                 if (k === 0) {
                     unratedCount = weights[k];
@@ -260,15 +260,17 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             /**
              *  count = number of ratings for it. total/count = average rating for tag.
              */
-            tagMeanScore = total + listAverage * unratedCount;
+            tagMeanScore = total / count;
+            tagMeanScore = tagMeanScore * count + listAverage * unratedCount;
             tagMeanScore = tagMeanScore / count;
             weight = count / maxTagCount;
             weight = 1 - weight;
             value = listAverage + (tagMeanScore - listAverage) * weight;
-            console.log(tagMeanScore, weight, value);
+//            console.log('weights', weights, 'values', values);
+//            console.log('tagMean', tagMeanScore);
+//            console.log('weight', weight);
+//            console.log('value', value);
             return value;
-//            return count > 1 ? (count / (count + someValue)) * (total / count) + (someValue / (count + someValue)) * listAverage : 0;
-            
         };
     
         // 'sub-function' of the completeBy... functions.

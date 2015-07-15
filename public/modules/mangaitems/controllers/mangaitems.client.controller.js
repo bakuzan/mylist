@@ -114,53 +114,13 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                     }
                 });
                 $scope.averageMangaRating = tempRating / $scope.maxMangaRatedCount;
-                var modeMap = {};
-                var maxCount = 0;
-                for(var i = 0; i < $scope.mangaitems.length; i++) {
-    	           if ($scope.mangaitems[i].end!==undefined && $scope.mangaitems[i].end!==null) {
-                        var end = $scope.mangaitems[i].end.substring(0,7);
 
-    	               if(modeMap[end] === null || modeMap[end] === undefined) {
-    		              modeMap[end] = 1;
-                        } else {
-                            modeMap[end]++;
-                        }
-
-                        if(modeMap[end] > maxCount) {
-    		              maxCount = modeMap[end];
-    	               }
-                   }
-                }
-                $scope.maxCompleteMonth = maxCount;
+                $scope.maxCompleteMonth = ItemService.maxCompleteMonth($scope.mangaitems);
                 $scope.completeByMonth = ItemService.completeByMonth($scope.mangaitems);
                 
-                var add = true;
-                var checkedRating;
-                //is tag in array?
-                angular.forEach($scope.mangaitems, function(manga) { 
-                    if (manga.tags.length===0) {
-                        $scope.areTagless = true;
-                    }
-                    angular.forEach(manga.tags, function(tag) {
-                        for(var i=0; i < $scope.statTags.length; i++) {
-                            if ($scope.statTags[i].tag===tag.text) {
-                                add = false;
-                                    $scope.statTags[i].count += 1;
-                                    $scope.statTags[i].ratedCount += manga.rating === 0 ? 0 : 1;
-                                    $scope.statTags[i].ratings.push(manga.rating);
-                                    $scope.statTags[i].ratingAdded += manga.rating;
-                                    $scope.statTags[i].ratingAvg = $scope.statTags[i].ratingAdded === 0 ? 0 : $scope.statTags[i].ratingAdded / $scope.statTags[i].ratedCount;
-                                    $scope.statTags[i].ratingWeighted = ItemService.ratingsWeighted($scope.statTags[i].ratings, $scope.averageMangaRating);
-                            }
-                        }
-                        // add if not in
-                        if (add===true) {
-                            checkedRating = manga.rating === 0 ? 0 : 1;
-                            $scope.statTags.push({ tag: tag.text, count: 1, ratedCount: checkedRating, ratings: [manga.rating], ratingAdded: manga.rating, ratingAvg: manga.rating, ratingWeighted: ItemService.ratingsWeighted([manga.rating], $scope.averageMangaRating) });
-                        }
-                        add = true; //reset add status.
-                    });
-                });
+                $scope.areTagless = ListService.checkForTagless($scope.mangaitems);
+                var maxTagCount = ItemService.maxTagCount($scope.mangaitems);
+                $scope.statTags = ItemService.buildStatTags($scope.mangaitems, maxTagCount, $scope.averageMangaRating);
             }
         });
         

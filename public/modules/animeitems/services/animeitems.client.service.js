@@ -97,6 +97,17 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             }
         };
     
+        //check to see if there are items with no tags.
+        this.checkForTagless = function(items) {
+            var areTagless = false;
+            angular.forEach(items, function(item) { 
+                if (item.tags.length === 0) {
+                    areTagless = true;
+                }
+            });
+            return areTagless;
+        };
+    
 })
 .service('ItemService', ['moment', '$filter', function(moment, $filter) {
         
@@ -148,23 +159,87 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 }
             }
         };
+    
+        //calculate which month has the most anime completed in it.
+        this.maxCompleteMonth = function(items) {
+            var modeMap = {}, maxCount = 0;
+            for(var i = 0; i < items.length; i++) {
+                if (items[i].end!==undefined && items[i].end!==null) {
+                    var end = items[i].end.substring(0,7);
+                    if(modeMap[end] === null || modeMap[end] === undefined) {
+                        modeMap[end] = 1;
+                    } else {
+                        modeMap[end]++;
+                    }
+                    if(modeMap[end] > maxCount) {
+                        maxCount = modeMap[end];
+                    }
+                }
+            }
+            return maxCount;
+        };
+    
+        //calculate which month has the most anime completed in it.
+        this.maxTagCount = function(items) {
+            var modeMap = {}, maxCount = 0;
+            angular.forEach(items, function(item) {
+                angular.forEach(item.tags, function(tag) {
+                    var text = tag.text;
+                    if(modeMap[text] === null || modeMap[text] === undefined) {
+                        modeMap[text] = 1;
+                    } else {
+                        modeMap[text]++;
+                    }
+                    if(modeMap[text] > maxCount) {
+                        maxCount = modeMap[text];
+                    }
+                });
+            });
+            return maxCount;
+        };
+    
+        //build stat tags including counts, averages etc.
+        this.buildStatTags = function(items, maxTagCount, averageItemRating) {
+            var self = this, add = true, statTags = [], checkedRating;
+            //is tag in array?
+            angular.forEach(items, function(item) { 
+                angular.forEach(item.tags, function(tag) {
+                    for(var i=0; i < statTags.length; i++) {
+                        if (statTags[i].tag===tag.text) {
+                            add = false;
+                            statTags[i].count += 1;
+                            statTags[i].ratedCount += item.rating === 0 ? 0 : 1;
+                            statTags[i].ratings.push(item.rating);
+                            statTags[i].ratingAdded += item.rating;
+                            statTags[i].ratingAvg = statTags[i].ratingAdded === 0 ? 0 : statTags[i].ratingAdded / statTags[i].ratedCount;
+                            statTags[i].ratingWeighted = self.ratingsWeighted(statTags[i].ratings, maxTagCount, averageItemRating);
+                        }            
+                    }
+                    // add if not in
+                    if (add===true) {
+                        checkedRating = item.rating === 0 ? 0 : 1;
+                        statTags.push({ tag: tag.text, count: 1, ratedCount: checkedRating, ratings: [item.rating], ratingAdded: item.rating, ratingAvg: item.rating, ratingWeighted: 0 });
+                    }
+                    add = true; //reset add status.
+                }); 
+//                    console.log($scope.statTags);
+            });
+            return statTags;
+        };
         
         //function to calculate the weighted mean ratings for the genre tags.
-        this.ratingsWeighted = function(ratings, listAverage) {
-            var values = [], weights = [], total = 0, count = 0, someValue = 50; //someValue to augment weighted average.
-            
+        this.ratingsWeighted = function(ratings, maxTagCount, listAverage) {
+            var values = [], weights = [], unratedCount = 0, tagMeanScore = 0, total = 0, count = 0, weight = 0, value = 0;
             /**
              *  create array (weights) with key(rating) and value(weight).
              *  uses values as a control.
              */
             for (var i=0; i < ratings.length; i++) {
-                if (ratings[i]!==0) {
-                    if (ratings[i] in values) {
-                        weights[ratings[i]]++;
-                    } else {
-                        values.push(ratings[i]);
-                        weights[ratings[i]] = 1;
-                    }
+                if (ratings[i] in values) {
+                    weights[ratings[i]]++;
+                } else {
+                    values.push(ratings[i]);
+                    weights[ratings[i]] = 1;
                 }
             }
 //            console.log(values,weights);
@@ -177,13 +252,22 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     total += k * weights[k];
                     count += weights[k];
                 }
+                if (k === 0) {
+                    unratedCount = weights[k];
+                }
             }
 
             /**
              *  count = number of ratings for it. total/count = average rating for tag.
-             *  someValue = random-number, listAverage = average rating for all tags.
              */
-            return count > 1 ? (count / (count + someValue)) * (total / count) + (someValue / (count + someValue)) * listAverage : 0;
+            tagMeanScore = total + listAverage * unratedCount;
+            tagMeanScore = tagMeanScore / count;
+            weight = count / maxTagCount;
+            weight = 1 - weight;
+            value = listAverage + (tagMeanScore - listAverage) * weight;
+            console.log(tagMeanScore, weight, value);
+            return value;
+//            return count > 1 ? (count / (count + someValue)) * (total / count) + (someValue / (count + someValue)) * listAverage : 0;
             
         };
     

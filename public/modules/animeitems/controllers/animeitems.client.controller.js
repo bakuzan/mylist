@@ -144,58 +144,12 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                     }
                 });
                 $scope.averageAnimeRating = tempRating / $scope.maxAnimeRatedCount;
-                var modeMap = {};
-                var maxCount = 0;
-                for(var i = 0; i < $scope.animeitems.length; i++) {
-    	           if ($scope.animeitems[i].end!==undefined && $scope.animeitems[i].end!==null) {
-                        var end = $scope.animeitems[i].end.substring(0,7);
-
-    	               if(modeMap[end] === null || modeMap[end] === undefined) {
-    		              modeMap[end] = 1;
-                        } else {
-                            modeMap[end]++;
-                        }
-
-                        if(modeMap[end] > maxCount) {
-    		              maxCount = modeMap[end];
-    	               }
-                   }
-                }
-//                console.log(modeMap);
-//                console.log(maxCount);
-                $scope.maxCompleteMonth = maxCount;
+                $scope.maxCompleteMonth = ItemService.maxCompleteMonth($scope.animeitems);
                 $scope.completeByMonth = ItemService.completeByMonth($scope.animeitems);
                 $scope.completeBySeason = ItemService.completeBySeason($scope.animeitems);
-                
-                var add = true;
-                var checkedRating;
-                //is tag in array?
-                angular.forEach($scope.animeitems, function(anime) { 
-                    if (anime.tags.length===0) {
-                        $scope.areTagless = true;
-                    }
-                    angular.forEach(anime.tags, function(tag) {
-                        for(var i=0; i < $scope.statTags.length; i++) {
-                            if ($scope.statTags[i].tag===tag.text) {
-                                add = false;
-                                    $scope.statTags[i].count += 1;
-                                    $scope.statTags[i].ratedCount += anime.rating === 0 ? 0 : 1;
-                                    $scope.statTags[i].ratings.push(anime.rating);
-                                    $scope.statTags[i].ratingAdded += anime.rating;
-                                    $scope.statTags[i].ratingAvg = $scope.statTags[i].ratingAdded === 0 ? 0 : $scope.statTags[i].ratingAdded / $scope.statTags[i].ratedCount;
-                                    $scope.statTags[i].ratingWeighted = ItemService.ratingsWeighted($scope.statTags[i].ratings, $scope.averageAnimeRating);
-                            }
-                                    
-                        }
-                        // add if not in
-                        if (add===true) {
-                            checkedRating = anime.rating === 0 ? 0 : 1;
-                            $scope.statTags.push({ tag: tag.text, count: 1, ratedCount: checkedRating, ratings: [anime.rating], ratingAdded: anime.rating, ratingAvg: anime.rating, ratingWeighted: 0 });
-                        }
-                        add = true; //reset add status.
-                    }); 
-                    console.log($scope.statTags);
-                });
+                $scope.areTagless = ListService.checkForTagless($scope.animeitems);
+                var maxTagCount = ItemService.maxTagCount($scope.animeitems);
+                $scope.statTags = ItemService.buildStatTags($scope.animeitems, maxTagCount, $scope.averageAnimeRating);
                 
             }
         });

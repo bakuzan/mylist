@@ -89,7 +89,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     i++;
                     alreadyAdded = false;
                 }
-                console.log(itemTags);
+//                console.log(itemTags);
                 return itemTags;
             } else {
                 //if there are no tags for item, then just return the new tags.
@@ -119,12 +119,12 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 var length = type === 'anime' ? item.episodes - latestHistory : item.chapters - latestHistory;
                 if (length > 0 && (type === 'anime' ? item.reWatching === false : item.reReading === false)) {
                     for(var i = 1; i <= length; i++) {
-                        item.meta.history.push({ date: Date.now(), value: latestHistory + i });
+                        item.meta.history.push({ date: Date.now(), value: latestHistory + i, title: item.title, id: item._id });
                     }
                 }
             } else {
                 if (updateHistory && (type === 'anime' ? item.reWatching === false : item.reReading === false)) {
-                    item.meta.history.push({ date: Date.now(), value: (type === 'anime' ? item.episodes : item.chapters) });
+                    item.meta.history.push({ date: Date.now(), value: (type === 'anime' ? item.episodes : item.chapters), title: item.title, id: item._id });
                 }
             }
             

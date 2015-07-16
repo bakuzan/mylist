@@ -1,8 +1,8 @@
 'use strict';
 
 // Animeitems controller
-angular.module('history').controller('HistoryController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems) {
+angular.module('history').controller('HistoryController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'HistoryService',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, HistoryService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -23,6 +23,8 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
         $scope.buildHistory = function() {
             getAnimeitems();
             getMangaitems();
+            $scope.animeHistory = HistoryService.buildHistoryList($scope.animeitems);
+            $scope.mangaHistory = HistoryService.buildHistoryList($scope.mangaitems);
         };
         
     }

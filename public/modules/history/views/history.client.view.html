@@ -6,9 +6,20 @@
         </div>
         <h1>{{view}} history</h1>
     </div>
-    <pre>
-    <p>Items checks - </p>
-        {{animeitems.length}}
-        {{mangaitems.length}}
-    </pre>
+    <div class="col-lg-12 col-md-12 col-sm-12 history-list-container" ng-show="view === 'Anime'">
+        <div class="col-lg-12 col-md-12 col-sm-12 history-list">
+            <div class="col-lg-12 col-md-12 col-sm-12 history-list-item" ng-repeat="item in animeHistory | orderBy: 'date'">
+                <p><a href="/!#/animeitems/{{item._id}}">{{item.title}}</a> - Episode {{item.value}}</p>
+                <span>{{item.date | date: 'dd MMM yyyy HH:mm'}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 history-list-container" ng-show="view === 'Manga'">
+        <div class="col-lg-12 col-md-12 col-sm-12 history-list">
+            <div class="col-lg-12 col-md-12 col-sm-12 history-list-item" ng-repeat="item in mangaHistory | orderBy: 'date'">
+                <p><a href="/!#/mangaitems/{{item._id}}">{{item.title}}</a> - Chapter {{item.value}}</p>
+                <span>{{item.date | date: 'dd MMM yyyy HH:mm'}}</span>
+            </div>
+        </div>
+    </div>
 </section>

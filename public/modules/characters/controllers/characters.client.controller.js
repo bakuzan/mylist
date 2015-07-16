@@ -58,12 +58,10 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             if ($scope.characters!==undefined) {
 //                console.log($scope.characters);
                 $scope.maxItemCount = $scope.characters.length;
+                $scope.areTagless = ListService.checkForTagless($scope.characters);
                 var add = true;
                 //is tag in array?
                 angular.forEach($scope.characters, function(item) {
-                    if (item.tags.length===0) {
-                        $scope.areTagless = true;
-                    }
                     angular.forEach(item.tags, function(tag) {
                         for(var i=0; i < $scope.statTags.length; i++) {
                             if ($scope.statTags[i].tag===tag.text) {

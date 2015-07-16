@@ -1,0 +1,7 @@
+.history-list-item:nth-child(odd) {
+    background-color: #eee;
+}
+
+.history-list-item > p {
+    margin: 4px 0;
+}

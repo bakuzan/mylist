@@ -1,14 +1,15 @@
 'use strict';
 
 // Animeitems controller
-angular.module('history').controller('HistoryController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'HistoryService',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, HistoryService) {
+angular.module('history').controller('HistoryController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'HistoryService', 'ListService',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, HistoryService, ListService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.view = 'Anime';
+        $scope.isLoading = true;
         
         function getAnimeitems() {
              // Find list of mangaitems.
@@ -36,6 +37,10 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
                 $scope.mangaHistory = HistoryService.buildHistoryList($scope.mangaitems);
             }
         });
+        
+        $scope.loading = function(value) {
+            $scope.isLoading = ListService.loader(value);
+        };
         
     }
 

@@ -5,18 +5,9 @@ angular.module('history').service('HistoryService', function() {
 
     this.buildHistoryList = function(items) {
         var itemHistory = [];
-        console.log(items);
         angular.forEach(items, function(item) {
-            console.log(item);
             angular.forEach(item.meta.history, function(history) {
-                console.log(history);
-//                if (history._id) {
-                    itemHistory.push(history);
-//                } else {
-//                    history._id = item._id;
-//                    history.title = item.title;
-//                    itemHistory.push(history);
-//                }
+                itemHistory.push({ date: history.date, value: history.value, title: item.title, id: item._id });
             });
         });
         console.log(itemHistory);

@@ -23,9 +23,19 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
         $scope.buildHistory = function() {
             getAnimeitems();
             getMangaitems();
-            $scope.animeHistory = HistoryService.buildHistoryList($scope.animeitems);
-            $scope.mangaHistory = HistoryService.buildHistoryList($scope.mangaitems);
         };
+        
+        $scope.$watchCollection('animeitems', function() {
+            if ($scope.animeitems!==undefined) {
+                $scope.animeHistory = HistoryService.buildHistoryList($scope.animeitems);
+            }
+        });
+        
+        $scope.$watchCollection('mangaitems', function() {
+            if ($scope.mangaitems!==undefined) {
+                $scope.mangaHistory = HistoryService.buildHistoryList($scope.mangaitems);
+            }
+        });
         
     }
 

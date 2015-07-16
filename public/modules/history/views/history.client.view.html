@@ -8,17 +8,17 @@
     </div>
     <div class="col-lg-12 col-md-12 col-sm-12 history-list-container" ng-show="view === 'Anime'">
         <div class="col-lg-12 col-md-12 col-sm-12 history-list">
-            <div class="col-lg-12 col-md-12 col-sm-12 history-list-item" ng-repeat="item in animeHistory | orderBy: 'date'">
-                <p><a href="/!#/animeitems/{{item._id}}">{{item.title}}</a> - Episode {{item.value}}</p>
-                <span>{{item.date | date: 'dd MMM yyyy HH:mm'}}</span>
+            <div class="col-lg-12 col-md-12 col-sm-12 history-list-item" ng-repeat="item in animeHistory | orderBy: ['-date','-value']">
+                <time class="pull-right" title="{{item.date | date: 'yyyy-MMM-dd HH:mm'}}" am-time-ago="item.date"></time>
+                <p><a href="/#!/animeitems/{{item.id}}">{{item.title}}</a> - Episode {{item.value}}</p>
             </div>
         </div>
     </div>
     <div class="col-lg-12 col-md-12 col-sm-12 history-list-container" ng-show="view === 'Manga'">
         <div class="col-lg-12 col-md-12 col-sm-12 history-list">
-            <div class="col-lg-12 col-md-12 col-sm-12 history-list-item" ng-repeat="item in mangaHistory | orderBy: 'date'">
-                <p><a href="/!#/mangaitems/{{item._id}}">{{item.title}}</a> - Chapter {{item.value}}</p>
-                <span>{{item.date | date: 'dd MMM yyyy HH:mm'}}</span>
+            <div class="col-lg-12 col-md-12 col-sm-12 history-list-item" ng-repeat="item in mangaHistory | orderBy: ['-date','-value']">
+                <time class="pull-right" title="{{item.date | date: 'yyyy-MMM-dd HH:mm'}}" am-time-ago="item.date"></time>
+                <p><a href="/#!/mangaitems/{{item.id}}">{{item.title}}</a> - Chapter {{item.value}}</p>
             </div>
         </div>
     </div>

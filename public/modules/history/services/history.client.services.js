@@ -34,22 +34,56 @@ angular.module('history').service('HistoryService', ['moment', function(moment) 
                     itemDate = moment(item.date),
                     diff = today.diff(itemDate, 'days');
                     
-                if ((diff === 0) && groupBuilder.today.length === 0) {
-                    groupBuilder.today.push(item);
-                } else if ((diff === 1) && groupBuilder.yesterday.length === 0) {
-                    groupBuilder.yesterday.push(item);
-                } else if ((1 < diff < 7) && groupBuilder.thisWeek.length === 0) {
-                    groupBuilder.thisWeek.push(item);
-                } else if ((6 < diff < 14) && groupBuilder.lastWeek.length === 0) {
-                    groupBuilder.lastWeek.push(item);
-                } else if ((13 < diff < 21) && groupBuilder.twoWeek.length === 0) {
-                    groupBuilder.twoWeek.push(item);
-                } else if ((20 < diff < 28) && groupBuilder.threeWeek.length === 0) {
-                    groupBuilder.threeWeek.push(item);
+                if (diff === 0) {
+                    if (groupBuilder.today.length === 0) {
+                        groupBuilder.today.push(item);
+                    }
+                } else if (diff === 1) {
+                    if (groupBuilder.yesterday.length === 0) {
+                        groupBuilder.yesterday.push(item);
+                    }
+                } else if (1 < diff < 7) {
+                    if (groupBuilder.thisWeek.length === 0) {
+                        groupBuilder.thisWeek.push(item);
+                    }
+                } else if (6 < diff < 14) {
+                    if (groupBuilder.lastWeek.length === 0) {
+                        groupBuilder.lastWeek.push(item);
+                    }
+                } else if (13 < diff < 21) {
+                    if (groupBuilder.twoWeek.length === 0) {
+                        groupBuilder.twoWeek.push(item);
+                    }
+                } else if (20 < diff < 28) {
+                    if (groupBuilder.threeWeek.length === 0) {
+                        groupBuilder.threeWeek.push(item);
+                    }
                 } 
             });
         console.log(groupBuilder);
         return groupBuilder;
+    };
+    
+    this.getGroupHeaders = function(groupBuilder, item) {
+        if (groupBuilder!==undefined) {
+                if (groupBuilder.today.indexOf(item) > -1) {
+                    return 'Today';
+                } else if (groupBuilder.yesterday.indexOf(item) > -1) {
+                    return 'Yesterday';
+                } else if (groupBuilder.thisWeek.indexOf(item) > -1) {
+                    return 'This week';
+                } else if (groupBuilder.lastWeek.indexOf(item) > -1) {
+                    return 'Last week';
+                } else if (groupBuilder.twoWeek.indexOf(item) > -1) {
+                    return 'Two weeks ago';
+                } else if (groupBuilder.threeWeek.indexOf(item) > -1) {
+                    return 'Three weeks ago';
+                } else {
+                    return null;
+                }
+        } else {
+            return null;
+        }
     };
 
 }]);

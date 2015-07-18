@@ -1,5 +1,9 @@
-.history-list-item:nth-child(odd) {
+.history-list-item:nth-child(odd) > p {
     background-color: #eee;
+}
+
+.history-list-item > h4 {
+    border-bottom: 1px solid #000;
 }
 
 .history-list-item > p {

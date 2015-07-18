@@ -9,7 +9,7 @@
     <div class="col-lg-12 col-md-12 col-sm-12 history-list-container" ng-show="view === 'Anime'">
         <div class="col-lg-12 col-md-12 col-sm-12 history-list">
             <div class="col-lg-12 col-md-12 col-sm-12 history-list-item" ng-repeat="item in (orderedAnimeHistory = (animeHistory | orderBy: ['-date','-value']))" ng-hide="loading(item.title)">
-                <h4 ng-if="isGroupHeader(item)">Subgroup header.</h4>
+                <h4 ng-if="isGroupHeader(groupAnimeBuilder, item)">{{isGroupHeader(groupAnimeBuilder, item)}}</h4>
                 <time class="pull-right" title="{{item.date | date: 'HH:mm dd MMMM'}}" am-time-ago="item.date"></time>
                 <p><a href="/#!/animeitems/{{item.id}}">{{item.title}}</a> - Episode {{item.value}}</p>
             </div>
@@ -17,7 +17,8 @@
     </div>
     <div class="col-lg-12 col-md-12 col-sm-12 history-list-container" ng-show="view === 'Manga'">
         <div class="col-lg-12 col-md-12 col-sm-12 history-list">
-            <div class="col-lg-12 col-md-12 col-sm-12 history-list-item" ng-repeat="item in mangaHistory | orderBy: ['-date','-value']">
+            <div class="col-lg-12 col-md-12 col-sm-12 history-list-item" ng-repeat="item in (orderedMangaHistory = (mangaHistory | orderBy: ['-date','-value']))">
+                <h4 ng-if="isGroupHeader(groupMangaBuilder, item)">{{isGroupHeader(groupMangaBuilder, item)}}</h4>
                 <time class="pull-right" title="{{item.date | date: 'HH:mm dd MMMM'}}" am-time-ago="item.date"></time>
                 <p><a href="/#!/mangaitems/{{item.id}}">{{item.title}}</a> - Chapter {{item.value}}</p>
             </div>

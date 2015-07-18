@@ -42,6 +42,22 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
             $scope.isLoading = ListService.loader(value);
         };
         
+        $scope.isGroupHeader = function(item) {
+            if ($scope.groupBuilder!==undefined) {
+                if (($scope.groupBuilder.today.indexOf(item) > -1) || ($scope.groupBuilder.yesterday.indexOf(item) > -1) || ($scope.groupBuilder.thiWeek.indexOf(item) > -1) || ($scope.groupBuilder.lastWeek.indexOf(item) > -1) || ($scope.groupBuilder.twoWeek.indexOf(item) > -1) ||($scope.groupBuilder.threeWeek.indexOf(item) > -1)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        };
+        
+        $scope.$watchCollection('orderedAnimeHistory', function(newValue) {
+            if (newValue!== undefined) {
+                $scope.groupBuilder = HistoryService.buildGroups(newValue);
+            }
+        });
+        
     }
 
                                                           ]);

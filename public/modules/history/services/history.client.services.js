@@ -19,6 +19,25 @@ angular.module('history').service('HistoryService', ['moment', function(moment) 
         return itemHistory;
     };
     
+    /** function to display relative time.
+     *  Using diff cause fromNow will create conflicts between
+     *  the item date and the 'group date'.
+     */
+    this.happenedWhen = function(when) {
+//          console.log(latest, updated);
+        var today = moment(new Date()), thisDate = moment(when),
+            diff = today.diff(thisDate, 'days');
+                
+        //for 0 and 1 day(s) ago use the special term.
+        if (diff===0) {
+            return 'Today';
+        } else if (diff===1) {
+            return 'Yesterday';
+        } else {
+            return diff + ' days ago.';
+        }
+    };
+    
     this.buildGroups = function(items) {
         var groupBuilder = {
                     today: [],
@@ -42,45 +61,45 @@ angular.module('history').service('HistoryService', ['moment', function(moment) 
                     if (groupBuilder.yesterday.length === 0) {
                         groupBuilder.yesterday.push(item);
                     }
-                } else if (1 < diff < 7) {
+                } else if (1 < diff && diff < 7) {
                     if (groupBuilder.thisWeek.length === 0) {
                         groupBuilder.thisWeek.push(item);
                     }
-                } else if (6 < diff < 14) {
+                } else if (6 < diff && diff < 14) {
                     if (groupBuilder.lastWeek.length === 0) {
                         groupBuilder.lastWeek.push(item);
                     }
-                } else if (13 < diff < 21) {
+                } else if (13 < diff && diff < 21) {
                     if (groupBuilder.twoWeek.length === 0) {
                         groupBuilder.twoWeek.push(item);
                     }
-                } else if (20 < diff < 28) {
+                } else if (20 < diff && diff < 28) {
                     if (groupBuilder.threeWeek.length === 0) {
                         groupBuilder.threeWeek.push(item);
                     }
                 } 
             });
-        console.log(groupBuilder);
+//        console.log(groupBuilder);
         return groupBuilder;
     };
     
     this.getGroupHeaders = function(groupBuilder, item) {
         if (groupBuilder!==undefined) {
-                if (groupBuilder.today.indexOf(item) > -1) {
-                    return 'Today';
-                } else if (groupBuilder.yesterday.indexOf(item) > -1) {
-                    return 'Yesterday';
-                } else if (groupBuilder.thisWeek.indexOf(item) > -1) {
-                    return 'This week';
-                } else if (groupBuilder.lastWeek.indexOf(item) > -1) {
-                    return 'Last week';
-                } else if (groupBuilder.twoWeek.indexOf(item) > -1) {
-                    return 'Two weeks ago';
-                } else if (groupBuilder.threeWeek.indexOf(item) > -1) {
-                    return 'Three weeks ago';
-                } else {
-                    return null;
-                }
+            if (groupBuilder.today.indexOf(item) > -1) {
+                return 'Today';
+            } else if (groupBuilder.yesterday.indexOf(item) > -1) {
+                return 'Yesterday';
+            } else if (groupBuilder.thisWeek.indexOf(item) > -1) {
+                return 'This week';
+            } else if (groupBuilder.lastWeek.indexOf(item) > -1) {
+                return 'Last week';
+            } else if (groupBuilder.twoWeek.indexOf(item) > -1) {
+                return 'Two weeks ago';
+            } else if (groupBuilder.threeWeek.indexOf(item) > -1) {
+                return 'Three weeks ago';
+            } else {
+                return null;
+            }
         } else {
             return null;
         }

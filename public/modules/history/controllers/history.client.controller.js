@@ -42,6 +42,10 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
             $scope.isLoading = ListService.loader(value);
         };
         
+        $scope.happenedWhen = function(when) {
+            return HistoryService.happenedWhen(when);
+        };
+        
         $scope.isGroupHeader = function(groupBuilder, item) {
             return HistoryService.getGroupHeaders(groupBuilder, item);
         };

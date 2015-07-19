@@ -132,6 +132,20 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             }
         };
         
+        $scope.$watch('view', function() {
+            if ($scope.view === 'statistics') {
+                if ($scope.animeitems!==undefined) {
+                    $scope.maxCompleteMonth = ItemService.maxCompleteMonth($scope.animeitems);
+                $scope.completeByMonth = ItemService.completeByMonth($scope.animeitems);
+                $scope.completeBySeason = ItemService.completeBySeason($scope.animeitems);
+                }
+            } else {
+                $scope.maxCompleteMonth = [];
+                $scope.completeByMonth = [];
+                $scope.completeBySeason = [];
+            }
+        });
+        
         $scope.$watchCollection('animeitems', function() {
             if ($scope.animeitems!==undefined) {
 //                console.log($scope.animeitems);
@@ -144,9 +158,6 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                     }
                 });
                 $scope.averageAnimeRating = tempRating / $scope.maxAnimeRatedCount;
-                $scope.maxCompleteMonth = ItemService.maxCompleteMonth($scope.animeitems);
-                $scope.completeByMonth = ItemService.completeByMonth($scope.animeitems);
-                $scope.completeBySeason = ItemService.completeBySeason($scope.animeitems);
                 $scope.areTagless = ListService.checkForTagless($scope.animeitems);
                 var maxTagCount = ItemService.maxTagCount($scope.animeitems);
                 $scope.statTags = ItemService.buildStatTags($scope.animeitems, maxTagCount, $scope.averageAnimeRating);

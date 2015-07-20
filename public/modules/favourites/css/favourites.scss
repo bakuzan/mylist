@@ -1,3 +1,5 @@
+@import '../../../../public/style/_var';
+
 .trophy-1 {
     color: gold;
 }
@@ -17,18 +19,18 @@
 }
 
 .selected {
-    border: 3px solid #FF0000;
+    border: 3px solid $red;
 }
 
 .bin-style {
     position: absolute;
     right: 0;
-    color: #FF0000;
+    color: $red;
     padding: 2px 4px;
     margin: 5px;
 }
 
 .bin-style:hover {
-    background-color: #FF0000;
+    background-color: $red;
     color: #FFF;
 }

@@ -1,3 +1,5 @@
+@import '../../../../public/style/_var';
+
 .content {
 	margin-top: 50px;
 }
@@ -341,7 +343,7 @@ footer a {
   left: 20vw;
   width: 60vw;
   height: 75vh;
-  border: 5px solid #337ab7;
+  border: 5px solid $blue;
   margin-top: 10px; 
   background-color: #FFF;
   align-content: center;
@@ -362,7 +364,7 @@ footer a {
 .popout-header {
   padding-bottom: 9px;
   margin: 20px 0;
-  border-bottom: 1px solid #337ab7;
+  border-bottom: 1px solid $blue;
 }
 
 .checklistItem {
@@ -378,12 +380,13 @@ footer a {
 .menu-header-bar {
     position: relative;
     display: block;
-    background-color: #337ab7;
+    background-color: $blue;
     color: #FFF;
     font-weight: bold;
     padding: 10px 15px;
     border: 1px solid #FFF;
-    margin-bottom: -1px;
+    border-radius: 2px;
+    margin: 0 5% -1px;
 }
 
 a.menu-header-bar,

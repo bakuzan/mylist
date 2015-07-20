@@ -1,11 +1,13 @@
+/* line 3, C:/mylist/mylist/public/modules/history/css/history.scss */
 .history-list-item:nth-child(odd) > p {
-    background-color: #eee;
-}
+  background-color: #eee; }
 
-.history-list-item > h4 {
-    border-bottom: 1px solid #000;
-}
+/* line 8, C:/mylist/mylist/public/modules/history/css/history.scss */
+.history-list-item h4 {
+  border-bottom: 1px solid #000; }
 
-.history-list-item > p {
-    margin: 4px 0;
-}
+/* line 12, C:/mylist/mylist/public/modules/history/css/history.scss */
+.history-list-item p {
+  margin: 4px 0; }
+
+/*# sourceMappingURL=history.css.map */

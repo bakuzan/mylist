@@ -1,0 +1,11 @@
+{
+  "version": 3,
+  "file": "history.css",
+  "sources": [
+    "history.scss",
+    "../../../style/_var.scss"
+  ],
+  "sourcesContent": [],
+  "mappings": ";AAEoC,kBAAkB,AAAA,WAAW,AAAX,GAAW,IAAO,CAAC,CAAnC;EAClC,gBAAgB,ECDP,IAAI,GDAsB;;;AAKnC,kBAAkB,CAAC,EAAE,CAAlB;EACC,aAAa,EAAE,cAAe,GAD9B;;;AAIJ,kBAAkB,CAAC,CAAC,CAAlB;EACE,MAAM,EAAE,KAAM,GADf",
+  "names": []
+}

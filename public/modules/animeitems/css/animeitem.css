@@ -1,124 +1,123 @@
+/* line 3, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
+.form-group p {
+  font-size: 14px; }
 
+/* line 7, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .view-buttons {
-    margin-bottom: 25px;
-    margin-top: -25px;
-    padding-bottom: 20px;
-}
+  margin-bottom: 25px;
+  margin-top: -25px;
+  padding-bottom: 20px; }
 
+/* line 13, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .stat-month-box {
-    cursor: pointer;
-    background-color: #1212B8;
-/*
-    border-style: solid;
-    border-width: 2px;
-    border-color: #FFF;
-*/
-}
+  cursor: pointer;
+  background-color: #1212B8; }
+
+/* line 18, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .stat-month-box:hover {
-    cursor: pointer;
-    border-style: solid;
-    border-width: 1px;
-    border-color: #000;
-}
+  cursor: pointer;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #000; }
 
+/* line 25, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .stat-rating-panel {
-    margin-top: 10px;
-/*    border-top: 1px solid #eee;*/
-}
+  margin-top: 10px; }
 
+/* line 29, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .stat-history {
-    margin-bottom: 10px;
-}
+  margin-bottom: 10px; }
 
+/* line 33, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .stat-header {
-    border-bottom: 1px solid #eee;
-    margin-bottom: 10px;
-}
+  border-bottom: 1px solid #eee;
+  margin-bottom: 10px; }
 
+/* line 38, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .progress-container {
-    height: 100%;
-}
+  height: 100%; }
 
+/* line 42, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .progress-bar-placement {
-    margin-bottom: 10px;
-}
+  margin-bottom: 10px; }
 
+/* line 46, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .stat-summary-info {
-    margin-top: -25px;
-}
+  margin-top: -25px; }
 
+/* line 50, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .related-media {
-    padding-top: 25px;
-    font-size: small;
-}
+  padding-top: 25px;
+  font-size: small; }
 
+/* line 55, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .stat-tag-panel {
-    margin-top: 10px;
-/*    border-top: 1px solid #eee;*/
-}
+  margin-top: 10px;
+  /*    border-top: 1px solid #eee;*/ }
 
+/* line 60, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .view-item-detail {
-    margin-top: 5px;
-    padding-top: 5px;
-}
+  margin-top: 5px;
+  padding-top: 5px; }
 
+/* line 65, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .item-icons {
-    margin: 1px;
-}
+  margin: 1px; }
 
+/* line 69, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .item-tags {
-    color: #777;
-    font-style: italic;
-    margin: 10px 0;
-    padding: 5px 0;
-    padding-left: 0;
-}
+  color: #777;
+  font-style: italic;
+  margin: 10px 0;
+  padding: 5px 0;
+  padding-left: 0; }
 
+/* line 77, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .item-actions {
-    margin: 10px 0;
-}
+  margin: 10px 0; }
 
+/* line 81, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .stat-header-label-container {
-    display: inline-flex;
-}
+  display: inline-flex; }
 
+/* line 86, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .stat-header-label,
 .stat-header-label.ng-valid.ng-dirty {
-    font-size: 24px;
-    padding: 5px;
-    border: 1px solid #FFF;
-    margin: 10px 5px;
-}
+  font-size: 24px;
+  padding: 5px;
+  border: 1px solid #FFF;
+  margin: 10px 5px; }
 
+/* line 95, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .stat-header-label.active,
 .stat-header-label.ng-valid.ng-dirty.active,
 .stat-header-label:focus {
-    color: #FFF;
-    background-color: #337ab7;
-}
+  color: #FFF;
+  background-color: #337ab7; }
 
+/* line 100, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .stat-season-header {
-    width: 24%;
-}
+  width: 24%; }
 
+/* line 104, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .stat-overview {
-    text-align: center;
-    font-size: 18px;
-    font-weight: bold;
-}
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold; }
 
+/* line 110, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .blue-text {
-    color: #337ab7;
-}
+  color: #337ab7; }
 
+/* line 114, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .green-text {
-    color: #47a447;
-}
+  color: #47a447; }
 
+/* line 118, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .padded-medium {
-    padding: 10px;
-}
+  padding: 10px; }
 
+/* line 122, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .item-history-popout {
   position: fixed;
   top: 10vh;
@@ -130,45 +129,47 @@
   border: 5px solid #337ab7;
   margin-top: 10px;
   overflow-y: scroll;
-  z-index: 200;
-}
+  z-index: 200; }
 
+/* line 136, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .close-button {
   position: absolute;
   top: 0;
   right: 0;
   padding: 2px 4px;
   margin: 0 20px;
-  color: #FF0000;
+  color: #d41f1a;
   font-size: 20px;
   text-align: center;
-  cursor: pointer;
-}
+  cursor: pointer; }
 
+/* line 148, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .close-button:hover {
-    background-color: #FF0000;
-    color: #FFF;
-}
+  background-color: #d41f1a;
+  color: #FFF; }
+
+/* line 152, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .tag-list {
-    list-style-type: none;
-    padding: 0 20px;
-}
+  list-style-type: none;
+  padding: 0 20px; }
 
+/* line 157, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .stat-month-header {
-    width: 8%
-}
+  width: 8%; }
 
+/* line 161, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .loading-image {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 100;
-    width: 100%;
-    height: 100%;
-    background-color: #C0C0C0;
-    background-color: rgba(192, 192, 192, 0.5);
-    background-image: url("/modules/core/img/loaders/info-loader.gif");
-    background-repeat: no-repeat;
-    background-position: center;
-}
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+  background-color: #C0C0C0;
+  background-color: rgba(192, 192, 192, 0.5);
+  background-image: url("/modules/core/img/loaders/info-loader.gif");
+  background-repeat: no-repeat;
+  background-position: center; }
+
+/*# sourceMappingURL=animeitem.css.map */

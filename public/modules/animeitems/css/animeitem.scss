@@ -1,4 +1,8 @@
-@import 'style/_var';
+@import '../../../../public/style/_var';
+
+.form-group p {
+	font-size: 14px;
+}
 
 .view-buttons {
     margin-bottom: 25px;
@@ -8,8 +12,9 @@
 
 .stat-month-box {
     cursor: pointer;
-    background-color: #1212B8;
+    background-color: $blue-rich;
 }
+
 .stat-month-box:hover {
     cursor: pointer;
     border-style: solid;
@@ -62,7 +67,7 @@
 }
 
 .item-tags {
-    color: #777;
+    color: $grey-dark;
     font-style: italic;
     margin: 10px 0;
     padding: 5px 0;
@@ -134,14 +139,14 @@
   right: 0;
   padding: 2px 4px;
   margin: 0 20px;
-  color: #FF0000;
+  color: $red;
   font-size: 20px;
   text-align: center;
   cursor: pointer;
 }
 
 .close-button:hover {
-    background-color: #FF0000;
+    background-color: $red;
     color: #FFF;
 }
 .tag-list {

@@ -370,17 +370,17 @@ footer a {
   margin: 20px 0;
   border-bottom: 1px solid #337ab7; }
 
-/* line 370, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 374, C:/mylist/mylist/public/modules/core/css/core.scss */
 .checklistItem {
   padding: 5px; }
 
-/* line 374, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 378, C:/mylist/mylist/public/modules/core/css/core.scss */
 .checklist-progress-bar {
   height: 10px;
   width: 75%;
   margin-top: 10px; }
 
-/* line 380, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 384, C:/mylist/mylist/public/modules/core/css/core.scss */
 .menu-header-bar {
   position: relative;
   display: block;
@@ -392,17 +392,17 @@ footer a {
   border-radius: 2px;
   margin: 0 5% -1px; }
 
-/* line 393, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 397, C:/mylist/mylist/public/modules/core/css/core.scss */
 a.menu-header-bar,
 a.menu-header-bar:hover {
   text-decoration: none; }
 
-/* line 397, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 401, C:/mylist/mylist/public/modules/core/css/core.scss */
 .menu-header-bar:hover {
   background-color: #286090;
   color: #FFF; }
 
-/* line 401, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 405, C:/mylist/mylist/public/modules/core/css/core.scss */
 .footer {
   padding-bottom: 15px; }
 

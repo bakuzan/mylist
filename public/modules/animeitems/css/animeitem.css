@@ -143,21 +143,21 @@
   text-align: center;
   cursor: pointer; }
 
-/* line 148, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
+/* line 151, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .close-button:hover {
   background-color: #d41f1a;
   color: #FFF; }
 
-/* line 152, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
+/* line 155, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .tag-list {
   list-style-type: none;
   padding: 0 20px; }
 
-/* line 157, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
+/* line 160, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .stat-month-header {
   width: 8%; }
 
-/* line 161, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
+/* line 164, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .loading-image {
   display: block;
   position: absolute;

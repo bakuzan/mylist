@@ -1,0 +1,400 @@
+.content {
+	margin-top: 50px;
+}
+.undecorated-link:hover {
+	text-decoration: none;
+}
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+	display: none !important;
+}
+.ng-invalid.ng-dirty {
+	border-color: #FA787E;
+}
+.ng-valid.ng-dirty {
+	border-color: #78FA89;
+}
+
+/* remove unecessary red/green borders. */
+.input-group input.ng-valid.ng-dirty,
+.input-group select.ng-valid.ng-dirty,
+.input-group span.ng-valid.ng-dirty {
+    border-color: #ccc;
+}
+
+/* remove not-allowed cursor */
+.form-control[disabled],
+input[type="checkbox"][disabled], input[type="checkbox"].disabled {
+    cursor: default;
+}
+
+.navbar-favourites {
+    color: #9d9d9d;
+    padding: 15px 15px;
+}
+.navbar-favourites:visited {
+    color: #9d9d9d;
+    text-decoration: none;
+}
+.navbar-favourites:focus {
+    color: #ffffff;
+    text-decoration: none;
+}
+.navbar-favourites:hover  {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+
+/**
+ *  Task List CSS
+ */
+
+.tagline {
+    margin-top: -10px;
+    text-align: center;
+    padding: 5px 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #777; 
+}
+
+/* inputs */
+.inputContainer {
+    height: 60px;
+    border-top: 1px solid #e5e5e5;
+    position: relative;
+    overflow: hidden;
+}
+
+.inputContainer.last {
+    border-bottom: 1px solid #e5e5e5;
+    margin-bottom: 20px;
+}
+
+.inputContainer.half.last.right {
+    border-left: 1px solid #efefef;
+}
+
+.icon {
+    position: absolute;
+    top: 30%;
+    left: 10px;
+    font-size: 20px;
+}
+
+.taskAdd {
+    background: #444;
+    padding-left: 15px;
+}
+
+.taskAdd:hover {
+    background: #303030;
+}
+
+.taskDelete {
+    background: #e74c3c;
+    padding-left: 30px;
+}
+
+.taskDelete:hover {
+    background: #c0392b;
+}
+
+/* task styles */
+.taskList {
+    list-style: none;
+    padding: 0 20px;
+    border-top: 1px solid #e5e5e5;
+}
+
+.taskItem {
+    border-bottom: 1px solid #e5e5e5;
+    padding: 15px 0;
+    color: #777;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+.taskList .taskItem:nth-child(even) {
+    background: #fcfcfc;
+}
+
+.taskCheckbox {
+    margin-right: 1em;
+}
+
+.complete-true {
+    text-decoration:  line-through;
+    color: #bebebe;
+}
+
+.taskList .taskDate {
+    color: #95a5a6;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: block;
+    margin-left: 41px;
+}
+
+.fa-calendar {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+[class*='category-'] {
+/*    display: inline-block;*/
+    font-size: 10px;
+    background: #444;
+    vertical-align: middle;
+    color: #fff;
+    padding: 10px;
+    width: 75px;
+    text-align: center;
+    border-radius: 2px;
+    float: right;
+    font-weight: normal;
+    text-transform: uppercase;
+    margin-right: 20px;
+}
+
+.category- {
+    background: transparent;
+}
+
+.category-Watch {
+    background: #2980b9;
+}
+
+.category-Read {
+    background: #8e44ad;
+}
+
+.category-Play {
+    background: #f39c12;
+}
+
+.category-Other {
+    background: #16a085;
+}
+
+
+footer {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #777;
+}
+
+footer a {
+    color: #f39c12;
+}
+/* custom checkboxes */
+.taskCheckbox {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+            appearance: none;
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+            transition: all 0.3s;
+    display: inline-block;
+    cursor: pointer;
+    width: 19px;
+    height: 19px;
+    vertical-align: middle;
+}
+
+.taskCheckbox:before, .taskCheckbox:checked:before {
+    font-family: 'FontAwesome';
+    color: #444;
+    font-size: 20px;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -o-transition: all 0.3s;
+            transition: all 0.3s;
+
+}
+
+.taskCheckbox:before {
+    content: '\f096';
+}
+
+.taskCheckbox:checked:before {
+    content: '\f14a';
+    color: #16a085;
+}
+/* custom select menu */
+.taskCategory {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+            appearance: none;
+    cursor: pointer;
+    padding-left: 16.5px; /*specific positioning due to difficult behavior of select element*/
+    background: #fff;
+}
+
+.selectArrow {
+    position: absolute;
+    z-index: 10;
+    top: 35%;
+    right: 0;
+    margin-right: 20px;
+    color: #777;
+    pointer-events: none;
+}
+
+.taskCategory option {
+    background: #fff;
+    border: none;
+/*    outline: none;*/
+    padding: 0 100px;
+}
+
+/** FAVOURITES STYLING **/
+
+.favourite-header {
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee; 
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.favourite-link {
+    color: inherit;
+}
+.favourite-link:hover,
+.favourite-link:focus {
+    color: inherit;
+    text-decoration: none;
+}
+
+.favourite-link:hover h2:before {
+    content: 'Go to ';
+}
+.favourite-link:hover h2:after {
+    content: '?';
+}
+
+.collapse-bar {
+    cursor: pointer;
+    background-color: #e6e6e6;
+    color: #FFF;
+    font-weight: bold;
+}
+
+.keep-cursor {
+    cursor: default;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+/*
+.show-nav .push-wrap {
+    -webkit-transform: translate(50%, 0);
+    -webkit-transform: translate3d(50%, 0, 0);
+    -moz-transform: translate(50%, 0);
+    -moz-transform: translate3d(50%, 0, 0);
+    -ms-transform: translate(50%, 0);
+    -ms-transform: translate3d(50%, 0, 0);
+    -o-transform: translate(50%, 0);
+    -o-transform: translate3d(50%, 0, 0);
+    transform: translate(50%, 0);
+    transform: translate3d(50%, 0, 0);
+}
+
+ Adds a transition and the resting translate state 
+.push-wrap {
+    -webkit-transition: all 300ms ease 0;
+    -moz-transition: all 300ms ease 0;
+    -o-transition: all 300ms ease 0;
+    transition: all 300ms ease 0;
+
+    -webkit-transform: translate(0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate(0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    -ms-transform: translate(0, 0);
+    -ms-transform: translate3d(0, 0, 0);
+    -o-transform: translate(0, 0);
+    -o-transform: translate3d(0, 0, 0);
+    transform: translate(0, 0);    
+    transform: translate3d(0, 0, 0);
+}
+*/
+
+.site-wrap {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.add-task-popout {
+  position: fixed;
+  top: 10vh;
+  left: 20vw;
+  width: 60vw;
+  height: 75vh;
+  border: 5px solid #337ab7;
+  margin-top: 10px; 
+  background-color: #FFF;
+  align-content: center;
+  overflow-y: scroll;
+  z-index: 100;
+}
+
+.toggle-add-task {
+    font-size: 20px;
+}
+
+/* Remove unecessary green 'valid' border */
+.btn-primary.ng-valid.ng-dirty {
+    border-color: #245580;
+}
+
+
+.popout-header {
+  padding-bottom: 9px;
+  margin: 20px 0;
+  border-bottom: 1px solid #337ab7;
+}
+
+.checklistItem {
+    padding: 5px;
+}
+
+.checklist-progress-bar {
+  height: 10px;
+  width: 75%;
+  margin-top: 10px;
+}
+
+.menu-header-bar {
+    position: relative;
+    display: block;
+    background-color: #337ab7;
+    color: #FFF;
+    font-weight: bold;
+    padding: 10px 15px;
+    border: 1px solid #FFF;
+    margin-bottom: -1px;
+}
+
+a.menu-header-bar,
+a.menu-header-bar:hover {
+  text-decoration: none;
+}
+
+.menu-header-bar:hover {
+    background-color: #286090;
+    color: #FFF;
+}
+.footer {
+    padding-bottom: 15px;
+}

@@ -1,6 +1,6 @@
 'use strict';
 
-// Animeitems controller
+// History controller
 angular.module('history').controller('HistoryController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'HistoryService', 'ListService',
 	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, HistoryService, ListService) {
 		$scope.authentication = Authentication;
@@ -25,6 +25,14 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
             getAnimeitems();
             getMangaitems();
         };
+        //Needed to catch 'Character' setting and skip it.
+        $scope.$watch('view', function(newValue) {
+            if ($scope.view !== undefined) {
+                if (newValue !== 'Anime' && newValue !== 'Manga') {
+                    $scope.view = 'Anime';
+                }
+            }
+        });
         
         $scope.$watchCollection('animeitems', function() {
             if ($scope.animeitems!==undefined) {

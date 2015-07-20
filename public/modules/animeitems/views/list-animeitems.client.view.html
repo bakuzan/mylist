@@ -1,156 +1,9 @@
 <section data-ng-controller="AnimeitemsController" data-ng-init="find()" data-ng-show="authentication.user">
     <span keycuts></span>
     <div class="page-header">
-        <div class="view-buttons text-right pull-right">
-            <label class="btn btn-primary" ng-model="isList" btn-radio="true" ng-click="view = 'list'; includeView = ''">List</label>
-            <label class="btn btn-primary" ng-model="isList" btn-radio="false" ng-click="view = 'statistics'; includeView = '/modules/animeitems/views/stats-animeitems.client.view.html'">Stats</label>
-        </div>
-        <h1>Anime {{view}}</h1>
+        <h1>Anime list</h1>
     </div>
-    <div class="col-lg-12 col-md-12 col-sm-12" ng-hide="isList">
-        <div class="col-lg-12 col-md-12 col-sm-12 stat-overview">
-            <span class="blue-text">{{(animeitems | filter: {status: false }).length }} watching</span> - <span class="green-text">{{(animeitems | filter: {status: true }).length }}  completed</span>
-        </div><!-- OVERVIEW STATS END -->
-        <div class="col-lg-12 col-md-12 col-sm-12 stat-history" ng-init="showHistory = true">
-            <div class="stat-header">
-                <div class="stat-header-label-container">
-                    <h3 class="clickable" ng-click="showHistory = !showHistory"><i class="fa" ng-class="showHistory ? 'fa-minus-square' : 'fa-plus-square'"></i> History</h3>
-                    <h3 class="btn stat-header-label" ng-model="historicalView" btn-radio="'month'" ng-show="showHistory">by month</h3>
-                    <h3 class="btn stat-header-label" ng-model="historicalView" btn-radio="'season'" ng-show="showHistory">by season</h3>
-                </div>
-            </div>
-            <table class="col-lg-12 col-md-12 col-sm-12" ng-show="historicalView === 'month' && showHistory">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th class="text-center stat-month-header" ng-repeat="month in months">{{month.text.substring(0,3)}}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="year in completeByMonth | orderBy: '-year'">
-                        <th><span>{{year.year}}</span></th>
-                        <td  class="stat-month-box" ng-repeat="month in year.months" ng-click="monthDetail(year.year, month.number);"  popover="{{month.count}} anime completed {{month.text}} {{year.year}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': month.count / maxCompleteMonth }">
-                        </td>
-                    </tr>
-                </tbody>
-            </table><!-- MONTH HISTORY TABLE END -->
-            <table class="col-lg-12 col-md-12 col-sm-12" ng-show="historicalView === 'season' && showHistory">
-                <thead>
-                    <tr>
-                        <th class=""></th>
-                        <th class="text-center stat-season-header" ng-repeat="season in seasons">{{season.text}}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="year in completeBySeason | orderBy: '-year'">
-                        <th><span>{{year.year}}</span></th>
-                        <td  class="stat-month-box" ng-repeat="season in year.seasons" ng-click="seasonDetail(year.year, season.number)" popover="{{ season.count }} anime completed {{season.text}} {{year.year}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': season.count / maxCompleteMonth }">
-                        </td>
-                    </tr>
-                </tbody>
-            </table><!-- SEASON HISTORY TABLE END -->
-        </div><!-- HISTORY PANEL END -->
-        <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="showDetail && showHistory">
-            <div class="col-lg-9 col-md-9 col-sm-9 stat-detail">
-                <div class="stat-detail-header">
-                    <h3>{{byMonthItems.length}} Anime Completed {{detailMonthName}} {{detailYear}}</h3>
-                </div>
-                <ul class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
-                    <li ng-repeat="anime in (byMonthItems = (animeitems | endedMonth: detailYear:detailMonth | orderBy: 'title'))">
-                        <a href="/#!/animeitems/{{anime._id}}"><span>{{anime.title}}</span></a> - <span>{{anime.rating}}</span>
-                    </li>
-                </ul>
-            </div>
-        </div><!-- MONTH DETAIL PANEL END -->
-        <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="showSeasonDetail && showHistory">
-            <div class="col-lg-9 col-md-9 col-sm-9 stat-detail">
-                <div class="stat-detail-header">
-                    <h3>{{bySeasonItems.length}} Anime Completed {{detailSeasonName}} {{detailSeasonYear}}</h3>
-                </div>
-                <ul class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
-                    <li ng-repeat="anime in (bySeasonItems = (animeitems | endedSeason: detailSeasonYear:detailSeason | orderBy: 'title'))">
-                        <a href="/#!/animeitems/{{anime._id}}"><span>{{anime.title}}</span></a> - <span>{{anime.rating}}</span>
-                        <p>{{anime.start | date: 'MM/yyyy'}} - {{anime.end | date: 'MM/yyyy'}}</p>
-                    </li>
-                </ul>
-            </div>
-        </div><!-- SEASON DETAIL PANEL END -->
-        <div class="col-lg-6 col-md-6 col-sm-6 stat-rating-panel" ng-init="showRatings = true">
-            <div class="stat-header">
-                <h3 class="clickable" ng-click="showRatings = !showRatings"><i class="fa" ng-class="showRatings ? 'fa-minus-square' : 'fa-plus-square'"></i> Ratings</h3><span class="stat-summary-info pull-right"><small class="text-muted">&nbsp;{{averageAnimeRating | number: 2}} average rating.</small></span>
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-12" ng-show="showRatings">
-                <table class="col-lg-12 col-md-12 col-sm-12 stat-rating-table">
-                    <tbody>
-                        <tr ng-repeat="i in [10,9,8,7,6,5,4,3,2,1,0]">
-                            <th class="col-lg-1 col-md-1 col-sm-1 text-right mb"><span ng-if="i!==0">{{i}}</span><span ng-if="i===0">-</span></th>
-                            <td class="col-lg-11 col-md-11 col-sm-11 col-xs-11 stat-rating-box">
-                                <div class="progress-container">
-                                    <progressbar class="progress-bar-placement" ng-if="i!==0" max="100" value="((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100" popover="{{(animeitems | filter: { rating: i }:true).length}} anime rated {{i}}." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">{{((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100 | number: 2}}%</progressbar>
-                                    <progressbar class="progress-bar-placement" ng-if="i===0" max="100" value="((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100" popover="{{(animeitems | filter: { rating: i }:true).length}} anime unrated." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">{{((animeitems | filter: { rating: i }:true).length / maxAnimeCount)*100 | number: 2}}%</progressbar>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div><!-- RATING PANEL END -->
-        <div class="col-lg-6 col-md-6 col-sm-6 stat-tag-panel" ng-init="showStatTags = true">
-            <div class="stat-header">
-                <h3 class="clickable" ng-click="showStatTags = !showStatTags"><i class="fa" ng-class="showStatTags ? 'fa-minus-square' : 'fa-plus-square'"></i> Tags</h3><span class="stat-summary-info pull-right"><small class="text-muted">&nbsp;{{statTags.length}} unique tags.</small></span>
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-12" ng-show="showStatTags">
-                <div class="input-group">
-                    <div class="input-group-addon">
-                        <i class="fa fa-search"></i>
-                    </div>
-                    <input type="text" ng-model="statSearch" placeholder="search tags" class="form-control">
-                </div>
-                <table class="col-lg-12 col-md-12 col-sm-12 stat-tag-table table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <td class="text-right">#</td>
-                            <td>
-                                <a href="" ng-click="statTagSortType = 'tag'; statTagSortReverse = !statTagSortReverse ">
-					               Tag
-					            </a>
-                                <i ng-show="statTagSortType == 'tag'" class="fa" ng-class="statTagSortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
-                            </td>
-                            <td class="text-right">
-                                <a href="" ng-click="statTagSortType = 'count'; statTagSortReverse = !statTagSortReverse ">
-					               Count
-					            </a>
-                                <i ng-show="statTagSortType == 'count'" class="fa" ng-class="statTagSortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
-                            </td>
-                            <td class="text-right">
-                                <a href="" ng-click="statTagSortType = 'ratingAvg'; statTagSortReverse = !statTagSortReverse ">
-					               Rating (Avg.)
-					            </a>
-                                <i ng-show="statTagSortType == 'ratingAvg'" class="fa" ng-class="statTagSortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
-                            </td>
-                            <td class="text-right">
-                                <a href="" ng-click="statTagSortType = 'ratingWeighted'; statTagSortReverse = !statTagSortReverse ">
-					               Rating (WAvg.)
-					            </a>
-                                <i ng-show="statTagSortType == 'ratingWeighted'" class="fa" ng-class="statTagSortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="stat in statTags | orderBy: statTagSortType:statTagSortReverse | filter: { tag: statSearch }">
-                            <td class="text-right">{{$index+1}}</td>
-                            <td>{{stat.tag}}</td>
-                            <td class="text-right">{{stat.count}}</td>
-                            <td class="text-right">{{stat.ratingAvg | number: 2}}</td>
-                            <td class="text-right">{{stat.ratingWeighted | number: 2}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div><!-- TAG PANEL END -->
-    </div><!-- STAT VIEW END -->
-    <div ng-show="isList">
-        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+    <div class="form-group col-lg-4 col-md-4 col-sm-4">
         <div class="paging-controls col-lg-12 col-md-12 col-sm-12">
             <button class="btn btn-success" ng-click="currentPage=0">First</button>
             <button class="btn btn-primary" ng-disabled="currentPage <= 0" ng-click="currentPage=currentPage-1">
@@ -251,7 +104,7 @@
             <input class="form-control" type="checkbox" data-ng-model="taglessItem">
         </div>
     </div><!-- FILTER SIDEBAR END -->
-        <div class="list-group col-lg-8 col-md-8 col-sm-8">
+    <div class="list-group col-lg-8 col-md-8 col-sm-8">
         <div data-ng-repeat="animeitem in animeitems | orderBy: sortType:sortReverse | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" list_Back="{{trustAsResourceUrl(animeitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12" ng-hide="loading(animeitem.title)">
 			<div class="view-item-top clickable" ng-click="viewItem===animeitem ? viewItem='' : viewItem=animeitem">
             <small class="list-group-item-text">
@@ -304,6 +157,5 @@
             </div><!-- VIEW ITEM END-->
         </div><!-- LIST ITEM END -->
     </div><!-- LIST -->
-    </div><!-- LIST VIEW(FILTERS + LIST) END-->
     <section class="loading-image" data-ng-if="isLoading"></section>
 </section>

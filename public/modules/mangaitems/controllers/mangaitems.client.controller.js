@@ -22,15 +22,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         
         //today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
         $scope.itemUpdate = new Date().toISOString().substring(0,10);
-        $scope.view = 'list'; //dynamic page title.
-        $scope.isList = true; //list view as default.
-        $scope.maxMangaCount = 0; //number of anime.
-        $scope.maxMangaRatedCount = 0; //number of anime with a rating i.e not 0.
-        $scope.averageMangaRating = 0; //average rating for anime.
-        $scope.maxCompleteMonth = 0; //used to find the max number of ends in 1 month.
-        $scope.showDetail = false; //show month detail.
-        $scope.statTagSortType = 'count'; //stat tag sort
-        $scope.statTagSortReverse = true; //stat tag sort direction.
 //        $scope.sortType = 'latest'; //default sort type
         $scope.sortOptions = [
             { v: 'title', n: 'Title' },{ v: 'chapters', n: 'Chapters' },{ v: 'volumes', n: 'Volumes' },{ v: 'start', n: 'Start date' },
@@ -68,59 +59,13 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             $scope.newTag = '';
         };
         
-        $scope.months = [
-            { number: '01', text: 'January' },
-            { number: '02', text: 'February' },
-            { number: '03', text: 'March' },
-            { number: '04', text: 'April' },
-            { number: '05', text: 'May' },
-            { number: '06', text: 'June' },
-            { number: '07', text: 'July' },
-            { number: '08', text: 'August' },
-            { number: '09', text: 'September' },
-            { number: '10', text: 'October' },
-            { number: '11', text: 'November' },
-            { number: '12', text: 'December' }
-        ];
-        
-        //show month detail.
-        $scope.monthDetail = function(year, month) {
-//            console.log(year+'-'+month);
-            //if the one already selected is clicked, hide the detail.
-            if ($scope.detailYear===year && $scope.detailMonth===month) {
-                    $scope.showDetail = !$scope.showDetail;
-            } else {
-                $scope.detailYear = year;
-                $scope.detailMonth = month;
-                //get month name also, cause why not.
-                angular.forEach($scope.months, function(mmm) {
-                    if ($scope.detailMonth===mmm.number) {
-                        $scope.detailMonthName = mmm.text;
-                    }
-                });
-                $scope.showDetail = true;
-            }
-        };
-        
         $scope.$watchCollection('mangaitems', function() {
             if ($scope.mangaitems!==undefined) {
 //                console.log($scope.mangaitems);
-                $scope.maxMangaCount = $scope.mangaitems.length;
-                var tempRating = 0;
-                angular.forEach($scope.mangaitems, function(manga) {
-                    if (manga.rating!==0) {
-                        tempRating += manga.rating;
-                        $scope.maxMangaRatedCount++;
-                    }
-                });
-                $scope.averageMangaRating = tempRating / $scope.maxMangaRatedCount;
-
-                $scope.maxCompleteMonth = ItemService.maxCompleteMonth($scope.mangaitems);
-                $scope.completeByMonth = ItemService.completeByMonth($scope.mangaitems);
                 
                 $scope.areTagless = ListService.checkForTagless($scope.mangaitems);
                 var maxTagCount = ItemService.maxTagCount($scope.mangaitems);
-                $scope.statTags = ItemService.buildStatTags($scope.mangaitems, maxTagCount, $scope.averageMangaRating);
+                $scope.statTags = ItemService.buildStatTags($scope.mangaitems, maxTagCount, 0);
             }
         });
         

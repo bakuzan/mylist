@@ -22,17 +22,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         
         //today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
         $scope.itemUpdate = new Date().toISOString().substring(0,10);
-        $scope.view = 'list'; //dynamic page title.
-        $scope.historicalView = 'month'; //default historical view in stats.
-        $scope.isList = true; //list view as default.
         $scope.viewItemHistory = false; //default stat of item history popout.
-        $scope.maxAnimeCount = 0; //number of anime.
-        $scope.maxAnimeRatedCount = 0; //number of anime with a rating i.e not 0.
-        $scope.averageAnimeRating = 0; //average rating for anime.
-        $scope.maxCompleteMonth = 0; //used to find the max number of ends in 1 month.
-        $scope.showDetail = false; //show month detail.
-        $scope.statTagSortType = 'count'; //stat tag sort
-        $scope.statTagSortReverse = true; //stat tag sort direction.
 //        $scope.sortType = ['latest', 'meta.updated']; //default sort type
         $scope.sortOptions = [
             { v: 'title', n: 'Title' },{ v: 'episodes', n: 'Episodes' },{ v: 'start', n: 'Start date' },
@@ -69,98 +59,13 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             $scope.newTag = '';
         };
         
-        $scope.seasons = [
-            { number: '03', text: 'Winter' },
-            { number: '06', text: 'Spring' },
-            { number: '09', text: 'Summer' },
-            { number: '12', text: 'Fall' }
-        ];
-        $scope.months = [
-            { number: '01', text: 'January' },
-            { number: '02', text: 'February' },
-            { number: '03', text: 'March' },
-            { number: '04', text: 'April' },
-            { number: '05', text: 'May' },
-            { number: '06', text: 'June' },
-            { number: '07', text: 'July' },
-            { number: '08', text: 'August' },
-            { number: '09', text: 'September' },
-            { number: '10', text: 'October' },
-            { number: '11', text: 'November' },
-            { number: '12', text: 'December' }
-        ];
-        
-        //show season detail.
-        $scope.seasonDetail = function(year, month) {
-//            console.log(year+'-'+month);
-            //if the one already selected is clicked, hide the detail.
-            if ($scope.detailSeasonYear===year && $scope.detailSeason===month) {
-                    $scope.showSeasonDetail = !$scope.showSeasonDetail;
-                    $scope.showDetail = false;
-            } else {
-                $scope.detailSeasonYear = year;
-                $scope.detailSeason = month;
-                //get month name also, cause why not.
-                angular.forEach($scope.seasons, function(mmm) {
-                    if ($scope.detailSeason===mmm.number) {
-                        $scope.detailSeasonName = mmm.text;
-                    }
-                });
-                $scope.showSeasonDetail = true;
-                $scope.showDetail = false;
-            }
-        };
-        
-//        //show month detail.
-        $scope.monthDetail = function(year, month) {
-//            console.log(year+'-'+month);
-            //if the one already selected is clicked, hide the detail.
-            if ($scope.detailYear===year && $scope.detailMonth===month) {
-                    $scope.showDetail = !$scope.showDetail;
-                    $scope.showSeasonDetail = false;
-            } else {
-                $scope.detailYear = year;
-                $scope.detailMonth = month;
-                //get month name also, cause why not.
-                angular.forEach($scope.months, function(mmm) {
-                    if ($scope.detailMonth===mmm.number) {
-                        $scope.detailMonthName = mmm.text;
-                    }
-                });
-                $scope.showDetail = true;
-                $scope.showSeasonDetail = false;
-            }
-        };
-        
-        $scope.$watch('view', function() {
-            if ($scope.view === 'statistics') {
-                if ($scope.animeitems!==undefined) {
-                    $scope.maxCompleteMonth = ItemService.maxCompleteMonth($scope.animeitems);
-                $scope.completeByMonth = ItemService.completeByMonth($scope.animeitems);
-                $scope.completeBySeason = ItemService.completeBySeason($scope.animeitems);
-                }
-            } else {
-                $scope.maxCompleteMonth = [];
-                $scope.completeByMonth = [];
-                $scope.completeBySeason = [];
-            }
-        });
-        
         $scope.$watchCollection('animeitems', function() {
             if ($scope.animeitems!==undefined) {
 //                console.log($scope.animeitems);
-                $scope.maxAnimeCount = $scope.animeitems.length;
-                var tempRating = 0;
-                angular.forEach($scope.animeitems, function(anime) {
-                    if (anime.rating!==0) {
-                        tempRating += anime.rating;
-                        $scope.maxAnimeRatedCount++;
-                    }
-                });
-                $scope.averageAnimeRating = tempRating / $scope.maxAnimeRatedCount;
+                
                 $scope.areTagless = ListService.checkForTagless($scope.animeitems);
                 var maxTagCount = ItemService.maxTagCount($scope.animeitems);
-                $scope.statTags = ItemService.buildStatTags($scope.animeitems, maxTagCount, $scope.averageAnimeRating);
+                $scope.statTags = ItemService.buildStatTags($scope.animeitems, maxTagCount, 0);
                 
             }
         });

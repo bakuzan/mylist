@@ -57,7 +57,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.$watchCollection('characters', function() {
             if ($scope.characters!==undefined) {
 //                console.log($scope.characters);
-                $scope.maxItemCount = $scope.characters.length;
                 $scope.areTagless = ListService.checkForTagless($scope.characters);
                 var add = true;
                 //is tag in array?
@@ -77,41 +76,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                     });
 //                    console.log($scope.statTags);
                 });
-                //get series counts.
-                angular.forEach($scope.characters, function(item) {
-                    for(var i=0; i < $scope.statSeries.length; i++) {
-                        if (item.anime!==null) {
-                            if ($scope.statSeries[i].name===item.anime.title) {
-                                add = false;
-                                $scope.statSeries[i].count += 1; 
-                            }
-                        } else if (item.manga!==null) {
-                            if ($scope.statSeries[i].name===item.manga.title) {
-                                add = false;
-                                $scope.statSeries[i].count += 1; 
-                            }
-                        }
-                    }
-                    // add if not in
-                    if (add===true) {
-                        if (item.anime!==null) {
-                            $scope.statSeries.push({ name: item.anime.title, count: 1 });
-                        } else if (item.manga!==null) {
-                            $scope.statSeries.push({ name: item.manga.title, count: 1 });
-                        }
-                    }
-                    add = true; //reset add status.
-                });
-//                    console.log($scope.statSeries);
-                //get gender counts.
-                angular.forEach($scope.statTags, function(stat) {
-                    if (stat.tag==='male') {
-                        $scope.male = stat.count;
-                    } else if (stat.tag==='female') {
-                        $scope.female = stat.count;
-                    }
-                });
-                $scope.nosex = $scope.maxItemCount - $scope.male - $scope.female;
                 //is voice actor in array?
                 angular.forEach($scope.characters, function(item) { 
                         for(var i=0; i < $scope.voiceActors.length; i++) {
@@ -140,63 +104,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 //            console.log($scope.newTag);
             $scope.tagArray = ListService.addTag($scope.tagArray, $scope.newTag);
             $scope.newTag = '';
-        };
-        
-        //show stat tag detail.
-        $scope.tagDetail = function(name) {
-            if ($scope.detailTagName===name) {
-                $scope.statSearch = '';
-                $scope.showTagDetail = false;
-                $scope.detailTagName = '';
-                $scope.isEqual = false;
-            } else {
-                $scope.statSearch = name;
-                $scope.detailTagName = name;
-                $scope.isEqual = true;
-                $scope.showTagDetail = true;
-                $scope.tagDetailCollection = [];
-                $scope.tagDetailResult = [];
-                var add = true;
-                angular.forEach($scope.characters, function(item){
-                    for(var i=0; i < item.tags.length; i++) {
-                        if (item.tags[i].text===name) {
-                            $scope.tagDetailCollection.push(item.tags);
-                        }
-                    }
-                });
-//                console.log($scope.tagDetailCollection);
-                angular.forEach($scope.tagDetailCollection, function(item) {
-                    angular.forEach(item, function(tem) {
-//                        console.log(tem);
-                        for(var i=0; i < $scope.tagDetailResult.length; i++) {
-                            //if exists and not the search value - increment the count.
-                            if ($scope.tagDetailResult[i].name===tem.text && tem.text!==name) {
-                                add = false;
-                                $scope.tagDetailResult[i].count += 1; 
-                            }
-                        }
-                        //add in if true and not the tag we searched on.
-                        if (add===true && tem.text!==name) {
-                            $scope.tagDetailResult.push({ name: tem.text, count: 1 });
-                        }
-                        add = true;
-                    });
-//                    console.log($scope.tagDetailResult);
-                });
-            }
-        };
-        
-        //show stat series detail.
-        $scope.seriesDetail = function(name) {
-            if ($scope.detailSeriesName===name) {
-                $scope.seriesSearch = '';
-                $scope.showSeriesDetail = false;
-                $scope.detailSeriesName = '';
-            } else {
-                $scope.seriesSearch = name;
-                $scope.detailSeriesName = name;
-                $scope.showSeriesDetail = true;
-            }
         };
         
 		// Create new Character

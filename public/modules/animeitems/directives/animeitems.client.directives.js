@@ -41,20 +41,16 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
                 } else if (e.ctrlKey && e.keyCode===37 && scope.currentPage > 0) {
                     scope.currentPage = scope.currentPage - 1;
                 } else if (e.altKey && e.keyCode===86) {
-                    if (scope.isList===true) {
-                        scope.isList = false;
-                        scope.view = 'statistics';
-                    } else if (scope.isList===false) {
-                        scope.isList = true;
-                        scope.view = 'list';
-                    } else {
-                        if (scope.isList==='list') {
-                            scope.isList = 'carousel';
-                        } else if (scope.isList==='carousel') {
-                            scope.isList = 'statistics';
-                        } else if (scope.isList==='statistics') {
-                            scope.isList = 'list';
-                        }
+                    if (scope.isList==='list') {
+                        scope.isList = 'carousel';
+                    } else if (scope.isList==='carousel') {
+                        scope.isList = 'list';
+                    } else if (scope.view === 'Anime') {
+                        scope.view = 'Manga';
+                    } else if (scope.view === 'Manga') {
+                        scope.view = 'Character';
+                    } else if (scope.view === 'Character') {
+                        scope.view = 'Anime';
                     }
                 }
             });

@@ -19,10 +19,10 @@
     background-color: #FFF;
 }
 html {
-    height: 100%;
+    min-height: 100vh;
     body {
         background-color: #222;
-        height: 100%;
+        min-height: 90vh;
     }
 }
 
@@ -32,19 +32,8 @@ html {
     left: 50%;
 }
 
-.wrapper {
-	min-height: 100%;
-    height: auto !important;
-//    padding-left: 250px; //avoid sidebar.
-	margin-bottom: -150px; /* the bottom margin is the negative value of the footer's height */
-}
-
-.push {
-    width: 100%;
-    height: 150px;
-}
-
 footer {
-    @extend .push;
+    width: 100%;
+    height: 100px;
     padding-bottom: 20px;
 }

@@ -21,11 +21,11 @@
 
 /* line 21, C:/mylist/mylist/public/modules/users/css/users.scss */
 html {
-  height: 100%; }
+  min-height: 100vh; }
   /* line 23, C:/mylist/mylist/public/modules/users/css/users.scss */
   html body {
     background-color: #222;
-    height: 100%; }
+    min-height: 90vh; }
 
 /* line 29, C:/mylist/mylist/public/modules/users/css/users.scss */
 .centerPiece {
@@ -34,19 +34,9 @@ html {
   left: 50%; }
 
 /* line 35, C:/mylist/mylist/public/modules/users/css/users.scss */
-.wrapper {
-  min-height: 100%;
-  height: auto !important;
-  margin-bottom: -150px;
-  /* the bottom margin is the negative value of the footer's height */ }
-
-/* line 42, C:/mylist/mylist/public/modules/users/css/users.scss */
-.push, footer {
-  width: 100%;
-  height: 150px; }
-
-/* line 47, C:/mylist/mylist/public/modules/users/css/users.scss */
 footer {
+  width: 100%;
+  height: 100px;
   padding-bottom: 20px; }
 
 /*# sourceMappingURL=users.css.map */

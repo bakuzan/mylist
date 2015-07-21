@@ -1,4 +1,5 @@
 @import '../../../../public/style/_var';
+@import '../../../../public/style/_mix';
 
 .content {
 	margin-top: 50px;
@@ -107,7 +108,14 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
 .taskList {
     list-style: none;
     padding: 0 20px;
-    border-top: 1px solid #e5e5e5;
+    
+    .taskItem:last-child {
+        border-bottom: none;
+    }
+    
+    .taskItem:nth-child(even) {
+        background: #fcfcfc;
+    }
 }
 
 .taskItem {
@@ -117,10 +125,6 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
     font-weight: 600;
     font-size: 14px;
     letter-spacing: 0.5px;
-}
-
-.taskList .taskItem:nth-child(even) {
-    background: #fcfcfc;
 }
 
 .taskCheckbox {
@@ -196,13 +200,8 @@ footer a {
 }
 /* custom checkboxes */
 .taskCheckbox {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-            appearance: none;
-    -webkit-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-            transition: all 0.3s;
+    @include appearance(none);
+    @include transition(all, 0.3s);
     display: inline-block;
     cursor: pointer;
     width: 19px;
@@ -214,11 +213,7 @@ footer a {
     font-family: 'FontAwesome';
     color: #444;
     font-size: 20px;
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    -o-transition: all 0.3s;
-            transition: all 0.3s;
-
+    @include transition(all, 0.3s);
 }
 
 .taskCheckbox:before {
@@ -232,14 +227,12 @@ footer a {
 
 .taskCheckbox:checked:before {
     content: '\f14a';
-    color: #16a085;
+    color: $green;
 }
 
 /* custom select menu */
 .taskCategory {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-            appearance: none;
+    @include appearance(none);
     cursor: pointer;
     padding-left: 16.5px; /*specific positioning due to difficult behavior of select element*/
     background: #fff;
@@ -408,6 +401,29 @@ a.menu-header-bar:hover {
     background-color: #286090;
     color: #FFF;
 }
-.footer {
-    padding-bottom: 15px;
+
+.tile-style {
+    border: 2px outset $grey-light;
+    @include box-shadow(1px, 1px, 5px, $grey-dark);
+}
+
+.task-list-container {
+//    @extend .tile-style;
+    padding: 0 5px;
+    margin-left: 10px;
+}
+//
+.filter-container {
+    @extend .tile-style;
+    padding: 20px 0;
+    margin-left: -10px;
+//    z-index: 1000;
+//    position: fixed;
+//    left: 250px;
+//    height: 100%;
+//    max-width: 400px;
+//    min-width: 200px;
+//    margin-left: -250px;
+//    overflow-y: auto;
+//    padding: 20px 0;
 }

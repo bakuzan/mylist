@@ -19,3 +19,8 @@
       -webkit-align-items: $align-items;
               align-items: $align-items;
 }
+@mixin box-shadow($w, $h, $d, $colour) {
+ -webkit-box-shadow: $w $h $d $colour;
+    -moz-box-shadow: $w $h $d $colour;
+         box-shadow: $w $h $d $colour;
+}

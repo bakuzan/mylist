@@ -82,7 +82,8 @@
 	<div class="row col-lg-12 col-md-12 col-sm-12 push-wrap">
         <h3>Week Beginning {{weekBeginning() | dateSuffix }}</h3>
 	</div>
-    <div class="col-lg-4 col-md-4 col-sm-4 mt push-wrap">
+    <div class="container">
+        <div class="col-lg-4 col-md-4 col-sm-4 mt filter-container">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <a class="menu-header-bar clickable" ng-click="isAddTask=!isAddTask"><i class="fa" ng-class="isAddTask === false ? 'fa-plus-square' : 'fa-minus-square'"></i> Add task</a>
         <a class="menu-header-bar" style="display: none;">Filters</a>
@@ -143,7 +144,7 @@
         </div><!-- collapse FILTERS -->
     </div><!-- col-md-12 FILTERS -->
     </div><!-- col-md-6 ACTIONS+FILTERS -->
-    <div class="row col-lg-8 col-md-8 col-sm-8 mt push-wrap">
+        <div class="col-lg-7 col-md-7 col-sm-8 mt task-list-container">
             <ul class="taskList col-lg-12 col-md-12 col-sm-12">
                 <li class="taskItem" ng-repeat="taskItem in (filteredTasks = (taskItem | filter: search | dayFilter: daySelected | dateFilter: datesSelected)) track by $index" ng-model="taskItem">
                     <input type="checkbox" class="taskCheckbox" ng-model="taskItem.complete" ng-change="save(taskItem.description)" ng-disabled="taskItem.complete || taskItem.checklist">
@@ -166,4 +167,5 @@
                 </li>
             </ul>
     </div><!-- TASK ROW -->
+    </div>
 </section>

@@ -134,30 +134,30 @@
 /* line 136, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .close-button {
   position: absolute;
-  top: 0;
-  right: 0;
-  padding: 2px 4px;
-  margin: 0 20px;
+  top: 6px;
+  right: 15px;
+  padding: 5px 10px;
+  margin: 20px 0;
   color: #d41f1a;
   font-size: 20px;
   text-align: center;
   cursor: pointer; }
 
-/* line 151, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
+/* line 148, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .close-button:hover {
   background-color: #d41f1a;
   color: #FFF; }
 
-/* line 155, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
+/* line 152, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .tag-list {
   list-style-type: none;
   padding: 0 20px; }
 
-/* line 160, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
+/* line 157, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .stat-month-header {
   width: 8%; }
 
-/* line 164, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
+/* line 161, C:/mylist/mylist/public/modules/animeitems/css/animeitem.scss */
 .loading-image {
   display: block;
   position: absolute;

@@ -135,17 +135,14 @@
 
 .close-button {
   position: absolute;
-  top: 0;
-  right: 0;
-  padding: 2px 4px;
-  margin: 0 20px;
+  top: 6px;
+  right: 15px;
+  padding: 5px 10px;
+  margin: 20px 0;
   color: $red;
   font-size: 20px;
   text-align: center;
   cursor: pointer;
-
-//  padding: 6px 6px;
-//  margin: 20px 12px 10px;
 }
 
 .close-button:hover {

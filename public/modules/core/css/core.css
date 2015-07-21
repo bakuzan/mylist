@@ -354,39 +354,42 @@ footer a {
   left: 20vw;
   width: 60vw;
   height: 75vh;
-  border: 5px solid #337ab7;
   margin-top: 10px;
   background-color: #FFF;
   align-content: center;
   overflow-y: scroll;
   z-index: 100; }
 
-/* line 353, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 354, C:/mylist/mylist/public/modules/core/css/core.scss */
 .toggle-add-task {
   font-size: 20px; }
 
 /* Remove unecessary green 'valid' border */
-/* line 358, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 359, C:/mylist/mylist/public/modules/core/css/core.scss */
 .btn-primary.ng-valid.ng-dirty {
   border-color: #245580; }
 
-/* line 363, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 364, C:/mylist/mylist/public/modules/core/css/core.scss */
 .popout-header {
   padding-bottom: 9px;
   margin: 20px 0;
-  border-bottom: 1px solid #337ab7; }
+  border-bottom: 1px solid #337ab7;
+  color: #FFF;
+  background-color: #337ab7;
+  padding: 10px;
+  width: 95%; }
 
-/* line 373, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 374, C:/mylist/mylist/public/modules/core/css/core.scss */
 .checklistItem {
   padding: 5px; }
 
-/* line 377, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 378, C:/mylist/mylist/public/modules/core/css/core.scss */
 .checklist-progress-bar {
   height: 10px;
   width: 75%;
   margin-top: 10px; }
 
-/* line 383, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 384, C:/mylist/mylist/public/modules/core/css/core.scss */
 .menu-header-bar {
   position: relative;
   display: block;
@@ -398,29 +401,29 @@ footer a {
   border-radius: 2px;
   margin: 0 5% -1px; }
 
-/* line 396, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 397, C:/mylist/mylist/public/modules/core/css/core.scss */
 a.menu-header-bar,
 a.menu-header-bar:hover {
   text-decoration: none; }
 
-/* line 400, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 401, C:/mylist/mylist/public/modules/core/css/core.scss */
 .menu-header-bar:hover {
   background-color: #286090;
   color: #FFF; }
 
-/* line 405, C:/mylist/mylist/public/modules/core/css/core.scss */
-.tile-style, .filter-container {
+/* line 406, C:/mylist/mylist/public/modules/core/css/core.scss */
+.tile-style, .add-task-popout, .filter-container {
   border: 2px outset #eee;
   -webkit-box-shadow: 1px 1px 5px #777;
   -moz-box-shadow: 1px 1px 5px #777;
   box-shadow: 1px 1px 5px #777; }
 
-/* line 410, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 411, C:/mylist/mylist/public/modules/core/css/core.scss */
 .task-list-container {
   padding: 0 5px;
   margin-left: 10px; }
 
-/* line 416, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 417, C:/mylist/mylist/public/modules/core/css/core.scss */
 .filter-container {
   padding: 20px 0;
   margin-left: -10px; }

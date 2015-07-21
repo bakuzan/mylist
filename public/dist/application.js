@@ -2690,6 +2690,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.$watchCollection('items', function() {
             if ($scope.view !== 'Character') {
                 if ($scope.items!==undefined) {
+                    $scope.statTags = []; //clear to stop multiple views tags appearing.
                     $scope.maxCompleteMonth = ItemService.maxCompleteMonth($scope.items);
                     $scope.completeByMonth = ItemService.completeByMonth($scope.items);
                     if ($scope.view === 'Anime') {
@@ -2711,6 +2712,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 }
             } else if ($scope.view === 'Character') {
                 if ($scope.items!==undefined) {
+                    $scope.statTags = []; //clear previous views tags.
                     $scope.maxCount = $scope.items.length;
                     var add = true;
                     //is tag in array?

@@ -225,10 +225,16 @@ footer a {
     content: '\f096';
 }
 
+.taskCheckbox:disabled:before {
+    content: '\f03a';
+    color: $blue-rich;
+}
+
 .taskCheckbox:checked:before {
     content: '\f14a';
     color: #16a085;
 }
+
 /* custom select menu */
 .taskCategory {
     -webkit-appearance: none;

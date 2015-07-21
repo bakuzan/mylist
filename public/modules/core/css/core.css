@@ -228,12 +228,17 @@ footer a {
   content: '\f096'; }
 
 /* line 228, C:/mylist/mylist/public/modules/core/css/core.scss */
+.taskCheckbox:disabled:before {
+  content: '\f03a';
+  color: #1212B8; }
+
+/* line 233, C:/mylist/mylist/public/modules/core/css/core.scss */
 .taskCheckbox:checked:before {
   content: '\f14a';
   color: #16a085; }
 
 /* custom select menu */
-/* line 233, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 239, C:/mylist/mylist/public/modules/core/css/core.scss */
 .taskCategory {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -243,7 +248,7 @@ footer a {
   /*specific positioning due to difficult behavior of select element*/
   background: #fff; }
 
-/* line 242, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 248, C:/mylist/mylist/public/modules/core/css/core.scss */
 .selectArrow {
   position: absolute;
   z-index: 10;
@@ -253,7 +258,7 @@ footer a {
   color: #777;
   pointer-events: none; }
 
-/* line 252, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 258, C:/mylist/mylist/public/modules/core/css/core.scss */
 .taskCategory option {
   background: #fff;
   border: none;
@@ -261,7 +266,7 @@ footer a {
   padding: 0 100px; }
 
 /** FAVOURITES STYLING **/
-/* line 261, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 267, C:/mylist/mylist/public/modules/core/css/core.scss */
 .favourite-header {
   padding-bottom: 5px;
   margin-bottom: 10px;
@@ -269,36 +274,36 @@ footer a {
   display: inline-block;
   white-space: nowrap; }
 
-/* line 269, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 275, C:/mylist/mylist/public/modules/core/css/core.scss */
 .favourite-link {
   color: inherit; }
 
-/* line 273, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 279, C:/mylist/mylist/public/modules/core/css/core.scss */
 .favourite-link:hover,
 .favourite-link:focus {
   color: inherit;
   text-decoration: none; }
 
-/* line 278, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 284, C:/mylist/mylist/public/modules/core/css/core.scss */
 .favourite-link:hover h2:before {
   content: 'Go to '; }
 
-/* line 281, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 287, C:/mylist/mylist/public/modules/core/css/core.scss */
 .favourite-link:hover h2:after {
   content: '?'; }
 
-/* line 285, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 291, C:/mylist/mylist/public/modules/core/css/core.scss */
 .collapse-bar {
   cursor: pointer;
   background-color: #e6e6e6;
   color: #FFF;
   font-weight: bold; }
 
-/* line 292, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 298, C:/mylist/mylist/public/modules/core/css/core.scss */
 .keep-cursor {
   cursor: default; }
 
-/* line 296, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 302, C:/mylist/mylist/public/modules/core/css/core.scss */
 .clickable {
   cursor: pointer; }
 
@@ -335,13 +340,13 @@ footer a {
     transform: translate3d(0, 0, 0);
 }
 */
-/* line 334, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 340, C:/mylist/mylist/public/modules/core/css/core.scss */
 .site-wrap {
   overflow: hidden;
   width: 100%;
   height: 100%; }
 
-/* line 340, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 346, C:/mylist/mylist/public/modules/core/css/core.scss */
 .add-task-popout {
   position: fixed;
   top: 10vh;
@@ -355,32 +360,32 @@ footer a {
   overflow-y: scroll;
   z-index: 100; }
 
-/* line 354, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 360, C:/mylist/mylist/public/modules/core/css/core.scss */
 .toggle-add-task {
   font-size: 20px; }
 
 /* Remove unecessary green 'valid' border */
-/* line 359, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 365, C:/mylist/mylist/public/modules/core/css/core.scss */
 .btn-primary.ng-valid.ng-dirty {
   border-color: #245580; }
 
-/* line 364, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 370, C:/mylist/mylist/public/modules/core/css/core.scss */
 .popout-header {
   padding-bottom: 9px;
   margin: 20px 0;
   border-bottom: 1px solid #337ab7; }
 
-/* line 374, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 380, C:/mylist/mylist/public/modules/core/css/core.scss */
 .checklistItem {
   padding: 5px; }
 
-/* line 378, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 384, C:/mylist/mylist/public/modules/core/css/core.scss */
 .checklist-progress-bar {
   height: 10px;
   width: 75%;
   margin-top: 10px; }
 
-/* line 384, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 390, C:/mylist/mylist/public/modules/core/css/core.scss */
 .menu-header-bar {
   position: relative;
   display: block;
@@ -392,17 +397,17 @@ footer a {
   border-radius: 2px;
   margin: 0 5% -1px; }
 
-/* line 397, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 403, C:/mylist/mylist/public/modules/core/css/core.scss */
 a.menu-header-bar,
 a.menu-header-bar:hover {
   text-decoration: none; }
 
-/* line 401, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 407, C:/mylist/mylist/public/modules/core/css/core.scss */
 .menu-header-bar:hover {
   background-color: #286090;
   color: #FFF; }
 
-/* line 405, C:/mylist/mylist/public/modules/core/css/core.scss */
+/* line 411, C:/mylist/mylist/public/modules/core/css/core.scss */
 .footer {
   padding-bottom: 15px; }
 

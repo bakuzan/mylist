@@ -1,30 +1,42 @@
 @media (min-width: 992px) {
-	.nav-users {
-		position: fixed;
-	}
-}
+  /* line 2, C:/mylist/mylist/public/modules/users/css/users.scss */
+  .nav-users {
+    position: fixed; } }
+
+/* line 6, C:/mylist/mylist/public/modules/users/css/users.scss */
 .remove-account-container {
-	display: inline-block;
-	position: relative;
-}
+  display: inline-block;
+  position: relative; }
+
+/* line 10, C:/mylist/mylist/public/modules/users/css/users.scss */
 .btn-remove-account {
-	top: 10px;
-	right: 10px;
-	position: absolute;
-}
+  top: 10px;
+  right: 10px;
+  position: absolute; }
 
 /*/ ADDED /*/
-
+/* line 18, C:/mylist/mylist/public/modules/users/css/users.scss */
 .loginBG {
-    background-color: white;
-}
+  background-color: #FFF; }
 
-body {
+/* line 21, C:/mylist/mylist/public/modules/users/css/users.scss */
+html {
+  min-height: 100vh; }
+  /* line 23, C:/mylist/mylist/public/modules/users/css/users.scss */
+  html body {
     background-color: #222;
-}
+    min-height: 90vh; }
 
+/* line 29, C:/mylist/mylist/public/modules/users/css/users.scss */
 .centerPiece {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-}
+  position: fixed;
+  top: 50%;
+  left: 50%; }
+
+/* line 35, C:/mylist/mylist/public/modules/users/css/users.scss */
+footer {
+  width: 100%;
+  height: 100px;
+  padding-bottom: 20px; }
+
+/*# sourceMappingURL=users.css.map */

@@ -1,50 +1,53 @@
+/* line 3, C:/mylist/mylist/public/modules/characters/css/characters.scss */
 .dark-bordered-font {
-    color: #ffffff;
-    font-size: 12px;
-    font-weight: 500;
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-}
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
+
+/* line 9, C:/mylist/mylist/public/modules/characters/css/characters.scss */
 .dark-bordered-font-heading {
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: 500;
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-}
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 500;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
 
+/* line 16, C:/mylist/mylist/public/modules/characters/css/characters.scss */
 .tag-bubble {
-    border-radius: 10px;
-    border: 2px solid #ADD8E6;
-    padding: 10px;
-    color: #777;
-    font-weight: 600;
-    font-size: 12px;
-    letter-spacing: 0.5px;
-    background-color: #F0F8FF;
-}
+  border-radius: 10px;
+  border: 2px solid #ADD8E6;
+  padding: 10px;
+  color: #777;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  background-color: #F0F8FF; }
 
+/* line 27, C:/mylist/mylist/public/modules/characters/css/characters.scss */
 .stat-media-panel {
-    margin-top: 10px;
-    border-top: 1px solid #eee;
-}
+  margin-top: 10px;
+  border-top: 1px solid #eee; }
 
+/* line 32, C:/mylist/mylist/public/modules/characters/css/characters.scss */
 .stat-table-row:hover {
-    background-color: #337ab7;
-    color: #FFFFFF;
-}
+  background-color: #337ab7;
+  color: #FFFFFF; }
 
+/* line 37, C:/mylist/mylist/public/modules/characters/css/characters.scss */
 .paging-controls {
-    text-align: center;
-    margin-bottom: 10px;
-}
+  text-align: center;
+  margin-bottom: 10px; }
 
+/* line 42, C:/mylist/mylist/public/modules/characters/css/characters.scss */
 .mt {
-    margin-top: 15px;
-}
+  margin-top: 15px; }
 
+/* line 46, C:/mylist/mylist/public/modules/characters/css/characters.scss */
 .character-default {
-    height: 150px;
-}
+  height: 150px; }
 
+/* line 50, C:/mylist/mylist/public/modules/characters/css/characters.scss */
 .character-expanded {
-    height: auto;
-}
+  height: auto; }
+
+/*# sourceMappingURL=characters.css.map */

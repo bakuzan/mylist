@@ -4,11 +4,11 @@ angular.module('characters').filter('seriesDetailFilter', function() {
     return function(array, detailSeriesName) {
         return array.filter(function(item) {
             //filter stat series detail.
-            if (item.anime!==null) {
+            if (item.anime!==null && item.anime!==undefined) {
                 if (item.anime.title===detailSeriesName) {
                     return item;
                 }
-            } else if (item.manga!==null) {
+            } else if (item.manga!==null && item.manga!==undefined) {
                 if (item.manga.title===detailSeriesName) {
                     return item;
                 }

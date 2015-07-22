@@ -1,0 +1,26 @@
+@mixin appearance($appearance) {
+-webkit-appearance: $appearance;
+   -moz-appearance: $appearance;
+        appearance: $appearance;
+}
+
+@mixin transition($transitionWidth, $transitionDuration) {
+    -webkit-transition: $transitionWidth $transitionDuration;
+         -o-transition: $transitionWidth $transitionDuration;
+       -moz-transition: $transitionWidth $transitionDuration;
+            transition: $transitionWidth $transitionDuration;
+}
+
+@mixin justify-content($justify-content) {
+  -webkit-justify-content: $justify-content;
+          justify-content: $justify-content;
+}
+@mixin align-items($align-items) {
+      -webkit-align-items: $align-items;
+              align-items: $align-items;
+}
+@mixin box-shadow($w, $h, $d, $colour) {
+ -webkit-box-shadow: $w $h $d $colour;
+    -moz-box-shadow: $w $h $d $colour;
+         box-shadow: $w $h $d $colour;
+}

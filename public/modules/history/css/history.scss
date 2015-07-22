@@ -1,0 +1,13 @@
+.history-list-item:nth-child(odd) > p {
+    background-color: $grey-light;
+}
+
+.history-list-item {
+    h4 {
+        border-bottom: 1px solid #000;
+    }
+    
+    p {
+        margin: 4px 0;       
+    }
+}

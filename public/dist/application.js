@@ -2216,26 +2216,44 @@ angular.module('history').service('HistoryService', ['moment', function(moment) 
                 if (diff === 0) {
                     if (groupBuilder.today.length === 0) {
                         groupBuilder.today.push(item);
+                        groupBuilder.today.count = 1;
+                    } else {
+                        groupBuilder.today.count++;
                     }
                 } else if (diff === 1) {
                     if (groupBuilder.yesterday.length === 0) {
                         groupBuilder.yesterday.push(item);
+                        groupBuilder.yesterday.count = 1;
+                    } else {
+                        groupBuilder.yesterday.count++;
                     }
                 } else if (1 < diff && diff < 7) {
                     if (groupBuilder.thisWeek.length === 0) {
                         groupBuilder.thisWeek.push(item);
+                        groupBuilder.thisWeek.count = 1;
+                    } else {
+                        groupBuilder.thisWeek.count++;
                     }
                 } else if (6 < diff && diff < 14) {
                     if (groupBuilder.lastWeek.length === 0) {
                         groupBuilder.lastWeek.push(item);
+                        groupBuilder.lastWeek.count = 1;
+                    } else {
+                        groupBuilder.lastWeek.count++;
                     }
                 } else if (13 < diff && diff < 21) {
                     if (groupBuilder.twoWeek.length === 0) {
                         groupBuilder.twoWeek.push(item);
+                        groupBuilder.twoWeek.count = 1;
+                    } else {
+                        groupBuilder.twoWeek.count++;
                     }
                 } else if (20 < diff && diff < 28) {
                     if (groupBuilder.threeWeek.length === 0) {
                         groupBuilder.threeWeek.push(item);
+                        groupBuilder.threeWeek.count = 1;
+                    } else {
+                        groupBuilder.threeWeek.count++;
                     }
                 } 
             });
@@ -2246,17 +2264,17 @@ angular.module('history').service('HistoryService', ['moment', function(moment) 
     this.getGroupHeaders = function(groupBuilder, item) {
         if (groupBuilder!==undefined) {
             if (groupBuilder.today.indexOf(item) > -1) {
-                return 'Today';
+                return 'Today (' + groupBuilder.today.count + ')';
             } else if (groupBuilder.yesterday.indexOf(item) > -1) {
-                return 'Yesterday';
+                return 'Yesterday (' + groupBuilder.yesterday.count + ')';
             } else if (groupBuilder.thisWeek.indexOf(item) > -1) {
-                return 'This week';
+                return 'This week (' + groupBuilder.thisWeek.count + ')';
             } else if (groupBuilder.lastWeek.indexOf(item) > -1) {
-                return 'Last week';
+                return 'Last week (' + groupBuilder.lastWeek.count + ')';
             } else if (groupBuilder.twoWeek.indexOf(item) > -1) {
-                return 'Two weeks ago';
+                return 'Two weeks ago (' + groupBuilder.twoWeek.count + ')';
             } else if (groupBuilder.threeWeek.indexOf(item) > -1) {
-                return 'Three weeks ago';
+                return 'Three weeks ago (' + groupBuilder.threeWeek.count + ')';
             } else {
                 return null;
             }

@@ -8,8 +8,8 @@ module.exports = function(grunt) {
 		clientViews: ['public/modules/**/views/**/*.html'],
 		clientJS: ['public/js/*.js', 'public/modules/**/*.js'],
 		clientCSS: ['public/modules/**/*.css'],
-		mochaTests: ['app/tests/**/*.js']
-//        clientSCSS: ['public/style/*.scss']
+		mochaTests: ['app/tests/**/*.js'],
+        sass: ['public/modules/**/*.scss']
 	};
 
 	// Project Configuration
@@ -48,14 +48,14 @@ module.exports = function(grunt) {
 				options: {
 					livereload: true
 				}
-			}
-//            clientSCSS: {
-//				files: watchFiles.clientSCSS,
-//				tasks: ['sass'],
-//				options: {
-//					livereload: true
-//				}
-//			}
+			},
+            sass: {
+                files: watchFiles.sass,
+                tasks: ['sass:dev'],
+			    options: {
+					livereload: true
+				}
+            }
 		},
 		jshint: {
 			all: {
@@ -147,22 +147,26 @@ module.exports = function(grunt) {
 			unit: {
 				configFile: 'karma.conf.js'
 			}
-		}
-//        concat: {
-//            dist: {
-//                src: [
-//                    'public/modules/**/*.scss',
-//                ],
-//                dest: 'public/style/build.scss',
-//            }
-//        },
-//        sass: {                                 // Task
-//            dist: {     
-//                files: {
-//                    'public/style/test.css': 'public/style/build.scss'
-//                }
-//            }
-//        }
+		},
+        /**
+		 * Sass
+		 */
+		sass: {
+		  dev: {		    
+		    files: {
+		      'public/style/main.css': 'public/style/main.scss',
+		    }
+		  },
+		  dist: {
+		    options: {
+		      style: 'compressed',
+		      compass: false
+		    },
+		    files: {
+		      'public/dist/main.min.css': 'public/style/main.scss'
+		    }
+		  }
+        }
 	});
 
 	// Load NPM tasks
@@ -181,10 +185,7 @@ module.exports = function(grunt) {
 	});
 
 	// Default task(s).
-	grunt.registerTask('default', ['lint', 'concurrent:default']);
-    
-    //Sass task(s).
-//    grunt.registerTask('sass', ['concat', 'sass']);
+	grunt.registerTask('default', ['lint', 'sass:dev', 'concurrent:default']);
 
 	// Debug task.
 	grunt.registerTask('debug', ['lint', 'concurrent:debug']);

@@ -1252,11 +1252,11 @@ angular.module('characters').filter('seriesDetailFilter', function() {
     return function(array, detailSeriesName) {
         return array.filter(function(item) {
             //filter stat series detail.
-            if (item.anime!==null) {
+            if (item.anime!==null && item.anime!==undefined) {
                 if (item.anime.title===detailSeriesName) {
                     return item;
                 }
-            } else if (item.manga!==null) {
+            } else if (item.manga!==null && item.manga!==undefined) {
                 if (item.manga.title===detailSeriesName) {
                     return item;
                 }
@@ -2164,10 +2164,10 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
 angular.module('history').service('HistoryService', ['moment', function(moment) {
 
     this.buildHistoryList = function(items) {
-        var itemHistory = [], today = moment(new Date());
+        var itemHistory = [], today = moment(new Date()).startOf('day');
         angular.forEach(items, function(item) {
             angular.forEach(item.meta.history, function(history) {
-                var cutoff = moment(history.date),
+                var cutoff = moment(history.date).startOf('day'),
                     diff = today.diff(cutoff, 'days');
 //                console.log(diff);
                 if (diff < 28) {
@@ -2185,7 +2185,7 @@ angular.module('history').service('HistoryService', ['moment', function(moment) 
      */
     this.happenedWhen = function(when) {
 //          console.log(latest, updated);
-        var today = moment(new Date()), thisDate = moment(when),
+        var today = moment(new Date()).startOf('day'), thisDate = moment(when).startOf('day'),
             diff = today.diff(thisDate, 'days');
                 
         //for 0 and 1 day(s) ago use the special term.
@@ -2209,8 +2209,8 @@ angular.module('history').service('HistoryService', ['moment', function(moment) 
                 },
             groupCheck = [];
             angular.forEach(items, function(item) {
-                var today = moment(new Date()),
-                    itemDate = moment(item.date),
+                var today = moment(new Date()).startOf('day'),
+                    itemDate = moment(item.date).startOf('day'),
                     diff = today.diff(itemDate, 'days');
                     
                 if (diff === 0) {

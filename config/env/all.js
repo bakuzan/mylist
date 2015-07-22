@@ -35,7 +35,7 @@ module.exports = {
 			]
 		},
 		css: [
-			'public/modules/**/css/*.css',
+            'public/style/*.css',
             'public/lib/components-font-awesome/css/font-awesome.min.css'
 		],
 		js: [

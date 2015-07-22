@@ -283,7 +283,7 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
     background: #fcfcfc; }
 
 .taskItem {
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid #eee;
   padding: 15px 0;
   color: #777;
   font-weight: 600;
@@ -298,7 +298,7 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
   color: #bebebe; }
 
 .taskList .taskDate {
-  color: #95a5a6;
+  color: #eee;
   font-size: 10px;
   font-weight: bold;
   text-transform: uppercase;
@@ -328,7 +328,7 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
   background: transparent; }
 
 .category-Watch {
-  background: #2980b9; }
+  background: #337ab7; }
 
 .category-Read {
   background: #8e44ad; }
@@ -337,7 +337,7 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
   background: #f39c12; }
 
 .category-Other {
-  background: #16a085; }
+  background: #47a447; }
 
 footer {
   text-align: center;
@@ -378,7 +378,7 @@ footer a {
 
 .taskCheckbox:disabled:before {
   content: '\f03a';
-  color: #1212B8; }
+  color: #337ab7; }
 
 .taskCheckbox:checked:before {
   content: '\f14a';
@@ -458,7 +458,7 @@ footer a {
   background-color: #FFF;
   align-content: center;
   overflow-y: scroll;
-  z-index: 100; }
+  z-index: 1000; }
 
 .toggle-add-task {
   font-size: 20px; }
@@ -503,19 +503,35 @@ a.menu-header-bar:hover {
   background-color: #286090;
   color: #FFF; }
 
-.tile-style, .add-task-popout, .filter-container {
+.tile-style, .add-task-popout, .task-list-container, .filter-container {
+  background-color: #f9f9f9;
   border: 2px outset #eee;
   -webkit-box-shadow: 1px 1px 5px #777;
   -moz-box-shadow: 1px 1px 5px #777;
   box-shadow: 1px 1px 5px #777; }
 
 .task-list-container {
-  padding: 0 5px;
+  padding: 10px 5px;
   margin-left: 10px; }
+
+.placeholder-container, .filter-container {
+  height: 400px; }
 
 .filter-container {
   padding: 20px 0;
-  margin-left: -10px; }
+  margin-left: -10px;
+  z-index: 500;
+  position: fixed;
+  top: 100px;
+  left: 50px;
+  max-width: 350px;
+  min-width: 200px; }
+
+.fixed-header {
+  position: fixed;
+  z-index: 500;
+  top: 55px;
+  left: 40px; }
 
 .trophy-1 {
   color: gold; }

@@ -73,6 +73,10 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.$watch('view', function(newValue) {
             if ($scope.view !== undefined) {
                 getItems(newValue);
+                //reset defaults that are shared between views.
+                $scope.historicalView = 'month';
+                $scope.statSearch = '';
+                $scope.showDetail = false;
             }
         });
         

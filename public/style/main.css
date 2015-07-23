@@ -270,7 +270,7 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
     .navbar-inverse .navbar-nav .open .dropdown-menu li a:hover {
       color: #FFF; } }
 
-@media only screen and (max-width: 992px) {
+@media (max-width: 992px) {
   .additional-navbar-links {
     display: none; } }
 .additional-navbar-links .navbar-link, .additional-navbar-links .navbar-link:visited {
@@ -284,10 +284,9 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
 .additional-navbar-links .navbar-link:active {
   color: #f39c12; }
 
-@media only screen and (min-width: 993px) {
+@media (min-width: 768px) and (max-width: 992px) {
   .additional-navbar-links-dropdown {
     display: none; } }
-
 /**
  *  Task List CSS
  */

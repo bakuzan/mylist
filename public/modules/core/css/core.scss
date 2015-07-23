@@ -127,8 +127,7 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
 }
 
 .additional-navbar-links {
-    @media only screen 
-        and (max-width: $break-medium) {
+    @media (max-width: $break-medium) {
             display: none;
     }
        
@@ -152,12 +151,12 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
         color: $brand-accent;
     }
 }
-.additional-navbar-links-dropdown {
-    @media only screen 
-        and (min-width: $break-medium + 1) {
-            display: none;
+
+    @media (min-width: $break-small) and (max-width: $break-medium) {
+            .additional-navbar-links-dropdown {
+                display: none;
+            }
     }
-}
 
 /**
  *  Task List CSS

@@ -27,23 +27,137 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
     cursor: default;
 }
 
-.navbar-favourites {
-    color: #9d9d9d;
-    padding: 15px 15px;
-}
-.navbar-favourites:visited {
-    color: #9d9d9d;
-    text-decoration: none;
-}
-.navbar-favourites:focus {
-    color: #ffffff;
-    text-decoration: none;
-}
-.navbar-favourites:hover  {
-    color: #ffffff;
-    text-decoration: none;
+.navbar-inverse {
+    background-image: none;
+    background-color: $brand-primary;
+    border-color: $brand-secondary;
 }
 
+.navbar-inverse .navbar-toggle {
+    @extend .navbar-inverse;
+}
+.navbar-inverse .navbar-toggle:focus {
+    @extend .navbar-inverse;
+    background-color: $brand-tertiary;
+}
+.navbar-inverse .navbar-toggle:hover {
+    @extend .navbar-inverse;
+    background-color: $brand-tertiary;
+}
+
+.navbar-inverse .navbar-brand {
+    color: $brand-accent;
+}
+
+.navbar-inverse .navbar-nav {
+    li {
+        a {
+            color: $brand-accent;
+        }
+        a:hover {
+            color: $navbar-link-hover-colour;
+        }
+    }
+    .open {
+        a {
+            background-image: none;
+            background-color: $brand-secondary;
+            color: $brand-accent-alter;
+            @media (max-width: $break-small) {
+                color: $brand-accent-alter;
+            }
+        }
+        a:focus {
+            @extend a;
+            @media (max-width: $break-small) {
+                color: $brand-accent-alter;
+            }
+        }
+        a:hover {
+            @extend a;
+            color: $navbar-link-hover-colour;
+            @media (max-width: $break-small) {
+                color: $navbar-link-hover-colour;
+            }
+        }
+    }
+    .active {
+        a {
+            background-image: none;
+            background-color: $brand-secondary;
+            color: $brand-accent-alter;
+            @media (max-width: $break-small) {
+                color: $brand-accent-alter;
+            }
+        }
+        a:focus {
+            @extend a;
+            @media (max-width: $break-small) {
+                color: $brand-accent-alter;
+            }
+        }
+        a:hover {
+            @extend a;
+        }
+    }
+}
+.navbar-inverse .navbar-nav .open .dropdown-menu {
+    li {
+        a {
+            background-image: none;
+            color: $brand-accent-alter;
+            @media (max-width: $break-small) {
+                color: $brand-accent-alter;
+            }
+        }
+        a:focus {
+            @extend a;
+            @media (max-width: $break-small) {
+                color: $brand-accent-alter;
+            }
+        }
+        a:hover {
+            @extend a;
+            color: $navbar-link-hover-colour;
+            @media (max-width: $break-small) {
+                color: $navbar-link-hover-colour;
+            }
+        }
+    }
+}
+
+.additional-navbar-links {
+    @media only screen 
+        and (max-width: $break-medium) {
+            display: none;
+    }
+       
+    .navbar-link {
+        color: $brand-accent;
+        padding: 15px 15px;
+    }
+    .navbar-link:visited {
+        @extend .navbar-link;
+        text-decoration: none;
+    }
+    .navbar-link:focus {
+        color: $navbar-link-hover-colour;
+        text-decoration: none;
+    }
+    .navbar-link:hover  {
+        @extend .navbar-link:focus;
+    }
+    .navbar-link:active {
+        @extend .navbar-link:focus;
+        color: $brand-accent;
+    }
+}
+.additional-navbar-links-dropdown {
+    @media only screen 
+        and (min-width: $break-medium + 1) {
+            display: none;
+    }
+}
 
 /**
  *  Task List CSS
@@ -373,7 +487,7 @@ a.menu-header-bar:hover {
 .task-list-container {
     @extend .tile-style;
     padding: 10px 5px;
-    margin-left: 10px;
+    margin: 40px 10px;
 }
 
 .placeholder-container {

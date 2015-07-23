@@ -1,13 +1,17 @@
+//brand colours.
 $brand-primary: #337ab7;
 $brand-secondary: #286090;
 $brand-tertiary: #1212B8;
 $brand-accent: #f39c12;
+$brand-accent-alter: #FFEA1D;
 
 $brand-warning: #d41f1a;
 $brand-success: #47a447;
 
+$navbar-link-hover-colour: #FFF;
 $tile-background: #f9f9f9;
 
+//named colours.
 $red: #d41f1a;
 $green: #47a447;
 $blue: #337ab7;
@@ -18,6 +22,13 @@ $purple: #8e44ad;
 $orange: #f39c12;
 
 $grey-light: #eee;
-$grey-line: 1px solid $grey-light;
+$grey: #9d9d9d;
 $grey-dark: #777;
 
+//lines and borders.
+$grey-line: 1px solid $grey-light;
+
+//for media queries.
+$break-small: 768px;
+$break-medium: 992px;
+$break-large: 1200px;

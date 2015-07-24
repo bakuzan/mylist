@@ -477,15 +477,36 @@ footer a {
     font-size: 20px;
 }
 
+//Btn styling!!
+.btn-primary {
+    background-image: none;
+    background-color: $brand-primary;
+    border-color: $brand-secondary;
+    color: $brand-accent;
+}
+.btn-primary:focus {
+    background-color: $brand-secondary;
+    border-color: $brand-tertiary;
+    color: $brand-accent-alter;
+}
+.btn-primary:hover {
+    @extend .btn-primary:focus;
+}
+.btn-primary:active {
+    @extend .btn-primary:focus;
+}
+.btn-primary.active {
+    @extend .btn-primary:focus;
+}
 /* Remove unecessary green 'valid' border */
 .btn-primary.ng-valid.ng-dirty {
-    border-color: #245580;
+    border-color: $brand-secondary;
 }
 
 .popout-header {
   padding-bottom: 9px;
   margin: 20px 0;
-  border-bottom: 1px solid $brand-primary;
+  border: $brand-border;
     color: #FFF;
     background-color: $brand-primary;
     padding: 10px;
@@ -506,10 +527,10 @@ footer a {
     position: relative;
     display: block;
     background-color: $brand-primary;
-    color: #FFF;
+    color: $brand-accent;
     font-weight: bold;
     padding: 10px 15px;
-    border: 1px solid #FFF;
+    border: $brand-border;
     border-radius: 2px;
     margin: 0 5% -1px;
 }
@@ -521,7 +542,7 @@ a.menu-header-bar:hover {
 
 .menu-header-bar:hover {
     background-color: $brand-secondary;
-    color: #FFF;
+    color: $brand-accent-alter;
 }
 
 .tile-style {

@@ -549,14 +549,25 @@ footer a, footer .navbar-inverse .navbar-nav .active a:focus, .navbar-inverse .n
 .toggle-add-task {
   font-size: 20px; }
 
+.btn-primary {
+  background-image: none;
+  background-color: #337ab7;
+  border-color: #286090;
+  color: #f39c12; }
+
+.btn-primary:focus, .btn-primary:hover, .btn-primary:active, .btn-primary.active {
+  background-color: #286090;
+  border-color: #1212B8;
+  color: #FFEA1D; }
+
 /* Remove unecessary green 'valid' border */
 .btn-primary.ng-valid.ng-dirty {
-  border-color: #245580; }
+  border-color: #286090; }
 
 .popout-header {
   padding-bottom: 9px;
   margin: 20px 0;
-  border-bottom: 1px solid #337ab7;
+  border: 1px solid #286090;
   color: #FFF;
   background-color: #337ab7;
   padding: 10px;
@@ -574,10 +585,10 @@ footer a, footer .navbar-inverse .navbar-nav .active a:focus, .navbar-inverse .n
   position: relative;
   display: block;
   background-color: #337ab7;
-  color: #FFF;
+  color: #f39c12;
   font-weight: bold;
   padding: 10px 15px;
-  border: 1px solid #FFF;
+  border: 1px solid #286090;
   border-radius: 2px;
   margin: 0 5% -1px; }
 
@@ -590,7 +601,7 @@ a.menu-header-bar:hover,
 
 .menu-header-bar:hover {
   background-color: #286090;
-  color: #FFF; }
+  color: #FFEA1D; }
 
 .tile-style, .add-task-popout, .task-list-container, .filter-container {
   background-color: #f9f9f9;

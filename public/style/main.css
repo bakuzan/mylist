@@ -145,6 +145,39 @@
   background-repeat: no-repeat;
   background-position: center; }
 
+.item-list-container {
+  padding: 10px;
+  margin: 40px 10px; }
+
+.item-placeholder-container, .item-filter-container {
+  height: 600px; }
+
+.item-filter-container {
+  padding: 20px 10px;
+  margin-left: -10px;
+  z-index: 500;
+  position: fixed;
+  top: 120px;
+  left: 50px;
+  max-width: 350px;
+  min-width: 200px; }
+
+@media (min-width: 768px) and (max-width: 1015px) {
+  .btn-ends {
+    display: none; } }
+.rating-stars, .list-item-rating-stars, .view-item-rating-stars {
+  color: #FFAC3A;
+  white-space: nowrap; }
+
+.list-item-rating-stars {
+  font-size: 14px; }
+
+.view-item-rating-stars {
+  font-size: 16px; }
+
+@media (min-width: 768px) and (max-width: 875px) {
+  .rating-label {
+    display: none; } }
 .dark-bordered-font {
   color: #ffffff;
   font-size: 12px;
@@ -625,7 +658,7 @@ a.menu-header-bar:hover,
   background-color: #094B83;
   color: #CA7500; }
 
-.tile-style, .add-task-popout, .task-list-container, .filter-container {
+.tile-style, .item-list-container, .item-filter-container, .add-task-popout, .task-list-container, .filter-container {
   background-color: #f9f9f9;
   border: 2px outset #eee;
   -webkit-box-shadow: 1px 1px 5px #777;

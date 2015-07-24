@@ -1,12 +1,12 @@
 <section data-ng-controller="AnimeitemsController" data-ng-init="find()" data-ng-show="authentication.user">
     <span keycuts></span>
-    <div class="page-header">
+    <div class="fixed-header">
         <h1>Anime list</h1>
     </div>
     <div class="container">
-        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+        <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container">
         <div class="paging-controls col-lg-12 col-md-12 col-sm-12">
-            <button class="btn btn-success" ng-click="currentPage=0">First</button>
+            <button class="btn btn-success btn-ends" ng-click="currentPage=0">First</button>
             <button class="btn btn-primary" ng-disabled="currentPage <= 0" ng-click="currentPage=currentPage-1">
                 Previous
             </button>
@@ -14,7 +14,7 @@
             <button class="btn btn-primary" ng-disabled="currentPage >= showingCount/pageSize - 1" ng-click="currentPage=currentPage+1">
                 Next
             </button>
-            <button class="btn btn-success" ng-click="currentPage=pageCount-1">Last</button>
+            <button class="btn btn-success btn-ends" ng-click="currentPage=pageCount-1">Last</button>
         </div>
        <div class="input-group">
             <div class="input-group-addon">
@@ -90,9 +90,9 @@
             <div class="input-group-addon clickable" data-ng-click="ratingLevel=undefined">
                 <i class="fa fa-star"></i>
             </div>
-               <rating class="form-control rating clickable" data-ng-model="ratingLevel" style="color: blue;" readonly="false" max="maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></rating>
+               <rating class="form-control rating-stars clickable" data-ng-model="ratingLevel" readonly="false" max="maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></rating>
             <div class="input-group-addon">
-                <span data-ng-show="overStar!=null" class="label" ng-class="{'label-warning': percent<40, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}">{{percent}}%</span>
+                <span data-ng-show="overStar!=null" class="label rating-label" ng-class="{'label-warning': percent<40, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}">{{percent}}%</span>
             </div>
         </div>
         <div class="input-group mt" data-ng-show="areTagless">
@@ -105,7 +105,9 @@
             <input class="form-control" type="checkbox" data-ng-model="taglessItem">
         </div>
     </div><!-- FILTER SIDEBAR END -->
-        <div class="list-group col-lg-8 col-md-8 col-sm-8">
+        <div class="col-lg-3 col-md-5 col-sm-5 mt item-placeholder-container"></div>
+        <div class="col-lg-8 col-md-6 col-sm-6 item-list-container">
+            <div class="list-group col-lg-12 col-md-12 col-sm-12">
         <div data-ng-repeat="animeitem in animeitems | orderBy: sortType:sortReverse | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" list_Back="{{trustAsResourceUrl(animeitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12" ng-hide="loading(animeitem.title)">
 			<div class="view-item-top clickable" ng-click="viewItem===animeitem ? viewItem='' : viewItem=animeitem">
             <small class="list-group-item-text">
@@ -124,7 +126,7 @@
                 <div class="item-detail">
                     <p>
                         <em class="text-muted" data-ng-if="animeitem.rating==0">No rating.</em>
-                        <rating data-ng-if="animeitem.rating!=0" data-ng-model="animeitem.rating" style="color: blue; font-size: 14px;" readonly="true" max="maxRating" id="rating" name="rating"></rating>
+                        <rating data-ng-if="animeitem.rating!=0" data-ng-model="animeitem.rating" class="list-item-rating-stars" readonly="true" max="maxRating" id="rating" name="rating"></rating>
                     </p>
                     <p ng-if="animeitem.reWatchCount!=0">{{animeitem.reWatchCount}} re-watches.</p>
                 </div>
@@ -158,6 +160,7 @@
             </div><!-- VIEW ITEM END-->
         </div><!-- LIST ITEM END -->
     </div><!-- LIST -->
+        </div>
     </div>
     <section class="loading-image" data-ng-if="isLoading"></section>
 </section>

@@ -27,6 +27,16 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
     cursor: default;
 }
 
+a {
+    color: $brand-accent;
+}
+a:focus {
+    color: $brand-accent-alter;
+}
+a:hover {
+    @extend a:focus;
+}
+
 .navbar-inverse {
     background-image: none;
     background-color: $brand-primary;
@@ -239,7 +249,7 @@ nav {
     font-size: 14px;
     letter-spacing: 0.5px;
     
-    @media (max-width: $break-medium) {
+    @media (min-width: $break-small) and (max-width: $break-medium) {
         span.task-description-text {
             white-space: nowrap;
             overflow: hidden;

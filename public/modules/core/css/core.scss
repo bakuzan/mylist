@@ -135,6 +135,23 @@ a:hover {
         }
     }
 }
+//Does the items within the navbar menu dropdowns.
+.navbar-inverse .navbar-nav .open .dropdown-menu {
+    li {
+        a {
+            background-image: none;
+            color: $brand-accent;
+        }
+        a:focus {
+            background-color: $brand-secondary;
+            color: $brand-accent-alter;
+        }
+        a:hover {
+            @extend a:focus;
+        }
+    }
+}
+//Does the 'single links' on the end and handles them becoming a dropdown on small screens.
 nav {
      .additional-navbar-links {
             @media (max-width: $break-medium) {

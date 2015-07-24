@@ -73,7 +73,7 @@
 .stat-header-label.active,
 .stat-header-label.ng-valid.ng-dirty.active,
 .stat-header-label:focus {
-  color: #FFF;
+  color: #FFAC3A;
   background-color: #337ab7; }
 
 .stat-season-header {
@@ -159,13 +159,13 @@
 
 .tag-bubble {
   border-radius: 10px;
-  border: 2px solid #ADD8E6;
+  border: 2px solid #094B83;
   padding: 10px;
-  color: #777;
+  color: #FFAC3A;
   font-weight: 600;
   font-size: 12px;
   letter-spacing: 0.5px;
-  background-color: #F0F8FF; }
+  background-color: #337ab7; }
 
 .stat-media-panel {
   margin-top: 10px;

@@ -1,12 +1,15 @@
 //brand colours.
 $brand-primary: #337ab7;
-$brand-secondary: #286090;
-$brand-tertiary: #1212B8;
-$brand-accent: #f39c12;
-$brand-accent-alter: #FFEA1D;
+$brand-secondary: #094B83; //#286090;
+$brand-tertiary: #7EB1DC; //#1212B8;
+$brand-accent: #FFAC3A; //#f39c12;
+$brand-accent-alter: #CA7500; //#FFCE8A; //#FF980B; //#FFEA1D;
 
 $brand-warning: #d41f1a;
 $brand-success: #47a447;
+$brand-success-alter: #0C640C;
+$brand-success-accent: #FFF; //#CD5959;
+$brand-success-accent-alter: #fcfcfc; //#F59191;
 
 $brand-border: 1px solid $brand-secondary;
 $tile-background: #f9f9f9;
@@ -24,6 +27,9 @@ $orange: #f39c12;
 $grey-light: #eee;
 $grey: #9d9d9d;
 $grey-dark: #777;
+
+$off-white: #fcfcfc;
+
 
 //lines and borders.
 $grey-line: 1px solid $grey-light;

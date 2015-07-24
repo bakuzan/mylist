@@ -80,7 +80,7 @@ a:hover {
     .active {
         a {
            background-image: none;
-           background-color: $brand-secondary;
+           background-color: none;
            color: $brand-accent-alter;
         }
         a:focus {
@@ -174,8 +174,23 @@ nav {
                 @extend .navbar-link:focus;
             }
             .navbar-link:active {
-                @extend .navbar-link:focus;
+                background-color: $brand-secondary;
                 color: $brand-accent;
+            }
+            li.active {
+                .navbar-link {
+                    background-color: $brand-secondary;
+                    color: $brand-accent;
+                }
+                .navbar-link:visited {
+                    @extend .navbar-link;
+                }
+                .navbar-link:focus {
+                    @extend .navbar-link;
+                }   
+                .navbar-link:hover  {
+                    @extend .navbar-link;
+                }
             }
      }
      .additional-navbar-links-dropdown {
@@ -502,12 +517,36 @@ footer a {
 .btn-primary.ng-valid.ng-dirty {
     border-color: $brand-secondary;
 }
+.btn-success {
+    background-image: none;
+    background-color: $brand-success;
+    border-color: $brand-success-alter;
+    color: $brand-success-accent;
+}
+.btn-success:focus {
+    background-color: $brand-success-alter;
+    border-color: $brand-success;
+    color: $brand-success-accent-alter;
+}
+.btn-success:hover {
+    @extend .btn-success:focus;
+}
+.btn-success:active {
+    @extend .btn-success:focus;
+}
+.btn-success.active {
+    @extend .btn-success:focus;
+}
+/* Remove unecessary green 'valid' border */
+.btn-success.ng-valid.ng-dirty {
+    border-color: $brand-success-alter;
+}
 
 .popout-header {
   padding-bottom: 9px;
   margin: 20px 0;
   border: $brand-border;
-    color: #FFF;
+    color: $brand-accent;
     background-color: $brand-primary;
     padding: 10px;
     width: 95%;

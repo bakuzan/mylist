@@ -225,68 +225,69 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
 .navbar-inverse .navbar-brand, .navbar-inverse .navbar-toggle:focus .navbar-brand, .navbar-inverse .navbar-toggle:hover .navbar-brand {
   color: #f39c12; }
 
-.navbar-inverse .navbar-nav li a, .navbar-inverse .navbar-toggle:focus .navbar-nav li a, .navbar-inverse .navbar-toggle:hover .navbar-nav li a, .navbar-inverse .navbar-nav li .open a:focus, .navbar-inverse .navbar-nav .open li a:focus, .navbar-inverse .navbar-nav li .open a:hover, .navbar-inverse .navbar-nav .open li a:hover, .navbar-inverse .navbar-nav li .active a:focus, .navbar-inverse .navbar-nav .active li a:focus, .navbar-inverse .navbar-nav li .active a:hover, .navbar-inverse .navbar-nav .active li a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu li a:focus, .navbar-inverse .navbar-nav .open .dropdown-menu li a:hover {
-  color: #f39c12; }
-.navbar-inverse .navbar-nav li a:hover, .navbar-inverse .navbar-nav li .open a:hover, .navbar-inverse .navbar-nav .open li a:hover, .navbar-inverse .navbar-nav li .active a:hover, .navbar-inverse .navbar-nav .active li a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu li a:hover {
-  color: #FFF; }
-.navbar-inverse .navbar-nav .open a, .navbar-inverse .navbar-nav .open a:focus, .navbar-inverse .navbar-nav .open a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu li a:focus, .navbar-inverse .navbar-nav .open .dropdown-menu li a:hover {
-  background-image: none;
-  background-color: #286090;
+.navbar-inverse .navbar-brand:focus {
   color: #FFEA1D; }
-  @media (max-width: 768px) {
-    .navbar-inverse .navbar-nav .open a, .navbar-inverse .navbar-nav .open a:focus, .navbar-inverse .navbar-nav .open a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu li a:focus, .navbar-inverse .navbar-nav .open .dropdown-menu li a:hover {
-      color: #FFEA1D; } }
-@media (max-width: 768px) {
-  .navbar-inverse .navbar-nav .open a:focus, .navbar-inverse .navbar-nav .open .dropdown-menu li a:focus {
-    color: #FFEA1D; } }
-.navbar-inverse .navbar-nav .open a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu li a:hover {
-  color: #FFF; }
-  @media (max-width: 768px) {
-    .navbar-inverse .navbar-nav .open a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu li a:hover {
-      color: #FFF; } }
-.navbar-inverse .navbar-nav .active a, .navbar-inverse .navbar-nav .active a:focus, .navbar-inverse .navbar-nav .active a:hover, .navbar-inverse .navbar-nav .active .open .dropdown-menu li a:focus, .navbar-inverse .navbar-nav .open .dropdown-menu li .active a:focus, .navbar-inverse .navbar-nav .active .open .dropdown-menu li a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu li .active a:hover {
-  background-image: none;
-  background-color: #286090;
-  color: #FFEA1D; }
-  @media (max-width: 768px) {
-    .navbar-inverse .navbar-nav .active a, .navbar-inverse .navbar-nav .active a:focus, .navbar-inverse .navbar-nav .active a:hover, .navbar-inverse .navbar-nav .active .open .dropdown-menu li a:focus, .navbar-inverse .navbar-nav .open .dropdown-menu li .active a:focus, .navbar-inverse .navbar-nav .active .open .dropdown-menu li a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu li .active a:hover {
-      color: #FFEA1D; } }
-@media (max-width: 768px) {
-  .navbar-inverse .navbar-nav .active a:focus, .navbar-inverse .navbar-nav .active .open .dropdown-menu li a:focus, .navbar-inverse .navbar-nav .open .dropdown-menu li .active a:focus {
-    color: #FFEA1D; } }
 
-.navbar-inverse .navbar-nav .open .dropdown-menu li a, .navbar-inverse .navbar-nav .open .dropdown-menu li a:focus, .navbar-inverse .navbar-nav .open .dropdown-menu li a:hover {
+.navbar-inverse .navbar-brand:hover {
+  color: #FFEA1D; }
+
+.navbar-inverse .navbar-nav li a, .navbar-inverse .navbar-toggle:focus .navbar-nav li a, .navbar-inverse .navbar-toggle:hover .navbar-nav li a, .navbar-inverse .navbar-nav li .active a:focus, .navbar-inverse .navbar-nav .active li a:focus, .navbar-inverse .navbar-nav li .active a:hover, .navbar-inverse .navbar-nav .active li a:hover {
+  color: #f39c12; }
+.navbar-inverse .navbar-nav li a:focus, .navbar-inverse .navbar-nav li a:hover, .navbar-inverse .navbar-nav li .active a:hover, .navbar-inverse .navbar-nav .active li a:hover, .navbar-inverse .navbar-nav li .active a:focus, .navbar-inverse .navbar-nav .active li a:focus {
+  color: #FFEA1D; }
+.navbar-inverse .navbar-nav .active a, .navbar-inverse .navbar-nav .active a:focus, .navbar-inverse .navbar-nav .active a:hover {
   background-image: none;
+  background-color: #286090;
+  color: #FFEA1D; }
+.navbar-inverse .navbar-nav li.open a.dropdown-toggle, .navbar-inverse .navbar-nav li.open a.dropdown-toggle:focus, .navbar-inverse .navbar-nav li.open a.dropdown-toggle:hover {
+  background-image: none;
+  background-color: #286090;
   color: #FFEA1D; }
   @media (max-width: 768px) {
-    .navbar-inverse .navbar-nav .open .dropdown-menu li a, .navbar-inverse .navbar-nav .open .dropdown-menu li a:focus, .navbar-inverse .navbar-nav .open .dropdown-menu li a:hover {
+    .navbar-inverse .navbar-nav li.open a.dropdown-toggle, .navbar-inverse .navbar-nav li.open a.dropdown-toggle:focus, .navbar-inverse .navbar-nav li.open a.dropdown-toggle:hover {
       color: #FFEA1D; } }
-@media (max-width: 768px) {
-  .navbar-inverse .navbar-nav .open .dropdown-menu li a:focus {
-    color: #FFEA1D; } }
-.navbar-inverse .navbar-nav .open .dropdown-menu li a:hover {
-  color: #FFF; }
+.navbar-inverse .navbar-nav li.open a.dropdown-toggle:hover, .navbar-inverse .navbar-nav li.open a.dropdown-toggle:focus {
+  color: #FFEA1D; }
   @media (max-width: 768px) {
-    .navbar-inverse .navbar-nav .open .dropdown-menu li a:hover {
-      color: #FFF; } }
+    .navbar-inverse .navbar-nav li.open a.dropdown-toggle:hover, .navbar-inverse .navbar-nav li.open a.dropdown-toggle:focus {
+      color: #FFEA1D; } }
+.navbar-inverse .navbar-nav li.open a.dropdown-toggle:hover {
+  color: #FFEA1D; }
+  @media (max-width: 768px) {
+    .navbar-inverse .navbar-nav li.open a.dropdown-toggle:hover {
+      color: #FFEA1D; } }
+.navbar-inverse .navbar-nav li.active a.dropdown-toggle, .navbar-inverse .navbar-nav li.active a.dropdown-toggle:focus, .navbar-inverse .navbar-nav li.active li.open a.dropdown-toggle:hover, .navbar-inverse .navbar-nav li.open li.active a.dropdown-toggle:hover {
+  background-image: none;
+  background-color: #286090;
+  color: #FFEA1D; }
+  @media (max-width: 768px) {
+    .navbar-inverse .navbar-nav li.active a.dropdown-toggle, .navbar-inverse .navbar-nav li.active a.dropdown-toggle:focus, .navbar-inverse .navbar-nav li.active li.open a.dropdown-toggle:hover, .navbar-inverse .navbar-nav li.open li.active a.dropdown-toggle:hover {
+      color: #FFEA1D; } }
+.navbar-inverse .navbar-nav li.active a.dropdown-toggle:hover, .navbar-inverse .navbar-nav li.active a.dropdown-toggle:focus {
+  color: #FFEA1D; }
+  @media (max-width: 768px) {
+    .navbar-inverse .navbar-nav li.active a.dropdown-toggle:hover, .navbar-inverse .navbar-nav li.active a.dropdown-toggle:focus {
+      color: #FFEA1D; } }
 
 @media (max-width: 992px) {
-  .additional-navbar-links {
+  nav .additional-navbar-links {
     display: none; } }
-.additional-navbar-links .navbar-link, .additional-navbar-links .navbar-link:visited {
+nav .additional-navbar-links .navbar-link, nav .additional-navbar-links .navbar-link:visited {
   color: #f39c12;
   padding: 15px 15px; }
-.additional-navbar-links .navbar-link:visited {
+nav .additional-navbar-links .navbar-link:visited {
   text-decoration: none; }
-.additional-navbar-links .navbar-link:focus, .additional-navbar-links .navbar-link:hover, .additional-navbar-links .navbar-link:active {
-  color: #FFF;
+nav .additional-navbar-links .navbar-link:focus, nav .additional-navbar-links .navbar-link:hover, nav .additional-navbar-links .navbar-link:active {
+  color: #FFEA1D;
   text-decoration: none; }
-.additional-navbar-links .navbar-link:active {
+nav .additional-navbar-links .navbar-link:active {
   color: #f39c12; }
+nav .additional-navbar-links-dropdown {
+  display: none; }
+  @media (max-width: 992px) {
+    nav .additional-navbar-links-dropdown {
+      display: block; } }
 
-@media (min-width: 768px) and (max-width: 992px) {
-  .additional-navbar-links-dropdown {
-    display: none; } }
 /**
  *  Task List CSS
  */
@@ -349,6 +350,18 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
   font-weight: 600;
   font-size: 14px;
   letter-spacing: 0.5px; }
+  @media (max-width: 992px) {
+    .taskItem span.task-description-text {
+      white-space: nowrap;
+      overflow: hidden;
+      position: absolute;
+      width: 50%;
+      margin-left: 5px; }
+    .taskItem span.task-times-text {
+      position: absolute;
+      display: block; }
+    .taskItem span.separator {
+      display: none; } }
 
 .taskCheckbox {
   margin-right: 1em; }
@@ -358,7 +371,7 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
   color: #bebebe; }
 
 .taskList .taskDate {
-  color: #eee;
+  color: #9d9d9d;
   font-size: 10px;
   font-weight: bold;
   text-transform: uppercase;
@@ -406,7 +419,7 @@ footer {
   text-transform: uppercase;
   color: #777; }
 
-footer a, footer .navbar-inverse .navbar-nav .open a:focus, .navbar-inverse .navbar-nav .open footer a:focus, footer .navbar-inverse .navbar-nav .open a:hover, .navbar-inverse .navbar-nav .open footer a:hover, footer .navbar-inverse .navbar-nav .active a:focus, .navbar-inverse .navbar-nav .active footer a:focus, footer .navbar-inverse .navbar-nav .active a:hover, .navbar-inverse .navbar-nav .active footer a:hover, footer .navbar-inverse .navbar-nav .open .dropdown-menu li a:focus, .navbar-inverse .navbar-nav .open .dropdown-menu li footer a:focus, footer .navbar-inverse .navbar-nav .open .dropdown-menu li a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu li footer a:hover {
+footer a, footer .navbar-inverse .navbar-nav .active a:focus, .navbar-inverse .navbar-nav .active footer a:focus, footer .navbar-inverse .navbar-nav .active a:hover, .navbar-inverse .navbar-nav .active footer a:hover {
   color: #f39c12; }
 
 /* custom checkboxes */
@@ -438,7 +451,7 @@ footer a, footer .navbar-inverse .navbar-nav .open a:focus, .navbar-inverse .nav
 
 .taskCheckbox:disabled:before {
   content: '\f03a';
-  color: #337ab7; }
+  color: #f39c12; }
 
 .taskCheckbox:checked:before {
   content: '\f14a';
@@ -555,11 +568,9 @@ footer a, footer .navbar-inverse .navbar-nav .open a:focus, .navbar-inverse .nav
   border-radius: 2px;
   margin: 0 5% -1px; }
 
-a.menu-header-bar, .navbar-inverse .navbar-nav .open a.menu-header-bar:focus, .navbar-inverse .navbar-nav .open a.menu-header-bar:hover, .navbar-inverse .navbar-nav .active a.menu-header-bar:focus, .navbar-inverse .navbar-nav .active a.menu-header-bar:hover, .navbar-inverse .navbar-nav .open .dropdown-menu li a.menu-header-bar:focus, .navbar-inverse .navbar-nav .open .dropdown-menu li a.menu-header-bar:hover,
+a.menu-header-bar, .navbar-inverse .navbar-nav .active a.menu-header-bar:focus, .navbar-inverse .navbar-nav .active a.menu-header-bar:hover,
 a.menu-header-bar:hover,
-.navbar-inverse .navbar-nav .open a.menu-header-bar:hover,
-.navbar-inverse .navbar-nav .active a.menu-header-bar:hover,
-.navbar-inverse .navbar-nav .open .dropdown-menu li a.menu-header-bar:hover {
+.navbar-inverse .navbar-nav .active a.menu-header-bar:hover {
   text-decoration: none; }
 
 .menu-header-bar:hover {

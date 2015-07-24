@@ -23,7 +23,7 @@
 				<a ng-switch-default href="/#!/{{item.link}}" data-ng-bind="item.title"></a>
 			</li>
 		</ul>
-        <ul class="nav navbar-nav additonal-navbar-links">
+        <ul class="additional-navbar-links nav navbar-nav">
             <li ng-class="{ active: isActive('/favourites')}">
                 <a href="/#!/favourites" class="navbar-link" data-ng-show="authentication.user"><i class="fa fa-star"></i> Favourites</a>
             </li>
@@ -34,7 +34,7 @@
                 <a href="/#!/statistics" class="navbar-link" data-ng-show="authentication.user"><i class="fa fa-bar-chart"></i> Statistics</a>
             </li>
         </ul>
-        <ul class="nav navbar-nav additonal-navbar-links-dropdown">
+        <ul class="additional-navbar-links-dropdown nav navbar-nav">
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <span>More </span><b class="caret"></b>

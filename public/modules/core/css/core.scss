@@ -48,41 +48,40 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
 .navbar-inverse .navbar-brand {
     color: $brand-accent;
 }
+.navbar-inverse .navbar-brand:focus {
+    color: $brand-accent-alter;
+}
+.navbar-inverse .navbar-brand:hover {
+    color: $brand-accent-alter;
+}
 
 .navbar-inverse .navbar-nav {
     li {
         a {
             color: $brand-accent;
         }
-        a:hover {
-            color: $navbar-link-hover-colour;
-        }
-    }
-    .open {
-        a {
-            background-image: none;
-            background-color: $brand-secondary;
-            color: $brand-accent-alter;
-            @media (max-width: $break-small) {
-                color: $brand-accent-alter;
-            }
-        }
         a:focus {
-            @extend a;
-            @media (max-width: $break-small) {
-                color: $brand-accent-alter;
-            }
+            color: $brand-accent-alter;
         }
         a:hover {
-            @extend a;
-            color: $navbar-link-hover-colour;
-            @media (max-width: $break-small) {
-                color: $navbar-link-hover-colour;
-            }
+            @extend a:focus;
         }
     }
     .active {
         a {
+           background-image: none;
+           background-color: $brand-secondary;
+           color: $brand-accent-alter;
+        }
+        a:focus {
+            @extend a;
+        }
+        a:hover {
+            @extend a;
+        }
+    }
+    li.open {
+        a.dropdown-toggle {
             background-image: none;
             background-color: $brand-secondary;
             color: $brand-accent-alter;
@@ -90,73 +89,77 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
                 color: $brand-accent-alter;
             }
         }
-        a:focus {
-            @extend a;
-            @media (max-width: $break-small) {
-                color: $brand-accent-alter;
-            }
-        }
-        a:hover {
-            @extend a;
-        }
-    }
-}
-.navbar-inverse .navbar-nav .open .dropdown-menu {
-    li {
-        a {
-            background-image: none;
+        a.dropdown-toggle:focus {
+            @extend a.dropdown-toggle;
             color: $brand-accent-alter;
             @media (max-width: $break-small) {
                 color: $brand-accent-alter;
             }
         }
-        a:focus {
-            @extend a;
+        a.dropdown-toggle:hover {
+            @extend a.dropdown-toggle:focus;
+            color: $brand-accent-alter;
             @media (max-width: $break-small) {
                 color: $brand-accent-alter;
             }
         }
-        a:hover {
-            @extend a;
-            color: $navbar-link-hover-colour;
+    }
+    li.active {
+        a.dropdown-toggle {
+            background-image: none;
+            background-color: $brand-secondary;
+            color: $brand-accent-alter;
             @media (max-width: $break-small) {
-                color: $navbar-link-hover-colour;
+                color: $brand-accent-alter;
             }
+        }
+        a.dropdown-toggle:focus {
+            @extend a.dropdown-toggle;
+            color: $brand-accent-alter;
+            @media (max-width: $break-small) {
+                color: $brand-accent-alter;
+            }
+        }
+        a.dropdown-toggle:hover {
+            @extend a.dropdown-toggle:focus;
         }
     }
 }
-
-.additional-navbar-links {
-    @media (max-width: $break-medium) {
-            display: none;
-    }
-       
-    .navbar-link {
-        color: $brand-accent;
-        padding: 15px 15px;
-    }
-    .navbar-link:visited {
-        @extend .navbar-link;
-        text-decoration: none;
-    }
-    .navbar-link:focus {
-        color: $navbar-link-hover-colour;
-        text-decoration: none;
-    }
-    .navbar-link:hover  {
-        @extend .navbar-link:focus;
-    }
-    .navbar-link:active {
-        @extend .navbar-link:focus;
-        color: $brand-accent;
-    }
-}
-
-    @media (min-width: $break-small) and (max-width: $break-medium) {
-            .additional-navbar-links-dropdown {
+nav {
+     .additional-navbar-links {
+            @media (max-width: $break-medium) {
                 display: none;
             }
-    }
+       
+            .navbar-link {
+                color: $brand-accent;
+                padding: 15px 15px;
+            }
+            .navbar-link:visited {
+                @extend .navbar-link;
+                text-decoration: none;
+            }
+            .navbar-link:focus {
+                color: $brand-accent-alter;
+                text-decoration: none;
+            }   
+            .navbar-link:hover  {
+                @extend .navbar-link:focus;
+            }
+            .navbar-link:active {
+                @extend .navbar-link:focus;
+                color: $brand-accent;
+            }
+     }
+     .additional-navbar-links-dropdown {
+            display: none;
+            
+            @media (max-width: $break-medium) {
+                    display: block;
+            }
+     }
+}
+    
 
 /**
  *  Task List CSS
@@ -235,6 +238,23 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
     font-weight: 600;
     font-size: 14px;
     letter-spacing: 0.5px;
+    
+    @media (max-width: $break-medium) {
+        span.task-description-text {
+            white-space: nowrap;
+            overflow: hidden;
+            position: absolute;
+            width: 50%;
+            margin-left: 5px;
+        }
+        span.task-times-text {
+            position: absolute;
+            display: block;
+        }
+        span.separator {
+            display: none;
+        }
+    }
 }
 
 .taskCheckbox {
@@ -247,7 +267,7 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
 }
 
 .taskList .taskDate {
-    color: $grey-light;
+    color: $grey;
     font-size: 10px;
     font-weight: bold;
     text-transform: uppercase;
@@ -281,7 +301,7 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
 }
 
 .category-Watch {
-    background: $brand-primary;
+    background: $blue;
 }
 
 .category-Read {
@@ -331,7 +351,7 @@ footer a {
 
 .taskCheckbox:disabled:before {
     content: '\f03a';
-    color: $brand-primary;
+    color: $brand-accent;
 }
 
 .taskCheckbox:checked:before {

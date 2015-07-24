@@ -144,12 +144,12 @@
         </div><!-- collapse FILTERS -->
     </div><!-- col-md-12 FILTERS -->
     </div><!-- col-md-6 ACTIONS+FILTERS -->
-        <div class="col-lg-3 col-md-3 col-sm-3 mt placeholder-container"></div>
-        <div class="col-lg-8 col-md-8 col-sm-8 mt task-list-container">
+        <div class="col-lg-3 col-md-5 col-sm-5 mt placeholder-container"></div>
+        <div class="col-lg-8 col-md-6 col-sm-6 mt task-list-container">
             <ul class="taskList col-lg-12 col-md-12 col-sm-12">
                 <li class="taskItem" ng-repeat="taskItem in (filteredTasks = (taskItem | filter: search | dayFilter: daySelected | dateFilter: datesSelected)) track by $index" ng-model="taskItem">
                     <input type="checkbox" class="taskCheckbox" ng-model="taskItem.complete" ng-change="save(taskItem.description)" ng-disabled="taskItem.complete || taskItem.checklist">
-                    <span class="complete-{{taskItem.complete}}" ng-class="taskItem.checklist === true ? 'clickable' : ''" ng-click="taskItem.checklist === true ? viewTask = !viewTask : ''">{{taskItem.description}}</span> - <span class="complete-{{taskItem.complete}}">{{taskItem.completeTimes}}/{{taskItem.repeat}}</span>
+                    <span class="task-description-text complete-{{taskItem.complete}}" ng-class="taskItem.checklist === true ? 'clickable' : ''" ng-click="taskItem.checklist === true ? viewTask = !viewTask : ''">{{taskItem.description}}</span><span class="separator"> - </span><span class="task-times-text complete-{{taskItem.complete}}">{{taskItem.completeTimes}}/{{taskItem.repeat}}</span>
                     <span class="category-{{taskItem.category}}">{{taskItem.category}}</span><a class="bin-style clickable" aria-hidden="true" ng-click="deleteTask(taskItem.description)"><i class="fa fa-trash-o"></i></a>
                     <strong class="taskDate complete-{{taskItem.complete}}"><i class="fa fa-calendar" popover="{{taskItem.date}}" popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true"></i><span ng-hide="taskItem.daily">{{taskItem.day}}</span><span ng-show="taskItem.daily" class="complete-{{taskItem.complete}}">DAILY</span></strong>
                     <div class="checklist-progress-container" ng-if="taskItem.checklist">

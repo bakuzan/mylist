@@ -208,7 +208,7 @@
   background-color: #337ab7;
   color: #FFFFFF; }
 
-.paging-controls {
+.paging-controls, .view-controls {
   text-align: center;
   margin-bottom: 10px; }
 
@@ -220,6 +220,10 @@
 
 .character-expanded {
   height: auto; }
+
+.view-controls label {
+  max-width: 45%;
+  min-width: 25%; }
 
 .content {
   margin-top: 50px; }

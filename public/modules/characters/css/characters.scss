@@ -48,3 +48,12 @@
 .character-expanded {
     height: auto;
 }
+
+.view-controls {
+    @extend .paging-controls;
+    
+    label {
+        max-width: 45%;
+        min-width: 25%;
+    }
+}

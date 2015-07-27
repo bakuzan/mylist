@@ -14,7 +14,7 @@ $brand-success-alter: #0C640C;
 $brand-success-accent: #FFF; //#CD5959;
 $brand-success-accent-alter: #fcfcfc; //#F59191;
 
-$brand-border: 1px solid $brand-secondary;
+$brand-border: 1px solid $brand-tertiary;
 $tile-background: #f9f9f9;
 
 //named colours.
@@ -36,6 +36,7 @@ $off-white: #fcfcfc;
 
 //lines and borders.
 $grey-line: 1px solid $grey-light;
+$accent-line: 1px solid $brand-accent;
 
 //for media queries.
 $break-small: 768px;

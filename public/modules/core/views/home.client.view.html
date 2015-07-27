@@ -153,9 +153,8 @@
                     <span class="category-{{taskItem.category}}">{{taskItem.category}}</span><a class="bin-style clickable" aria-hidden="true" ng-click="deleteTask(taskItem.description)"><i class="fa fa-trash-o"></i></a>
                     <strong class="taskDate complete-{{taskItem.complete}}"><i class="fa fa-calendar" popover="{{taskItem.date}}" popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true"></i><span ng-hide="taskItem.daily">{{taskItem.day}}</span><span ng-show="taskItem.daily" class="complete-{{taskItem.complete}}">DAILY</span></strong>
                     <div class="checklist-progress-container" ng-if="taskItem.checklist">
-                        <progress class="checklist-progress-bar" popover="{{ ((taskItem.checklistOptions | filter: {complete: true}).length / taskItem.checklistOptions.length)*100 | number: 2 }}%" popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">
-                            <bar type="primary" value="((taskItem.checklistOptions | filter: {complete: true}).length / taskItem.checklistOptions.length) * 100"></bar>
-                        </progress>
+                        <div class="checklist-progress-bar" my-progress="((taskItem.checklistOptions | filter: {complete: true}).length / taskItem.checklistOptions.length) * 100" popover="{{ ((taskItem.checklistOptions | filter: {complete: true}).length / taskItem.checklistOptions.length)*100 | number: 2 }}%" popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">
+                        </div>
                     </div>
                     <div ng-if="taskItem.checklist" ng-show="viewTask">
                         <ul class="checklistList">

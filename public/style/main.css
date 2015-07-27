@@ -1,6 +1,10 @@
 .form-group p {
   font-size: 14px; }
 
+.list-group-item {
+  background-color: #094B83;
+  border-color: #7EB1DC; }
+
 .view-buttons {
   margin-bottom: 25px;
   margin-top: -25px;
@@ -99,14 +103,14 @@
   left: 20vw;
   width: 60vw;
   height: 50vh;
-  background-color: #FFF;
+  background-color: #337ab7;
   align-content: center;
   border: 5px solid #094B83;
   margin-top: 10px;
   overflow-y: scroll;
-  z-index: 200; }
+  z-index: 750; }
   .item-history-popout div.item-history:nth-child(even) {
-    background-color: #FFAC3A;
+    background-color: #094B83;
     width: 95%; }
 
 .close-button {
@@ -136,7 +140,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 100;
+  z-index: 1000;
   width: 100%;
   height: 100%;
   background-color: #C0C0C0;
@@ -184,13 +188,13 @@
   .rating-label {
     display: none; } }
 .dark-bordered-font {
-  color: #ffffff;
+  color: #FFAC3A;
   font-size: 12px;
   font-weight: 500;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
 
 .dark-bordered-font-heading {
-  color: #ffffff;
+  color: #FFAC3A;
   font-size: 16px;
   font-weight: 500;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
@@ -357,6 +361,9 @@ nav .additional-navbar-links-dropdown {
 .accent-text {
   color: #FFAC3A; }
 
+.accent-alter-text {
+  color: #CA7500; }
+
 /**
  *  Task List CSS
  */
@@ -409,13 +416,11 @@ nav .additional-navbar-links-dropdown {
   padding: 0 20px; }
   .taskList .taskItem:last-child {
     border-bottom: none; }
-  .taskList .taskItem:nth-child(even) {
-    background: #fcfcfc; }
 
 .taskItem {
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #7EB1DC;
   padding: 15px 0;
-  color: #777;
+  color: #FFAC3A;
   font-weight: 600;
   font-size: 14px;
   letter-spacing: 0.5px; }
@@ -437,10 +442,10 @@ nav .additional-navbar-links-dropdown {
 
 .complete-true {
   text-decoration: line-through;
-  color: #bebebe; }
+  color: #CA7500; }
 
 .taskList .taskDate {
-  color: #9d9d9d;
+  color: #CA7500;
   font-size: 10px;
   font-weight: bold;
   text-transform: uppercase;
@@ -470,7 +475,7 @@ nav .additional-navbar-links-dropdown {
   background: transparent; }
 
 .category-Watch {
-  background: #337ab7; }
+  background: #d41f1a; }
 
 .category-Read {
   background: #8e44ad; }
@@ -498,7 +503,7 @@ nav .additional-navbar-links-dropdown {
 
 .taskCheckbox:before, .taskCheckbox:checked:before {
   font-family: 'FontAwesome';
-  color: #444;
+  color: #FFAC3A;
   font-size: 20px;
   -webkit-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -510,7 +515,7 @@ nav .additional-navbar-links-dropdown {
 
 .taskCheckbox:disabled:before {
   content: '\f03a';
-  color: #FFAC3A; }
+  color: #CA7500; }
 
 .taskCheckbox:checked:before {
   content: '\f14a';
@@ -540,28 +545,6 @@ nav .additional-navbar-links-dropdown {
   border: none;
   /*    outline: none;*/
   padding: 0 100px; }
-
-/** FAVOURITES STYLING **/
-.favourite-header {
-  padding-bottom: 5px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #eee;
-  display: inline-block;
-  white-space: nowrap; }
-
-.favourite-link {
-  color: inherit; }
-
-.favourite-link:hover,
-.favourite-link:focus {
-  color: inherit;
-  text-decoration: none; }
-
-.favourite-link:hover h2:before {
-  content: 'Go to '; }
-
-.favourite-link:hover h2:after {
-  content: '?'; }
 
 .collapse-bar {
   cursor: pointer;
@@ -643,19 +626,14 @@ nav .additional-navbar-links-dropdown {
 .popout-header {
   padding-bottom: 9px;
   margin: 20px 0;
-  border: 1px solid #094B83;
+  border: 1px solid #7EB1DC;
   color: #FFAC3A;
-  background-color: #337ab7;
+  background-color: #094B83;
   padding: 10px;
   width: 95%; }
 
 .checklistItem {
   padding: 5px; }
-
-.checklist-progress-bar {
-  height: 10px;
-  width: 75%;
-  margin-top: 10px; }
 
 .menu-header-bar {
   position: relative;
@@ -664,7 +642,7 @@ nav .additional-navbar-links-dropdown {
   color: #FFAC3A;
   font-weight: bold;
   padding: 10px 15px;
-  border: 1px solid #094B83;
+  border: 1px solid #7EB1DC;
   border-radius: 2px;
   margin: 0 5% -1px; }
 
@@ -679,12 +657,12 @@ a.menu-header-bar:hover,
   background-color: #094B83;
   color: #CA7500; }
 
-.tile-style, .item-list-container, .item-filter-container, .add-task-popout, .task-list-container, .filter-container {
-  background-color: #f9f9f9;
-  border: 2px outset #eee;
-  -webkit-box-shadow: 1px 1px 5px #777;
-  -moz-box-shadow: 1px 1px 5px #777;
-  box-shadow: 1px 1px 5px #777; }
+.tile-style, .item-list-container, .item-filter-container, .add-task-popout, .task-list-container, .filter-container, .favourite-anime, .favourite-manga, .current-favourites {
+  background-color: #337ab7;
+  border: 2px outset #7EB1DC;
+  -webkit-box-shadow: 1px 1px 5px #094B83;
+  -moz-box-shadow: 1px 1px 5px #094B83;
+  box-shadow: 1px 1px 5px #094B83; }
 
 .task-list-container {
   padding: 10px 5px;
@@ -709,18 +687,64 @@ a.menu-header-bar:hover,
   top: 55px;
   left: 40px; }
 
+.page-header {
+  border-color: #FFAC3A; }
+
+.checklist-progress-bar {
+  background-color: #eee;
+  height: 10px;
+  width: 75%;
+  margin-top: 10px; }
+
+.checklist-progress {
+  background-color: #CA7500;
+  background-image: -webkit-gradient(linear, left 0, left 100%, from(#CA7500), to(#FFAC3A));
+  background-image: -webkit-linear-gradient(top, #CA7500 0, #FFAC3A 100%);
+  background-image: -moz-linear-gradient(top, #CA7500 0, #FFAC3A 100%);
+  background-image: -o-linear-gradient(top, #CA7500 0, #FFAC3A 100%);
+  background-image: linear-gradient(to bottom, #CA7500 0, #FFAC3A 100%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFCA7500',endColorstr='#FFFFAC3A',GradientType=0); }
+
+/** FAVOURITES STYLING **/
+.favourite-header {
+  display: inline-block;
+  width: 100%;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #FFAC3A;
+  margin-bottom: 10px;
+  white-space: nowrap; }
+
+.favourite-link {
+  color: inherit; }
+
+.favourite-link:hover,
+.favourite-link:focus {
+  color: inherit;
+  text-decoration: none; }
+
+.favourite-link:hover h2:before {
+  content: 'Go to '; }
+
+.favourite-link:hover h2:after {
+  content: '?'; }
+
 .trophy-1 {
-  color: gold; }
+  color: gold;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
 
 .trophy-2 {
-  color: silver; }
+  color: silver;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
 
 .trophy-3 {
-  color: rosybrown; }
+  color: rosybrown;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
 
 .trophy-4,
 .trophy-5 {
-  color: white; }
+  color: white;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
 
 .favourite-item {
   height: 10vh; }
@@ -738,6 +762,12 @@ a.menu-header-bar:hover,
 .bin-style:hover {
   background-color: #d41f1a;
   color: #FFF; }
+
+.favourite-anime, .favourite-manga, .current-favourites {
+  padding-bottom: 10px; }
+
+.favourite-content a.list-group-item:hover, .favourite-content .navbar-inverse .navbar-nav .active a.list-group-item:hover, .navbar-inverse .navbar-nav .active .favourite-content a.list-group-item:hover {
+  background-color: #337ab7; }
 
 .history-list-item:nth-child(odd) p {
   background-color: #eee; }
@@ -761,7 +791,8 @@ a.menu-header-bar:hover,
 
 /*/ ADDED /*/
 .loginBG {
-  background-color: #FFF; }
+  background-color: #094B83;
+  color: #FFAC3A; }
 
 html {
   height: 100%; }
@@ -791,5 +822,22 @@ footer a, footer .navbar-inverse .navbar-nav .active a:focus, .navbar-inverse .n
   color: #FFAC3A; }
 footer hr {
   border-color: #CA7500; }
+
+.input-group-addon {
+  color: #FFAC3A;
+  background-color: #094B83;
+  border: 1px solid #7EB1DC; }
+
+.form-control {
+  background-color: #094B83;
+  color: #FFAC3A;
+  border-color: #7EB1DC; }
+
+.form-control[disabled] {
+  background-color: #7EB1DC;
+  color: #CA7500; }
+
+.form-control[readonly] {
+  background-color: #094B83; }
 
 /*# sourceMappingURL=main.css.map */

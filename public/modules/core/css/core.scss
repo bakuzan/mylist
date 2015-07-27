@@ -279,15 +279,15 @@ nav {
         border-bottom: none;
     }
     
-    .taskItem:nth-child(even) {
-        background: #fcfcfc;
-    }
+//    .taskItem:nth-child(even) {
+//        background: $brand-primary;
+//    }
 }
 
 .taskItem {
-    border-bottom: $grey-line;
+    border-bottom: $brand-border;
     padding: 15px 0;
-    color: #777;
+    color: $brand-accent;
     font-weight: 600;
     font-size: 14px;
     letter-spacing: 0.5px;
@@ -316,11 +316,11 @@ nav {
 
 .complete-true {
     text-decoration:  line-through;
-    color: #bebebe;
+    color: $brand-accent-alter;
 }
 
 .taskList .taskDate {
-    color: $grey;
+    color: $brand-accent-alter;
     font-size: 10px;
     font-weight: bold;
     text-transform: uppercase;
@@ -354,7 +354,7 @@ nav {
 }
 
 .category-Watch {
-    background: $blue;
+    background: $red;
 }
 
 .category-Read {
@@ -382,7 +382,7 @@ nav {
 
 .taskCheckbox:before, .taskCheckbox:checked:before {
     font-family: 'FontAwesome';
-    color: #444;
+    color: $brand-accent;
     font-size: 20px;
     @include transition(all, 0.3s);
 }
@@ -393,7 +393,7 @@ nav {
 
 .taskCheckbox:disabled:before {
     content: '\f03a';
-    color: $brand-accent;
+    color: $brand-accent-alter;
 }
 
 .taskCheckbox:checked:before {
@@ -424,32 +424,6 @@ nav {
     border: none;
 /*    outline: none;*/
     padding: 0 100px;
-}
-
-/** FAVOURITES STYLING **/
-
-.favourite-header {
-  padding-bottom: 5px;
-  margin-bottom: 10px;
-  border-bottom: $grey-line; 
-  display: inline-block;
-  white-space: nowrap;
-}
-
-.favourite-link {
-    color: inherit;
-}
-.favourite-link:hover,
-.favourite-link:focus {
-    color: inherit;
-    text-decoration: none;
-}
-
-.favourite-link:hover h2:before {
-    content: 'Go to ';
-}
-.favourite-link:hover h2:after {
-    content: '?';
 }
 
 .collapse-bar {
@@ -571,19 +545,13 @@ nav {
   margin: 20px 0;
   border: $brand-border;
     color: $brand-accent;
-    background-color: $brand-primary;
+    background-color: $brand-secondary;
     padding: 10px;
     width: 95%;
 }
 
 .checklistItem {
     padding: 5px;
-}
-
-.checklist-progress-bar {
-  height: 10px;
-  width: 75%;
-  margin-top: 10px;
 }
 
 .menu-header-bar {
@@ -609,9 +577,9 @@ a.menu-header-bar:hover {
 }
 
 .tile-style {
-    background-color: $tile-background;
-    border: 2px outset $grey-light;
-    @include box-shadow(1px, 1px, 5px, $grey-dark);
+    background-color: $brand-primary;
+    border: 2px outset $brand-tertiary;
+    @include box-shadow(1px, 1px, 5px, $brand-secondary);
 }
 
 .task-list-container {
@@ -645,4 +613,21 @@ a.menu-header-bar:hover {
     z-index: 500;
     top: 55px;
     left: 40px;
+}
+
+.page-header {
+    border-color: $brand-accent;
+}
+
+.checklist-progress-bar {
+    background-color: $grey-light;
+    height: 10px;
+    width: 75%;
+    margin-top: 10px;
+}
+.checklist-progress {
+    background-color: $brand-accent-alter;
+    @include background-image($brand-accent-alter, $brand-accent);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFCA7500',endColorstr='#FFFFAC3A',GradientType=0);
 }

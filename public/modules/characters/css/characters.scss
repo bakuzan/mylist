@@ -1,11 +1,11 @@
 .dark-bordered-font {
-    color: #ffffff;
+    color: $brand-accent;
     font-size: 12px;
     font-weight: 500;
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 .dark-bordered-font-heading {
-    color: #ffffff;
+    color: $brand-accent;
     font-size: 16px;
     font-weight: 500;
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;

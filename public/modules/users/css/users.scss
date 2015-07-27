@@ -16,7 +16,9 @@
 /*/ ADDED /*/
 
 .loginBG {
-    background-color: #FFF;
+//    background-color: #FFF;
+    background-color: $brand-secondary;
+    color: $brand-accent;
 }
 
 html {
@@ -55,4 +57,23 @@ footer {
     hr {
         border-color: $brand-accent-alter;
     }
+}
+
+.input-group-addon {
+    color: $brand-accent;
+    background-color: $brand-secondary;
+    border: $brand-border;
+}
+
+.form-control {
+    background-color: $brand-secondary;
+    color: $brand-accent;
+    border-color: $brand-tertiary;
+}
+.form-control[disabled] {
+    background-color: $brand-tertiary;
+    color: $brand-accent-alter;
+}
+.form-control[readonly] {
+    background-color: $brand-secondary;
 }

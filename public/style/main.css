@@ -625,6 +625,21 @@ nav .additional-navbar-links-dropdown {
 .btn-success.ng-valid.ng-dirty {
   border-color: #0C640C; }
 
+.btn-danger {
+  background-image: none;
+  background-color: #d41f1a;
+  border-color: #830300;
+  color: #FFF; }
+
+.btn-danger:focus, .btn-danger:hover, .btn-danger:active, .btn-danger.active {
+  background-color: #830300;
+  border-color: #d41f1a;
+  color: #fcfcfc; }
+
+/* Remove unecessary green 'valid' border */
+.btn-danger.ng-valid.ng-dirty {
+  border-color: #830300; }
+
 .popout-header {
   padding-bottom: 9px;
   margin: 20px 0;

@@ -209,6 +209,9 @@ nav {
 .accent-text {
     color: $brand-accent;
 }
+.accent-alter-text {
+    color: $brand-accent-alter;
+}
     
 
 /**
@@ -537,6 +540,30 @@ nav {
 /* Remove unecessary green 'valid' border */
 .btn-success.ng-valid.ng-dirty {
     border-color: $brand-success-alter;
+}
+.btn-danger {
+    background-image: none;
+    background-color: $brand-danger;
+    border-color: $brand-danger-alter;
+    color: $brand-danger-accent;
+}
+.btn-danger:focus {
+    background-color: $brand-danger-alter;
+    border-color: $brand-danger;
+    color: $brand-danger-accent-alter;
+}
+.btn-danger:hover {
+    @extend .btn-danger:focus;
+}
+.btn-danger:active {
+    @extend .btn-danger:focus;
+}
+.btn-danger.active {
+    @extend .btn-danger:focus;
+}
+/* Remove unecessary green 'valid' border */
+.btn-danger.ng-valid.ng-dirty {
+    border-color: $brand-danger-alter;
 }
 
 .popout-header {

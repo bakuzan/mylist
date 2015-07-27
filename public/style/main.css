@@ -351,6 +351,12 @@ nav .additional-navbar-links-dropdown {
     nav .additional-navbar-links-dropdown {
       display: block; } }
 
+.primary-text {
+  color: #337ab7; }
+
+.accent-text {
+  color: #FFAC3A; }
+
 /**
  *  Task List CSS
  */
@@ -746,7 +752,7 @@ html {
   height: 100%; }
   html body {
     position: relative;
-    background-color: #222;
+    background-color: #094B83;
     min-height: 94%; }
 
 .centerPiece {
@@ -764,9 +770,11 @@ footer {
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  color: #777; }
+  color: #CA7500; }
 
 footer a, footer .navbar-inverse .navbar-nav .active a:focus, .navbar-inverse .navbar-nav .active footer a:focus, footer .navbar-inverse .navbar-nav .active a:hover, .navbar-inverse .navbar-nav .active footer a:hover, footer .navbar-inverse .navbar-nav .active .open .dropdown-menu li a:hover, .navbar-inverse .navbar-nav .active .open .dropdown-menu li footer a:hover, footer .navbar-inverse .navbar-nav .open .dropdown-menu li .active a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu li .active footer a:hover {
   color: #FFAC3A; }
+footer hr {
+  border-color: #CA7500; }
 
 /*# sourceMappingURL=main.css.map */

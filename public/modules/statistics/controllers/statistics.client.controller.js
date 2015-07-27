@@ -78,6 +78,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 $scope.historicalView = 'month';
                 $scope.statSearch = '';
                 $scope.showDetail = false;
+                $scope.statTags = [];
             }
         });
         

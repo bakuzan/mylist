@@ -117,7 +117,7 @@
 			<h4 class="list-group-item-heading" data-ng-bind="animeitem.title"></h4>
             <p class="list-group-item-text">
                 <span data-ng-bind="animeitem.episodes"></span><span ng-if="animeitem.finalEpisode!==0">/{{animeitem.finalEpisode}}</span> Episodes
-                <span class="item-icons" ng-if="animeitem.status===true"><i class="fa fa-check"></i></span>
+                <span class="item-icons green-text" ng-if="animeitem.status===true"><i class="fa fa-check"></i></span>
                 <span class="item-icons" ng-if="animeitem.disc===true"><i class="glyphicon glyphicon-cd"></i></span>
                 <span class="item-icons" ng-if="animeitem.reWatching===true"><i class="fa fa-repeat"></i></span>
             </p>

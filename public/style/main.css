@@ -697,16 +697,27 @@ a.menu-header-bar:hover,
 .favourite-content a.list-group-item:hover, .favourite-content .navbar-inverse .navbar-nav .active a.list-group-item:hover, .navbar-inverse .navbar-nav .active .favourite-content a.list-group-item:hover {
   background-color: #337ab7; }
 
-.history-list-item:nth-child(odd) p {
+.history-list-item:nth-child(even) p {
   background-color: #094B83; }
 
 .history-list-item h4 {
   border-bottom: 1px solid #FFAC3A; }
 .history-list-item p {
+  padding: 0 5px;
   margin: 4px 0; }
 
 .history-list-container {
   padding: 10px 15px; }
+  .history-list-container .history-list {
+    background-color: #337ab7; }
+
+.history-group-header {
+  padding-bottom: 9px;
+  margin: 20px 0;
+  border: 1px solid #7EB1DC;
+  background-color: #094B83;
+  padding: 10px;
+  width: 100%; }
 
 .stat-month-box {
   cursor: pointer;

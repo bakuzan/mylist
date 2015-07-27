@@ -35,7 +35,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             { number: '12', text: 'December' }
         ];
         $scope.showDetail = false; //show month detail.
-        $scope.statTagSortType = 'count'; //stat tag sort
+        $scope.statTagSortType = 'ratingWeighted'; //stat tag sort
         $scope.statTagSortReverse = true; //stat tag sort direction.
         $scope.statTagDetailSortType = 'count'; //stat tag detail sort
         $scope.statTagDetailSortReverse = true; //stat tag detail sort direction.
@@ -63,6 +63,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             } else if (view === 'Manga') {
                 $scope.items = Mangaitems.query();
             } else if (view === 'Character') {
+                $scope.statTagSortType = 'count'; //stat tag sort
                 $scope.items = Characters.query();
             }
         }

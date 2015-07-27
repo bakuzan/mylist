@@ -1,15 +1,20 @@
 .history-list-item:nth-child(odd) {
     p {
-        background-color: $grey-light;
+        background-color: $brand-secondary;
     }
 }
 
 .history-list-item {
     h4 {
-        border-bottom: 1px solid #000;
+        border-bottom: $accent-line;
     }
     
     p {
         margin: 4px 0;       
     }
+}
+
+.history-list-container {
+    @extend .tile-style;
+    padding: 10px 15px;
 }

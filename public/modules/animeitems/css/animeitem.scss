@@ -14,53 +14,6 @@
     padding-bottom: 20px;
 }
 
-.stat-month-box {
-    cursor: pointer;
-    background-color: $blue-rich;
-}
-
-.stat-month-box:hover {
-    cursor: pointer;
-    border-style: solid;
-    border-width: 1px;
-    border-color: #000;
-}
-
-.stat-rating-panel {
-    margin-top: 10px;
-}
-
-.stat-history {
-    margin-bottom: 10px;
-}
-
-.stat-header {
-    border-bottom: $grey-line;
-    margin-bottom: 10px;
-}
-
-.progress-container {
-    height: 100%;
-}
-
-.progress-bar-placement {
-    margin-bottom: 10px;
-}
-
-.stat-summary-info {
-    margin-top: -25px;
-}
-
-.related-media {
-    padding-top: 25px;
-    font-size: small;
-}
-
-.stat-tag-panel {
-    margin-top: 10px;
-/*    border-top: 1px solid #eee;*/
-}
-
 .view-item-detail {
     margin-top: 5px;
     padding-top: 5px;
@@ -82,34 +35,6 @@
     margin: 10px 0;
 }
 
-.stat-header-label-container {
-    display: inline-flex;
-}
-
-.stat-header-label,
-.stat-header-label.ng-valid.ng-dirty {
-    font-size: 24px;
-    padding: 5px;
-    border: 1px solid #FFF;
-    margin: 10px 5px;
-}
-
-.stat-header-label.active,
-.stat-header-label.ng-valid.ng-dirty.active,
-.stat-header-label:focus {
-    color: $brand-accent;
-    background-color: $brand-primary;
-}
-
-.stat-season-header {
-    width: 24%;
-}
-
-.stat-overview {
-    text-align: center;
-    font-size: 18px;
-    font-weight: bold;
-}
 
 .blue-text {
     color: $blue;
@@ -164,9 +89,6 @@
     padding: 0 20px;
 }
 
-.stat-month-header {
-    width: 8%
-}
 
 .loading-image {
     display: block;

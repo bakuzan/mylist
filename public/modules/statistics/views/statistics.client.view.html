@@ -87,8 +87,11 @@
                             <th class="col-lg-1 col-md-1 col-sm-1 text-right mb"><span ng-if="i!==0">{{i}}</span><span ng-if="i===0">-</span></th>
                             <td class="col-lg-11 col-md-11 col-sm-11 col-xs-11 stat-rating-box">
                                 <div class="progress-container">
-                                    <progressbar class="progress-bar-placement" ng-if="i!==0" max="100" value="((items | filter: { rating: i }:true).length / maxCount)*100" popover="{{(items | filter: { rating: i }:true).length}} entries rated {{i}}." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">{{((items | filter: { rating: i }:true).length / maxCount)*100 | number: 2}}%</progressbar>
-                                    <progressbar class="progress-bar-placement" ng-if="i===0" max="100" value="((items | filter: { rating: i }:true).length / maxCount)*100" popover="{{(items | filter: { rating: i }:true).length}} entries unrated." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">{{((items | filter: { rating: i }:true).length / maxCount)*100 | number: 2}}%</progressbar>
+                                    <div class="progress progress-bar-placement" ng-if="i!==0" max="100" value="((items | filter: { rating: i }:true).length / maxCount)*100" popover="{{(items | filter: { rating: i }:true).length}} entries rated {{i}}." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">
+                                        <div class="bar current-progress" style="width: {{((items | filter: { rating: i }:true).length / maxCount)*100 }}%">{{((items | filter: { rating: i }:true).length / maxCount)*100 | number: 2}}%</div>
+                                    </div>
+                                    <div class="progress progress-bar-placement" ng-if="i===0" max="100" value="((items | filter: { rating: i }:true).length / maxCount)*100" popover="{{(items | filter: { rating: i }:true).length}} entries unrated." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">
+                                        <div class="bar current-progress" style="width: {{((items | filter: { rating: i }:true).length / maxCount)*100 }}%">{{((items | filter: { rating: i }:true).length / maxCount)*100 | number: 2}}%</div></div>
                                 </div>
                             </td>
                         </tr>

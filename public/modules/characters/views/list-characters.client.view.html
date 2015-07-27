@@ -9,7 +9,7 @@
                 <label class="btn btn-primary" ng-model="isList" btn-radio="'list'">List</label>
                 <label class="btn btn-primary" ng-model="isList" btn-radio="'carousel'">Carousel</label>
             </div>
-        <div class="paging-controls col-lg-12 col-md-12 col-sm-12">
+        <div class="paging-controls col-lg-12 col-md-12 col-sm-12" ng-hide="isList === 'carousel'">
             <button class="btn btn-success btn-ends" ng-click="currentPage=0">First</button>
             <button class="btn btn-primary" ng-disabled="currentPage <= 0" ng-click="currentPage=currentPage-1">
                 Previous

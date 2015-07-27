@@ -125,3 +125,11 @@
         background-color: $brand-secondary;   
     }
 }
+
+.current-progress {
+    color: $brand-secondary;
+    background-color: $brand-accent-alter;
+    @include background-image($brand-accent-alter, $brand-accent);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFCA7500',endColorstr='#FFFFAC3A',GradientType=0);
+}

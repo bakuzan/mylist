@@ -25,13 +25,16 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
         
         //user-selected style options/defaults.
         $scope.styles = [
-            { name: 'Blue', url: 'main.css' },
-            { name: 'Red', url: 'main-red.css' },
-            { name: 'Purple', url: 'main-purple.css' }
+            { name: 'Blue', url: 'style/main.css' },
+            { name: 'Red', url: 'style/main-red.css' },
+            { name: 'Purple', url: 'style/main-purple.css' }
         ];
         
         $scope.changeTheme = function() {
-            localStorage.setItem('theme', JSON.stringify($scope.theme));            
+            localStorage.setItem('theme', JSON.stringify($scope.theme));
+            var storedValue = localStorage.getItem('theme'),
+                link = document.getElementById('app-theme');
+                link.href = storedValue.substr(1, storedValue.lastIndexOf("\"") - 1); //remove quotes for whatever reason.
         };
         
 	}

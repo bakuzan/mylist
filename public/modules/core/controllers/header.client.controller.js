@@ -18,6 +18,21 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
         $scope.isActive = function (viewLocation) { 
             return viewLocation === $location.path();
         };
-
+        
+        $scope.saved = localStorage.getItem('theme');
+        $scope.theme = (localStorage.getItem('theme')!==null) ? JSON.parse($scope.saved) : 'main.css';
+        localStorage.setItem('theme', JSON.stringify($scope.theme));
+        
+        //user-selected style options/defaults.
+        $scope.styles = [
+            { name: 'Blue', url: 'main.css' },
+            { name: 'Red', url: 'main-red.css' },
+            { name: 'Purple', url: 'main-purple.css' }
+        ];
+        
+        $scope.changeTheme = function() {
+            localStorage.setItem('theme', JSON.stringify($scope.theme));            
+        };
+        
 	}
 ]);

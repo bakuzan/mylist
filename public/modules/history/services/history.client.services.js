@@ -136,8 +136,6 @@ angular.module('history').service('HistoryService', ['moment', function(moment) 
                     } else {
                         groupBuilder.fourWeek.count++;
                     }
-                } else {
-//                    console.log(itemDate);
                 }
             });
 //        console.log(groupBuilder);

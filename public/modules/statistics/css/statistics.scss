@@ -12,11 +12,14 @@
 
 .stat-rating-panel {
     @extend .tile-style;
-    margin-top: 10px;
+}
+
+.stat-history-panel {
+    @extend .tile-style;
+    margin-bottom: 10px;
 }
 
 .stat-history {
-    @extend .tile-style;
     padding-bottom: 10px;
     margin-bottom: 10px;
 }
@@ -45,12 +48,11 @@
 
 .stat-tag-panel {
     @extend .tile-style;
-    margin-top: 10px;
-/*    border-top: 1px solid #eee;*/
+    margin-bottom: 10px;
 }
 .stat-tag-detail {
     @extend .tile-style;
-    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 
@@ -93,17 +95,17 @@
     font-size: 18px;
     font-weight: bold;
     padding: 5px 0;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 
 
 .stat-media-panel {
     @extend .tile-style;
-    margin-top: 10px;
+    margin-bottom: 10px;
 }
 .stat-media-detail {
     @extend .tile-style;
-    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .stat-table-row:hover {
@@ -117,7 +119,7 @@
     vertical-align: middle;
     height: 35px;
     padding: 5px 0;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 
 .stat-tag-table, .stat-media-table, .stat-tag-detail-table {
@@ -132,4 +134,9 @@
     @include background-image($brand-accent-alter, $brand-accent);
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFCA7500',endColorstr='#FFFFAC3A',GradientType=0);
+}
+
+.stat-month-detail {
+    @extend .tile-style;
+    margin-bottom: 10px;
 }

@@ -1,11 +1,11 @@
 .dark-bordered-font {
-    color: #ffffff;
+    color: $brand-accent;
     font-size: 12px;
     font-weight: 500;
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 .dark-bordered-font-heading {
-    color: #ffffff;
+    color: $brand-accent;
     font-size: 16px;
     font-weight: 500;
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
@@ -13,24 +13,15 @@
 
 .tag-bubble {
     border-radius: 10px;
-    border: 2px solid #ADD8E6;
+    border: 2px solid $brand-secondary;
     padding: 10px;
-    color: #777;
+    color: $brand-accent;
     font-weight: 600;
     font-size: 12px;
     letter-spacing: 0.5px;
-    background-color: #F0F8FF;
+    background-color: $brand-primary;
 }
 
-.stat-media-panel {
-    margin-top: 10px;
-    border-top: 1px solid #eee;
-}
-
-.stat-table-row:hover {
-    background-color: #337ab7;
-    color: #FFFFFF;
-}
 
 .paging-controls {
     text-align: center;
@@ -47,4 +38,13 @@
 
 .character-expanded {
     height: auto;
+}
+
+.view-controls {
+    @extend .paging-controls;
+    
+    label {
+        max-width: 45%;
+        min-width: 25%;
+    }
 }

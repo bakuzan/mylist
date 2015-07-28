@@ -1,11 +1,12 @@
 <section data-ng-controller="MangaitemsController" data-ng-init="find()" data-ng-show="authentication.user">
     <span keycuts></span>
-    <div class="page-header">
+    <div class="fixed-header">
         <h1>Manga list</h1>
     </div>
-    <div class="form-group col-lg-4 col-md-4 col-sm-4">
+    <div class="container">
+        <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container">
         <div class="paging-controls col-lg-12 col-md-12 col-sm-12">
-            <button class="btn btn-success" ng-click="currentPage=0">First</button>
+            <button class="btn btn-success btn-ends" ng-click="currentPage=0">First</button>
             <button class="btn btn-primary" ng-disabled="currentPage <= 0" ng-click="currentPage=currentPage-1">
                 Previous
             </button>
@@ -13,7 +14,7 @@
             <button class="btn btn-primary" ng-disabled="currentPage >= showingCount/pageSize - 1" ng-click="currentPage=currentPage+1">
                 Next
             </button>
-            <button class="btn btn-success" ng-click="currentPage=pageCount-1">Last</button>
+            <button class="btn btn-success btn-ends" ng-click="currentPage=pageCount-1">Last</button>
         </div>
        <div class="input-group">
             <div class="input-group-addon">
@@ -27,11 +28,11 @@
             </div>
            <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags" typeahead="stat.tag for stat in statTags | filter: $viewValue" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
 	   </div>
-       <div class="input-group mt" ng-hide="searchTags===undefined || searchTags==='' || searchTags===null">
+       <div class="input-group mt search-tag-list-container" ng-hide="searchTags===undefined || searchTags==='' || searchTags===null">
            <ul class="tag-list col-lg-12 col-md-12">
                 <li class="tag-bubble col-lg-12 col-md-12" ng-repeat="tag in tagsForFilter track by $index">
                     {{tag}}
-                    <a class="clickable pull-right" aria-hidden="true" delete-search-tag="{{tag}}"><i class="fa fa-trash-o" style="color: red;"></i></a>
+                    <a class="bin-style clickable pull-right" aria-hidden="true" delete-search-tag="{{tag}}"><i class="fa fa-trash-o"></i></a>
                 </li>
             </ul>
        </div>
@@ -90,9 +91,9 @@
             <div class="input-group-addon clickable" data-ng-click="ratingLevel=undefined">
                 <i class="fa fa-star"></i>
             </div>
-               <rating class="form-control rating clickable" data-ng-model="ratingLevel" style="color: blue;" readonly="false" max="maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></rating>
+               <rating class="form-control rating-stars clickable" data-ng-model="ratingLevel" readonly="false" max="maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></rating>
             <div class="input-group-addon">
-                <span data-ng-show="overStar!=null" class="label" ng-class="{'label-warning': percent<40, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}">{{percent}}%</span>
+                <span data-ng-show="overStar!=null" class="label rating-label" ng-class="{'label-warning': percent<40, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}">{{percent}}%</span>
             </div>
         </div>
         <div class="input-group mt" data-ng-show="areTagless">
@@ -105,7 +106,9 @@
             <input class="form-control" type="checkbox" data-ng-model="taglessItem">
         </div>
     </div>
-    <div class="list-group col-lg-8 col-md-8 col-sm-8">
+        <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
+        <div class="col-lg-8 col-md-6 col-sm-6 item-list-container">
+            <div class="list-group col-lg-12 col-md-12 col-sm-12">
         <div data-ng-repeat="mangaitem in mangaitems | orderBy: sortType:sortReverse | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" list_Back="{{trustAsResourceUrl(mangaitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12" ng-hide="loading(mangaitem.title)">
 			<div class="view-item-top clickable" ng-click="viewItem===mangaitem ? viewItem='' : viewItem=mangaitem">
             <small class="list-group-item-text">
@@ -116,7 +119,7 @@
             <p class="list-group-item-text">
                 <span data-ng-bind="mangaitem.chapters"></span><span ng-if="mangaitem.finalChapter!==0">/{{mangaitem.finalChapter}}</span> Chapters, 
                 <span data-ng-bind="mangaitem.volumes"></span><span ng-if="mangaitem.finalVolume!==0">/{{mangaitem.finalVolume}}</span> Volumes
-                <span class="item-icons" ng-if="mangaitem.status===true"><i class="fa fa-check"></i></span>
+                <span class="item-icons green-text" ng-if="mangaitem.status===true"><i class="fa fa-check"></i></span>
                 <span class="item-icons" ng-if="mangaitem.hardcopy===true"><i class="fa fa-book"></i></span>
                 <span class="item-icons" ng-if="mangaitem.reReading===true"><i class="fa fa-repeat"></i></span>
             </p>
@@ -125,7 +128,7 @@
                 <div class="item-detail">
                     <p>
                         <em class="text-muted" data-ng-if="mangaitem.rating==0">No rating.</em>
-                        <rating data-ng-if="mangaitem.rating!=0" data-ng-model="mangaitem.rating" style="color: blue; font-size: 14px;" readonly="true" max="maxRating" id="rating" name="rating"></rating>
+                        <rating data-ng-if="mangaitem.rating!=0" data-ng-model="mangaitem.rating" class="list-item-rating-stars" readonly="true" max="maxRating" id="rating" name="rating"></rating>
                     </p>
                     <p ng-if="mangaitem.reReadCount!=0">{{mangaitem.reReadCount}} re-reads.</p>
                 </div>
@@ -157,6 +160,8 @@
                     </div>
                 </div>
             </div><!-- VIEW ITEM END-->
+        </div>
+    </div>
         </div>
     </div>
     <section class="loading-image" data-ng-if="isLoading"></section>

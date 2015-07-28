@@ -16,13 +16,18 @@
 /*/ ADDED /*/
 
 .loginBG {
-    background-color: #FFF;
+//    background-color: #FFF;
+    background-color: $brand-secondary;
+    color: $brand-accent;
 }
+
 html {
-    min-height: 100vh;
+    height: 100%;
+        
     body {
-        background-color: #222;
-        min-height: 90vh;
+        position: relative;
+        background-color: $brand-primary;
+        min-height: 94%;
     }
 }
 
@@ -33,7 +38,42 @@ html {
 }
 
 footer {
+    position: absolute;
+    bottom: 0;
     width: 100%;
     height: 100px;
     padding-bottom: 20px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: $brand-accent-alter;
+}
+
+footer {
+    a {
+        color: $brand-accent;
+    }
+    hr {
+        border-color: $brand-accent-alter;
+    }
+}
+
+.input-group-addon {
+    color: $brand-accent;
+    background-color: $brand-secondary;
+    border: $brand-border;
+}
+
+.form-control {
+    background-color: $brand-secondary;
+    color: $brand-accent;
+    border-color: $brand-tertiary;
+}
+.form-control[disabled] {
+    background-color: $brand-tertiary;
+    color: $brand-accent-alter;
+}
+.form-control[readonly] {
+    background-color: $brand-secondary;
 }

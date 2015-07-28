@@ -1364,8 +1364,8 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 ]);
 'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus',
-	function($scope, Authentication, Menus) {
+angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus', '$location',
+	function($scope, Authentication, Menus, $location) {
 		$scope.authentication = Authentication;
 		$scope.isCollapsed = false;
 		$scope.menu = Menus.getMenu('topbar');
@@ -1378,6 +1378,10 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
 		$scope.$on('$stateChangeSuccess', function() {
 			$scope.isCollapsed = false;
 		});
+        
+        $scope.isActive = function (viewLocation) { 
+            return viewLocation === $location.path();
+        };
 
 	}
 ]);
@@ -1632,6 +1636,18 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
 
 	}
 ]);
+'use strict';
+
+angular.module('core').directive('myProgress', function() {
+  return function(scope, element, attrs) {
+  scope.$watch(attrs.myProgress, function(val) {
+      
+      var type = 'checklist-progress';
+      
+       element.html('<div class="' + type + '" style="width: ' + val + '%;height: 100%"></div>');
+  });
+  };
+});
 'use strict';
 
 angular.module('core').filter('dayFilter', function() {
@@ -2170,7 +2186,7 @@ angular.module('history').service('HistoryService', ['moment', function(moment) 
                 var cutoff = moment(history.date).startOf('day'),
                     diff = today.diff(cutoff, 'days');
 //                console.log(diff);
-                if (diff < 28) {
+                if (diff < 29) {
                     itemHistory.push({ date: history.date, value: history.value, title: item.title, id: item._id });
                 }
             });
@@ -2198,6 +2214,38 @@ angular.module('history').service('HistoryService', ['moment', function(moment) 
         }
     };
     
+    // getting mondays and sundays for this, last, two and three weeks ago.
+    this.getEndsOfWeek = function() {
+        var self = this, endsOfWeek = [], thisMonday = self.weekBeginning(), thisSunday = self.weekEnding();
+        endsOfWeek = { 
+            mondays: [ thisMonday, self.getSetDaysAgo(thisMonday, 7), self.getSetDaysAgo(thisMonday, 14), self.getSetDaysAgo(thisMonday, 21), self.getSetDaysAgo(thisMonday, 28) ],
+            sundays: [ thisSunday, self.getSetDaysAgo(thisSunday, 7), self.getSetDaysAgo(thisSunday, 14), self.getSetDaysAgo(thisSunday, 21), self.getSetDaysAgo(thisSunday, 28) ]
+        };
+        return endsOfWeek;        
+    };
+    //get 'daysAgo' days ago from 'thisEnd' date.
+    this.getSetDaysAgo = function(thisEnd, daysAgo) {
+        var newDate = moment(thisEnd).subtract(daysAgo, 'days');
+        return newDate;
+    };
+    //get 'this' monday.
+    this.weekBeginning = function() {
+        var date = new Date(),
+            day = date.getDay(),
+            diff = date.getDate() - day + (day === 0 ? -6:1),
+            temp = new Date(),
+            wkBeg = new Date(temp.setDate(diff));
+        return moment(wkBeg.toISOString()).startOf('day');
+    };
+    //get 'this' sunday.
+    this.weekEnding = function() {
+        var date = new Date(),
+            day = date.getDay(),
+            diff = date.getDate() - day + (day === 0 ? 0:7),
+            temp = new Date(),
+            wkEnd = new Date(temp.setDate(diff));
+        return moment(wkEnd.toISOString()).endOf('day');
+    };
     this.buildGroups = function(items) {
         var groupBuilder = {
                     today: [],
@@ -2205,9 +2253,11 @@ angular.module('history').service('HistoryService', ['moment', function(moment) 
                     thisWeek: [],
                     lastWeek: [],
                     twoWeek: [],
-                    threeWeek: []
+                    threeWeek: [],
+                    fourWeek: []
                 },
-            groupCheck = [];
+            groupCheck = [], self = this, endsOfWeek = self.getEndsOfWeek(), mondays = endsOfWeek.mondays, sundays = endsOfWeek.sundays;
+            console.log(mondays, sundays);
             angular.forEach(items, function(item) {
                 var today = moment(new Date()).startOf('day'),
                     itemDate = moment(item.date).startOf('day'),
@@ -2227,35 +2277,42 @@ angular.module('history').service('HistoryService', ['moment', function(moment) 
                     } else {
                         groupBuilder.yesterday.count++;
                     }
-                } else if (1 < diff && diff < 7) {
+                } else if (mondays[0] <= itemDate && itemDate <= sundays[0]) {
                     if (groupBuilder.thisWeek.length === 0) {
                         groupBuilder.thisWeek.push(item);
                         groupBuilder.thisWeek.count = 1;
                     } else {
                         groupBuilder.thisWeek.count++;
                     }
-                } else if (6 < diff && diff < 14) {
+                } else if (mondays[1] <= itemDate && itemDate <= sundays[1]) {
                     if (groupBuilder.lastWeek.length === 0) {
                         groupBuilder.lastWeek.push(item);
                         groupBuilder.lastWeek.count = 1;
                     } else {
                         groupBuilder.lastWeek.count++;
                     }
-                } else if (13 < diff && diff < 21) {
+                } else if (mondays[2] <= itemDate && itemDate <= sundays[2]) {
                     if (groupBuilder.twoWeek.length === 0) {
                         groupBuilder.twoWeek.push(item);
                         groupBuilder.twoWeek.count = 1;
                     } else {
                         groupBuilder.twoWeek.count++;
                     }
-                } else if (20 < diff && diff < 28) {
+                } else if (mondays[3] <= itemDate && itemDate <= sundays[3]) {
                     if (groupBuilder.threeWeek.length === 0) {
                         groupBuilder.threeWeek.push(item);
                         groupBuilder.threeWeek.count = 1;
                     } else {
                         groupBuilder.threeWeek.count++;
                     }
-                } 
+                } else if (mondays[4] <= itemDate && itemDate <= sundays[4]) {
+                    if (groupBuilder.fourWeek.length === 0) {
+                        groupBuilder.fourWeek.push(item);
+                        groupBuilder.fourWeek.count = 1;
+                    } else {
+                        groupBuilder.fourWeek.count++;
+                    }
+                }
             });
 //        console.log(groupBuilder);
         return groupBuilder;
@@ -2275,6 +2332,8 @@ angular.module('history').service('HistoryService', ['moment', function(moment) 
                 return 'Two weeks ago (' + groupBuilder.twoWeek.count + ')';
             } else if (groupBuilder.threeWeek.indexOf(item) > -1) {
                 return 'Three weeks ago (' + groupBuilder.threeWeek.count + ')';
+            } else if (groupBuilder.fourWeek.indexOf(item) > -1) {
+                return 'Four weeks ago (' + groupBuilder.fourWeek.count + ')';
             } else {
                 return null;
             }
@@ -2664,7 +2723,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             { number: '12', text: 'December' }
         ];
         $scope.showDetail = false; //show month detail.
-        $scope.statTagSortType = 'count'; //stat tag sort
+        $scope.statTagSortType = 'ratingWeighted'; //stat tag sort
         $scope.statTagSortReverse = true; //stat tag sort direction.
         $scope.statTagDetailSortType = 'count'; //stat tag detail sort
         $scope.statTagDetailSortReverse = true; //stat tag detail sort direction.
@@ -2692,6 +2751,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             } else if (view === 'Manga') {
                 $scope.items = Mangaitems.query();
             } else if (view === 'Character') {
+                $scope.statTagSortType = 'count'; //stat tag sort
                 $scope.items = Characters.query();
             }
         }
@@ -2706,6 +2766,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 $scope.historicalView = 'month';
                 $scope.statSearch = '';
                 $scope.showDetail = false;
+                $scope.statTags = [];
             }
         });
         

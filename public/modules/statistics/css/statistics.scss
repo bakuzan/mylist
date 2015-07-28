@@ -1,0 +1,142 @@
+.stat-month-box {
+    cursor: pointer;
+    background-color: $brand-accent-alter;
+}
+
+.stat-month-box:hover {
+    cursor: pointer;
+    border-style: solid;
+    border-width: 1px;
+    border-color: $brand-tertiary;
+}
+
+.stat-rating-panel {
+    @extend .tile-style;
+}
+
+.stat-history-panel {
+    @extend .tile-style;
+    margin-bottom: 10px;
+}
+
+.stat-history {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.stat-header {
+    border-bottom: $accent-line;
+    margin-bottom: 10px;
+}
+
+.progress-container {
+    height: 100%;
+}
+
+.progress-bar-placement {
+    margin-bottom: 10px;
+}
+
+.stat-summary-info {
+    margin-top: -25px;
+}
+
+.related-media {
+    padding-top: 25px;
+    font-size: small;
+}
+
+.stat-tag-panel {
+    @extend .tile-style;
+    margin-bottom: 10px;
+}
+.stat-tag-detail {
+    @extend .tile-style;
+    margin-bottom: 10px;
+}
+
+
+.stat-header-label-container {
+    display: inline-flex;
+}
+
+.stat-header-label,
+.stat-header-label.ng-valid.ng-dirty {
+    font-size: 24px;
+    padding: 5px;
+    border: $brand-border;
+    margin: 10px 5px;
+}
+
+.stat-header-label.active,
+.stat-header-label.ng-valid.ng-dirty.active,
+.stat-header-label:focus {
+    color: $brand-accent;
+    background-color: $brand-secondary;
+    border-color: $brand-primary;
+}
+
+.stat-header-label:hover {
+    color: $brand-accent-alter;
+}
+
+
+.stat-month-header {
+    width: 8%
+}
+
+.stat-season-header {
+    width: 24%;
+}
+
+.stat-overview {
+    @extend .tile-style;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 5px 0;
+    margin-bottom: 10px;
+}
+
+
+.stat-media-panel {
+    @extend .tile-style;
+    margin-bottom: 10px;
+}
+.stat-media-detail {
+    @extend .tile-style;
+    margin-bottom: 10px;
+}
+
+.stat-table-row:hover {
+    background-color: $brand-secondary;
+    color: $brand-accent-alter;
+}
+
+.stat-gender-panel {
+    @extend .tile-style;
+    text-align: center;
+    vertical-align: middle;
+    height: 35px;
+    padding: 5px 0;
+    margin-bottom: 10px;
+}
+
+.stat-tag-table, .stat-media-table, .stat-tag-detail-table {
+    thead {
+        background-color: $brand-secondary;   
+    }
+}
+
+.current-progress {
+    color: $brand-secondary;
+    background-color: $brand-accent-alter;
+    @include background-image($brand-accent-alter, $brand-accent);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFCA7500',endColorstr='#FFFFAC3A',GradientType=0);
+}
+
+.stat-month-detail {
+    @extend .tile-style;
+    margin-bottom: 10px;
+}

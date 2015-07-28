@@ -2,57 +2,16 @@
 	font-size: 14px;
 }
 
+
+.list-group-item {
+    background-color: $brand-secondary;
+    border-color: $brand-tertiary;
+}
+
 .view-buttons {
     margin-bottom: 25px;
     margin-top: -25px;
     padding-bottom: 20px;
-}
-
-.stat-month-box {
-    cursor: pointer;
-    background-color: $blue-rich;
-}
-
-.stat-month-box:hover {
-    cursor: pointer;
-    border-style: solid;
-    border-width: 1px;
-    border-color: #000;
-}
-
-.stat-rating-panel {
-    margin-top: 10px;
-}
-
-.stat-history {
-    margin-bottom: 10px;
-}
-
-.stat-header {
-    border-bottom: $grey-line;
-    margin-bottom: 10px;
-}
-
-.progress-container {
-    height: 100%;
-}
-
-.progress-bar-placement {
-    margin-bottom: 10px;
-}
-
-.stat-summary-info {
-    margin-top: -25px;
-}
-
-.related-media {
-    padding-top: 25px;
-    font-size: small;
-}
-
-.stat-tag-panel {
-    margin-top: 10px;
-/*    border-top: 1px solid #eee;*/
 }
 
 .view-item-detail {
@@ -76,34 +35,6 @@
     margin: 10px 0;
 }
 
-.stat-header-label-container {
-    display: inline-flex;
-}
-
-.stat-header-label,
-.stat-header-label.ng-valid.ng-dirty {
-    font-size: 24px;
-    padding: 5px;
-    border: 1px solid #FFF;
-    margin: 10px 5px;
-}
-
-.stat-header-label.active,
-.stat-header-label.ng-valid.ng-dirty.active,
-.stat-header-label:focus {
-    color: #FFF;
-    background-color: $blue;
-}
-
-.stat-season-header {
-    width: 24%;
-}
-
-.stat-overview {
-    text-align: center;
-    font-size: 18px;
-    font-weight: bold;
-}
 
 .blue-text {
     color: $blue;
@@ -123,18 +54,24 @@
   left: 20vw;
   width: 60vw;
   height: 50vh;
-  background-color: #FFF;
+  background-color: $brand-primary;
   align-content: center;
-  border: 5px solid $blue;
+  border: 5px solid $brand-secondary;
   margin-top: 10px;
   overflow-y: scroll;
-  z-index: 200;
+  z-index: 750;
+    
+    div.item-history:nth-child(even) {
+        background-color: $brand-secondary;
+        width: 95%;
+    }
+    
 }
 
 .close-button {
   position: absolute;
   top: 6px;
-  right: 15px;
+  right: 1%;
   padding: 5px 10px;
   margin: 20px 0;
   color: $red;
@@ -152,16 +89,13 @@
     padding: 0 20px;
 }
 
-.stat-month-header {
-    width: 8%
-}
 
 .loading-image {
     display: block;
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 100;
+    z-index: 1000;
     width: 100%;
     height: 100%;
     background-color: #C0C0C0;
@@ -169,4 +103,58 @@
     background-image: url("/modules/core/img/loaders/info-loader.gif");
     background-repeat: no-repeat;
     background-position: center;
+}
+
+.item-list-container {
+    @extend .tile-style;
+    padding: 10px;
+    margin: 40px 10px;
+}
+
+.item-placeholder-container {
+    min-height: 600px;
+    margin-top: 40px;
+}
+
+.item-filter-container {
+    @extend .tile-style;
+    @extend .item-placeholder-container;
+    padding: 20px 10px;
+    margin-top: 0;
+    margin-left: -10px;
+    z-index: 500;
+    position: fixed;
+    top: 120px;
+    left: 50px;
+    max-width: 350px;
+    min-width: 200px;
+}
+
+.search-tag-list-container {
+    min-width: 180px;
+}
+
+@media (min-width: $break-small) and (max-width: 1015px) {
+    .btn-ends {
+        display: none;
+    }
+
+}
+
+.rating-stars {
+    color: $brand-accent;
+    white-space: nowrap;
+}
+.list-item-rating-stars {
+    @extend .rating-stars;
+    font-size: 14px;
+}
+.view-item-rating-stars {
+    @extend .rating-stars;
+    font-size: 16px;
+}
+@media (min-width: $break-small) and (max-width: 875px) {
+    .rating-label {
+        display: none;
+    }
 }

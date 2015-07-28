@@ -23,9 +23,35 @@
 				<a ng-switch-default href="/#!/{{item.link}}" data-ng-bind="item.title"></a>
 			</li>
 		</ul>
-        <a href="/#!/favourites" class="navbar-nav navbar-favourites" data-ng-show="authentication.user"><i class="fa fa-star"></i> Favourites</a>
-        <a href="/#!/history" class="navbar-nav navbar-favourites" data-ng-show="authentication.user"><i class="fa fa-clock-o"></i> History</a>
-        <a href="/#!/statistics" class="navbar-nav navbar-favourites" data-ng-show="authentication.user"><i class="fa fa-bar-chart"></i> Statistics</a>
+        <ul class="additional-navbar-links nav navbar-nav">
+            <li ng-class="{ active: isActive('/favourites')}">
+                <a href="/#!/favourites" class="navbar-link" data-ng-show="authentication.user"><i class="fa fa-star"></i> Favourites</a>
+            </li>
+            <li ng-class="{ active: isActive('/history')}">
+                <a href="/#!/history" class="navbar-link" data-ng-show="authentication.user"><i class="fa fa-clock-o"></i> History</a>
+            </li>
+            <li ng-class="{ active: isActive('/statistics')}">
+                <a href="/#!/statistics" class="navbar-link" data-ng-show="authentication.user"><i class="fa fa-bar-chart"></i> Statistics</a>
+            </li>
+        </ul>
+        <ul class="additional-navbar-links-dropdown nav navbar-nav">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <span>More </span><b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li ng-class="{ active: isActive('/favourites')}">
+                        <a href="/#!/favourites" class="navbar-link" data-ng-show="authentication.user"><i class="fa fa-star"></i> Favourites</a>
+                    </li>
+                    <li ng-class="{ active: isActive('/history')}">
+                        <a href="/#!/history" class="navbar-link" data-ng-show="authentication.user"><i class="fa fa-clock-o"></i> History</a>
+                    </li>
+                    <li ng-class="{ active: isActive('/statistics')}">
+                        <a href="/#!/statistics" class="navbar-link" data-ng-show="authentication.user"><i class="fa fa-bar-chart"></i> Statistics</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
 		<ul class="nav navbar-nav navbar-right" data-ng-hide="authentication.user">
 			<!--<li ui-route="/signup" ng-class="{active: $uiRoute}">
 				<a href="/#!/signup">Sign Up</a>

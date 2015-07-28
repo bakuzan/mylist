@@ -1,5 +1,6 @@
 .content {
 	margin-top: 50px;
+    padding-bottom: 100px;
 }
 .undecorated-link:hover {
 	text-decoration: none;
@@ -27,23 +28,191 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
     cursor: default;
 }
 
-.navbar-favourites {
-    color: #9d9d9d;
-    padding: 15px 15px;
+a {
+    color: $brand-accent;
 }
-.navbar-favourites:visited {
-    color: #9d9d9d;
-    text-decoration: none;
+a:focus {
+    color: $brand-accent-alter;
 }
-.navbar-favourites:focus {
-    color: #ffffff;
-    text-decoration: none;
-}
-.navbar-favourites:hover  {
-    color: #ffffff;
-    text-decoration: none;
+a:hover {
+    @extend a:focus;
 }
 
+.navbar-inverse {
+    background-image: none;
+    background-color: $brand-primary;
+    border-color: $brand-secondary;
+}
+
+.navbar-inverse .navbar-toggle {
+    @extend .navbar-inverse;
+}
+.navbar-inverse .navbar-toggle:focus {
+    @extend .navbar-inverse;
+    background-color: $brand-tertiary;
+}
+.navbar-inverse .navbar-toggle:hover {
+    @extend .navbar-inverse;
+    background-color: $brand-tertiary;
+}
+
+.navbar-inverse .navbar-brand {
+    color: $brand-accent;
+}
+.navbar-inverse .navbar-brand:focus {
+    color: $brand-accent-alter;
+}
+.navbar-inverse .navbar-brand:hover {
+    color: $brand-accent-alter;
+}
+
+.navbar-inverse .navbar-nav {
+    li {
+        a {
+            color: $brand-accent;
+        }
+        a:focus {
+            color: $brand-accent-alter;
+        }
+        a:hover {
+            @extend a:focus;
+        }
+    }
+    .active {
+        a {
+           background-image: none;
+           background-color: none;
+           color: $brand-accent-alter;
+        }
+        a:focus {
+            @extend a;
+        }
+        a:hover {
+            @extend a;
+        }
+    }
+    li.open {
+        a.dropdown-toggle {
+            background-image: none;
+            background-color: $brand-secondary;
+            color: $brand-accent-alter;
+            @media (max-width: $break-small) {
+                color: $brand-accent-alter;
+            }
+        }
+        a.dropdown-toggle:focus {
+            @extend a.dropdown-toggle;
+            color: $brand-accent-alter;
+            @media (max-width: $break-small) {
+                color: $brand-accent-alter;
+            }
+        }
+        a.dropdown-toggle:hover {
+            @extend a.dropdown-toggle:focus;
+            color: $brand-accent-alter;
+            @media (max-width: $break-small) {
+                color: $brand-accent-alter;
+            }
+        }
+    }
+    li.active {
+        a.dropdown-toggle {
+            background-image: none;
+            background-color: $brand-secondary;
+            color: $brand-accent-alter;
+            @media (max-width: $break-small) {
+                color: $brand-accent-alter;
+            }
+        }
+        a.dropdown-toggle:focus {
+            @extend a.dropdown-toggle;
+            color: $brand-accent-alter;
+            @media (max-width: $break-small) {
+                color: $brand-accent-alter;
+            }
+        }
+        a.dropdown-toggle:hover {
+            @extend a.dropdown-toggle:focus;
+        }
+    }
+}
+//Does the items within the navbar menu dropdowns.
+.navbar-inverse .navbar-nav .open .dropdown-menu {
+    li {
+        a {
+            background-image: none;
+            color: $brand-accent;
+        }
+        a:focus {
+            background-color: $brand-secondary;
+            color: $brand-accent-alter;
+        }
+        a:hover {
+            @extend a:focus;
+        }
+    }
+}
+//Does the 'single links' on the end and handles them becoming a dropdown on small screens.
+nav {
+     .additional-navbar-links {
+            @media (max-width: $break-medium) {
+                display: none;
+            }
+       
+            .navbar-link {
+                color: $brand-accent;
+                padding: 15px 15px;
+            }
+            .navbar-link:visited {
+                @extend .navbar-link;
+                text-decoration: none;
+            }
+            .navbar-link:focus {
+                color: $brand-accent-alter;
+                text-decoration: none;
+            }   
+            .navbar-link:hover  {
+                @extend .navbar-link:focus;
+            }
+            .navbar-link:active {
+                background-color: $brand-secondary;
+                color: $brand-accent;
+            }
+            li.active {
+                .navbar-link {
+                    background-color: $brand-secondary;
+                    color: $brand-accent;
+                }
+                .navbar-link:visited {
+                    @extend .navbar-link;
+                }
+                .navbar-link:focus {
+                    @extend .navbar-link;
+                }   
+                .navbar-link:hover  {
+                    @extend .navbar-link;
+                }
+            }
+     }
+     .additional-navbar-links-dropdown {
+            display: none;
+            
+            @media (max-width: $break-medium) {
+                    display: block;
+            }
+     }
+}
+
+.primary-text {
+    color: $brand-primary;
+}
+.accent-text {
+    color: $brand-accent;
+}
+.accent-alter-text {
+    color: $brand-accent-alter;
+}
+    
 
 /**
  *  Task List CSS
@@ -110,18 +279,35 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
         border-bottom: none;
     }
     
-    .taskItem:nth-child(even) {
-        background: #fcfcfc;
-    }
+//    .taskItem:nth-child(even) {
+//        background: $brand-primary;
+//    }
 }
 
 .taskItem {
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: $brand-border;
     padding: 15px 0;
-    color: #777;
+    color: $brand-accent;
     font-weight: 600;
     font-size: 14px;
     letter-spacing: 0.5px;
+    
+    @media (min-width: $break-small) and (max-width: $break-medium) {
+        span.task-description-text {
+            white-space: nowrap;
+            overflow: hidden;
+            position: absolute;
+            width: 50%;
+            margin-left: 5px;
+        }
+        span.task-times-text {
+            position: absolute;
+            display: block;
+        }
+        span.separator {
+            display: none;
+        }
+    }
 }
 
 .taskCheckbox {
@@ -130,11 +316,11 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
 
 .complete-true {
     text-decoration:  line-through;
-    color: #bebebe;
+    color: $brand-accent-alter;
 }
 
 .taskList .taskDate {
-    color: #95a5a6;
+    color: $brand-accent-alter;
     font-size: 10px;
     font-weight: bold;
     text-transform: uppercase;
@@ -168,33 +354,21 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
 }
 
 .category-Watch {
-    background: #2980b9;
+    background: $red;
 }
 
 .category-Read {
-    background: #8e44ad;
+    background: $purple;
 }
 
 .category-Play {
-    background: #f39c12;
+    background: $orange;
 }
 
 .category-Other {
-    background: #16a085;
+    background: $green;
 }
 
-
-footer {
-    text-align: center;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: #777;
-}
-
-footer a {
-    color: #f39c12;
-}
 /* custom checkboxes */
 .taskCheckbox {
     @include appearance(none);
@@ -208,7 +382,7 @@ footer a {
 
 .taskCheckbox:before, .taskCheckbox:checked:before {
     font-family: 'FontAwesome';
-    color: #444;
+    color: $brand-accent;
     font-size: 20px;
     @include transition(all, 0.3s);
 }
@@ -219,12 +393,12 @@ footer a {
 
 .taskCheckbox:disabled:before {
     content: '\f03a';
-    color: $blue-rich;
+    color: $brand-accent-alter;
 }
 
 .taskCheckbox:checked:before {
     content: '\f14a';
-    color: $green;
+    color: $brand-success;
 }
 
 /* custom select menu */
@@ -250,32 +424,6 @@ footer a {
     border: none;
 /*    outline: none;*/
     padding: 0 100px;
-}
-
-/** FAVOURITES STYLING **/
-
-.favourite-header {
-  padding-bottom: 5px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #eee; 
-  display: inline-block;
-  white-space: nowrap;
-}
-
-.favourite-link {
-    color: inherit;
-}
-.favourite-link:hover,
-.favourite-link:focus {
-    color: inherit;
-    text-decoration: none;
-}
-
-.favourite-link:hover h2:before {
-    content: 'Go to ';
-}
-.favourite-link:hover h2:after {
-    content: '?';
 }
 
 .collapse-bar {
@@ -311,24 +459,93 @@ footer a {
   background-color: #FFF;
   align-content: center;
   overflow-y: scroll;
-  z-index: 100;
+  z-index: 1000;
 }
 
 .toggle-add-task {
     font-size: 20px;
 }
 
+//Btn styling!!
+.btn-primary {
+    background-image: none;
+    background-color: $brand-primary;
+    border-color: $brand-secondary;
+    color: $brand-accent;
+}
+.btn-primary:focus {
+    background-color: $brand-secondary;
+    border-color: $brand-tertiary;
+    color: $brand-accent-alter;
+}
+.btn-primary:hover {
+    @extend .btn-primary:focus;
+}
+.btn-primary:active {
+    @extend .btn-primary:focus;
+}
+.btn-primary.active {
+    @extend .btn-primary:focus;
+}
 /* Remove unecessary green 'valid' border */
 .btn-primary.ng-valid.ng-dirty {
-    border-color: #245580;
+    border-color: $brand-secondary;
+}
+.btn-success {
+    background-image: none;
+    background-color: $brand-success;
+    border-color: $brand-success-alter;
+    color: $brand-success-accent;
+}
+.btn-success:focus {
+    background-color: $brand-success-alter;
+    border-color: $brand-success;
+    color: $brand-success-accent-alter;
+}
+.btn-success:hover {
+    @extend .btn-success:focus;
+}
+.btn-success:active {
+    @extend .btn-success:focus;
+}
+.btn-success.active {
+    @extend .btn-success:focus;
+}
+/* Remove unecessary green 'valid' border */
+.btn-success.ng-valid.ng-dirty {
+    border-color: $brand-success-alter;
+}
+.btn-danger {
+    background-image: none;
+    background-color: $brand-danger;
+    border-color: $brand-danger-alter;
+    color: $brand-danger-accent;
+}
+.btn-danger:focus {
+    background-color: $brand-danger-alter;
+    border-color: $brand-danger;
+    color: $brand-danger-accent-alter;
+}
+.btn-danger:hover {
+    @extend .btn-danger:focus;
+}
+.btn-danger:active {
+    @extend .btn-danger:focus;
+}
+.btn-danger.active {
+    @extend .btn-danger:focus;
+}
+/* Remove unecessary green 'valid' border */
+.btn-danger.ng-valid.ng-dirty {
+    border-color: $brand-danger-alter;
 }
 
 .popout-header {
   padding-bottom: 9px;
   margin: 20px 0;
-  border-bottom: 1px solid $blue;
-    color: #FFF;
-    background-color: #337ab7;
+  border: $brand-border;
+    color: $brand-accent;
+    background-color: $brand-secondary;
     padding: 10px;
     width: 95%;
 }
@@ -337,20 +554,14 @@ footer a {
     padding: 5px;
 }
 
-.checklist-progress-bar {
-  height: 10px;
-  width: 75%;
-  margin-top: 10px;
-}
-
 .menu-header-bar {
     position: relative;
     display: block;
-    background-color: $blue;
-    color: #FFF;
+    background-color: $brand-primary;
+    color: $brand-accent;
     font-weight: bold;
     padding: 10px 15px;
-    border: 1px solid #FFF;
+    border: $brand-border;
     border-radius: 2px;
     margin: 0 5% -1px;
 }
@@ -361,32 +572,62 @@ a.menu-header-bar:hover {
 }
 
 .menu-header-bar:hover {
-    background-color: #286090;
-    color: #FFF;
+    background-color: $brand-secondary;
+    color: $brand-accent-alter;
 }
 
 .tile-style {
-    border: 2px outset $grey-light;
-    @include box-shadow(1px, 1px, 5px, $grey-dark);
+    background-color: $brand-primary;
+    border: 2px outset $brand-tertiary;
+    @include box-shadow(1px, 1px, 5px, $brand-secondary);
 }
 
 .task-list-container {
-//    @extend .tile-style;
-    padding: 0 5px;
-    margin-left: 10px;
+    @extend .tile-style;
+    padding: 10px 5px;
+    margin: 40px 10px;
 }
-//
+
+.placeholder-container {
+    height: 400px;
+}
+
 .filter-container {
     @extend .tile-style;
+    @extend .placeholder-container;
     padding: 20px 0;
     margin-left: -10px;
-//    z-index: 1000;
-//    position: fixed;
-//    left: 250px;
-//    height: 100%;
-//    max-width: 400px;
-//    min-width: 200px;
+    z-index: 500;
+    position: fixed;
+    top: 100px;
+    left: 50px;
+    max-width: 350px;
+    min-width: 200px;
 //    margin-left: -250px;
 //    overflow-y: auto;
 //    padding: 20px 0;
+}
+
+.fixed-header {
+    position: fixed;
+    z-index: 500;
+    top: 55px;
+    left: 40px;
+}
+
+.page-header {
+    border-color: $brand-accent;
+}
+
+.checklist-progress-bar {
+    background-color: $grey-light;
+    height: 10px;
+    width: 75%;
+    margin-top: 10px;
+}
+.checklist-progress {
+    background-color: $brand-accent-alter;
+    @include background-image($brand-accent-alter, $brand-accent);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFCA7500',endColorstr='#FFFFAC3A',GradientType=0);
 }

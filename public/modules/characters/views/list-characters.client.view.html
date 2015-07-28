@@ -1,15 +1,16 @@
 <section data-ng-controller="CharactersController" data-ng-init="find()" data-ng-show="authentication.user">
     <span keycuts></span>
-    <div class="page-header">
-        <div class="view-buttons text-right pull-right">
-            <label class="btn btn-primary" ng-model="isList" btn-radio="'list'">List</label>
-            <label class="btn btn-primary" ng-model="isList" btn-radio="'carousel'">Carousel</label>
-        </div>
+    <div class="fixed-header">
         <h1>Characters {{isList}}</h1>
     </div>
-    <div class="form-group col-lg-4 col-md-4 col-sm-4">
-        <div class="paging-controls col-lg-12 col-md-12 col-sm-12">
-            <button class="btn btn-success" ng-click="currentPage=0">First</button>
+    <div class="container">
+        <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container">
+            <div class="view-controls">
+                <label class="btn btn-primary" ng-model="isList" btn-radio="'list'">List</label>
+                <label class="btn btn-primary" ng-model="isList" btn-radio="'carousel'">Carousel</label>
+            </div>
+        <div class="paging-controls col-lg-12 col-md-12 col-sm-12" ng-hide="isList === 'carousel'">
+            <button class="btn btn-success btn-ends" ng-click="currentPage=0">First</button>
             <button class="btn btn-primary" ng-disabled="currentPage <= 0" ng-click="currentPage=currentPage-1">
                 Previous
             </button>
@@ -17,7 +18,7 @@
             <button class="btn btn-primary" ng-disabled="currentPage >= showingCount/pageSize - 1" ng-click="currentPage=currentPage+1">
                 Next
             </button>
-            <button class="btn btn-success" ng-click="currentPage=pageCount-1">Last</button>
+            <button class="btn btn-success btn-ends" ng-click="currentPage=pageCount-1">Last</button>
         </div>
        <div class="input-group">
             <div class="input-group-addon">
@@ -31,11 +32,11 @@
             </div>
            <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags" typeahead="stat.tag for stat in statTags | filter: $viewValue" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
 	   </div>
-       <div class="input-group mt" ng-hide="searchTags===undefined || searchTags==='' || searchTags===null">
+       <div class="input-group mt search-tag-list-container" ng-hide="searchTags===undefined || searchTags==='' || searchTags===null">
            <ul class="tag-list col-lg-12 col-md-12 col-sm-12">
                 <li class="tag-bubble col-lg-12 col-md-12 col-sm-12" ng-repeat="tag in tagsForFilter track by $index">
                     {{tag}}
-                    <a class="clickable pull-right" aria-hidden="true" delete-search-tag="{{tag}}"><i class="fa fa-trash-o" style="color: red;"></i></a>
+                    <a class="bin-style clickable pull-right" aria-hidden="true" delete-search-tag="{{tag}}"><i class="fa fa-trash-o"></i></a>
                 </li>
             </ul>
        </div>
@@ -93,16 +94,21 @@
             <input class="form-control" type="checkbox" data-ng-model="taglessItem">
         </div>
     </div>
-    <div class="list-group col-lg-8 col-md-8 col-sm-8" data-ng-show="isList==='list'">
-        <div data-ng-repeat="character in characters | orderBy: sortType:sortReverse | filter: search | mediaFilter: media | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" character_Back="{{trustAsResourceUrl(character.image)}}" class="list-group-item clickable" ng-class="viewItem===character ? 'col-lg-12 col-md-12 col-sm-12 character-expanded' : ' col-lg-6 col-md-6 col-sm-6 character-default'" ng-click="viewItem===character ? viewItem='' : viewItem=character" ng-hide="loading(character.name)">
-			<h4 class="dark-bordered-font-heading" data-ng-bind="character.name"></h4>
-            <p class="list-group-item-text">
-                <span class="dark-bordered-font" data-ng-bind="character.voice"></span>
-            </p>
-            <span class="dark-bordered-font" data-ng-show="character.manga!==undefined && character.manga!==null" data-ng-bind="character.manga.title"></span>
-            <span class="dark-bordered-font" data-ng-show="character.anime!==undefined && character.manga===null" data-ng-bind="character.anime.title"></span>
+        <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
+        <div class="col-lg-8 col-md-6 col-sm-6 item-list-container">
+            <div class="list-group col-lg-12 col-md-12 col-sm-12" data-ng-show="isList==='list'">
+        <div data-ng-repeat="character in characters | orderBy: sortType:sortReverse | filter: search | mediaFilter: media | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" character_Back="{{trustAsResourceUrl(character.image)}}" class="list-group-item" ng-class="viewItem===character ? 'col-lg-12 col-md-12 col-sm-12 character-expanded' : ' col-lg-6 col-md-6 col-sm-6 character-default'" ng-hide="loading(character.name)">
+            <div class="clickable view-item-top" ng-click="viewItem===character ? viewItem='' : viewItem=character">
+			 <h4 class="dark-bordered-font-heading" data-ng-bind="character.name"></h4>
+                <p class="list-group-item-text">
+                    <span class="dark-bordered-font" data-ng-bind="character.voice"></span>
+                </p>
+                <span class="dark-bordered-font" data-ng-show="character.manga!==undefined && character.manga!==null" data-ng-bind="character.manga.title"></span>
+                <span class="dark-bordered-font" data-ng-show="character.anime!==undefined && character.manga===null" data-ng-bind="character.anime.title"></span>
+            </div>
             <div class="view-item-detail" ng-if="viewItem===character">
-                <div class="col-lg-12 col-md-12 col-sm-12 item-tags">
+            <p class="clickable" ng-init="showCharacterTags = false" ng-click="showCharacterTags=!showCharacterTags"><i class="fa" ng-class="showCharacterTags ? 'fa-minus-square' : 'fa-plus-square'"></i> View Tags</p>
+                <div class="col-lg-12 col-md-12 col-sm-12 item-tags" ng-show="showCharacterTags">
                     <span class="col-md-2 tag-bubble" ng-repeat="tag in character.tags">{{tag.text}}</span>
                 </div>
                 <div class="item-actions" data-ng-show="((authentication.user) && (authentication.user._id == character.user._id))">
@@ -116,7 +122,7 @@
             </div><!-- VIEW ITEM END-->
         </div><!-- LIST ITEM END -->
     </div><!-- LIST END -->
-    <div class="characterCarousel col-lg-8 col-md-8 col-sm-8" style="height: 300px;" data-ng-show="isList==='carousel'">
+            <div class="characterCarousel col-lg-12 col-md-12 col-sm-12 mt" style="height: 300px;" data-ng-show="isList==='carousel'">
         <carousel interval="myInterval" style="height: 300px;" disable-ng-animate>
             <slide ng-repeat="character in characters | filter: search | mediaFilter: media | tagFilter: searchTags:taglessItem" active="character.active">
                 <a href="/#!/characters/{{character._id}}">
@@ -128,8 +134,7 @@
             </slide>
         </carousel>
     </div>
-    <div class="alert alert-warning text-center" data-ng-hide="!characters.$resolved || characters.length">
-    	No Characters yet, why don't you <a href="/#!/characters/create">create one</a>?
+        </div>
     </div>
     <section class="loading-image" data-ng-if="isLoading"></section>
 </section>

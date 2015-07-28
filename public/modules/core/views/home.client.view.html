@@ -3,7 +3,7 @@
             <a class="close-button mt" data-ng-click="isAddTask=!isAddTask"><i class="fa fa-times"></i></a>
             <h4 class="popout-header">Add new task</h4>
             <div class="col-md-12 mt">
-            <form name="scheduleForm" class="form-horizontal" novalidate>
+                <form name="scheduleForm" class="form-horizontal" novalidate>
                 <fieldset>
                 <div class="form-group">
                     <label for="description" class="col-md-2 control-label">Description</label>
@@ -76,10 +76,10 @@
                     <button class="btn btn-primary" ng-click="addNew()" ng-disabled="scheduleForm.$invalid">Add task</button>
                 </div>
                 </fieldset>
-            </form>
+                </form><!-- </form> -->
             </div><!-- collapse FORM -->
     </div><!-- col-md-12 ACTIONS -->
-	<div class="row col-lg-12 col-md-12 col-sm-12 push-wrap">
+	<div class="fixed-header">
         <h3>Week Beginning {{weekBeginning() | dateSuffix }}</h3>
 	</div>
     <div class="container">
@@ -144,17 +144,17 @@
         </div><!-- collapse FILTERS -->
     </div><!-- col-md-12 FILTERS -->
     </div><!-- col-md-6 ACTIONS+FILTERS -->
-        <div class="col-lg-7 col-md-7 col-sm-8 mt task-list-container">
+        <div class="col-lg-3 col-md-5 col-sm-5 mt placeholder-container"></div>
+        <div class="col-lg-8 col-md-6 col-sm-6 mt task-list-container">
             <ul class="taskList col-lg-12 col-md-12 col-sm-12">
                 <li class="taskItem" ng-repeat="taskItem in (filteredTasks = (taskItem | filter: search | dayFilter: daySelected | dateFilter: datesSelected)) track by $index" ng-model="taskItem">
                     <input type="checkbox" class="taskCheckbox" ng-model="taskItem.complete" ng-change="save(taskItem.description)" ng-disabled="taskItem.complete || taskItem.checklist">
-                    <span class="complete-{{taskItem.complete}}" ng-class="taskItem.checklist === true ? 'clickable' : ''" ng-click="taskItem.checklist === true ? viewTask = !viewTask : ''">{{taskItem.description}}</span> - <span class="complete-{{taskItem.complete}}">{{taskItem.completeTimes}}/{{taskItem.repeat}}</span>
+                    <span class="task-description-text complete-{{taskItem.complete}}" ng-class="taskItem.checklist === true ? 'clickable' : ''" ng-click="taskItem.checklist === true ? viewTask = !viewTask : ''">{{taskItem.description}}</span><span class="separator"> - </span><span class="task-times-text complete-{{taskItem.complete}}">{{taskItem.completeTimes}}/{{taskItem.repeat}}</span>
                     <span class="category-{{taskItem.category}}">{{taskItem.category}}</span><a class="bin-style clickable" aria-hidden="true" ng-click="deleteTask(taskItem.description)"><i class="fa fa-trash-o"></i></a>
-                    <strong class="taskDate complete-{{taskItem.complete}}"><i class="fa fa-calendar" popover="{{taskItem.date}}" popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true"></i><span ng-hide="taskItem.daily">{{taskItem.day}}</span><span ng-show="taskItem.daily" class="complete-{{taskItem.complete}}">DAILY</span></strong>
+                    <strong class="taskDate complete-{{taskItem.complete}}"><i class="fa fa-calendar" popover="{{taskItem.date}}" popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="false"></i><span ng-hide="taskItem.daily">{{taskItem.day}}</span><span ng-show="taskItem.daily" class="complete-{{taskItem.complete}}">DAILY</span></strong>
                     <div class="checklist-progress-container" ng-if="taskItem.checklist">
-                        <progress class="checklist-progress-bar" popover="{{ ((taskItem.checklistOptions | filter: {complete: true}).length / taskItem.checklistOptions.length)*100 | number: 2 }}%" popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">
-                            <bar type="primary" value="((taskItem.checklistOptions | filter: {complete: true}).length / taskItem.checklistOptions.length) * 100"></bar>
-                        </progress>
+                        <div class="checklist-progress-bar" my-progress="((taskItem.checklistOptions | filter: {complete: true}).length / taskItem.checklistOptions.length) * 100" popover="{{ ((taskItem.checklistOptions | filter: {complete: true}).length / taskItem.checklistOptions.length)*100 | number: 2 }}%" popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="false">
+                        </div>
                     </div>
                     <div ng-if="taskItem.checklist" ng-show="viewTask">
                         <ul class="checklistList">
@@ -166,6 +166,6 @@
                     </div>
                 </li>
             </ul>
-    </div><!-- TASK ROW -->
+        </div><!-- TASK ROW -->
     </div>
 </section>

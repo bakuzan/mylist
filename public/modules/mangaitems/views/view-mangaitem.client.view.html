@@ -20,7 +20,7 @@
                 <span class="glyphicon glyphicon-book" data-ng-show="mangaitem.hardcopy"></span> <span class="text-muted" data-ng-show="mangaitem.status">(Completed)</span> <span class="text-muted" data-ng-show="mangaitem.reReading">(Reading)</span>
                 <h3>Chapter </h3><span data-ng-bind="mangaitem.chapters"></span>/<span data-ng-bind="mangaitem.finalChapter"></span>
                 <h3>Volume </h3><span data-ng-bind="mangaitem.volumes"></span>/<span data-ng-bind="mangaitem.finalVolume"></span>
-                <div class="related-media text-muted">
+                <div class="related-media accent-alter-text">
                     <p data-ng-show="mangaitem.anime!==undefined">Related anime: <a href="/#!/animeitems/{{mangaitem.anime._id}}">{{mangaitem.anime.title}}</a></p>
                 </div>
                 <div class="col-md-9 item-tags">
@@ -29,15 +29,15 @@
             </div>
         </div>
         <div class="text-right">
-            <span class="text-muted" data-ng-show="mangaitem.status">Re-read count: {{ mangaitem.reReadCount }}</span>
+            <span class="accent-alter-text" data-ng-show="mangaitem.status">Re-read count: {{ mangaitem.reReadCount }}</span>
         </div>
         <div class="text-right">
-            <em class="text-muted" data-ng-show="mangaitem.rating==0">No rating</em>
-            <rating data-ng-model="mangaitem.rating" style="color: blue; font-size: 16px;" readonly="true" max="maxRating" id="rating" name="rating"></rating>
+            <em class="accent-alter-text" data-ng-show="mangaitem.rating==0">No rating</em>
+            <rating data-ng-model="mangaitem.rating" class="view-item-rating-stars" data-ng-show="mangaitem.rating!==0" readonly="true" max="maxRating" id="rating" name="rating"></rating>
         </div>
 	</div>
 	<small>
-		<em class="text-muted">
+		<em class="accent-alter-text">
 			Start
 			<span data-ng-bind="mangaitem.start | date:'yyyy-MMM-dd'"></span><br/>
             End

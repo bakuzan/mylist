@@ -31,7 +31,7 @@
                 <tbody>
                     <tr ng-repeat="year in completeByMonth | orderBy: '-year'" ng-hide="loading(year.year)">
                         <th><span>{{year.year}}</span></th>
-                        <td  class="stat-month-box" ng-repeat="month in year.months" ng-click="monthDetail(year.year, month.number);"  popover="{{month.count}} completed {{month.text}} {{year.year}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': month.count / maxCompleteMonth }">
+                        <td  class="stat-month-box" ng-repeat="month in year.months" ng-click="monthDetail(year.year, month.number);"  popover="{{month.count}} completed {{month.text}} {{year.year}}." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true" ng-style="{'opacity': month.count / maxCompleteMonth }">
                         </td>
                     </tr>
                 </tbody>
@@ -46,7 +46,7 @@
                 <tbody>
                     <tr ng-repeat="year in completeBySeason | orderBy: '-year'">
                         <th><span>{{year.year}}</span></th>
-                        <td  class="stat-month-box" ng-repeat="season in year.seasons" ng-click="seasonDetail(year.year, season.number)" popover="{{ season.count }} completed {{season.text}} {{year.year}}." popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="true" ng-style="{'opacity': season.count / maxCompleteMonth }">
+                        <td  class="stat-month-box" ng-repeat="season in year.seasons" ng-click="seasonDetail(year.year, season.number)" popover="{{ season.count }} completed {{season.text}} {{year.year}}." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true" ng-style="{'opacity': season.count / maxCompleteMonth }">
                         </td>
                     </tr>
                 </tbody>
@@ -89,10 +89,10 @@
                             <th class="col-lg-1 col-md-1 col-sm-1 text-right mb"><span ng-if="i!==0">{{i}}</span><span ng-if="i===0">-</span></th>
                             <td class="col-lg-11 col-md-11 col-sm-11 col-xs-11 stat-rating-box">
                                 <div class="progress-container">
-                                    <div class="progress progress-bar-placement" ng-if="i!==0" max="100" value="((items | filter: { rating: i }:true).length / maxCount)*100" popover="{{(items | filter: { rating: i }:true).length}} entries rated {{i}}." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">
+                                    <div class="progress progress-bar-placement" ng-if="i!==0" max="100" value="((items | filter: { rating: i }:true).length / maxCount)*100" popover="{{(items | filter: { rating: i }:true).length}} entries rated {{i}}." popover-trigger="mouseenter" popover-placement="left" popover-append-to-body="false">
                                         <div class="bar current-progress" style="width: {{((items | filter: { rating: i }:true).length / maxCount)*100 }}%">{{((items | filter: { rating: i }:true).length / maxCount)*100 | number: 2}}%</div>
                                     </div>
-                                    <div class="progress progress-bar-placement" ng-if="i===0" max="100" value="((items | filter: { rating: i }:true).length / maxCount)*100" popover="{{(items | filter: { rating: i }:true).length}} entries unrated." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true">
+                                    <div class="progress progress-bar-placement" ng-if="i===0" max="100" value="((items | filter: { rating: i }:true).length / maxCount)*100" popover="{{(items | filter: { rating: i }:true).length}} entries unrated." popover-trigger="mouseenter" popover-placement="left" popover-append-to-body="false">
                                         <div class="bar current-progress" style="width: {{((items | filter: { rating: i }:true).length / maxCount)*100 }}%">{{((items | filter: { rating: i }:true).length / maxCount)*100 | number: 2}}%</div></div>
                                 </div>
                             </td>

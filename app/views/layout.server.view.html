@@ -36,7 +36,17 @@
 
 	<!--Application CSS Files-->
 	{% for cssFile in cssFiles %}<link rel="stylesheet" href="{{cssFile}}">{% endfor %}
-
+    <!-- USER SELECTED STYLE -->
+    <script type="text/javascript">
+        storedValue = localStorage.getItem('theme');
+        link = document.createElement( "link" );
+        link.id = "app-theme";
+        link.href = storedValue.substr(1, storedValue.lastIndexOf("\"") - 1); //remove quotes for whatever reason.
+        link.type = "text/css";
+        link.rel = "stylesheet";
+        document.getElementsByTagName("head")[0].appendChild(link);
+    </script>
+    
 	<!-- HTML5 Shim -->
 	<!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>

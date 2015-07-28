@@ -9,7 +9,7 @@ module.exports = function(grunt) {
 		clientJS: ['public/js/*.js', 'public/modules/**/*.js'],
 		clientCSS: ['public/modules/**/*.css'],
 		mochaTests: ['app/tests/**/*.js'],
-        sass: ['public/modules/**/*.scss']
+        sass: ['public/modules/**/*.scss'],
 	};
 
 	// Project Configuration
@@ -155,6 +155,8 @@ module.exports = function(grunt) {
 		  dev: {		    
 		    files: {
 		      'public/style/main.css': 'public/style/main.scss',
+              'public/style/main-red.css': 'public/style/main-red.scss',
+              'public/style/main-purple.css': 'public/style/main-purple.scss',
 		    }
 		  },
 		  dist: {

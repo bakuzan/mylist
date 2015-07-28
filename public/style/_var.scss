@@ -1,10 +1,3 @@
-//brand colours.
-$brand-primary: #337ab7;
-$brand-secondary: #094B83; //#286090;
-$brand-tertiary: #7EB1DC; //#1212B8;
-$brand-accent: #FFAC3A; //#f39c12;
-$brand-accent-alter: #CA7500; //#FFCE8A; //#FF980B; //#FFEA1D;
-
 $brand-danger: #d41f1a;
 $brand-danger-alter: #830300; //#AB0E0A;
 $brand-danger-accent: #FFF;
@@ -14,7 +7,6 @@ $brand-success-alter: #0C640C;
 $brand-success-accent: #FFF; //#CD5959;
 $brand-success-accent-alter: #fcfcfc; //#F59191;
 
-$brand-border: 1px solid $brand-tertiary;
 $tile-background: #f9f9f9;
 
 //named colours.
@@ -36,7 +28,6 @@ $off-white: #fcfcfc;
 
 //lines and borders.
 $grey-line: 1px solid $grey-light;
-$accent-line: 1px solid $brand-accent;
 
 //for media queries.
 $break-small: 768px;

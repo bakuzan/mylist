@@ -6,7 +6,7 @@
     <div class="container">
         <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container">
         <div class="paging-controls col-lg-12 col-md-12 col-sm-12">
-            <button class="btn btn-success btn-ends" ng-click="currentPage=0">First</button>
+            <button class="btn btn-accent btn-ends" ng-click="currentPage=0">First</button>
             <button class="btn btn-primary" ng-disabled="currentPage <= 0" ng-click="currentPage=currentPage-1">
                 Previous
             </button>
@@ -14,7 +14,7 @@
             <button class="btn btn-primary" ng-disabled="currentPage >= showingCount/pageSize - 1" ng-click="currentPage=currentPage+1">
                 Next
             </button>
-            <button class="btn btn-success btn-ends" ng-click="currentPage=pageCount-1">Last</button>
+            <button class="btn btn-accent btn-ends" ng-click="currentPage=pageCount-1">Last</button>
         </div>
        <div class="input-group">
             <div class="input-group-addon">
@@ -138,7 +138,7 @@
                 </div>
                 <a class="clickable" ng-click="viewItemHistory = true;">View history</a>
                 <div class="item-actions" data-ng-show="((authentication.user) && (authentication.user._id == animeitem.user._id))">
-                    <a class="btn btn-success" href="/#!/animeitems/{{animeitem._id}}">
+                    <a class="btn btn-accent" href="/#!/animeitems/{{animeitem._id}}">
                         <i class="fa fa-eye"></i>
                     </a>
                     <a class="btn btn-primary" href="/#!/animeitems/{{animeitem._id}}/edit">

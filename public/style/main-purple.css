@@ -517,9 +517,32 @@ nav .additional-navbar-links-dropdown {
   border-color: #AB69C8;
   color: #BDC316; }
 
+.btn-primary:disabled, .btn-primary[disabled] {
+  background-color: #AB69C8;
+  border-color: #AB69C8; }
+
 /* Remove unecessary green 'valid' border */
 .btn-primary.ng-valid.ng-dirty {
   border-color: #611483; }
+
+.btn-accent {
+  background-image: none;
+  background-color: #F7FD5C;
+  border-color: #BDC316;
+  color: #8D44AD; }
+
+.btn-accent:focus, .btn-accent:hover, .btn-accent:active, .btn-accent.active {
+  background-color: #BDC316;
+  border-color: #AB69C8;
+  color: #611483; }
+
+.btn-accent:disabled, .btn-accent[disabled] {
+  background-color: #AB69C8;
+  border-color: #AB69C8; }
+
+/* Remove unecessary green 'valid' border */
+.btn-accent.ng-valid.ng-dirty {
+  border-color: #BDC316; }
 
 .btn-success {
   background-image: none;

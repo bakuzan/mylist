@@ -487,9 +487,41 @@ nav {
 .btn-primary.active {
     @extend .btn-primary:focus;
 }
+.btn-primary:disabled, .btn-primary[disabled] {
+    background-color: $brand-tertiary;
+    border-color: $brand-tertiary;
+}
 /* Remove unecessary green 'valid' border */
 .btn-primary.ng-valid.ng-dirty {
     border-color: $brand-secondary;
+}
+.btn-accent {
+    background-image: none;
+    background-color: $brand-accent;
+    border-color: $brand-accent-alter;
+    color: $brand-primary;
+}
+.btn-accent:focus {
+    background-color: $brand-accent-alter;
+    border-color: $brand-tertiary;
+    color: $brand-secondary;
+}
+.btn-accent:hover {
+    @extend .btn-accent:focus;
+}
+.btn-accent:active {
+    @extend .btn-accent:focus;
+}
+.btn-accent.active {
+    @extend .btn-accent:focus;
+}
+.btn-accent:disabled, .btn-accent[disabled] {
+    background-color: $brand-tertiary;
+    border-color: $brand-tertiary;
+}
+/* Remove unecessary green 'valid' border */
+.btn-accent.ng-valid.ng-dirty {
+    border-color: $brand-accent-alter;
 }
 .btn-success {
     background-image: none;

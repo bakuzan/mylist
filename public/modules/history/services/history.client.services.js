@@ -81,7 +81,7 @@ angular.module('history').service('HistoryService', ['moment', function(moment) 
                     fourWeek: []
                 },
             groupCheck = [], self = this, endsOfWeek = self.getEndsOfWeek(), mondays = endsOfWeek.mondays, sundays = endsOfWeek.sundays;
-            console.log(mondays, sundays);
+//            console.log(mondays, sundays);
             angular.forEach(items, function(item) {
                 var today = moment(new Date()).startOf('day'),
                     itemDate = moment(item.date).startOf('day'),

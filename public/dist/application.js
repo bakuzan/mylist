@@ -315,7 +315,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		// Find a list of Animeitems
 		$scope.find = function() {
 			$scope.animeitems = Animeitems.query();
-            console.log($scope.animeitems);
+//            console.log($scope.animeitems);
 		};
 
 		// Find existing Animeitem
@@ -1384,14 +1384,16 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
         };
         
         $scope.saved = localStorage.getItem('theme');
-        $scope.theme = (localStorage.getItem('theme')!==null) ? JSON.parse($scope.saved) : 'style/main.css';
+        $scope.theme = (localStorage.getItem('theme')!==null) ? JSON.parse($scope.saved) : 'style/main.min.css';
         localStorage.setItem('theme', JSON.stringify($scope.theme));
         
         //user-selected style options/defaults.
         $scope.styles = [
-            { name: 'Blue', url: 'style/main.css' },
-            { name: 'Red', url: 'style/main-red.css' },
-            { name: 'Purple', url: 'style/main-purple.css' }
+            { name: 'Blue', url: 'style/main.min.css' },
+            { name: 'Red', url: 'style/main-red.min.css' },
+            { name: 'Purple', url: 'style/main-purple.min.css' },
+            { name: 'Day', url: 'style/main-day.min.css' },
+            { name: 'Night', url: 'style/main-night.min.css' }
         ];
         
         $scope.changeTheme = function() {
@@ -1460,7 +1462,7 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         //var day = new Date('2015-05-04').getDay();
         var day = $scope.today.getDay();
         //console.log(day);
-        console.log($scope.taskItem);
+//        console.log($scope.taskItem);
         //Is it monday?
         if (day===1) {
             var refreshItems = $scope.taskItem;
@@ -2275,7 +2277,7 @@ angular.module('history').service('HistoryService', ['moment', function(moment) 
                     fourWeek: []
                 },
             groupCheck = [], self = this, endsOfWeek = self.getEndsOfWeek(), mondays = endsOfWeek.mondays, sundays = endsOfWeek.sundays;
-            console.log(mondays, sundays);
+//            console.log(mondays, sundays);
             angular.forEach(items, function(item) {
                 var today = moment(new Date()).startOf('day'),
                     itemDate = moment(item.date).startOf('day'),
@@ -3053,10 +3055,6 @@ angular.module('users').config(['$stateProvider',
 angular.module('users').controller('AuthenticationController', ['$scope', '$http', '$location', 'Authentication',
 	function($scope, $http, $location, Authentication) {
 		$scope.authentication = Authentication;
-        
-        $scope.saved = localStorage.getItem('theme');
-        $scope.theme = (localStorage.getItem('theme')!==null) ? JSON.parse($scope.saved) : 'main.css';
-        localStorage.setItem('theme', JSON.stringify($scope.theme));
 
 		// If user is signed in then redirect back home
 		if ($scope.authentication.user) $location.path('/');

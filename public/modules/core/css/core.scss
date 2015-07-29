@@ -29,10 +29,10 @@ input[type="checkbox"][disabled], input[type="checkbox"].disabled {
 }
 
 a {
-    color: $brand-accent;
+    color: $brand-accent-alter;
 }
 a:focus {
-    color: $brand-accent-alter;
+    color: $brand-accent;
 }
 a:hover {
     @extend a:focus;
@@ -201,6 +201,13 @@ nav {
                     display: block;
             }
      }
+}
+.dropdown-menu {
+    .active {
+        a {
+            background-color: $brand-primary;
+        }
+    }
 }
 
 .primary-text {

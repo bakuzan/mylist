@@ -3,7 +3,7 @@
         <hr/>
         <small>jormungand-1.4</small><br/>
 	    <small>swalsh</small><br/>
-        <select ng-model="theme" ng-options="option.url as option.name for option in styles" ng-change="changeTheme()">
+        <select ng-model="theme" ng-options="option.url as option.name for option in styles | orderBy: 'name'" ng-change="changeTheme()">
         </select>
     </footer>
 </div>

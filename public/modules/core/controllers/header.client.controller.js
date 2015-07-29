@@ -20,14 +20,16 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
         };
         
         $scope.saved = localStorage.getItem('theme');
-        $scope.theme = (localStorage.getItem('theme')!==null) ? JSON.parse($scope.saved) : 'style/main.css';
+        $scope.theme = (localStorage.getItem('theme')!==null) ? JSON.parse($scope.saved) : 'style/main.min.css';
         localStorage.setItem('theme', JSON.stringify($scope.theme));
         
         //user-selected style options/defaults.
         $scope.styles = [
-            { name: 'Blue', url: 'style/main.css' },
-            { name: 'Red', url: 'style/main-red.css' },
-            { name: 'Purple', url: 'style/main-purple.css' }
+            { name: 'Blue', url: 'style/main.min.css' },
+            { name: 'Red', url: 'style/main-red.min.css' },
+            { name: 'Purple', url: 'style/main-purple.min.css' },
+            { name: 'Day', url: 'style/main-day.min.css' },
+            { name: 'Night', url: 'style/main-night.min.css' }
         ];
         
         $scope.changeTheme = function() {

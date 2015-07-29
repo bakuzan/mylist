@@ -41,7 +41,11 @@
         storedValue = localStorage.getItem('theme');
         link = document.createElement( "link" );
         link.id = "app-theme";
-        link.href = storedValue.substr(1, storedValue.lastIndexOf("\"") - 1); //remove quotes for whatever reason.
+        if (storedValue) {
+            link.href = storedValue.substr(1, storedValue.lastIndexOf("\"") - 1); //remove quotes for whatever reason.
+        } else {
+            link.href = "style/main.min.css"; //default if no stored value.
+        }
         link.type = "text/css";
         link.rel = "stylesheet";
         document.getElementsByTagName("head")[0].appendChild(link);

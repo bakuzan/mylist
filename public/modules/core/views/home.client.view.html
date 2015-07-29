@@ -152,8 +152,9 @@
                     <span class="task-description-text complete-{{taskItem.complete}}" ng-class="taskItem.checklist === true ? 'clickable' : ''" ng-click="taskItem.checklist === true ? viewTask = !viewTask : ''">{{taskItem.description}}</span><span class="separator"> - </span><span class="task-times-text complete-{{taskItem.complete}}">{{taskItem.completeTimes}}/{{taskItem.repeat}}</span>
                     <span class="category-{{taskItem.category}}">{{taskItem.category}}</span><a class="bin-style clickable" aria-hidden="true" ng-click="deleteTask(taskItem.description)"><i class="fa fa-trash-o"></i></a>
                     <strong class="taskDate complete-{{taskItem.complete}}"><i class="fa fa-calendar" popover="{{taskItem.date}}" popover-trigger="mouseenter" popover-placement="bottom" popover-append-to-body="false"></i><span ng-hide="taskItem.daily">{{taskItem.day}}</span><span ng-show="taskItem.daily" class="complete-{{taskItem.complete}}">DAILY</span></strong>
-                    <div class="checklist-progress-container" ng-if="taskItem.checklist">
-                        <div class="checklist-progress-bar" my-progress="((taskItem.checklistOptions | filter: {complete: true}).length / taskItem.checklistOptions.length) * 100" popover="{{ ((taskItem.checklistOptions | filter: {complete: true}).length / taskItem.checklistOptions.length)*100 | number: 2 }}%" popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="false">
+                    <div class="progress-container" ng-if="taskItem.checklist">
+                        <div class="progress checklist-progress-bar" value="((taskItem.checklistOptions | filter: {complete: true}).length / taskItem.checklistOptions.length) * 100" popover="{{ ((taskItem.checklistOptions | filter: {complete: true}).length / taskItem.checklistOptions.length)*100 | number: 2 }}%" popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="false">
+                        <div class="bar checklist-progress" style="width: {{ ((taskItem.checklistOptions | filter: {complete: true}).length / taskItem.checklistOptions.length) * 100}}%"></div>
                         </div>
                     </div>
                     <div ng-if="taskItem.checklist" ng-show="viewTask">

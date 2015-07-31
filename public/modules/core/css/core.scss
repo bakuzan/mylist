@@ -141,6 +141,7 @@ a:hover {
     li {
         a {
             background-image: none;
+            background-color: $brand-tertiary;
             color: $brand-accent;
         }
         a:focus {

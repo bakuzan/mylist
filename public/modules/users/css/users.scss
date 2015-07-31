@@ -72,7 +72,7 @@ footer {
 }
 .form-control[disabled] {
     background-color: $brand-tertiary;
-    color: $brand-accent-alter;
+    color: darken($brand-accent-alter, 25%);
 }
 .form-control[readonly] {
     background-color: $brand-secondary;

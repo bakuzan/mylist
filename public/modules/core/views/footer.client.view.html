@@ -5,5 +5,6 @@
 	    <small>swalsh</small><br/>
         <select ng-model="theme" ng-options="option.url as option.name for option in styles | orderBy: 'name'" ng-change="changeTheme()">
         </select>
+        <input type="checkbox" ng-model="timedTheme" ng-change="changeTheme()">
     </footer>
 </div>

@@ -38,14 +38,29 @@
 	{% for cssFile in cssFiles %}<link rel="stylesheet" href="{{cssFile}}">{% endfor %}
     <!-- USER SELECTED STYLE -->
     <script type="text/javascript">
+        timeOfDayTheme = localStorage.getItem('timedTheme');
         storedValue = localStorage.getItem('theme');
         link = document.createElement( "link" );
-        link.id = "app-theme";
-        if (storedValue) {
-            link.href = storedValue.substr(1, storedValue.lastIndexOf("\"") - 1); //remove quotes for whatever reason.
+        if (timeOfDayTheme === 'false') {
+            if (!storedValue) {
+                localStorage.setItem('theme', JSON.stringify('style/main.min.css'));
+            }
         } else {
-            link.href = "style/main.min.css"; //default if no stored value.
+            var time = new Date().getHours();
+                console.log(time);
+            if (time > 20 || time < 6) {
+                localStorage.setItem('theme', JSON.stringify('style/main-night.min.css'));
+            } else if (time > 17) {
+                localStorage.setItem('theme', JSON.stringify('style/main-purple.min.css'));
+            } else if (time > 9) {
+                localStorage.setItem('theme', JSON.stringify('style/main-day.min.css'));
+            } else if (time > 6) {
+                localStorage.setItem('theme', JSON.stringify('style/main.min.css'));
+            }
         }
+        storedValue = localStorage.getItem('theme');
+        link.href = storedValue.substr(1, storedValue.lastIndexOf("\"") - 1); //remove quotes for whatever reason.
+        link.id = "app-theme";
         link.type = "text/css";
         link.rel = "stylesheet";
         document.getElementsByTagName("head")[0].appendChild(link);

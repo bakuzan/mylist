@@ -82,7 +82,7 @@
             <div class="input-group-addon">
                 <i class="fa fa-microphone"></i>
             </div>
-            <input type="text" class="form-control" placeholder="search voice" ng-model="search.voice" typeahead="voice for voice in voiceActors | filter: $viewValue "><!-- -->
+            <input type="text" class="form-control" placeholder="search voice" ng-model="search.voice" typeahead="voice.name for voice in voiceActors | filter: $viewValue "><!-- -->
 	    </div>
         <div class="input-group mt" data-ng-show="areTagless">
             <div class="input-group-addon">

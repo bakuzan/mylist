@@ -852,8 +852,8 @@ angular.module('characters').config(['$stateProvider',
 'use strict';
 
 // Characters controller
-angular.module('characters').controller('CharactersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Characters', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ListService',
-	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window, ListService) {
+angular.module('characters').controller('CharactersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Characters', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ListService', 'CharacterService',
+	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window, ListService, CharacterService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -909,37 +909,8 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             if ($scope.characters!==undefined) {
 //                console.log($scope.characters);
                 $scope.areTagless = ListService.checkForTagless($scope.characters);
-                var add = true;
-                //is tag in array?
-                angular.forEach($scope.characters, function(item) {
-                    angular.forEach(item.tags, function(tag) {
-                        for(var i=0; i < $scope.statTags.length; i++) {
-                            if ($scope.statTags[i].tag===tag.text) {
-                                add = false;
-                                $scope.statTags[i].count += 1; 
-                            }
-                        }
-                        // add if not in
-                        if (add===true) {
-                            $scope.statTags.push({ tag: tag.text, count: 1 });
-                        }
-                        add = true; //reset add status.
-                    });
-//                    console.log($scope.statTags);
-                });
-                //is voice actor in array?
-                angular.forEach($scope.characters, function(item) { 
-                        for(var i=0; i < $scope.voiceActors.length; i++) {
-                            if ($scope.voiceActors[i]===item.voice) {
-                                add = false; 
-                            }
-                        }
-                        // add if not in
-                        if (add===true) {
-                            $scope.voiceActors.push(item.voice);
-                        }
-                        add = true; //reset add status.
-                });
+                $scope.statTags = CharacterService.buildCharacterTags($scope.characters);
+                $scope.voiceActors = CharacterService.buildVoiceActors($scope.characters);
             }
         });
         
@@ -1345,7 +1316,84 @@ angular.module('characters').factory('Characters', ['$resource',
 			}
 		});
 	}
-]);
+])
+.service('CharacterService', function() {
+    
+    this.buildCharacterTags = function(items) {
+        var add = true, statTags = [];
+        //is tag in array?
+        angular.forEach(items, function(item) {
+            angular.forEach(item.tags, function(tag) {
+                for(var i=0; i < statTags.length; i++) {
+                    if (statTags[i].tag === tag.text) {
+                        add = false;
+                        statTags[i].count += 1; 
+                    }
+                }
+                // add if not in
+                if (add===true) {
+                    statTags.push({ tag: tag.text, count: 1 });
+                }
+                add = true; //reset add status.
+            });
+//          console.log($scope.statTags);
+        });
+        
+        return statTags;
+    };
+    
+    this.buildVoiceActors = function(items) {
+        var add = true, voiceActors = [];
+        //is voice actor in array?
+        angular.forEach(items, function(item) { 
+            for(var i=0; i < voiceActors.length; i++) {
+                if (voiceActors[i].name === item.voice) {
+                    add = false;
+                    voiceActors[i].count += 1;
+                }
+            }
+            // add if not in
+            if (add===true) {
+                voiceActors.push({ name: item.voice, count: 1 });
+            }
+            add = true; //reset add status.
+        });
+        
+        return voiceActors;
+    };
+    
+    this.buildSeriesList = function(items) {
+        var add = true, statSeries = [];
+        //get series counts.
+        angular.forEach(items, function(item) {
+            for(var i=0; i < statSeries.length; i++) {
+                if (item.anime !== null) {
+                    if (statSeries[i].name === item.anime.title) {
+                        add = false;
+                        statSeries[i].count += 1; 
+                    }
+                } else if (item.manga !== null) {
+                    if (statSeries[i].name === item.manga.title) {
+                        add = false;
+                        statSeries[i].count += 1; 
+                    }
+                }
+            }
+            // add if not in
+            if (add === true) {
+                if (item.anime !== null) {
+                    statSeries.push({ name: item.anime.title, count: 1 });
+                } else if (item.manga !== null) {
+                    statSeries.push({ name: item.manga.title, count: 1 });
+                }
+            }
+            add = true; //reset add status.
+        });
+        
+        return statSeries;
+    };
+    
+});
 'use strict';
 
 // Setting up route
@@ -2729,8 +2777,8 @@ angular.module('statistics').config(['$stateProvider', '$urlRouterProvider',
 'use strict';
 
 // Statistics controller
-angular.module('statistics').controller('StatisticsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'Characters', 'ListService', 'ItemService',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, Characters, ListService, ItemService) {
+angular.module('statistics').controller('StatisticsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'Characters', 'ListService', 'ItemService', 'CharacterService',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, Characters, ListService, ItemService, CharacterService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -2769,12 +2817,16 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.statTagDetailSortReverse = true; //stat tag detail sort direction.
         $scope.statSeriesSortType = 'count'; //stat series sort
         $scope.statSeriesSortReverse = true; //stat series sort direction.
+        $scope.statVoiceSortType = 'count'; //stat voice sort
+        $scope.statVoiceSortReverse = true; //stat voice sort direction.
         $scope.statTags = []; //for tag statistics;
         $scope.showTagDetail = false; //visibility of detail for tags.
         $scope.statSearch = ''; //filter value for tag detail.
         $scope.statSeries = []; //for series statistics;
+        $scope.voiceActors = []; //for voice actor list;
         $scope.showSeriesDetail = false; //visibility of series drilldown.
         $scope.seriesSearch = ''; //for filtering series values.
+        $scope.voiceSearch = ''; //for filtering voice values.
         $scope.areTagless = false; //are any items tagless
         $scope.taglessItem = false; //filter variable for showing tagless items.
         $scope.male = 0; //gender count for pb.
@@ -2837,50 +2889,9 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 if ($scope.items!==undefined) {
                     $scope.statTags = []; //clear previous views tags.
                     $scope.maxCount = $scope.items.length;
-                    var add = true;
-                    //is tag in array?
-                    angular.forEach($scope.items, function(item) {
-                        angular.forEach(item.tags, function(tag) {
-                            for(var i=0; i < $scope.statTags.length; i++) {
-                                if ($scope.statTags[i].tag===tag.text) {
-                                    add = false;
-                                    $scope.statTags[i].count += 1; 
-                                }
-                            }
-                            // add if not in
-                            if (add===true) {
-                                $scope.statTags.push({ tag: tag.text, count: 1 });
-                            }
-                            add = true; //reset add status.
-                        });
-//                    console.log($scope.statTags);
-                    });
-                    //get series counts.
-                    angular.forEach($scope.items, function(item) {
-                        for(var i=0; i < $scope.statSeries.length; i++) {
-                            if (item.anime!==null) {
-                                if ($scope.statSeries[i].name===item.anime.title) {
-                                    add = false;
-                                    $scope.statSeries[i].count += 1; 
-                                }
-                            } else if (item.manga!==null) {
-                                if ($scope.statSeries[i].name===item.manga.title) {
-                                    add = false;
-                                    $scope.statSeries[i].count += 1; 
-                                }
-                            }
-                        }
-                        // add if not in
-                        if (add===true) {
-                            if (item.anime!==null) {
-                                $scope.statSeries.push({ name: item.anime.title, count: 1 });
-                            } else if (item.manga!==null) {
-                                $scope.statSeries.push({ name: item.manga.title, count: 1 });
-                            }
-                        }
-                        add = true; //reset add status.
-                    });
-//                    console.log($scope.statSeries);
+                    $scope.statTags = CharacterService.buildCharacterTags($scope.items);
+                    $scope.statSeries = CharacterService.buildSeriesList($scope.items);
+                    $scope.voiceActors = CharacterService.buildVoiceActors($scope.items);
                     //get gender counts.
                     angular.forEach($scope.statTags, function(stat) {
                         if (stat.tag==='male') {
@@ -2990,6 +3001,18 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 $scope.seriesSearch = name;
                 $scope.detailSeriesName = name;
                 $scope.showSeriesDetail = true;
+            }
+        };
+        
+        $scope.voiceDetail = function(name) {
+            if ($scope.detailVoiceName === name) {
+                $scope.voiceSearch = '';
+                $scope.showVoiceDetail = false;
+                $scope.detailVoiceName = '';
+            } else {
+                $scope.voiceSearch = name;
+                $scope.detailVoiceName = name;
+                $scope.showVoiceDetail = true;
             }
         };
         

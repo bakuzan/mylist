@@ -165,12 +165,12 @@
                 </progress>
             </div>
         </div><!-- GENDER PERCENTAGE BAR END -->
-        <div class="col-lg-6 col-md-6 col-sm-6 stat-tag-panel">
+        <div class="col-lg-6 col-md-6 col-sm-6 stat-tag-panel" ng-init="showStatTags = true">
         <div class="col-lg-12 col-md-12 col-sm-12 stat-tag-main">
             <div class="stat-header">
-                <h3>Tags</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{statTags.length}} unique tags.</small></span>
+                <h3 class="clickable" ng-click="showStatTags = !showStatTags"><i class="fa" ng-class="showStatTags ? 'fa-minus-square' : 'fa-plus-square'"></i> Tags</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{statTags.length}} unique tags.</small></span>
             </div>
-            <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="col-lg-12 col-md-12 col-sm-12" ng-show="showStatTags">
                 <div class="input-group">
                     <div class="input-group-addon">
                         <i class="fa fa-search"></i>
@@ -205,7 +205,7 @@
                 </table>
             </div>
         </div><!-- TAG PANEL END -->
-        <div class="col-lg-12 col-md-12 col-sm-12 stat-tag-detail" ng-show="showTagDetail">
+        <div class="col-lg-12 col-md-12 col-sm-12 stat-tag-detail" ng-show="showTagDetail && showStatTags">
             <div class="col-lg-12 col-md-12 col-sm-12 stat-detail">
                 <div class="stat-detail-header">
                     <h3>Tags appearing with {{detailTagName}}</h3>
@@ -245,12 +245,12 @@
             </div>
         </div><!-- TAG DETAIL PANEL END -->
         </div><!-- TAG CONTAINER END -->
-        <div class="col-lg-6 col-md-6 col-sm-6 stat-media-panel">
+        <div class="col-lg-6 col-md-6 col-sm-6 stat-media-panel" ng-init="showStatSeries = true">
             <div class="col-lg-12 col-md-12 col-sm-12 stat-media-main">
             <div class="stat-header">
-                <h3>Series</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{statSeries.length}} unique series.</small></span>
+                <h3 class="clickable" ng-click="showStatSeries = !showStatSeries"><i class="fa" ng-class="showStatSeries ? 'fa-minus-square' : 'fa-plus-square'"></i> Series</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{statSeries.length}} unique series.</small></span>
             </div>
-            <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="col-lg-12 col-md-12 col-sm-12" ng-show="showStatSeries">
                 <div class="input-group">
                     <div class="input-group-addon">
                         <i class="fa fa-search"></i>
@@ -285,7 +285,7 @@
                 </table>
             </div>
         </div><!-- SERIES PANEL END -->
-            <div class="col-lg-12 col-md-12 col-sm-12 stat-media-detail" ng-show="showSeriesDetail">
+        <div class="col-lg-12 col-md-12 col-sm-12 stat-media-detail" ng-show="showSeriesDetail && showStatSeries">
             <div class="col-lg-12 col-md-12 col-sm-12 stat-detail">
                 <div class="stat-detail-header">
                     <h3>Characters in {{detailSeriesName}}</h3>
@@ -298,6 +298,59 @@
             </div>
         </div><!-- SERIES DETAIL PANEL END -->
         </div><!-- MEDIA CONTAINER END -->
+        <div class="col-lg-6 col-md-6 col-sm-6 stat-voice-panel" ng-init="showVoiceActors = true">
+            <div class="col-lg-12 col-md-12 col-sm-12 stat-voice-main">
+                <div class="stat-header">
+                    <h3 class="clickable" ng-click="showVoiceActors = !showVoiceActors"><i class="fa" ng-class="showVoiceActors ? 'fa-minus-square' : 'fa-plus-square'"></i> Voice Actors</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{voiceActors.length}} voices.</small></span>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12" ng-show="showVoiceActors">
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-search"></i>
+                        </div>
+                        <input type="text" ng-model="voiceSearch" placeholder="search voices" class="form-control">
+                    </div>
+                    <table class="col-lg-12 col-md-12 col-sm-12 stat-voice-table table table-bordered">
+                        <thead>
+                            <tr>
+                                <td class="text-right">#</td>
+                                <td>
+                                    <a href="" ng-click="statVoiceSortType = 'name'; statVoiceSortReverse = !statVoiceSortReverse ">
+					                   Voice
+					               </a>
+                                    <i ng-show="statVoiceSortType == 'name'" class="fa" ng-class="statVoiceSortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                                </td>
+                                <td class="text-right">
+                                    <a href="" ng-click="statVoiceSortType = 'count'; statVoiceSortReverse = !statVoiceSortReverse ">
+					                   Count
+					               </a>
+                                    <i ng-show="statVoiceSortType == 'count'" class="fa" ng-class="statVoiceSortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="stat-table-row clickable" ng-repeat="stat in voiceActors | orderBy: statVoiceSortType:statVoiceSortReverse | filter: {name: voiceSearch }" ng-click="voiceDetail(stat.name);" >
+                                <td class="text-right">{{$index+1}}</td>
+                                <td>{{stat.name}}</td>
+                                <td class="text-right">{{stat.count}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 stat-voice-detail" ng-show="showVoiceDetail && showVoiceActors">
+            <div class="col-lg-12 col-md-12 col-sm-12 stat-detail">
+                <div class="stat-detail-header">
+                    <h3>Characters voiced by {{detailVoiceName}}</h3>
+                </div>
+                <ul class="col-lg-12 col-md-12 col-sm-12 stat-voice-detail-list">
+                    <li ng-repeat="item in items | orderBy: 'name' | filter: {voice: detailVoiceName}">
+                        <a href="/#!/characters/{{item._id}}"><span>{{item.name}}</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div><!-- SERIES DETAIL PANEL END -->
+        </div><!-- VOICE CONTAINER END -->
     </div><!-- CHARACTER STAT VIEW END -->
 <section class="loading-image" data-ng-if="isLoading"></section>
 </section>

@@ -1,8 +1,8 @@
 'use strict';
 
 // Characters controller
-angular.module('characters').controller('CharactersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Characters', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ListService',
-	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window, ListService) {
+angular.module('characters').controller('CharactersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Characters', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ListService', 'CharacterService',
+	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window, ListService, CharacterService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -58,37 +58,8 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             if ($scope.characters!==undefined) {
 //                console.log($scope.characters);
                 $scope.areTagless = ListService.checkForTagless($scope.characters);
-                var add = true;
-                //is tag in array?
-                angular.forEach($scope.characters, function(item) {
-                    angular.forEach(item.tags, function(tag) {
-                        for(var i=0; i < $scope.statTags.length; i++) {
-                            if ($scope.statTags[i].tag===tag.text) {
-                                add = false;
-                                $scope.statTags[i].count += 1; 
-                            }
-                        }
-                        // add if not in
-                        if (add===true) {
-                            $scope.statTags.push({ tag: tag.text, count: 1 });
-                        }
-                        add = true; //reset add status.
-                    });
-//                    console.log($scope.statTags);
-                });
-                //is voice actor in array?
-                angular.forEach($scope.characters, function(item) { 
-                        for(var i=0; i < $scope.voiceActors.length; i++) {
-                            if ($scope.voiceActors[i]===item.voice) {
-                                add = false; 
-                            }
-                        }
-                        // add if not in
-                        if (add===true) {
-                            $scope.voiceActors.push(item.voice);
-                        }
-                        add = true; //reset add status.
-                });
+                $scope.statTags = CharacterService.buildCharacterTags($scope.characters);
+                $scope.voiceActors = CharacterService.buildVoiceActors($scope.characters);
             }
         });
         

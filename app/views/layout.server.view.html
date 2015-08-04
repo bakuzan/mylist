@@ -41,7 +41,7 @@
         timeOfDayTheme = localStorage.getItem('timedTheme');
         storedValue = localStorage.getItem('theme');
         link = document.createElement( "link" );
-        if (timeOfDayTheme === 'false') {
+        if (timeOfDayTheme === 'false' || !timeOfDayTheme) {
             if (!storedValue) {
                 localStorage.setItem('theme', JSON.stringify('style/main.min.css'));
             }

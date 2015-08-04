@@ -46,7 +46,7 @@
 		  <div class="input-group-addon">
 		      <i class="fa fa-sort"></i>
           </div>
-            <select class="form-control" ng-model="sortType" ng-init="sortType = sortOptions[4].v" ng-options="so.v as so.n for so in sortOptions">
+            <select class="form-control" ng-model="sortType" ng-init="sortType = selectListOptions.sortOptions[4].v" ng-options="so.v as so.n for so in selectListOptions.sortOptions">
             </select>
         </div>
         <div class="input-group mt clickable" ng-click="sortReverse = !sortReverse">
@@ -60,30 +60,21 @@
 		  <div class="input-group-addon">
 		      <i class="fa fa-check"></i>
           </div>
-            <select class="form-control" ng-model="search.status">
-                        <option value="">All</option>
-                        <option value="false">Ongoing</option>
-                        <option value="true">Completed</option>
+            <select class="form-control" ng-model="search.status" ng-init="search.status = false" ng-options="so.v as so.n for so in selectListOptions.status">
             </select>
         </div>
         <div class="input-group mt">
 		  <div class="input-group-addon">
 		      <i class="glyphicon glyphicon-cd"></i>
           </div>
-            <select class="form-control" ng-model="search.disc">
-                        <option value="">All</option>
-                        <option value="false">Online</option>
-                        <option value="true">Disc</option>
+            <select class="form-control" ng-model="search.disc" ng-init="search.disc = ''" ng-options="so.v as so.n for so in selectListOptions.media">
             </select>
         </div>
         <div class="input-group mt">
 		  <div class="input-group-addon">
 		      <i class="fa fa-repeat"></i>
           </div>
-            <select class="form-control" ng-model="search.reWatching">
-                        <option value="">All</option>
-                        <option value="false">Not Re-watching</option>
-                        <option value="true">Re-watching</option>
+            <select class="form-control" ng-model="search.reWatching" ng-init="search.reWatching = ''" ng-options="so.v as so.n for so in selectListOptions.repeating">
             </select>
         </div>
         <div class="input-group mt">

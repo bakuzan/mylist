@@ -50,12 +50,7 @@
 		  <div class="input-group-addon">
 		      <i class="fa fa-sort"></i>
           </div>
-            <select class="form-control" ng-model="sortType">
-                        <option value="">-- choose sort type --</option>
-                        <option value="name">Name</option>
-                        <option value="anime.title">Anime</option>
-                        <option value="manga.title">Manga</option>
-                        <option value="voice">Voice</option>
+            <select class="form-control" ng-model="sortType" ng-init="sortType = 'name'" ng-options="so.v as so.n for so in selectListOptions.sortOptions">
             </select>
         </div>
         <div class="input-group mt clickable" ng-click="sortReverse = !sortReverse">
@@ -64,18 +59,12 @@
           </div>
             <input type="text" class="form-control" value="Ascending" ng-show="!sortReverse" disabled>
             <input type="text" class="form-control" value="Descending" ng-show="sortReverse" disabled>
-            <!--<input type="checkbox" class="form-control" data-ng-model="sortReverse" id="sortReverse">-->
         </div>
         <div class="input-group mt">
 		  <div class="input-group-addon">
 		      <i class="fa fa-book"></i>
           </div>
-            <select class="form-control" ng-model="media">
-                        <option value="">-- choose media type --</option>
-                        <option value="none">None</option>
-                        <option value="anime">Anime-only</option>
-                        <option value="manga">Manga-only</option>
-                        <option value="both">Both</option>
+            <select class="form-control" ng-model="media" ng-init="media = ''" ng-options="so.v as so.n for so in selectListOptions.media">
             </select>
         </div>
         <div class="input-group mt">

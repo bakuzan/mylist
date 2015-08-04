@@ -19,7 +19,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             $scope.currentPage = pagingDetails.currentPage;
             $scope.pageCount = pagingDetails.pageCount;
         });
-        
+        $scope.selectListOptions = ListService.getSelectListOptions($scope.whichController);
         $scope.isList = 'list'; //show list? or carousel.
         $scope.maxItemCount = 0; //number of characters.
         $scope.statTagSortType = 'count'; //stat tag sort
@@ -29,7 +29,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.statSeriesSortType = 'count'; //stat series sort
         $scope.statSeriesSortReverse = true; //stat series sort direction.
         $scope.myInterval = 2500; //carousel timer.
-        $scope.sortType = 'name'; //default sort type
 	    $scope.sortReverse = false; // default sort order
         $scope.imgPath = ''; //image path
         //$scope.newTag = ''; //for adding tags.

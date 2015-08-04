@@ -23,11 +23,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         //today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
         $scope.itemUpdate = new Date().toISOString().substring(0,10);
         $scope.viewItemHistory = false; //default stat of item history popout.
-//        $scope.sortType = ['latest', 'meta.updated']; //default sort type
-        $scope.sortOptions = [
-            { v: 'title', n: 'Title' },{ v: 'episodes', n: 'Episodes' },{ v: 'start', n: 'Start date' },
-            { v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' }
-        ];
+        $scope.selectListOptions = ListService.getSelectListOptions($scope.whichController);
 	    $scope.sortReverse = true; // default sort order
         $scope.finalNumbers = false; //default show status of final number fields in edit view.
         $scope.ratingLevel = undefined; //default rating filter

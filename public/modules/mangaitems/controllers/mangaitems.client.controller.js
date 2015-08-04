@@ -22,11 +22,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         
         //today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
         $scope.itemUpdate = new Date().toISOString().substring(0,10);
-//        $scope.sortType = 'latest'; //default sort type
-        $scope.sortOptions = [
-            { v: 'title', n: 'Title' },{ v: 'chapters', n: 'Chapters' },{ v: 'volumes', n: 'Volumes' },{ v: 'start', n: 'Start date' },
-            { v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' }
-        ];
+        $scope.selectListOptions = ListService.getSelectListOptions($scope.whichController);
 	    $scope.sortReverse = true; // default sort order
         $scope.finalNumbers = false; //default show status of final number fields in edit view.
         $scope.ratingLevel = undefined; //default rating selection

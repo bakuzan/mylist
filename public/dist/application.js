@@ -134,11 +134,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         //today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
         $scope.itemUpdate = new Date().toISOString().substring(0,10);
         $scope.viewItemHistory = false; //default stat of item history popout.
-//        $scope.sortType = ['latest', 'meta.updated']; //default sort type
-        $scope.sortOptions = [
-            { v: 'title', n: 'Title' },{ v: 'episodes', n: 'Episodes' },{ v: 'start', n: 'Start date' },
-            { v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' }
-        ];
+        $scope.selectListOptions = ListService.getSelectListOptions($scope.whichController);
 	    $scope.sortReverse = true; // default sort order
         $scope.finalNumbers = false; //default show status of final number fields in edit view.
         $scope.ratingLevel = undefined; //default rating filter
@@ -530,6 +526,31 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             var pagingDetails = { currentPage: currentPage, pageCount: pageCount };
             return pagingDetails;
         };
+        
+        //returns the options for the various filters in list pages.
+        this.getSelectListOptions = function(controller) {
+            var selectListOptions = [];
+            if (controller !== 'character') {
+                selectListOptions.status = [ { v: '', n: 'All' }, { v: false, n: 'Ongoing' }, { v: true, n: 'Completed' } ];
+                if (controller === 'animeitem') {
+                    selectListOptions.sortOptions = [ { v: 'title', n: 'Title' },{ v: 'episodes', n: 'Episodes' },{ v: 'start', n: 'Start date' },
+                                                      { v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' } 
+                                                    ];
+                    selectListOptions.media = [ { v: '', n: 'All' }, { v: false, n: 'Online' }, { v: true, n: 'Disc' } ];
+                    selectListOptions.repeating = [ { v: '', n: 'All' }, { v: false, n: 'Not Re-watching' }, { v: true, n: 'Re-watching' } ];
+                } else if (controller === 'mangaitem') {
+                    selectListOptions.sortOptions = [ { v: 'title', n: 'Title' },{ v: 'chapters', n: 'Chapters' },{ v: 'volumes', n: 'Volumes' },{ v: 'start', n: 'Start date' },
+                                                      { v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' } 
+                                                    ];
+                    selectListOptions.media = [ { v: '', n: 'All' }, { v: false, n: 'Online' }, { v: true, n: 'Hardcopy' } ];
+                    selectListOptions.repeating = [ { v: '', n: 'All' }, { v: false, n: 'Not Re-reading' }, { v: true, n: 'Re-reading' } ];
+                }
+            } else if (controller === 'character') {
+                selectListOptions.sortOptions = [ { v: 'name', n: 'Name' }, { v: 'anime.title', n: 'Anime' }, { v: 'manga.title', n: 'Manga' }, { v: 'voice', n: 'Voice' }  ];
+                selectListOptions.media = [ { v: '', n: '-- choose media type --' }, { v: 'none', n: 'None' }, { v: 'anime', n: 'Anime-only' }, { v: 'manga', n: 'Manga-only' }, { v: 'both', n: 'Both' } ];
+            }
+            return selectListOptions;
+        };
     
         this.addTag = function(tagArray, newTag) {
             if (newTag!=='' && newTag!==undefined) {
@@ -870,7 +891,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             $scope.currentPage = pagingDetails.currentPage;
             $scope.pageCount = pagingDetails.pageCount;
         });
-        
+        $scope.selectListOptions = ListService.getSelectListOptions($scope.whichController);
         $scope.isList = 'list'; //show list? or carousel.
         $scope.maxItemCount = 0; //number of characters.
         $scope.statTagSortType = 'count'; //stat tag sort
@@ -880,7 +901,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.statSeriesSortType = 'count'; //stat series sort
         $scope.statSeriesSortReverse = true; //stat series sort direction.
         $scope.myInterval = 2500; //carousel timer.
-        $scope.sortType = 'name'; //default sort type
 	    $scope.sortReverse = false; // default sort order
         $scope.imgPath = ''; //image path
         //$scope.newTag = ''; //for adding tags.
@@ -2491,11 +2511,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         
         //today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
         $scope.itemUpdate = new Date().toISOString().substring(0,10);
-//        $scope.sortType = 'latest'; //default sort type
-        $scope.sortOptions = [
-            { v: 'title', n: 'Title' },{ v: 'chapters', n: 'Chapters' },{ v: 'volumes', n: 'Volumes' },{ v: 'start', n: 'Start date' },
-            { v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' }
-        ];
+        $scope.selectListOptions = ListService.getSelectListOptions($scope.whichController);
 	    $scope.sortReverse = true; // default sort order
         $scope.finalNumbers = false; //default show status of final number fields in edit view.
         $scope.ratingLevel = undefined; //default rating selection

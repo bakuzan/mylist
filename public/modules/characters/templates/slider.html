@@ -1,0 +1,13 @@
+<ul class="slider">
+    <li class="slide" ng-repeat="slide in slides | filter: search | mediaFilter: media | tagFilter: searchTags:taglessItem" ng-show="slide.visible" ng-if="repeater">
+        <a href="/#!/characters/{{slide._id}}">
+            <img class="slide-image" ng-src="{{trustAsResourceUrl(slide.image)}}">
+            <div class="slide-caption">
+                <span class="dark-bordered-font-heading">{{slide.name}}</span>
+            </div>
+        </a>
+    </li>
+    <ul class="slider-indicators">
+        <li ng-repeat="slide in slides" ng-click="goToSlide($index)" class="indicator" ng-class="{ 'active' : slide.visible, 'locked' : slide.locked }"></li>
+    </ul>
+</ul>

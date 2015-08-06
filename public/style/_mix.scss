@@ -4,11 +4,17 @@
         appearance: $appearance;
 }
 
-@mixin transition($transitionWidth, $transitionDuration) {
-    -webkit-transition: $transitionWidth $transitionDuration;
-         -o-transition: $transitionWidth $transitionDuration;
-       -moz-transition: $transitionWidth $transitionDuration;
-            transition: $transitionWidth $transitionDuration;
+@mixin transition($property, $duration) {
+    -webkit-transition: $property $duration;
+         -o-transition: $property $duration;
+       -moz-transition: $property $duration;
+            transition: $property $duration;
+}
+@mixin transition-timing($property, $duration, $timing) {
+  -webkit-transition: $property $duration $timing;
+     -moz-transition: $property $duration $timing;
+       -o-transition: $property $duration $timing;
+          transition: $property $duration $timing;
 }
 
 @mixin justify-content($justify-content) {
@@ -26,8 +32,8 @@
 }
 @mixin background-image($from, $to) {
     background-image: -webkit-gradient(linear,left 0,left 100%,from($from),to($to));
-    background-image: -webkit-linear-gradient(top,$from 0,$to 100%);
-    background-image: -moz-linear-gradient(top,$from 0,$to 100%);
-    background-image: -o-linear-gradient(top,$from 0,$to 100%);
-    background-image: linear-gradient(to bottom,$from 0,$to 100%);
+    background-image:                 -webkit-linear-gradient(top,$from 0,$to 100%);
+    background-image:                    -moz-linear-gradient(top,$from 0,$to 100%);
+    background-image:                      -o-linear-gradient(top,$from 0,$to 100%);
+    background-image:                   linear-gradient(to bottom,$from 0,$to 100%);
 }

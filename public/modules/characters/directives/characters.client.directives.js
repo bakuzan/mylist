@@ -11,13 +11,93 @@ angular.module('characters').directive('characterBack', function(){
         });
     };
 })
-.directive('disableNgAnimate', ['$animate', function($animate) {
+//.directive('disableNgAnimate', ['$animate', function($animate) {
+//  return {
+//    restrict: 'A',
+//    link: function(scope, element) {
+//      $animate.enabled(false, element);
+//    }
+//  };
+//}])
+.directive('slider', ['$timeout', '$sce', function($timeout, $sce) {
   return {
-    restrict: 'A',
-    link: function(scope, element) {
-      $animate.enabled(false, element);
-    }
+      restrict: 'AE',
+      replace: true,
+      scope: {
+          slides: '=?'
+      },
+      templateUrl: '/modules/characters/templates/slider.html',
+      link: function(scope, elem, attrs) {
+          var timer, autoSlide, length = elem[0].childElementCount - 1;
+          scope.repeater = scope.slides === undefined ? false : true; //is there a collection to iterate through?
+          scope.currentIndex = 0; //inital slide.
+          //allow retreival of local resource
+          scope.trustAsResourceUrl = function(url) {
+              return $sce.trustAsResourceUrl(url);
+          };
+          
+          //if no collection, make a dummy collection to cycle throught the children.
+          if (!scope.repeater) {
+            scope.slides = []; //used to allow cycling.
+            for(var i = 0; i < length; i++) {
+                scope.slides.push({ index: i });
+            }
+          }
+          scope.goToSlide = function(slide) {
+              if (scope.currentIndex !== slide) {
+                  //reached end of slides?
+                  if (slide !== scope.slides.length) {
+                    scope.currentIndex = slide;
+                  } else {
+                    scope.currentIndex = 0;
+                  }
+              } else {
+                  if (scope.slides[scope.currentIndex].locked) {
+                    //unlock, i.e start timer.
+                    scope.slides[scope.currentIndex].locked = false;
+                  } else {
+                    //lock, i.e. cancel timer.
+                    scope.slides[scope.currentIndex].locked = true;
+                    $timeout.cancel(timer);
+                  }
+              }
+          };
+          
+          scope.$watch('currentIndex', function() {
+            scope.slides.forEach(function(slide) {
+                slide.visible = false; // make every slide invisible
+                slide.locked = false; // make every slide unlocked
+            });
+            scope.slides[scope.currentIndex].visible = true; // make the current slide visible
+          });
+          
+          autoSlide = function() {
+              timer = $timeout(function() {
+                  var next = scope.currentIndex + 1;
+                  scope.goToSlide(next);
+                  timer = $timeout(autoSlide, 3000);
+              }, 3000);
+          };
+          autoSlide();
+          scope.$on('$destroy', function() {
+              $timeout.cancel(timer); // when the scope is destroyed, cancel the timer
+          });
+          
+          //Stop timer on enter.
+          elem.bind('mouseenter', function() {
+              if (scope.slides[scope.currentIndex].locked === false) {
+                $timeout.cancel(timer);
+              }
+          });
+          //Restart timer on leave.
+          elem.bind('mouseleave', function() {
+              if (scope.slides[scope.currentIndex].locked === false) {
+                timer = $timeout(autoSlide, 3000);
+              }
+          });
+      }
   };
+    
 }])
 .directive('enterTag', function () {
     return {

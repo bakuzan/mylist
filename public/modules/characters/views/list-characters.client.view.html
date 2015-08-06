@@ -111,18 +111,21 @@
             </div><!-- VIEW ITEM END-->
         </div><!-- LIST ITEM END -->
     </div><!-- LIST END -->
-            <div class="characterCarousel col-lg-12 col-md-12 col-sm-12 mt" style="height: 300px;" data-ng-show="isList==='carousel'">
-        <carousel interval="myInterval" style="height: 300px;" disable-ng-animate>
-            <slide ng-repeat="character in characters | filter: search | mediaFilter: media | tagFilter: searchTags:taglessItem" active="character.active">
-                <a href="/#!/characters/{{character._id}}">
-                    <img ng-src="{{trustAsResourceUrl(character.image)}}" style="height: 300px; width: auto; margin: auto;">
-                    <div class="carousel-caption">
-                        <span class="dark-bordered-font-heading"> {{character.name}} </span>
-                    </div>
-                </a>
-            </slide>
-        </carousel>
-    </div>
+            <div class="slider-container col-lg-12 col-md-12 col-sm-12" data-ng-show="isList==='carousel'">
+                <ul slider slides="characters"></ul>
+<!--
+                <carousel interval="myInterval" style="height: 300px;" disable-ng-animate>
+                    <slide ng-repeat="character in characters | filter: search | mediaFilter: media | tagFilter: searchTags:taglessItem" active="character.active">
+                        <a href="/#!/characters/{{character._id}}">
+                            <img ng-src="{{trustAsResourceUrl(character.image)}}" style="height: 300px; width: auto; margin: auto;">
+                            <div class="carousel-caption">
+                                <span class="dark-bordered-font-heading"> {{character.name}} </span>
+                            </div>
+                        </a>
+                    </slide>
+                </carousel>
+-->
+            </div>
         </div>
     </div>
     <section class="loading-image" data-ng-if="isLoading"></section>

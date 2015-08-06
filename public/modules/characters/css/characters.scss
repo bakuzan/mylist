@@ -48,3 +48,86 @@
         min-width: 25%;
     }
 }
+
+.slider-container {
+    min-height: 450px;
+    padding: 0;
+}
+
+.slider {
+    position: relative;
+    width: 100%;
+    min-height: 400px;
+    padding: 5px;
+    margin: auto;
+    list-style-type: none;
+}
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: auto;
+  max-width: 100%;
+  min-height: 300px;
+  margin: auto;
+  @include box-shadow(0px, 0px, 15px, $brand-accent);
+  a {
+      height: 300px;
+      text-decoration: none;
+      .slide-image {
+        display: block;
+        width: auto;
+        max-width: 100%;
+        height: inherit;
+        margin: auto;
+      }
+  }
+}
+
+.slide-caption {
+    position: absolute;
+    top: 80%;
+    width: 100%;
+    text-align: center;
+}
+
+.slider-indicators {
+    position: absolute;
+    bottom: 2%;
+    width: 100%;
+    text-align: center;
+    
+    li.indicator {
+        display: inline-block;
+        position: relative;
+        cursor: pointer;
+        height: 16px;
+        width: 16px;
+        margin: 0 12px;
+        background-color: $grey-light;
+        @include transition(background-color, 0.3s);
+        border-radius: 50%;
+    }
+    li.indicator.active {
+        @extend li.indicator;
+        background-color: $brand-accent;
+    }
+    li.indicator.active.locked {
+        @extend li.indicator;
+        background-color: $brand-accent-alter;
+    }
+}
+
+.slide.ng-hide-add,
+.slide.ng-hide-remove {
+  @include transition-timing(all, 0.5s, linear);
+  display: block!important;
+}
+.slide.ng-hide-add.ng-hide-add-active,
+.slide.ng-hide-remove {
+  opacity: 0;
+}
+.slide.ng-hide-add,
+.slide.ng-hide-remove.ng-hide-remove-active {
+  opacity: 1;
+}

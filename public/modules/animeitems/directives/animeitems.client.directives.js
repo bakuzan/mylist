@@ -42,8 +42,8 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
                     scope.currentPage = scope.currentPage - 1;
                 } else if (e.altKey && e.keyCode===86) {
                     if (scope.isList==='list') {
-                        scope.isList = 'carousel';
-                    } else if (scope.isList==='carousel') {
+                        scope.isList = 'slider';
+                    } else if (scope.isList==='slider') {
                         scope.isList = 'list';
                     } else if (scope.view === 'Anime') {
                         scope.view = 'Manga';

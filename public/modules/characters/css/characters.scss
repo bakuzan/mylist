@@ -66,29 +66,63 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: auto;
+  width: 100%;
   max-width: 100%;
+  overflow: hidden;
   min-height: 300px;
   margin: auto;
   @include box-shadow(0px, 0px, 15px, $brand-accent);
   a {
-      height: 300px;
       text-decoration: none;
       .slide-image {
         display: block;
+        height: 300px;
         width: auto;
         max-width: 100%;
-        height: inherit;
         margin: auto;
+      }
+      .slide-caption {
+        position: absolute;
+        top: 80%;
+        width: 100%;
+        text-align: center;
       }
   }
 }
-
-.slide-caption {
+.slider-control {
     position: absolute;
-    top: 80%;
-    width: 100%;
+    top: 0;
+    left: 0;
+    height: 300px;
+    width: 15%;
+    font-size: 20px;
+    color: #fff;
     text-align: center;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .6);
+    filter: alpha(opacity=50);
+    opacity: 0.5;
+    span {
+        position: absolute;
+        top: 50%;
+    }
+}
+.slider-control.left {
+    background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, .5) 0%, rgba(0, 0, 0, .0001) 100%);
+    background-image: -o-linear-gradient(left, rgba(0, 0, 0, .5) 0%, rgba(0, 0, 0, .0001) 100%);
+    background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, .5)), to(rgba(0, 0, 0, .0001)));
+    background-image: linear-gradient(to right, rgba(0, 0, 0, .5) 0%, rgba(0, 0, 0, .0001) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#80000000', endColorstr='#00000000', GradientType=1);
+    background-repeat: repeat-x;
+}
+.slider-control.right {
+    right: 0;
+    left: auto;
+    background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, .0001) 0%, rgba(0, 0, 0, .5) 100%);
+    background-image: -o-linear-gradient(left, rgba(0, 0, 0, .0001) 0%, rgba(0, 0, 0, .5) 100%);
+    background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, .0001)), to(rgba(0, 0, 0, .5)));
+    background-image: linear-gradient(to right, rgba(0, 0, 0, .0001) 0%, rgba(0, 0, 0, .5) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#80000000', GradientType=1);
+    background-repeat: repeat-x;
 }
 
 .slider-indicators {

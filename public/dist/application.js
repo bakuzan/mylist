@@ -388,8 +388,8 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
                     scope.currentPage = scope.currentPage - 1;
                 } else if (e.altKey && e.keyCode===86) {
                     if (scope.isList==='list') {
-                        scope.isList = 'carousel';
-                    } else if (scope.isList==='carousel') {
+                        scope.isList = 'slider';
+                    } else if (scope.isList==='slider') {
                         scope.isList = 'list';
                     } else if (scope.view === 'Anime') {
                         scope.view = 'Manga';
@@ -892,7 +892,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             $scope.pageCount = pagingDetails.pageCount;
         });
         $scope.selectListOptions = ListService.getSelectListOptions($scope.whichController);
-        $scope.isList = 'list'; //show list? or carousel.
+        $scope.isList = 'list'; //show list? or slider.
         $scope.maxItemCount = 0; //number of characters.
         $scope.statTagSortType = 'count'; //stat tag sort
         $scope.statTagSortReverse = true; //stat tag sort direction.
@@ -900,7 +900,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.statTagDetailSortReverse = true; //stat tag detail sort direction.
         $scope.statSeriesSortType = 'count'; //stat series sort
         $scope.statSeriesSortReverse = true; //stat series sort direction.
-        $scope.myInterval = 2500; //carousel timer.
 	    $scope.sortReverse = false; // default sort order
         $scope.imgPath = ''; //image path
         //$scope.newTag = ''; //for adding tags.
@@ -916,9 +915,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.seriesSearch = ''; //for filtering series values.
         $scope.areTagless = false; //are any items tagless
         $scope.taglessItem = false; //filter variable for showing tagless items.
-        $scope.male = 0; //gender count for pb.
-        $scope.female = 0; //gender count for pb.
-        $scope.nosex = 0; //no gender count for pb.
 
         //allow retreival of local resource
         $scope.trustAsResourceUrl = function(url) {
@@ -1114,7 +1110,7 @@ angular.module('characters').directive('characterBack', function(){
         var url = attrs.characterBack;
         element.css({
             'background-image': 'url(' + url +')',
-            'background-size' : '100%',
+            'background-size' : 'cover',
             'background-repeat': 'no-repeat',
             'background-position': 'center'
         });
@@ -1127,6 +1123,124 @@ angular.module('characters').directive('characterBack', function(){
       $animate.enabled(false, element);
     }
   };
+}])
+.directive('slider', ['$timeout', '$sce', function($timeout, $sce) {
+  return {
+      restrict: 'AE',
+      replace: true,
+      scope: {
+          slides: '=?',
+          interval: '=?'
+      },
+      templateUrl: '/modules/characters/templates/slider.html',
+      link: function(scope, elem, attrs) {
+          var timer, autoSlide, length = elem[0].childElementCount - 1;
+          scope.currentIndex = 0; //first slide.
+          scope.repeater = scope.slides === undefined ? false : true; //is there a collection to iterate through?
+          scope.interval = scope.interval === undefined ? 3000 : scope.interval; //is there a custom interval?
+          
+          //allow retreival of local resource
+          scope.trustAsResourceUrl = function(url) {
+              return $sce.trustAsResourceUrl(url);
+          };
+          
+          //if no collection, make a dummy collection to cycle throught the children.
+          if (!scope.repeater) {
+            scope.slides = []; //used to allow cycling.
+            for(var i = 0; i < length; i++) {
+                scope.slides.push({ index: i });
+            }
+          }
+          scope.goToSlide = function(slide) {
+              if (scope.currentIndex !== slide) {
+                  //reached end of slides?
+                  if (slide !== scope.slides.length) {
+                    scope.currentIndex = slide;
+                  } else {
+                    scope.currentIndex = 0;
+                  }
+              } else {
+                  if (scope.slides[scope.currentIndex].locked) {
+                    //unlock, i.e start timer.
+                    scope.slides[scope.currentIndex].locked = false;
+                  } else {
+                    //lock, i.e. cancel timer.
+                    scope.slides[scope.currentIndex].locked = true;
+                    $timeout.cancel(timer);
+                  }
+              }
+          };
+          scope.next = function() {
+              if (scope.currentIndex !== scope.slides.length - 1) {
+                  scope.currentIndex += 1;
+              } else {
+                  scope.currentIndex = 0;
+              }
+          };
+          scope.prev = function() {
+              if (scope.currentIndex !== 0) {
+                  scope.currentIndex -= 1;
+              } else {
+                  scope.currentIndex = scope.slides.length - 1;
+              }
+          };
+          
+          scope.$watch('currentIndex', function() {
+              console.log(scope.currentIndex);
+              if (scope.currentIndex !== undefined) {
+                scope.slides.forEach(function(slide) {
+                    slide.visible = false; // make every slide invisible
+                    slide.locked = false; // make every slide unlocked
+                });
+                scope.slides[scope.currentIndex].visible = true; // make the current slide visible
+              }
+          });
+          
+          autoSlide = function() {
+              timer = $timeout(function() {
+                  var next = scope.currentIndex + 1;
+                  scope.goToSlide(next);
+                  timer = $timeout(autoSlide, scope.interval);
+              }, scope.interval);
+          };
+          autoSlide();
+          scope.$on('$destroy', function() {
+              $timeout.cancel(timer); // when the scope is destroyed, cancel the timer
+          });
+          
+          //Stop timer on enter.
+          elem.bind('mouseenter', function() {
+              console.log('entered');
+              if (scope.slides[scope.currentIndex].locked === false) {
+                $timeout.cancel(timer);
+                  console.log('enter cancel');
+              }
+          });
+          //Restart timer on leave.
+          elem.bind('mouseleave', function() {
+              console.log('left');
+              if (scope.slides[scope.currentIndex].locked === false) {
+                timer = $timeout(autoSlide, scope.interval);
+                  console.log('left restart');
+              }
+          });
+          
+          /** FILTERS
+           *    Code below here will allow the slides to be affected by the character filters.
+           */
+//          scope.$watch('$parent.search', function(newValue) {
+//              if (scope.$parent.search !== undefined) {
+//                  scope.search = newValue;
+//              }
+//          });
+//          scope.$watch('$parent.media', function(newValue) {
+//              if (scope.$parent.media !== undefined) {
+//                  scope.media = newValue;
+//              }
+//          });
+      }
+  };
+    
 }])
 .directive('enterTag', function () {
     return {

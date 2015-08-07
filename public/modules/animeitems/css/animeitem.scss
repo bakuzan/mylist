@@ -96,8 +96,8 @@
     top: 0;
     left: 0;
     z-index: 1000;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     background-color: #C0C0C0;
     background-color: rgba(192, 192, 192, 0.5);
     background-image: url("/modules/core/img/loaders/info-loader.gif");
@@ -112,7 +112,7 @@
 }
 
 .item-placeholder-container {
-    min-height: 600px;
+//    min-height: 600px;
     margin-top: 40px;
 }
 
@@ -129,6 +129,17 @@
     max-width: 350px;
     min-width: 200px;
 }
+.in-the-way {
+    @media (max-width: $break-small) {
+        display: none;
+    }
+}
+.show-actions {
+    display: none;
+    @media (max-width: $break-small) {
+        display: inline-block;
+    }
+}
 
 .search-tag-list-container {
     min-width: 180px;
@@ -138,7 +149,6 @@
     .btn-ends {
         display: none;
     }
-
 }
 
 .rating-stars {

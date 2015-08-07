@@ -1,15 +1,15 @@
 <section data-ng-controller="CharactersController" data-ng-init="find()" data-ng-show="authentication.user">
     <span keycuts></span>
     <div class="fixed-header">
-        <h1>Characters {{isList}}</h1>
+        <h1>Characters {{isList}} <button class="btn btn-primary show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</button></h1>
     </div>
     <div class="container">
-        <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container">
+        <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }">
             <div class="view-controls">
                 <label class="btn btn-primary" ng-model="isList" btn-radio="'list'">List</label>
-                <label class="btn btn-primary" ng-model="isList" btn-radio="'carousel'">Carousel</label>
+                <label class="btn btn-primary" ng-model="isList" btn-radio="'slider'">Slider</label>
             </div>
-        <div class="paging-controls col-lg-12 col-md-12 col-sm-12" ng-hide="isList === 'carousel'">
+        <div class="paging-controls col-lg-12 col-md-12 col-sm-12" ng-hide="isList === 'slider'">
             <button class="btn btn-accent btn-ends" ng-click="currentPage=0">First</button>
             <button class="btn btn-primary" ng-disabled="currentPage <= 0" ng-click="currentPage=currentPage-1">
                 Previous
@@ -111,8 +111,8 @@
             </div><!-- VIEW ITEM END-->
         </div><!-- LIST ITEM END -->
     </div><!-- LIST END -->
-            <div class="slider-container col-lg-12 col-md-12 col-sm-12" data-ng-show="isList==='carousel'">
-                <ul slider slides="characters"></ul>
+            <div class="slider-container col-lg-12 col-md-12 col-sm-12" data-ng-show="isList==='slider'">
+                <ul slider slides="characters" interval="1000"></ul>
 <!--
                 <carousel interval="myInterval" style="height: 300px;" disable-ng-animate>
                     <slide ng-repeat="character in characters | filter: search | mediaFilter: media | tagFilter: searchTags:taglessItem" active="character.active">

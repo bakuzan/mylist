@@ -1,10 +1,10 @@
 <section data-ng-controller="AnimeitemsController" data-ng-init="find()" data-ng-show="authentication.user">
     <span keycuts></span>
     <div class="fixed-header">
-        <h1>Anime list</h1>
+        <h1>Anime list <button class="btn btn-primary show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</button></h1>
     </div>
     <div class="container">
-        <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container">
+        <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }">
         <div class="paging-controls col-lg-12 col-md-12 col-sm-12">
             <button class="btn btn-accent btn-ends" ng-click="currentPage=0">First</button>
             <button class="btn btn-primary" ng-disabled="currentPage <= 0" ng-click="currentPage=currentPage-1">

@@ -5,32 +5,35 @@ angular.module('characters').directive('characterBack', function(){
         var url = attrs.characterBack;
         element.css({
             'background-image': 'url(' + url +')',
-            'background-size' : '100%',
+            'background-size' : 'cover',
             'background-repeat': 'no-repeat',
             'background-position': 'center'
         });
     };
 })
-//.directive('disableNgAnimate', ['$animate', function($animate) {
-//  return {
-//    restrict: 'A',
-//    link: function(scope, element) {
-//      $animate.enabled(false, element);
-//    }
-//  };
-//}])
+.directive('disableNgAnimate', ['$animate', function($animate) {
+  return {
+    restrict: 'A',
+    link: function(scope, element) {
+      $animate.enabled(false, element);
+    }
+  };
+}])
 .directive('slider', ['$timeout', '$sce', function($timeout, $sce) {
   return {
       restrict: 'AE',
       replace: true,
       scope: {
-          slides: '=?'
+          slides: '=?',
+          interval: '=?'
       },
       templateUrl: '/modules/characters/templates/slider.html',
       link: function(scope, elem, attrs) {
           var timer, autoSlide, length = elem[0].childElementCount - 1;
+          scope.currentIndex = 0; //first slide.
           scope.repeater = scope.slides === undefined ? false : true; //is there a collection to iterate through?
-          scope.currentIndex = 0; //inital slide.
+          scope.interval = scope.interval === undefined ? 3000 : scope.interval; //is there a custom interval?
+          
           //allow retreival of local resource
           scope.trustAsResourceUrl = function(url) {
               return $sce.trustAsResourceUrl(url);
@@ -62,21 +65,38 @@ angular.module('characters').directive('characterBack', function(){
                   }
               }
           };
+          scope.next = function() {
+              if (scope.currentIndex !== scope.slides.length - 1) {
+                  scope.currentIndex += 1;
+              } else {
+                  scope.currentIndex = 0;
+              }
+          };
+          scope.prev = function() {
+              if (scope.currentIndex !== 0) {
+                  scope.currentIndex -= 1;
+              } else {
+                  scope.currentIndex = scope.slides.length - 1;
+              }
+          };
           
           scope.$watch('currentIndex', function() {
-            scope.slides.forEach(function(slide) {
-                slide.visible = false; // make every slide invisible
-                slide.locked = false; // make every slide unlocked
-            });
-            scope.slides[scope.currentIndex].visible = true; // make the current slide visible
+              console.log(scope.currentIndex);
+              if (scope.currentIndex !== undefined) {
+                scope.slides.forEach(function(slide) {
+                    slide.visible = false; // make every slide invisible
+                    slide.locked = false; // make every slide unlocked
+                });
+                scope.slides[scope.currentIndex].visible = true; // make the current slide visible
+              }
           });
           
           autoSlide = function() {
               timer = $timeout(function() {
                   var next = scope.currentIndex + 1;
                   scope.goToSlide(next);
-                  timer = $timeout(autoSlide, 3000);
-              }, 3000);
+                  timer = $timeout(autoSlide, scope.interval);
+              }, scope.interval);
           };
           autoSlide();
           scope.$on('$destroy', function() {
@@ -85,16 +105,34 @@ angular.module('characters').directive('characterBack', function(){
           
           //Stop timer on enter.
           elem.bind('mouseenter', function() {
+              console.log('entered');
               if (scope.slides[scope.currentIndex].locked === false) {
                 $timeout.cancel(timer);
+                  console.log('enter cancel');
               }
           });
           //Restart timer on leave.
           elem.bind('mouseleave', function() {
+              console.log('left');
               if (scope.slides[scope.currentIndex].locked === false) {
-                timer = $timeout(autoSlide, 3000);
+                timer = $timeout(autoSlide, scope.interval);
+                  console.log('left restart');
               }
           });
+          
+          /** FILTERS
+           *    Code below here will allow the slides to be affected by the character filters.
+           */
+//          scope.$watch('$parent.search', function(newValue) {
+//              if (scope.$parent.search !== undefined) {
+//                  scope.search = newValue;
+//              }
+//          });
+//          scope.$watch('$parent.media', function(newValue) {
+//              if (scope.$parent.media !== undefined) {
+//                  scope.media = newValue;
+//              }
+//          });
       }
   };
     

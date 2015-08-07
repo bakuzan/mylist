@@ -20,7 +20,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             $scope.pageCount = pagingDetails.pageCount;
         });
         $scope.selectListOptions = ListService.getSelectListOptions($scope.whichController);
-        $scope.isList = 'list'; //show list? or carousel.
+        $scope.isList = 'list'; //show list? or slider.
         $scope.maxItemCount = 0; //number of characters.
         $scope.statTagSortType = 'count'; //stat tag sort
         $scope.statTagSortReverse = true; //stat tag sort direction.
@@ -28,7 +28,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.statTagDetailSortReverse = true; //stat tag detail sort direction.
         $scope.statSeriesSortType = 'count'; //stat series sort
         $scope.statSeriesSortReverse = true; //stat series sort direction.
-        $scope.myInterval = 2500; //carousel timer.
 	    $scope.sortReverse = false; // default sort order
         $scope.imgPath = ''; //image path
         //$scope.newTag = ''; //for adding tags.
@@ -44,9 +43,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.seriesSearch = ''; //for filtering series values.
         $scope.areTagless = false; //are any items tagless
         $scope.taglessItem = false; //filter variable for showing tagless items.
-        $scope.male = 0; //gender count for pb.
-        $scope.female = 0; //gender count for pb.
-        $scope.nosex = 0; //no gender count for pb.
 
         //allow retreival of local resource
         $scope.trustAsResourceUrl = function(url) {

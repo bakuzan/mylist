@@ -47,54 +47,54 @@ angular.module('characters').directive('characterBack', function(){
             }
           }
           scope.goToSlide = function(slide) {
+//              console.log('go to', slide);
               if (scope.currentIndex !== slide) {
                   //reached end of slides?
-                  if (slide !== scope.slides.length) {
+                  if (slide !== scope.filteredSlides.length) {
                     scope.currentIndex = slide;
                   } else {
                     scope.currentIndex = 0;
                   }
               } else {
-                  if (scope.slides[scope.currentIndex].locked) {
+                  if (scope.filteredSlides[scope.currentIndex].locked) {
                     //unlock, i.e start timer.
-                    scope.slides[scope.currentIndex].locked = false;
+                    scope.filteredSlides[scope.currentIndex].locked = false;
                   } else {
                     //lock, i.e. cancel timer.
-                    scope.slides[scope.currentIndex].locked = true;
+                    scope.filteredSlides[scope.currentIndex].locked = true;
                     $timeout.cancel(timer);
                   }
               }
           };
           scope.next = function() {
-              if (scope.currentIndex !== scope.slides.length - 1) {
+              if (scope.currentIndex < scope.filteredSlides.length - 1) {
                   scope.currentIndex += 1;
               } else {
                   scope.currentIndex = 0;
               }
           };
           scope.prev = function() {
-              if (scope.currentIndex !== 0) {
+              if (scope.currentIndex > 0) {
                   scope.currentIndex -= 1;
               } else {
-                  scope.currentIndex = scope.slides.length - 1;
+                  scope.currentIndex = scope.filteredSlides.length - 1;
               }
           };
           
           scope.$watch('currentIndex', function() {
-              console.log(scope.currentIndex);
+//              console.log('index', scope.currentIndex);
               if (scope.currentIndex !== undefined) {
-                scope.slides.forEach(function(slide) {
-                    slide.visible = false; // make every slide invisible
-                    slide.locked = false; // make every slide unlocked
-                });
-                scope.slides[scope.currentIndex].visible = true; // make the current slide visible
+                    scope.filteredSlides.forEach(function(slide) {
+                        slide.visible = false; // make every slide invisible
+                        slide.locked = false; // make every slide unlocked
+                    });
+                    scope.filteredSlides[scope.currentIndex].visible = true; // make the current slide visible
               }
           });
           
           autoSlide = function() {
               timer = $timeout(function() {
-                  var next = scope.currentIndex + 1;
-                  scope.goToSlide(next);
+                  scope.next();
                   timer = $timeout(autoSlide, scope.interval);
               }, scope.interval);
           };
@@ -104,35 +104,51 @@ angular.module('characters').directive('characterBack', function(){
           });
           
           //Stop timer on enter.
-          elem.bind('mouseenter', function() {
-              console.log('entered');
-              if (scope.slides[scope.currentIndex].locked === false) {
+          scope.enter = function() {
+//              console.log('entered');
+              if (scope.filteredSlides[scope.currentIndex].locked !== true) {
                 $timeout.cancel(timer);
-                  console.log('enter cancel');
+//                  console.log('cancelled');
               }
-          });
+          };
           //Restart timer on leave.
-          elem.bind('mouseleave', function() {
-              console.log('left');
-              if (scope.slides[scope.currentIndex].locked === false) {
+          scope.leave = function() {
+//              console.log('left');
+              if (scope.filteredSlides[scope.currentIndex].locked !== true) {
                 timer = $timeout(autoSlide, scope.interval);
-                  console.log('left restart');
+//                  console.log('restarted');
               }
-          });
+          };
           
           /** FILTERS
            *    Code below here will allow the slides to be affected by the character filters.
+           *    Note: the interval is removed and replaced to avoid the auto-slide fouling the
+           *            change over up.
            */
-//          scope.$watch('$parent.search', function(newValue) {
-//              if (scope.$parent.search !== undefined) {
-//                  scope.search = newValue;
-//              }
-//          });
-//          scope.$watch('$parent.media', function(newValue) {
-//              if (scope.$parent.media !== undefined) {
-//                  scope.media = newValue;
-//              }
-//          });
+          scope.$watch('$parent.search', function(newValue) {
+              if (scope.$parent.search !== undefined) {
+                  var temp = scope.interval;
+                  scope.interval = null;
+                  scope.search = newValue;
+                  scope.interval = temp;
+              }
+          });
+          scope.$watch('$parent.media', function(newValue) {
+              if (scope.$parent.media !== undefined) {
+                  var temp = scope.interval;
+                  scope.interval = null;
+                  scope.media = newValue;
+                  scope.interval = temp;
+              }
+          });
+          scope.$watch('$parent.searchTags', function(newValue) {
+              if (scope.$parent.media !== undefined) {
+                  var temp = scope.interval;
+                  scope.interval = null;
+                  scope.searchTags = newValue;
+                  scope.interval = temp;
+              }
+          });
       }
   };
     

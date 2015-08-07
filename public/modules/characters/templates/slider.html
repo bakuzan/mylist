@@ -1,4 +1,4 @@
-<ul class="slider">
+<ul class="slider" ng-mouseenter="enter()" ng-mouseleave="leave()">
     <li class="slide" ng-repeat="slide in (filteredSlides =  (slides | filter: search | mediaFilter: media | tagFilter: searchTags:taglessItem))" ng-show="slide.visible" ng-if="repeater">
         <a href="/#!/characters/{{slide._id}}">
             <img class="slide-image" ng-src="{{trustAsResourceUrl(slide.image)}}">
@@ -7,9 +7,9 @@
             </div>
         </a>
     </li>
-    <a class="left slider-control clickable" ng-click="prev()" ng-show="slides.length > 1"><span class="fa fa-chevron-left"></span></a>
-    <a class="right slider-control clickable" ng-click="next()" ng-show="slides.length > 1"><span class="fa fa-chevron-right"></span></a>
+    <a class="left slider-control clickable" ng-click="prev()" ng-show="filteredSlides.length > 1"><span class="fa fa-chevron-left"></span></a>
+    <a class="right slider-control clickable" ng-click="next()" ng-show="filteredSlides.length > 1"><span class="fa fa-chevron-right"></span></a>
     <ul class="slider-indicators">
-        <li ng-repeat="slide in slides" ng-click="goToSlide($index)" class="indicator" ng-class="{ 'active' : slide.visible, 'locked' : slide.locked }"></li>
+        <li ng-repeat="slide in slides | filter: search | mediaFilter: media | tagFilter: searchTags:taglessItem" ng-click="goToSlide($index)" class="indicator" ng-class="{ 'active' : slide.visible, 'locked' : slide.locked }"></li>
     </ul>
 </ul>

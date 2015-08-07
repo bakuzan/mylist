@@ -30,7 +30,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.statSeriesSortReverse = true; //stat series sort direction.
 	    $scope.sortReverse = false; // default sort order
         $scope.imgPath = ''; //image path
-        //$scope.newTag = ''; //for adding tags.
         $scope.tagArray = []; // holding tags pre-submit
         $scope.tagArrayRemove = [];
         $scope.usedTags = []; //for typeahead array.

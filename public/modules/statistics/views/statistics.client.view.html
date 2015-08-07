@@ -13,7 +13,6 @@
             <span class="accent-text">{{(items | filter: {status: false }).length }} in progress</span> - <span class="green-text">{{(items | filter: {status: true }).length }}  completed</span>
         </div><!-- OVERVIEW STATS END -->
         <div class="col-lg-12 col-md-12 col-sm-12 stat-history-panel">
-            <div class="col-lg-12 col-md-12 col-sm-12 stat-history" ng-init="showHistory = true">
             <div class="stat-header">
                 <div class="stat-header-label-container">
                     <h3 class="clickable" ng-click="showHistory = !showHistory"><i class="fa" ng-class="showHistory ? 'fa-minus-square' : 'fa-plus-square'"></i> History</h3>
@@ -21,6 +20,7 @@
                     <h3 class="btn stat-header-label" ng-model="historicalView" btn-radio="'season'" ng-show="showHistory && view === 'Anime'">by season</h3>
                 </div>
             </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 stat-history" ng-init="showHistory = true">
             <table class="col-lg-12 col-md-12 col-sm-12" ng-show="historicalView === 'month' && showHistory">
                 <thead>
                     <tr>
@@ -166,11 +166,11 @@
             </div>
         </div><!-- GENDER PERCENTAGE BAR END -->
         <div class="col-lg-6 col-md-6 col-sm-6 stat-tag-panel" ng-init="showStatTags = true">
-        <div class="col-lg-12 col-md-12 col-sm-12 stat-tag-main">
             <div class="stat-header">
                 <h3 class="clickable" ng-click="showStatTags = !showStatTags"><i class="fa" ng-class="showStatTags ? 'fa-minus-square' : 'fa-plus-square'"></i> Tags</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{statTags.length}} unique tags.</small></span>
             </div>
-            <div class="col-lg-12 col-md-12 col-sm-12" ng-show="showStatTags">
+            <div class="col-lg-12 col-md-12 col-sm-12 stat-tag-main">
+                <div class="col-lg-12 col-md-12 col-sm-12" ng-show="showStatTags">
                 <div class="input-group">
                     <div class="input-group-addon">
                         <i class="fa fa-search"></i>
@@ -204,8 +204,8 @@
                     </tbody>
                 </table>
             </div>
-        </div><!-- TAG PANEL END -->
-        <div class="col-lg-12 col-md-12 col-sm-12 stat-tag-detail" ng-show="showTagDetail && showStatTags">
+            </div><!-- TAG PANEL END -->
+            <div class="col-lg-12 col-md-12 col-sm-12 stat-tag-detail" ng-show="showTagDetail && showStatTags">
             <div class="col-lg-12 col-md-12 col-sm-12 stat-detail">
                 <div class="stat-detail-header">
                     <h3>Tags appearing with {{detailTagName}}</h3>
@@ -246,11 +246,11 @@
         </div><!-- TAG DETAIL PANEL END -->
         </div><!-- TAG CONTAINER END -->
         <div class="col-lg-6 col-md-6 col-sm-6 stat-media-panel" ng-init="showStatSeries = true">
-            <div class="col-lg-12 col-md-12 col-sm-12 stat-media-main">
             <div class="stat-header">
                 <h3 class="clickable" ng-click="showStatSeries = !showStatSeries"><i class="fa" ng-class="showStatSeries ? 'fa-minus-square' : 'fa-plus-square'"></i> Series</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{statSeries.length}} unique series.</small></span>
             </div>
-            <div class="col-lg-12 col-md-12 col-sm-12" ng-show="showStatSeries">
+            <div class="col-lg-12 col-md-12 col-sm-12 stat-media-main">
+                <div class="col-lg-12 col-md-12 col-sm-12" ng-show="showStatSeries">
                 <div class="input-group">
                     <div class="input-group-addon">
                         <i class="fa fa-search"></i>
@@ -284,8 +284,8 @@
                     </tbody>
                 </table>
             </div>
-        </div><!-- SERIES PANEL END -->
-        <div class="col-lg-12 col-md-12 col-sm-12 stat-media-detail" ng-show="showSeriesDetail && showStatSeries">
+            </div><!-- SERIES PANEL END -->
+            <div class="col-lg-12 col-md-12 col-sm-12 stat-media-detail" ng-show="showSeriesDetail && showStatSeries">
             <div class="col-lg-12 col-md-12 col-sm-12 stat-detail">
                 <div class="stat-detail-header">
                     <h3>Characters in {{detailSeriesName}}</h3>
@@ -299,10 +299,10 @@
         </div><!-- SERIES DETAIL PANEL END -->
         </div><!-- MEDIA CONTAINER END -->
         <div class="col-lg-6 col-md-6 col-sm-6 stat-voice-panel" ng-init="showVoiceActors = true">
-            <div class="col-lg-12 col-md-12 col-sm-12 stat-voice-main">
-                <div class="stat-header">
+            <div class="stat-header">
                     <h3 class="clickable" ng-click="showVoiceActors = !showVoiceActors"><i class="fa" ng-class="showVoiceActors ? 'fa-minus-square' : 'fa-plus-square'"></i> Voice Actors</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{voiceActors.length}} voices.</small></span>
                 </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 stat-voice-main">
                 <div class="col-lg-12 col-md-12 col-sm-12" ng-show="showVoiceActors">
                     <div class="input-group">
                         <div class="input-group-addon">

@@ -157,9 +157,9 @@
                         <div class="bar checklist-progress" style="width: {{ ((taskItem.checklistOptions | filter: {complete: true}).length / taskItem.checklistOptions.length) * 100}}%"></div>
                         </div>
                     </div>
-                    <div ng-if="taskItem.checklist" ng-show="viewTask">
-                        <ul class="checklistList">
-                            <li class="checklistItem" ng-repeat="option in taskItem.checklistOptions track by $index">
+                    <div ng-if="taskItem.checklist" class="checklist-list-container" ng-show="viewTask">
+                        <ul class="checklist-list">
+                            <li class="checklist-item" ng-repeat="option in taskItem.checklistOptions track by $index">
                                 <input type="checkbox" class="taskCheckbox" ng-model="option.complete" ng-change="tickOff(taskItem.description, option.text)" ng-disabled="option.complete">
                                 <span class="complete-{{option.complete}}">{{option.text}}</span>
                             </li>

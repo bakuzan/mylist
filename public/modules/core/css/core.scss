@@ -286,20 +286,20 @@ nav {
     .taskItem:last-child {
         border-bottom: none;
     }
-    
-//    .taskItem:nth-child(even) {
-//        background: $brand-primary;
-//    }
 }
 
 .taskItem {
+    max-height: 500px;
     border-bottom: $brand-border;
     padding: 15px 0;
     color: $brand-accent;
     font-weight: 600;
     font-size: 14px;
     letter-spacing: 0.5px;
-    
+    .checklist-list-container {
+        max-height: 350px;
+        overflow-y: auto;
+    }
     @media (min-width: $break-small) and (max-width: $break-medium) {
         span.task-description-text {
             white-space: nowrap;
@@ -590,7 +590,7 @@ nav {
     width: 95%;
 }
 
-.checklistItem {
+.checklist-item {
     padding: 5px;
 }
 

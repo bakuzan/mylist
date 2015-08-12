@@ -30,7 +30,7 @@ angular.module('characters').directive('characterBack', function(){
       templateUrl: '/modules/characters/templates/slider.html',
       link: function(scope, elem, attrs) {
           var timer, autoSlide, length = elem[0].childElementCount - 1;
-          scope.currentIndex = 0; //first slide.
+          scope.currentIndex = -1; //pre-first slide to stop 'cannot assign to undefined' error.
           scope.repeater = scope.slides === undefined ? false : true; //is there a collection to iterate through?
           scope.interval = scope.interval === undefined ? 3000 : scope.interval; //is there a custom interval?
           
@@ -82,8 +82,8 @@ angular.module('characters').directive('characterBack', function(){
           };
           
           scope.$watch('currentIndex', function() {
-//              console.log('index', scope.currentIndex);
-              if (scope.currentIndex !== undefined) {
+//              console.log('index', scope.currentIndex, 'filtered slides ', scope.filteredSlides);
+              if (scope.currentIndex > -1) {
                     scope.filteredSlides.forEach(function(slide) {
                         slide.visible = false; // make every slide invisible
                         slide.locked = false; // make every slide unlocked

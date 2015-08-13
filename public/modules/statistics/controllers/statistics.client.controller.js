@@ -45,6 +45,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.statVoiceSortReverse = true; //stat voice sort direction.
         $scope.statTags = []; //for tag statistics;
         $scope.showTagDetail = false; //visibility of detail for tags.
+        $scope.ratingsDistribution = []; //counts for each rating.
         $scope.statSearch = ''; //filter value for tag detail.
         $scope.statSeries = []; //for series statistics;
         $scope.voiceActors = []; //for voice actor list;
@@ -83,6 +84,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 $scope.statSearch = '';
                 $scope.showDetail = false;
                 $scope.statTags = [];
+                $scope.ratingsDistribution = [];
             }
         });
         
@@ -106,6 +108,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                         }
                     });
                     $scope.averageRating = tempRating / $scope.maxRatedCount;
+                    $scope.ratingsDistribution = ItemService.ratingsDistribution($scope.items, $scope.maxCount);
                     var maxTagCount = ItemService.maxTagCount($scope.items);
                     $scope.statTags = ItemService.buildStatTags($scope.items, maxTagCount, $scope.averageRating);
                 }

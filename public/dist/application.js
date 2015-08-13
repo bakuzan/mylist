@@ -773,6 +773,21 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             return value;
         };
     
+        //builds counts for number of items given for each rating.
+        this.ratingsDistribution = function(items, maxCount) {
+            var possibleValues = [10,9,8,7,6,5,4,3,2,1,0], ratingsDistribution = [], i = possibleValues.length;
+            while(i--) {
+                var count = $filter('filter')(items, { rating: i }, true).length;
+                ratingsDistribution.push({ number: i === 0 ? '-' : i,  
+                                           text: i === 0 ? count + ' entries unrated.' : count + ' entries rated ' + i, 
+                                           count: count,
+                                           percentage: ((count / maxCount) * 100).toFixed(2)
+                                         });
+            }
+//            console.log('RD: ', ratingsDistribution);
+            return ratingsDistribution;
+        };
+    
         // 'sub-function' of the completeBy... functions.
         this.endingYears = function(items) {
             var itemYears = $filter('unique')(items, 'end.substring(0,4)'); //get unqiue years as items.
@@ -2966,6 +2981,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.statVoiceSortReverse = true; //stat voice sort direction.
         $scope.statTags = []; //for tag statistics;
         $scope.showTagDetail = false; //visibility of detail for tags.
+        $scope.ratingsDistribution = []; //counts for each rating.
         $scope.statSearch = ''; //filter value for tag detail.
         $scope.statSeries = []; //for series statistics;
         $scope.voiceActors = []; //for voice actor list;
@@ -3004,6 +3020,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 $scope.statSearch = '';
                 $scope.showDetail = false;
                 $scope.statTags = [];
+                $scope.ratingsDistribution = [];
             }
         });
         
@@ -3027,6 +3044,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                         }
                     });
                     $scope.averageRating = tempRating / $scope.maxRatedCount;
+                    $scope.ratingsDistribution = ItemService.ratingsDistribution($scope.items, $scope.maxCount);
                     var maxTagCount = ItemService.maxTagCount($scope.items);
                     $scope.statTags = ItemService.buildStatTags($scope.items, maxTagCount, $scope.averageRating);
                 }

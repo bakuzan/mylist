@@ -43,6 +43,8 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.statSeriesSortReverse = true; //stat series sort direction.
         $scope.statVoiceSortType = 'count'; //stat voice sort
         $scope.statVoiceSortReverse = true; //stat voice sort direction.
+        $scope.overview = {}; //holds summary/overview details.
+        $scope.gender = {}; //holds gender summary details.
         $scope.statTags = []; //for tag statistics;
         $scope.showTagDetail = false; //visibility of detail for tags.
         $scope.ratingsDistribution = []; //counts for each rating.
@@ -92,23 +94,17 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             if ($scope.view !== 'Character') {
                 if ($scope.items!==undefined) {
                     $scope.statTags = []; //clear to stop multiple views tags appearing.
+                    $scope.overview = ItemService.buildOverview($scope.items);
                     $scope.maxCompleteMonth = ItemService.maxCompleteMonth($scope.items);
                     $scope.completeByMonth = ItemService.completeByMonth($scope.items);
                     if ($scope.view === 'Anime') {
                         $scope.completeBySeason = ItemService.completeBySeason($scope.items);
                     }
-                    
                     $scope.maxCount = $scope.items.length;
-                    var tempRating = 0;
-                    $scope.maxRatedCount = 0;
-                    angular.forEach($scope.items, function(item) {
-                        if (item.rating!==0) {
-                            tempRating += item.rating;
-                            $scope.maxRatedCount++;
-                        }
-                    });
-                    $scope.averageRating = tempRating / $scope.maxRatedCount;
-                    $scope.ratingsDistribution = ItemService.ratingsDistribution($scope.items, $scope.maxCount);
+                    var ratingValues = ItemService.getRatingValues($scope.items);
+                    $scope.maxRatedCount = ratingValues.maxRatedCount;
+                    $scope.averageRating = ratingValues.averageRating;
+                    $scope.ratingsDistribution = ItemService.buildRatingsDistribution($scope.items, $scope.maxCount);
                     var maxTagCount = ItemService.maxTagCount($scope.items);
                     $scope.statTags = ItemService.buildStatTags($scope.items, maxTagCount, $scope.averageRating);
                 }
@@ -119,15 +115,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                     $scope.statTags = CharacterService.buildCharacterTags($scope.items);
                     $scope.statSeries = CharacterService.buildSeriesList($scope.items);
                     $scope.voiceActors = CharacterService.buildVoiceActors($scope.items);
-                    //get gender counts.
-                    angular.forEach($scope.statTags, function(stat) {
-                        if (stat.tag==='male') {
-                            $scope.male = stat.count;
-                        } else if (stat.tag==='female') {
-                            $scope.female = stat.count;
-                        }
-                    });
-                    $scope.nosex = $scope.maxCount - $scope.male - $scope.female;
+                    $scope.gender = CharacterService.buildGenderDistribution($scope.statTags, $scope.maxCount);
                 }
             }
         });

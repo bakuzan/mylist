@@ -185,6 +185,16 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             }
         };
     
+        //build statistics item overview details.
+        this.buildOverview = function(items) {
+            var overview = { 
+                ongoing: $filter('filter')(items, {status: false }).length, 
+                completed: $filter('filter')(items, {status: true }).length
+            };
+//            console.log('overview ' , overview);
+            return overview;
+        };
+    
         //calculate which month has the most anime completed in it.
         this.maxCompleteMonth = function(items) {
             var modeMap = {}, maxCount = 0;
@@ -202,6 +212,26 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 }
             }
             return maxCount;
+        };
+    
+        //calculate the rating values - max rated count and average rating.
+        this.getRatingValues = function(items) {
+            var tempRating = 0,
+                maxRatedCount = 0,
+                averageRating = 0;
+            angular.forEach(items, function(item) {
+                if (item.rating !== 0) {
+                    tempRating += item.rating;
+                    maxRatedCount++;
+                }
+            });
+            averageRating = tempRating / maxRatedCount;
+            var values = {
+                maxRatedCount: maxRatedCount,
+                averageRating: averageRating
+            };
+//            console.log('values', values);
+            return values;
         };
     
         //calculate which month has the most anime completed in it.
@@ -299,7 +329,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         };
     
         //builds counts for number of items given for each rating.
-        this.ratingsDistribution = function(items, maxCount) {
+        this.buildRatingsDistribution = function(items, maxCount) {
             var possibleValues = [10,9,8,7,6,5,4,3,2,1,0], ratingsDistribution = [], i = possibleValues.length;
             while(i--) {
                 var count = $filter('filter')(items, { rating: i }, true).length;

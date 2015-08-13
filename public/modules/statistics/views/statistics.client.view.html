@@ -10,7 +10,7 @@
     </div>
     <div class="col-lg-12 col-md-12 col-sm-12" ng-hide="view === 'Character'">
         <div class="col-lg-12 col-md-12 col-sm-12 stat-overview">
-            <span class="accent-text">{{(items | filter: {status: false }).length }} in progress</span> - <span class="green-text">{{(items | filter: {status: true }).length }}  completed</span>
+            <span class="accent-text">{{overview.ongoing}} in progress</span> - <span class="green-text">{{overview.completed}}  completed</span>
         </div><!-- OVERVIEW STATS END -->
         <div class="col-lg-12 col-md-12 col-sm-12 stat-history-panel">
             <div class="stat-header">
@@ -157,9 +157,9 @@
         <div class="col-lg-12 col-md-12 col-sm-12 stat-gender-panel">
             <div class="stat-gender-progress-container">
                 <progress>
-                    <bar type="danger" value="(female / maxCount) * 100">{{(female / maxCount) * 100 | number: 2}}% female</bar>
-                    <bar type="primary" value="(male / maxCount) * 100">{{(male / maxCount) * 100 | number: 2}}% male</bar>
-                    <bar type="success" value="(nosex / maxCount) * 100">{{(nosex / maxCount) * 100 | number: 2}}% unassigned</bar>
+                    <bar type="danger" value="gender.female.percentage">{{gender.female.percentage}}{{gender.female.text}}</bar>
+                    <bar type="primary" value="gender.male.percentage">{{gender.male.percentage}}{{gender.male.text}}</bar>
+                    <bar type="success" value="gender.nosex.percentage">{{gender.nosex.percentage}}{{gender.nosex.text}}</bar>
                 </progress>
             </div>
         </div><!-- GENDER PERCENTAGE BAR END -->

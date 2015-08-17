@@ -55,7 +55,7 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         //var day = new Date('2015-05-04').getDay();
         var day = $scope.today.getDay();
         //console.log(day);
-//        console.log($scope.taskItem);
+        console.log($scope.taskItem);
         //Is it monday?
         if (day===1) {
             var refreshItems = $scope.taskItem;
@@ -132,7 +132,6 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
             }
             $scope.newOption = '';
     };
-    
     $scope.dropOption = function(text) {
         var removal = $window.confirm('Are you sure you don\'t want to add this option?');
         if (removal) {
@@ -199,9 +198,9 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
     $scope.deleteTask = function (description) {
         //are you sure option...
         var removal = $window.confirm('Are you sure you want to delete this task?');
-        var deletingItem = $scope.taskItem;
-        $scope.taskItem = [];
         if (removal) {
+            var deletingItem = $scope.taskItem;
+            $scope.taskItem = [];
             //update the complete task.
             angular.forEach(deletingItem, function (taskItem) {
                 if (taskItem.description !== description) {
@@ -245,6 +244,30 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
             }
         });
         localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
+    };
+    $scope.insertOption = function (description, newOption) {
+        if (newOption!=='' && newOption!==undefined) {
+            var i = 0, alreadyAdded = false;
+            //find the item and insert the option.
+            angular.forEach($scope.taskItem, function (taskItem) {
+                if (taskItem.description === description) {
+                    while(i < taskItem.checklistOptions.length) {
+                        if (taskItem.checklistOptions[i].text === newOption) {
+                            alreadyAdded = true;
+                        }
+                        i++;
+                    }
+                    //if not in array add it.
+                    if (alreadyAdded === false) {
+                        taskItem.checklistOptions.push({ text: newOption, complete: false });
+                    }
+                }
+            });
+            localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
+             if (alreadyAdded === true) {
+                alert('Option already exists.\nPlease re-name and try again.');
+             }
+        }
     };
 
 	}

@@ -160,9 +160,9 @@
                         </div>
                     </div>
                     <div ng-if="taskItem.checklist" class="checklist-list-container" ng-show="viewTask">
-                        <input ng-show="!taskItem.complete && addingToChecklist" type="text" class="form-control" ng-model="insertNewOption" enter-tag="insertOption(taskItem.description, insertNewOption)">
+                        <input ng-show="!taskItem.complete && addingToChecklist" type="text" class="form-control" ng-model="insertNewOption" enter-tag="insertOption(taskItem.description, insertNewOption); insertNewOption = ''">
                         <a ng-show="!taskItem.complete" class="btn btn-accent" ng-click="addingToChecklist=!addingToChecklist">Add option to {{taskItem.description}}</a>
-                        <a ng-show="!taskItem.complete && addingToChecklist"class="btn btn-accent" ng-click="insertOption(taskItem.description, insertNewOption)" ng-disabled="insertNewOption==='' || insertNewOption===null || insertNewOption===undefined">Add</a>
+                        <a ng-show="!taskItem.complete && addingToChecklist"class="btn btn-accent" ng-click="insertOption(taskItem.description, insertNewOption); insertNewOption = ''" ng-disabled="insertNewOption==='' || insertNewOption===null || insertNewOption===undefined">Add</a>
                         <ul class="checklist-list">
                             <li class="checklist-item" ng-repeat="option in taskItem.checklistOptions track by $index">
                                 <input type="checkbox" class="taskCheckbox" ng-model="option.complete" ng-change="tickOff(taskItem.description, option.text)" ng-disabled="option.complete">

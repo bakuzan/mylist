@@ -101,13 +101,14 @@
         <div class="col-lg-8 col-md-6 col-sm-6 item-list-container">
             <div class="list-group col-lg-12 col-md-12 col-sm-12">
         <div data-ng-repeat="mangaitem in mangaitems | orderBy: sortType:sortReverse | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" list_Back="{{trustAsResourceUrl(mangaitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12" ng-hide="loading(mangaitem.title)">
-			<div class="view-item-top clickable" ng-click="viewItem===mangaitem ? viewItem='' : viewItem=mangaitem">
+			<div class="view-item-top">
             <small class="list-group-item-text">
                 <time ng-if="mangaitem.latest.substring(0,10)===mangaitem.meta.updated.substring(0,10)" title="{{mangaitem.meta.updated | date: 'yyyy-MMM-dd HH:mm'}}" ng-bind="latestDate(mangaitem.latest, mangaitem.meta.updated)"></time>
                 <time ng-if="mangaitem.latest.substring(0,10)!==mangaitem.meta.updated.substring(0,10)" title="{{mangaitem.latest | date: 'yyyy-MMM-dd'}}" ng-bind="latestDate(mangaitem.latest, mangaitem.meta.updated)"></time>
 			</small>
-			<h4 class="list-group-item-heading" data-ng-bind="mangaitem.title"></h4>
+			<h4 class="list-group-item-heading clickable" ng-click="viewItem===mangaitem ? viewItem='' : viewItem=mangaitem" data-ng-bind="mangaitem.title"></h4>
             <p class="list-group-item-text">
+                <span class="clickable" ng-if="!mangaitem.status" ng-click="tickOff(mangaitem)"><i class="fa fa-plus-square"></i> </span>
                 <span data-ng-bind="mangaitem.chapters"></span><span ng-if="mangaitem.finalChapter!==0">/{{mangaitem.finalChapter}}</span> Chapters, 
                 <span data-ng-bind="mangaitem.volumes"></span><span ng-if="mangaitem.finalVolume!==0">/{{mangaitem.finalVolume}}</span> Volumes
                 <span class="item-icons green-text" ng-if="mangaitem.status===true"><i class="fa fa-check"></i></span>

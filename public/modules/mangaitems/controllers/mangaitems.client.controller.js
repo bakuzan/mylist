@@ -168,8 +168,9 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             //console.log(mangaitem.image);
             
             //handle end date
-            if (mangaitem.chapters===mangaitem.finalChapter && mangaitem.volumes===mangaitem.finalVolume && mangaitem.finalChapter!==0) {
-                if (mangaitem.end===undefined) {
+            if (mangaitem.chapters===mangaitem.finalChapter && mangaitem.finalChapter!==0) {
+                if (mangaitem.end===undefined || mangaitem.end===null) {
+                    mangaitem.volumes = mangaitem.finalVolume;
                     mangaitem.end = mangaitem.latest.substring(0,10);
                     //console.log(animeitem.end);
                 }
@@ -197,6 +198,12 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 			});
             
 		};
+        $scope.tickOff = function(item) {
+            item.chapters += 1;
+            item.latest = $scope.itemUpdate;
+            $scope.mangaitem = item;
+            $scope.update();
+        };
 
 		// Find a list of Mangaitems
 		$scope.find = function() {

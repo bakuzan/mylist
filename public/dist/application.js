@@ -275,8 +275,8 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             //console.log(animeitem.image);
             
             //handle end date
-            if (animeitem.episodes===animeitem.finalEpisode && animeitem.finalEpisode!==0) {
-                if (animeitem.end===undefined) {
+            if (animeitem.episodes === animeitem.finalEpisode && animeitem.finalEpisode!==0) {
+                if (animeitem.end===undefined || animeitem.end === null) {
                     animeitem.end = animeitem.latest.substring(0,10);
 //                    console.log(animeitem.end);
                 }
@@ -284,7 +284,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 //in the event the 'complete-ness' of an entry needs to be undone.
                 //this will undo the end date.
                 animeitem.end = null;
-//                console.log(animeitem.end);
+                console.log(animeitem.end);
             }
             
             //handle status: completed.
@@ -300,13 +300,19 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 animeitem.reWatchCount += 1;
                 animeitem.reWatching = false;
             }
-
+            console.log(animeitem);
 			animeitem.$update(function() {
 				$location.path('animeitems');
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});
 		};
+        $scope.tickOff = function(item) {
+            item.episodes += 1;
+            item.latest = $scope.itemUpdate;
+            $scope.animeitem = item;
+            $scope.update();
+        };
 
 		// Find a list of Animeitems
 		$scope.find = function() {
@@ -2873,8 +2879,9 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             //console.log(mangaitem.image);
             
             //handle end date
-            if (mangaitem.chapters===mangaitem.finalChapter && mangaitem.volumes===mangaitem.finalVolume && mangaitem.finalChapter!==0) {
-                if (mangaitem.end===undefined) {
+            if (mangaitem.chapters===mangaitem.finalChapter && mangaitem.finalChapter!==0) {
+                if (mangaitem.end===undefined || mangaitem.end===null) {
+                    mangaitem.volumes = mangaitem.finalVolume;
                     mangaitem.end = mangaitem.latest.substring(0,10);
                     //console.log(animeitem.end);
                 }
@@ -2902,6 +2909,12 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 			});
             
 		};
+        $scope.tickOff = function(item) {
+            item.chapters += 1;
+            item.latest = $scope.itemUpdate;
+            $scope.mangaitem = item;
+            $scope.update();
+        };
 
 		// Find a list of Mangaitems
 		$scope.find = function() {

@@ -1,0 +1,27 @@
+<section data-ng-controller="RatingsController" data-ng-init="findItems()" data-ng-show="authentication.user">
+    <span keycuts></span>
+    <div class="page-header">
+        <div class="view-buttons text-right pull-right">
+            <label class="btn btn-primary" ng-model="view" btn-radio="'Anime'">Anime</label>
+            <label class="btn btn-primary" ng-model="view" btn-radio="'Manga'">Manga</label>
+        </div>
+        <h1>{{view}} ratings</h1>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 ratings-table-container">
+        <table>
+            <thead>
+                <th>S</th>
+                <th>Title</th>
+                <th>R</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in items | orderBy: sortType:sortReverse" ng-hide="loading(item.title)">
+                    <td class="green-text"><i ng-if="item.status" class="fa fa-check"></i></td>
+                    <td><a href="/#!/{{view.toLowerCase()}}items/{{item._id}}">{{item.title}}</a></td>
+                    <td class="text-right"><span ng-show="item.rating !== 0">{{item.rating}}</span><span ng-show="item.rating === 0">-</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <section class="loading-image" data-ng-if="isLoading"></section>
+</section>

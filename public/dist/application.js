@@ -68,6 +68,10 @@ ApplicationConfiguration.registerModule('mangaitems');
 'use strict';
 
 // Use Applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('ratings');
+'use strict';
+
+// Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('statistics');
 'use strict';
 
@@ -305,7 +309,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 animeitem.reWatchCount += 1;
                 animeitem.reWatching = false;
             }
-            console.log(animeitem);
+
 			animeitem.$update(function() {
 				$location.path('animeitems');
 			}, function(errorResponse) {
@@ -3014,6 +3018,68 @@ angular.module('mangaitems').factory('Mangaitems', ['$resource',
 		});
 	}
 ]);
+'use strict';
+
+// Setting up route
+angular.module('ratings').config(['$stateProvider', '$urlRouterProvider',
+	function($stateProvider, $urlRouterProvider) {
+		// Redirect to home view when route not found
+		$urlRouterProvider.otherwise('/signin');
+
+		// Home state routing
+		$stateProvider
+        .state('ratings', {
+			url: '/ratings',
+			templateUrl: 'modules/ratings/views/ratings.client.view.html'
+		});
+	}
+]);
+'use strict';
+
+// History controller
+angular.module('ratings').controller('RatingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'ListService',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, ListService) {
+		$scope.authentication = Authentication;
+        
+        // If user is not signed in then redirect back to signin.
+		if (!$scope.authentication.user) $location.path('/signin');
+        
+        $scope.view = 'Anime';
+        $scope.sortType = 'rating';
+        $scope.sortReverse = true;
+        $scope.isLoading = true;
+        $scope.loading = function(value) {
+            $scope.isLoading = ListService.loader(value);
+        };
+        
+        function getItems(view) {
+            if (view === 'Anime') {
+                $scope.items = Animeitems.query();
+            } else if (view === 'Manga') {
+                $scope.items = Mangaitems.query();
+            }
+            console.log(view, $scope.items);
+        }
+        $scope.find = function(view) {
+            getItems(view);
+        };
+        //Needed to catch 'Character' setting and skip it.
+        $scope.$watch('view', function(newValue) {
+            if ($scope.view !== undefined) {
+                if (newValue !== 'Anime' && newValue !== 'Manga') {
+                    $scope.view = 'Anime';
+                } else {
+                    getItems($scope.view);
+                }
+            }
+        });
+        
+        
+    }
+]);
+
+
+
 'use strict';
 
 // Setting up route

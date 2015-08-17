@@ -131,8 +131,13 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             $scope.pageCount = pagingDetails.pageCount;
         });
         
-        //today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
+        /** today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
+         *      AND episode/start/latest auto-pop in create.
+         */
         $scope.itemUpdate = new Date().toISOString().substring(0,10);
+        $scope.start = $scope.itemUpdate;
+        $scope.latest = $scope.itemUpdate;
+        $scope.episodes = 0;
         $scope.viewItemHistory = false; //default stat of item history popout.
         $scope.selectListOptions = ListService.getSelectListOptions($scope.whichController);
 	    $scope.sortReverse = true; // default sort order
@@ -2731,8 +2736,14 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             $scope.pageCount = pagingDetails.pageCount;
         });
         
-        //today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
+        /** today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
+         *      AND chapter/volume/start/latest auto-pop in create.
+         */
         $scope.itemUpdate = new Date().toISOString().substring(0,10);
+        $scope.start = $scope.itemUpdate;
+        $scope.latest = $scope.itemUpdate;
+        $scope.chapters = 0;
+        $scope.volumes = 0;
         $scope.selectListOptions = ListService.getSelectListOptions($scope.whichController);
 	    $scope.sortReverse = true; // default sort order
         $scope.finalNumbers = false; //default show status of final number fields in edit view.

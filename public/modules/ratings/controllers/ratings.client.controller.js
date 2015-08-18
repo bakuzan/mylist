@@ -60,7 +60,7 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
                 }, function(errorResponse) {
                     $scope.error = errorResponse.data.message;
                 }); 
-                console.log('update');
+//                console.log('update');
             }
             return false;
         };

@@ -3098,7 +3098,7 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
                 }, function(errorResponse) {
                     $scope.error = errorResponse.data.message;
                 }); 
-                console.log('update');
+//                console.log('update');
             }
             return false;
         };
@@ -3107,7 +3107,18 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
 
 
 
+'use strict';
 
+angular.module('ratings').directive('focusOnShow', function($timeout) {
+    return function(scope, element, attrs) {
+       scope.$watch(attrs.focusOnShow, function (newValue) { 
+//            console.log('preview changed!')
+            $timeout(function() {
+                newValue && element[0].focus();
+            });
+         },true);
+      };    
+});
 'use strict';
 
 // Setting up route

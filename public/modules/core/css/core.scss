@@ -678,8 +678,34 @@ div.popover {
     color: $brand-accent-alter;
 }
 
+/** RATINGS PAGE **/
+
 .small-input {
+    display: inline;
     width: 40px;
     padding: 0;
     padding-left: 5px;
 }
+
+.ratings-table {
+    width: 100%;
+    tr:hover {
+        background-color: $brand-secondary;
+    }
+    th {
+        text-align: center;
+    }
+    th.left {
+        text-align: left;
+    }
+    td {
+        text-align: center;
+    }
+    td.left {
+        text-align: left;
+    }
+}
+
+
+
+/** END RATINGS PAGE **/

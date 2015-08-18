@@ -43,14 +43,17 @@
                     <span>More </span><b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu">
-                    <li ng-class="{ active: isActive('/favourites')}">
-                        <a href="/#!/favourites" class="navbar-link" data-ng-show="authentication.user"><i class="fa fa-star"></i> Favourites</a>
-                    </li>
                     <li ng-class="{ active: isActive('/history')}">
                         <a href="/#!/history" class="navbar-link" data-ng-show="authentication.user"><i class="fa fa-clock-o"></i> History</a>
                     </li>
                     <li ng-class="{ active: isActive('/statistics')}">
                         <a href="/#!/statistics" class="navbar-link" data-ng-show="authentication.user"><i class="fa fa-bar-chart"></i> Statistics</a>
+                    </li>
+                    <li ng-class="{ active: isActive('/ratings')}">
+                        <a href="/#!/ratings" class="navbar-link" data-ng-show="authentication.user"><i class="fa fa-star"></i> Ratings</a>
+                    </li>
+                    <li ng-class="{ active: isActive('/favourites')}">
+                        <a href="/#!/favourites" class="navbar-link" data-ng-show="authentication.user"><i class="fa fa-trophy"></i> Favourites</a>
                     </li>
                 </ul>
             </li>

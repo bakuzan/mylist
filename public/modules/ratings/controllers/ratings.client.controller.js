@@ -11,6 +11,12 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         $scope.view = 'Anime';
         $scope.sortType = 'rating';
         $scope.sortReverse = true;
+        //rating 'tooltip' function
+        $scope.maxRating = 10;
+        $scope.hoveringOver = function(value) {
+            $scope.overStar = value;
+            $scope.percent = 100 * (value / $scope.maxRating);
+        };
         $scope.isLoading = true;
         $scope.loading = function(value) {
             $scope.isLoading = ListService.loader(value);

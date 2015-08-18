@@ -194,7 +194,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 animeitem.reWatchCount += 1;
                 animeitem.reWatching = false;
             }
-            console.log(animeitem);
+
 			animeitem.$update(function() {
 				$location.path('animeitems');
 			}, function(errorResponse) {

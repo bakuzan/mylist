@@ -68,6 +68,10 @@ ApplicationConfiguration.registerModule('mangaitems');
 'use strict';
 
 // Use Applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('ratings');
+'use strict';
+
+// Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('statistics');
 'use strict';
 
@@ -305,7 +309,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 animeitem.reWatchCount += 1;
                 animeitem.reWatching = false;
             }
-            console.log(animeitem);
+
 			animeitem.$update(function() {
 				$location.path('animeitems');
 			}, function(errorResponse) {
@@ -424,15 +428,17 @@ angular.module('animeitems').filter('startFrom', function() {
 })
 .filter('ratingFilter', function() {
     return function(array, rating) {
-        //filter for rating stars
-        return array.filter(function(item) {
-//            console.log(item);
-            if (item.rating===rating) {
-                return item;
-            } else if (rating===undefined) {
-                return item;
-            }
-        });
+        if (array !== undefined) {
+            //filter for rating stars
+            return array.filter(function(item) {
+    //            console.log(item);
+                if (item.rating===rating) {
+                    return item;
+                } else if (rating===undefined) {
+                    return item;
+                }
+            });
+        }
     };
 })
 .filter('endedMonth', function() {
@@ -3014,6 +3020,105 @@ angular.module('mangaitems').factory('Mangaitems', ['$resource',
 		});
 	}
 ]);
+'use strict';
+
+// Setting up route
+angular.module('ratings').config(['$stateProvider', '$urlRouterProvider',
+	function($stateProvider, $urlRouterProvider) {
+		// Redirect to home view when route not found
+		$urlRouterProvider.otherwise('/signin');
+
+		// Home state routing
+		$stateProvider
+        .state('ratings', {
+			url: '/ratings',
+			templateUrl: 'modules/ratings/views/ratings.client.view.html'
+		});
+	}
+]);
+'use strict';
+
+// History controller
+angular.module('ratings').controller('RatingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'ListService',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, ListService) {
+		$scope.authentication = Authentication;
+        
+        // If user is not signed in then redirect back to signin.
+		if (!$scope.authentication.user) $location.path('/signin');
+        
+        $scope.view = 'Anime';
+        $scope.sortType = 'rating';
+        $scope.sortReverse = true;
+        $scope.ratingLevel = undefined; //default rating filter
+        //rating 'tooltip' function
+        $scope.maxRating = 10;
+        $scope.hoveringOver = function(value) {
+            $scope.overStar = value;
+            $scope.percent = 100 * (value / $scope.maxRating);
+        };
+        $scope.isLoading = true;
+        $scope.loading = function(value) {
+            $scope.isLoading = ListService.loader(value);
+        };
+        
+        function getItems(view) {
+            if (view === 'Anime') {
+                $scope.items = Animeitems.query();
+            } else if (view === 'Manga') {
+                $scope.items = Mangaitems.query();
+            }
+//            console.log(view, $scope.items);
+        }
+        $scope.find = function(view) {
+            getItems(view);
+        };
+        //Needed to catch 'Character' setting and skip it.
+        $scope.$watch('view', function(newValue) {
+            if ($scope.view !== undefined) {
+                if (newValue !== 'Anime' && newValue !== 'Manga') {
+                    $scope.view = 'Anime';
+                } else {
+                    getItems($scope.view);
+                }
+            }
+        });
+        //get the item your changing the score for.
+        $scope.startEdit = function(item) {
+            $scope.editingItem = item;
+            $scope.newRating = $scope.editingItem.rating; //default to current rating.
+        };
+        //apply new score.
+        $scope.endEdit = function(score) {
+            var item = $scope.editingItem;
+            if (item.rating !== score) {
+                item.rating = score;
+
+                item.$update(function() {
+                    $location.path('ratings');
+                }, function(errorResponse) {
+                    $scope.error = errorResponse.data.message;
+                }); 
+//                console.log('update');
+            }
+            return false;
+        };
+    }
+]);
+
+
+
+'use strict';
+
+angular.module('ratings').directive('focusOnShow', function($timeout) {
+    return function(scope, element, attrs) {
+       scope.$watch(attrs.focusOnShow, function (newValue) { 
+//            console.log('preview changed!')
+            $timeout(function() {
+                newValue && element[0].focus();
+            });
+         },true);
+      };    
+});
 'use strict';
 
 // Setting up route

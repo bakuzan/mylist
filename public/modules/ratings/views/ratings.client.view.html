@@ -1,0 +1,79 @@
+<section data-ng-controller="RatingsController" data-ng-init="findItems()" data-ng-show="authentication.user">
+    <span keycuts></span>
+    <div class="fixed-header">
+        <h1>{{view}} ratings <button class="btn btn-primary show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</button></h1>
+    </div>
+    <div class="container">
+        <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }">
+            <div class="view-controls">
+                <label class="btn btn-primary" ng-model="view" btn-radio="'Anime'">Anime</label>
+                <label class="btn btn-primary" ng-model="view" btn-radio="'Manga'">Manga</label>
+            </div>
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </div>
+               <input type="text" class="form-control" placeholder="search items" ng-model="search.title"><!-- typeahead="animeitem.title for animeitem in animeitems | filter: { title:$viewValue } " -->
+           </div>
+            <div class="input-group mt">
+              <div class="input-group-addon">
+                  <i class="fa fa-list-ol"></i>
+              </div>
+                <input type="text" class="form-control" value="Showing {{ (showingCount = (items | filter: search | ratingFilter: ratingLevel).length) }} {{view.toLowerCase()}}." disabled>
+            </div>
+            <div class="input-group mt">
+                <div class="input-group-addon clickable" data-ng-click="ratingLevel=undefined">
+                    <i class="fa fa-star"></i>
+                </div>
+                   <rating class="form-control rating-stars clickable" data-ng-model="ratingLevel" readonly="false" max="maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></rating>
+                <div class="input-group-addon">
+                    <span data-ng-show="overStar!=null" class="label rating-label" ng-class="{'label-warning': percent<40, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}">{{percent}}%</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
+        <div class="col-lg-8 col-md-6 col-sm-6 item-list-container">
+            <table class="ratings-table">
+                <thead>
+                    <th>
+                        <a href="" ng-click="sortType = 'status'; sortReverse = !sortReverse ">
+                        S
+                        </a>
+                        <i ng-show="sortType == 'status'" class="fa" ng-class="sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                    </th>
+                    <th class="left">
+                        <a href="" ng-click="sortType = 'title'; sortReverse = !sortReverse ">
+                        Title
+                        </a>
+                        <i ng-show="sortType == 'title'" class="fa" ng-class="sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                    </th><!-- Make ~80% width of table. -->
+                    <th>
+                        <a href="" ng-click="sortType = 'rating'; sortReverse = !sortReverse ">
+                        R
+                        </a>
+                        <i ng-show="sortType == 'rating'" class="fa" ng-class="sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                    </th>
+                </thead>
+                <tbody ng-init="changeRating=false">
+                    <tr ng-repeat="item in items | filter: search | ratingFilter: ratingLevel | orderBy: sortType:sortReverse" ng-hide="loading(item.title)">
+                        <td>
+                            <i ng-if="item.status" class="fa fa-check green-text"></i>
+                            <i ng-if="!item.status" class="fa fa-minus"></i>
+                        </td>
+                        <td class="left">
+                            <a href="/#!/{{view.toLowerCase()}}items/{{item._id}}">{{item.title}}</a>
+                        </td>
+                        <td ng-click="changeRating = !changeRating; startEdit(item)" ng-show="!changeRating || editingItem !== item">
+                            <a class="clickable" ng-show="item.rating !== 0">{{item.rating}}</a>
+                            <span class="clickable" ng-if="item.rating === 0">-</span>
+                        </td>
+                        <td ng-show="changeRating && editingItem === item">
+                            <input type="number" class="small-input form-control" min="0" max="{{maxRating}}" ng-model="newRating" ng-change="checkScore({{newRating}})" ng-blur="changeRating=endEdit(newRating);" enter-tag="changeRating=endEdit(newRating);" focus-on-show="changeRating">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <section class="loading-image" data-ng-if="isLoading"></section>
+</section>

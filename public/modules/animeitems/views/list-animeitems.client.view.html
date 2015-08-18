@@ -107,7 +107,7 @@
 			</small>
 			<h4 class="list-group-item-heading clickable" ng-click="viewItem===animeitem ? viewItem='' : viewItem=animeitem" data-ng-bind="animeitem.title"></h4>
             <p class="list-group-item-text">
-                <span class="clickable" ng-if="!animeitem.status" ng-click="tickOff(animeitem)"><i class="fa fa-plus-square"></i> </span>
+                <a class="clickable" ng-if="!animeitem.status" ng-click="tickOff(animeitem)"><i class="fa fa-plus-square"></i> </a>
                 <span data-ng-bind="animeitem.episodes"></span><span ng-if="animeitem.finalEpisode!==0">/{{animeitem.finalEpisode}}</span><span> Episodes</span>
                 <span class="item-icons green-text" ng-if="animeitem.status===true"><i class="fa fa-check"></i></span>
                 <span class="item-icons" ng-if="animeitem.disc===true"><i class="glyphicon glyphicon-cd"></i></span>

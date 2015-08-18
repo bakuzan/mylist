@@ -8,15 +8,17 @@ angular.module('animeitems').filter('startFrom', function() {
 })
 .filter('ratingFilter', function() {
     return function(array, rating) {
-        //filter for rating stars
-        return array.filter(function(item) {
-//            console.log(item);
-            if (item.rating===rating) {
-                return item;
-            } else if (rating===undefined) {
-                return item;
-            }
-        });
+        if (array !== undefined) {
+            //filter for rating stars
+            return array.filter(function(item) {
+    //            console.log(item);
+                if (item.rating===rating) {
+                    return item;
+                } else if (rating===undefined) {
+                    return item;
+                }
+            });
+        }
     };
 })
 .filter('endedMonth', function() {

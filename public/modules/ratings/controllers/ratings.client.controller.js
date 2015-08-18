@@ -11,6 +11,7 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         $scope.view = 'Anime';
         $scope.sortType = 'rating';
         $scope.sortReverse = true;
+        $scope.ratingLevel = undefined; //default rating filter
         //rating 'tooltip' function
         $scope.maxRating = 10;
         $scope.hoveringOver = function(value) {

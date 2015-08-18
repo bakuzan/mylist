@@ -428,15 +428,17 @@ angular.module('animeitems').filter('startFrom', function() {
 })
 .filter('ratingFilter', function() {
     return function(array, rating) {
-        //filter for rating stars
-        return array.filter(function(item) {
-//            console.log(item);
-            if (item.rating===rating) {
-                return item;
-            } else if (rating===undefined) {
-                return item;
-            }
-        });
+        if (array !== undefined) {
+            //filter for rating stars
+            return array.filter(function(item) {
+    //            console.log(item);
+                if (item.rating===rating) {
+                    return item;
+                } else if (rating===undefined) {
+                    return item;
+                }
+            });
+        }
     };
 })
 .filter('endedMonth', function() {
@@ -3047,6 +3049,13 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         $scope.view = 'Anime';
         $scope.sortType = 'rating';
         $scope.sortReverse = true;
+        $scope.ratingLevel = undefined; //default rating filter
+        //rating 'tooltip' function
+        $scope.maxRating = 10;
+        $scope.hoveringOver = function(value) {
+            $scope.overStar = value;
+            $scope.percent = 100 * (value / $scope.maxRating);
+        };
         $scope.isLoading = true;
         $scope.loading = function(value) {
             $scope.isLoading = ListService.loader(value);
@@ -3058,7 +3067,7 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
             } else if (view === 'Manga') {
                 $scope.items = Mangaitems.query();
             }
-            console.log(view, $scope.items);
+//            console.log(view, $scope.items);
         }
         $scope.find = function(view) {
             getItems(view);
@@ -3073,10 +3082,29 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
                 }
             }
         });
-        
-        
+        //get the item your changing the score for.
+        $scope.startEdit = function(item) {
+            $scope.editingItem = item;
+            $scope.newRating = $scope.editingItem.rating; //default to current rating.
+        };
+        //apply new score.
+        $scope.endEdit = function(score) {
+            var item = $scope.editingItem;
+            if (item.rating !== score) {
+                item.rating = score;
+
+                item.$update(function() {
+                    $location.path('ratings');
+                }, function(errorResponse) {
+                    $scope.error = errorResponse.data.message;
+                }); 
+                console.log('update');
+            }
+            return false;
+        };
     }
 ]);
+
 
 
 

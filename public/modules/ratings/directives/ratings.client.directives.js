@@ -5,7 +5,8 @@ angular.module('ratings').directive('focusOnShow', function($timeout) {
        scope.$watch(attrs.focusOnShow, function (newValue) { 
 //            console.log('preview changed!')
             $timeout(function() {
-                newValue && element[0].focus();
+                var myValue = newValue && element[0].focus();
+                return myValue;
             });
          },true);
       };    

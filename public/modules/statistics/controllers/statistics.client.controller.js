@@ -80,6 +80,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         //required for ctrl+v clicks.
         $scope.$watch('view', function(newValue) {
             if ($scope.view !== undefined) {
+                $scope.isLoading = true;
                 getItems(newValue);
                 //reset defaults that are shared between views.
                 $scope.historicalView = 'month';

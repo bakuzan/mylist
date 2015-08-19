@@ -203,7 +203,8 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		};
         $scope.tickOff = function(item) {
             item.episodes += 1;
-            item.latest = $scope.itemUpdate;
+            item.latest = $scope.itemUpdate; //update latest.
+            $scope.updateHistory = true; //add to history.
             $scope.animeitem = item;
             $scope.update();
         };

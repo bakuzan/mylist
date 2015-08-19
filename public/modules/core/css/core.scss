@@ -466,7 +466,7 @@ nav {
   margin-top: 10px; 
   background-color: #FFF;
   align-content: center;
-  overflow-y: scroll;
+  overflow-y: auto;
   z-index: 1000;
 }
 
@@ -676,6 +676,35 @@ a.menu-header-bar:hover {
 
 div.popover {
     color: $brand-accent-alter;
+}
+
+.checklist-list {
+    list-style-type: decimal-leading-zero;
+}
+.options-list-container {
+    max-height: 235px;
+    overflow-y: auto;
+}
+.options-list {
+    @extend .checklist-list;
+    li {
+        position: relative;
+        padding: 0;
+        p {
+            width: 100%;
+            padding-right: 10px;
+            margin-bottom: 0;
+        }
+        p:hover {
+            background-color: $brand-primary;
+        }
+        a {
+            margin: 0;
+        }
+    }
+    li:hover {
+        background-color: $brand-secondary;
+    }
 }
 
 /** RATINGS PAGE **/

@@ -318,7 +318,8 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		};
         $scope.tickOff = function(item) {
             item.episodes += 1;
-            item.latest = $scope.itemUpdate;
+            item.latest = $scope.itemUpdate; //update latest.
+            $scope.updateHistory = true; //add to history.
             $scope.animeitem = item;
             $scope.update();
         };
@@ -2928,7 +2929,8 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		};
         $scope.tickOff = function(item) {
             item.chapters += 1;
-            item.latest = $scope.itemUpdate;
+            item.latest = $scope.itemUpdate; //update latest.
+            $scope.updateHistory = true; //add to history.
             $scope.mangaitem = item;
             $scope.update();
         };
@@ -3075,6 +3077,7 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         //Needed to catch 'Character' setting and skip it.
         $scope.$watch('view', function(newValue) {
             if ($scope.view !== undefined) {
+                $scope.isLoading = true;
                 if (newValue !== 'Anime' && newValue !== 'Manga') {
                     $scope.view = 'Anime';
                 } else {
@@ -3114,7 +3117,8 @@ angular.module('ratings').directive('focusOnShow', function($timeout) {
        scope.$watch(attrs.focusOnShow, function (newValue) { 
 //            console.log('preview changed!')
             $timeout(function() {
-                newValue && element[0].focus();
+                var myValue = newValue && element[0].focus();
+                return myValue;
             });
          },true);
       };    
@@ -3217,6 +3221,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         //required for ctrl+v clicks.
         $scope.$watch('view', function(newValue) {
             if ($scope.view !== undefined) {
+                $scope.isLoading = true;
                 getItems(newValue);
                 //reset defaults that are shared between views.
                 $scope.historicalView = 'month';

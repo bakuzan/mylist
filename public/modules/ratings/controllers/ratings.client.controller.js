@@ -37,6 +37,7 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         //Needed to catch 'Character' setting and skip it.
         $scope.$watch('view', function(newValue) {
             if ($scope.view !== undefined) {
+                $scope.isLoading = true;
                 if (newValue !== 'Anime' && newValue !== 'Manga') {
                     $scope.view = 'Anime';
                 } else {

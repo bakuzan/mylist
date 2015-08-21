@@ -64,16 +64,22 @@
   margin-top: 10px;
   overflow-y: scroll;
   z-index: 750;
-    
-    div.item-history:nth-child(even) {
-        background-color: $brand-secondary;
-        width: 95%;
-    }
-    
 }
 .item-history-list {
+    position: relative;
     padding: 0 5px 5px;
     margin-bottom: 5px;
+    .item-history {
+        position: relative;
+        width: 95%;
+        a {
+            margin: 0;
+        }
+    }
+    div.item-history:nth-child(even) {
+        background-color: $brand-secondary;
+    }
+    
 }
 
 .close-button {

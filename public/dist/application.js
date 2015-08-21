@@ -293,7 +293,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 //in the event the 'complete-ness' of an entry needs to be undone.
                 //this will undo the end date.
                 animeitem.end = null;
-                console.log(animeitem.end);
+//                console.log(animeitem.end);
             }
             
             //handle status: completed.
@@ -356,6 +356,15 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         
         $scope.loading = function(value) {
             $scope.isLoading = ListService.loader(value);
+        };
+        
+        $scope.deleteHistory = function(item, history) {
+            //are you sure option...
+            var removal = $window.confirm('Are you sure you want to delete this history?');
+            if (removal) {
+                $scope.animeitem = ItemService.deleteHistory(item, history);
+                $scope.update();
+            }
         };
         
 	}
@@ -646,6 +655,18 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 }
             }
             
+            return item;
+        };
+        
+        //remove an entry from an items history.
+        this.deleteHistory = function(item, history) {
+            var temp = [];
+            angular.forEach(item.meta.history, function(past) {
+                if (past.value !== history.value) {
+                    temp.push(past);
+                }
+            });
+            item.meta.history = temp;
             return item;
         };
     
@@ -2967,6 +2988,15 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         
         $scope.loading = function(value) {
             $scope.isLoading = ListService.loader(value);
+        };
+        
+        $scope.deleteHistory = function(item, history) {
+            //are you sure option...
+            var removal = $window.confirm('Are you sure you want to delete this history?');
+            if (removal) {
+                $scope.mangaitem = ItemService.deleteHistory(item, history);
+                $scope.update();
+            }
         };
 	}
 ]);

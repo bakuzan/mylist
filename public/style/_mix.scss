@@ -4,17 +4,11 @@
         appearance: $appearance;
 }
 
-@mixin transition($property, $duration) {
-    -webkit-transition: $property $duration;
-         -o-transition: $property $duration;
-       -moz-transition: $property $duration;
-            transition: $property $duration;
-}
-@mixin transition-timing($property, $duration, $timing) {
-  -webkit-transition: $property $duration $timing;
-     -moz-transition: $property $duration $timing;
-       -o-transition: $property $duration $timing;
-          transition: $property $duration $timing;
+@mixin transition($transition) {
+    -webkit-transition: $transition;
+         -o-transition: $transition;
+       -moz-transition: $transition;
+            transition: $transition;
 }
 
 @mixin justify-content($justify-content) {

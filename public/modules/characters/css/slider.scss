@@ -88,7 +88,7 @@
         width: 16px;
         margin: 0 12px;
         background-color: $grey-light;
-        @include transition(background-color, 0.3s);
+        @include transition(background-color 0.3s);
         border-radius: 50%;
     }
     li.indicator.active {
@@ -103,7 +103,7 @@
 
 .slide.ng-hide-add,
 .slide.ng-hide-remove {
-  @include transition-timing(all, 0.5s, linear);
+  @include transition(all 0.5s linear);
   display: block!important;
 }
 .slide.ng-hide-add.ng-hide-add-active,

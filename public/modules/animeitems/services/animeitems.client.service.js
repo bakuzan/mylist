@@ -155,6 +155,18 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             
             return item;
         };
+        
+        //remove an entry from an items history.
+        this.deleteHistory = function(item, history) {
+            var temp = [];
+            angular.forEach(item.meta.history, function(past) {
+                if (past.value !== history.value) {
+                    temp.push(past);
+                }
+            });
+            item.meta.history = temp;
+            return item;
+        };
     
         //function to display relative time - using latest or updated date.
         this.latestDate = function(latest, updated) {

@@ -146,6 +146,7 @@
                         <div ng-if="viewItem.meta.history.length === 0">No recorded history.</div>
                         <div class="item-history-list" ng-if="viewItem.meta.history.length > 0">
                             <div class="item-history mt" ng-repeat="history in viewItem.meta.history | orderBy: '-value'">
+                                <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="deleteHistory(viewItem, history)"><i class="fa fa-trash-o"></i></a>
                                 <span>{{history.date | date : 'dd-MM-yyyy HH:mm'}}</span><span> - Chapter {{history.value}}</span>
                             </div>
                         </div>

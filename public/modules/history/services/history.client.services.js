@@ -20,7 +20,7 @@ angular.module('history').service('HistoryService', ['moment', function(moment) 
     };
     
     /** function to display relative time.
-     *  Using diff cause fromNow will create conflicts between
+     *  Using diff because fromNow will create conflicts between
      *  the item date and the 'group date'.
      */
     this.happenedWhen = function(when) {
@@ -29,12 +29,10 @@ angular.module('history').service('HistoryService', ['moment', function(moment) 
             diff = today.diff(thisDate, 'days');
                 
         //for 0 and 1 day(s) ago use the special term.
-        if (diff===0) {
-            return 'Today';
-        } else if (diff===1) {
-            return 'Yesterday';
+        if (diff < 2) {
+            return moment(when).calendar();
         } else {
-            return diff + ' days ago.';
+            return moment(when).format('LLLL');
         }
     };
     

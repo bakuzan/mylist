@@ -55,6 +55,38 @@ angular.module('characters').factory('Characters', ['$resource',
         return statTags;
     };
     
+    this.buildRelatedCharacterTags = function(items, name) {
+        var add = true, tagDetailCollection = [], tagDetailResult = [];
+        //get all character tag arrays that contain the chosen tag into a collection.
+        angular.forEach(items, function(item){
+            for(var i=0; i < item.tags.length; i++) {
+                if (item.tags[i].text === name) {
+                    tagDetailCollection.push(item.tags);
+                }
+            }
+        });
+//        console.log(tagDetailCollection);
+        angular.forEach(tagDetailCollection, function(item) {
+            angular.forEach(item, function(bit) {
+//              console.log(bit);
+                for(var i=0; i < tagDetailResult.length; i++) {
+                    //if exists and not the search value - increment the count.
+                    if (tagDetailResult[i].name===bit.text && bit.text!==name) {
+                        add = false;
+                        tagDetailResult[i].count += 1; 
+                    }
+                }
+                //add if true and not the tag we searched on.
+                if (add===true && bit.text!==name) {
+                    tagDetailResult.push({ name: bit.text, count: 1 });
+                }
+                add = true;
+            });
+        });
+//        console.log(tagDetailResult);
+        return tagDetailResult;
+    };
+    
     this.buildVoiceActors = function(items) {
         var add = true, voiceActors = [];
         //is voice actor in array?

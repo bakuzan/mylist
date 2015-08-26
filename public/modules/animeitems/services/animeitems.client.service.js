@@ -133,6 +133,34 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             return areTagless;
         };
     
+        this.getCommonArrays = function(controller) {
+            var commonArrays = {},
+                seasons = [ 
+                    { number: '03', text: 'Winter' },
+                    { number: '06', text: 'Spring' },
+                    { number: '09', text: 'Summer' },
+                    { number: '12', text: 'Fall' }
+                ],
+                months = [
+                    { number: '01', text: 'January' },
+                    { number: '02', text: 'February' },
+                    { number: '03', text: 'March' },
+                    { number: '04', text: 'April' },
+                    { number: '05', text: 'May' },
+                    { number: '06', text: 'June' },
+                    { number: '07', text: 'July' },
+                    { number: '08', text: 'August' },
+                    { number: '09', text: 'September' },
+                    { number: '10', text: 'October' },
+                    { number: '11', text: 'November' },
+                    { number: '12', text: 'December' }
+                ];
+            if (controller === 'statistics') {
+                commonArrays = { months: months, seasons: seasons };
+            }
+            return commonArrays;
+        };
+    
 })
 .service('ItemService', ['moment', '$filter', function(moment, $filter) {
         
@@ -178,7 +206,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                  diff = latestDate.fromNow();
                 
                 if (diff==='a day ago') {
-                    return 'Yesterday';
+                    return moment(updated).calendar();
                 } else {
                     return diff + '.';
                 }
@@ -266,8 +294,8 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         };
     
         //build stat tags including counts, averages etc.
-        this.buildStatTags = function(items, maxTagCount, averageItemRating) {
-            var self = this, add = true, statTags = [], checkedRating;
+        this.buildStatTags = function(items, averageItemRating) {
+            var self = this, add = true, statTags = [], checkedRating, maxTagCount = self.maxTagCount(items);
             //is tag in array?
             angular.forEach(items, function(item) { 
                 angular.forEach(item.tags, function(tag) {
@@ -393,7 +421,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
     
         //complete by season stats.
         this.completeBySeason = function(items) {
-            var self = this, completeBySeason = [], itemYears = self.endingYears(items), i = itemYears.length;
+            var self = this, seasonDetails = {}, completeBySeason = [], maxCompleteSeason = 0, itemYears = self.endingYears(items), i = itemYears.length;
             //build completeBySeason object.
             while(i--) {
                 //chuck the null end date. push the year part of the other end dates with seasons array.
@@ -407,9 +435,18 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             ] });
                 }
             }
-            
-//            console.log('completeBySeason', completeBySeason);
-            return completeBySeason;
+            //find maximum complete in a season.
+            angular.forEach(completeBySeason, function(item) {
+                var i = item.seasons.length;
+                while(i--) {
+                    if (item.seasons[i].count > maxCompleteSeason) {
+                        maxCompleteSeason = item.seasons[i].count;
+                    }
+                }
+            });
+            seasonDetails = { completeBySeason: completeBySeason, maxCompleteSeason: maxCompleteSeason };
+//            console.log('completeBySeason', seasonDetails);
+            return seasonDetails;
         };
         
 }]);

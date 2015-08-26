@@ -14,26 +14,10 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.maxRatedCount = 0; //number of items with a rating i.e not 0.
         $scope.averageRating = 0; //average rating for items.
         $scope.maxCompleteMonth = 0; //used to find the max number of ends in 1 month.
-        $scope.seasons = [
-            { number: '03', text: 'Winter' },
-            { number: '06', text: 'Spring' },
-            { number: '09', text: 'Summer' },
-            { number: '12', text: 'Fall' }
-        ];
-        $scope.months = [
-            { number: '01', text: 'January' },
-            { number: '02', text: 'February' },
-            { number: '03', text: 'March' },
-            { number: '04', text: 'April' },
-            { number: '05', text: 'May' },
-            { number: '06', text: 'June' },
-            { number: '07', text: 'July' },
-            { number: '08', text: 'August' },
-            { number: '09', text: 'September' },
-            { number: '10', text: 'October' },
-            { number: '11', text: 'November' },
-            { number: '12', text: 'December' }
-        ];
+        $scope.maxCompleteSeason = 0;
+        var commonArrays = ListService.getCommonArrays('statistics');
+        $scope.months = commonArrays.months;
+        $scope.seasons = commonArrays.seasons;
         $scope.showDetail = false; //show month detail.
         $scope.statTagSortType = 'ratingWeighted'; //stat tag sort
         $scope.statTagSortReverse = true; //stat tag sort direction.
@@ -63,11 +47,13 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.loading = function(value) {
             $scope.isLoading = ListService.loader(value);
         };
-        
+        //handle getting view items and setting view specific defaults.
         function getItems(view) {
             if (view === 'Anime') {
+                $scope.statTagSortType = 'ratingWeighted'; //stat tag sort
                 $scope.items = Animeitems.query();
             } else if (view === 'Manga') {
+                $scope.statTagSortType = 'ratingWeighted'; //stat tag sort
                 $scope.items = Mangaitems.query();
             } else if (view === 'Character') {
                 $scope.statTagSortType = 'count'; //stat tag sort
@@ -90,7 +76,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 $scope.ratingsDistribution = [];
             }
         });
-        
+        //watch for items changes...occurs on view change.
         $scope.$watchCollection('items', function() {
             if ($scope.view !== 'Character') {
                 if ($scope.items!==undefined) {
@@ -98,16 +84,17 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                     $scope.overview = ItemService.buildOverview($scope.items);
                     $scope.maxCompleteMonth = ItemService.maxCompleteMonth($scope.items);
                     $scope.completeByMonth = ItemService.completeByMonth($scope.items);
-                    if ($scope.view === 'Anime') {
-                        $scope.completeBySeason = ItemService.completeBySeason($scope.items);
+                    if ($scope.view === 'Anime') { 
+                        var seasonDetails = ItemService.completeBySeason($scope.items);
+                        $scope.completeBySeason = seasonDetails.completeBySeason;
+                        $scope.maxCompleteSeason = seasonDetails.maxCompleteSeason;
                     }
                     $scope.maxCount = $scope.items.length;
                     var ratingValues = ItemService.getRatingValues($scope.items);
                     $scope.maxRatedCount = ratingValues.maxRatedCount;
                     $scope.averageRating = ratingValues.averageRating;
                     $scope.ratingsDistribution = ItemService.buildRatingsDistribution($scope.items, $scope.maxCount);
-                    var maxTagCount = ItemService.maxTagCount($scope.items);
-                    $scope.statTags = ItemService.buildStatTags($scope.items, maxTagCount, $scope.averageRating);
+                    $scope.statTags = ItemService.buildStatTags($scope.items, $scope.averageRating);
                 }
             } else if ($scope.view === 'Character') {
                 if ($scope.items!==undefined) {
@@ -120,49 +107,36 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 }
             }
         });
-        
         //show season detail.
-        $scope.seasonDetail = function(year, month) {
-//            console.log(year+'-'+month);
+        $scope.seasonDetail = function(year, month, monthText) {
+//            console.log(year+'-'+month, monthText);
             //if the one already selected is clicked, hide the detail.
             if ($scope.detailSeasonYear===year && $scope.detailSeason===month) {
-                    $scope.showSeasonDetail = !$scope.showSeasonDetail;
-                    $scope.showDetail = false;
+                $scope.showSeasonDetail = !$scope.showSeasonDetail;
+                $scope.showDetail = false;
             } else {
                 $scope.detailSeasonYear = year;
                 $scope.detailSeason = month;
-                //get month name also, cause why not.
-                angular.forEach($scope.seasons, function(mmm) {
-                    if ($scope.detailSeason===mmm.number) {
-                        $scope.detailSeasonName = mmm.text;
-                    }
-                });
+                $scope.detailSeasonName = monthText;
                 $scope.showSeasonDetail = true;
                 $scope.showDetail = false;
             }
         };
-        
-//        //show month detail.
-        $scope.monthDetail = function(year, month) {
-//            console.log(year+'-'+month);
+        //show month detail.
+        $scope.monthDetail = function(year, month, monthText) {
+//            console.log(year+'-'+month, monthText);
             //if the one already selected is clicked, hide the detail.
             if ($scope.detailYear===year && $scope.detailMonth===month) {
-                    $scope.showDetail = !$scope.showDetail;
-                    $scope.showSeasonDetail = false;
+                $scope.showDetail = !$scope.showDetail;
+                $scope.showSeasonDetail = false;
             } else {
                 $scope.detailYear = year;
                 $scope.detailMonth = month;
-                //get month name also, cause why not.
-                angular.forEach($scope.months, function(mmm) {
-                    if ($scope.detailMonth===mmm.number) {
-                        $scope.detailMonthName = mmm.text;
-                    }
-                });
+                $scope.detailMonthName = monthText;
                 $scope.showDetail = true;
                 $scope.showSeasonDetail = false;
             }
         };
-        
         //show stat tag detail.
         $scope.tagDetail = function(name) {
             if ($scope.detailTagName===name) {
@@ -175,38 +149,9 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 $scope.detailTagName = name;
                 $scope.isEqual = true;
                 $scope.showTagDetail = true;
-                $scope.tagDetailCollection = [];
-                $scope.tagDetailResult = [];
-                var add = true;
-                angular.forEach($scope.items, function(item){
-                    for(var i=0; i < item.tags.length; i++) {
-                        if (item.tags[i].text===name) {
-                            $scope.tagDetailCollection.push(item.tags);
-                        }
-                    }
-                });
-//                console.log($scope.tagDetailCollection);
-                angular.forEach($scope.tagDetailCollection, function(item) {
-                    angular.forEach(item, function(tem) {
-//                        console.log(tem);
-                        for(var i=0; i < $scope.tagDetailResult.length; i++) {
-                            //if exists and not the search value - increment the count.
-                            if ($scope.tagDetailResult[i].name===tem.text && tem.text!==name) {
-                                add = false;
-                                $scope.tagDetailResult[i].count += 1; 
-                            }
-                        }
-                        //add in if true and not the tag we searched on.
-                        if (add===true && tem.text!==name) {
-                            $scope.tagDetailResult.push({ name: tem.text, count: 1 });
-                        }
-                        add = true;
-                    });
-//                    console.log($scope.tagDetailResult);
-                });
+                $scope.tagDetailResult = CharacterService.buildRelatedCharacterTags($scope.items, name);
             }
         };
-        
         //show stat series detail.
         $scope.seriesDetail = function(name) {
             if ($scope.detailSeriesName===name) {
@@ -219,7 +164,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 $scope.showSeriesDetail = true;
             }
         };
-        
+        //show voice actor detail
         $scope.voiceDetail = function(name) {
             if ($scope.detailVoiceName === name) {
                 $scope.voiceSearch = '';

@@ -82,7 +82,7 @@
             </div><!-- collapse FORM -->
     </div><!-- col-md-12 ACTIONS -->
 	<div class="fixed-header">
-        <h3>Week Beginning {{weekBeginning() | dateSuffix }} <button class="btn btn-primary show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</button></h3>
+        <h3>Week Beginning {{ weekBeginning() | dateSuffix }} <button class="btn btn-primary show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</button></h3>
 	</div>
     <div class="container">
         <div class="col-lg-4 col-md-4 col-sm-4 mt filter-container" ng-class="{ 'in-the-way' : inTheWay }">

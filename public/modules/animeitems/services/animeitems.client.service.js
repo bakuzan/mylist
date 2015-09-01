@@ -206,7 +206,9 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                  diff = latestDate.fromNow();
                 
                 if (diff==='a day ago') {
-                    return moment(updated).calendar();
+                    return 'Yesterday at ' + latestDate.format('HH:mm');
+                } else if (diff.indexOf('days') > -1) {
+                    return diff + ' at ' + latestDate.format('HH:mm');
                 } else {
                     return diff + '.';
                 }

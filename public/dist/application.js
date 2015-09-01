@@ -708,7 +708,9 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                  diff = latestDate.fromNow();
                 
                 if (diff==='a day ago') {
-                    return moment(updated).calendar();
+                    return 'Yesterday at ' + latestDate.format('HH:mm');
+                } else if (diff.indexOf('days') > -1) {
+                    return diff + ' at ' + latestDate.format('HH:mm');
                 } else {
                     return diff + '.';
                 }
@@ -2637,10 +2639,12 @@ angular.module('history').service('HistoryService', ['moment', function(moment) 
             diff = today.diff(thisDate, 'days');
                 
         //for 0 and 1 day(s) ago use the special term.
-        if (diff < 2) {
-            return moment(when).calendar();
+        if (diff === 0) {
+            return 'Today at ' + moment(when).format('HH:mm');
+        } else if (diff === 1) {
+            return 'Yesterday at ' + moment(when).format('HH:mm');
         } else {
-            return moment(when).format('LLLL');
+            return diff + ' days ago at ' + moment(when).format('HH:mm');
         }
     };
     

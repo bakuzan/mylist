@@ -56,4 +56,49 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
             });
         }
     };
-});
+})
+.directive('pageControls', ['$timeout', function($timeout) {
+  return {
+      restrict: 'EA',
+      replace: true,
+      scope: {
+          pageConfig: '=',
+          showingCount: '='
+      },
+      templateUrl: '/modules/animeitems/templates/page-controls.html',
+      link: function(scope, elem, attrs) {
+          /** Calculate page count.
+           *    If showingCount isn't caluclated in time...
+           *    If the pageSize is altered...
+           */
+          $timeout(function() {
+              scope.$watch('[showingCount, pageConfig.pageSize]', function() {
+                  scope.pageCount = Math.ceil(scope.showingCount / scope.pageConfig.pageSize);
+                  if (scope.pageConfig.currentPage > scope.pageCount - 1) {
+                      scope.last(); //in the event changing page size would put you above the last page.
+                  } else if (scope.pageConfig.currentPage < 0) {
+                      scope.first();
+                  }
+              });
+          });
+          
+          /** Button Functions
+           *    go to next/prev pages. skip to first/last page.
+           */
+          scope.first = function() {
+              scope.pageConfig.currentPage = 0;
+          };
+          scope.last = function() {
+              scope.pageConfig.currentPage = scope.pageCount - 1;
+          };
+          scope.next = function() {
+              scope.pageConfig.currentPage += 1;
+          };
+          scope.prev = function() {
+              scope.pageConfig.currentPage -= 1;
+          };
+          
+      }
+  };
+    
+}]);

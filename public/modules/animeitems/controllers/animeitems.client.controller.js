@@ -11,14 +11,19 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.whichController = 'animeitem';
         $scope.isLoading = true;
         //paging controls for the list view.
-        $scope.currentPage = 0;
-        $scope.pageSize = 10;
-        $scope.pageCount = 0;
-        $scope.$watch('showingCount', function() {
-            var pagingDetails = ListService.numberOfPages($scope.showingCount, $scope.pageSize, $scope.currentPage);
-            $scope.currentPage = pagingDetails.currentPage;
-            $scope.pageCount = pagingDetails.pageCount;
-        });
+        //paging variables.
+        $scope.pageConfig = {
+            currentPage: 0,
+            pageSize: 10
+        };
+//        $scope.currentPage = 0;
+//        $scope.pageSize = 10;
+//        $scope.pageCount = 0;
+//        $scope.$watch('showingCount', function() {
+//            var pagingDetails = ListService.numberOfPages($scope.showingCount, $scope.pageSize, $scope.currentPage);
+//            $scope.currentPage = pagingDetails.currentPage;
+//            $scope.pageCount = pagingDetails.pageCount;
+//        });
         
         /** today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
          *      AND episode/start/latest auto-pop in create.

@@ -130,6 +130,19 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             currentPage: 0,
             pageSize: 10
         };
+        $scope.filterConfig = {
+            showingCount: 0,
+            sortType: '',
+            sortReverse: false,
+            ratingLevel: undefined,
+            maxRating: 10,
+            searchTags: '',
+            tagsForFilter: [],
+            taglessItem: false,
+            areTagless: false,
+            selectListOptions: ListService.getSelectListOptions($scope.whichController),
+            statTags: ItemService.buildStatTags($scope.animeitems, 0)
+        };
         
         /** today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
          *      AND episode/start/latest auto-pop in create.
@@ -139,31 +152,18 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.latest = $scope.itemUpdate;
         $scope.episodes = 0;
         $scope.viewItemHistory = false; //default stat of item history popout.
-        $scope.selectListOptions = ListService.getSelectListOptions($scope.whichController);
 	    $scope.sortReverse = true; // default sort order
         $scope.finalNumbers = false; //default show status of final number fields in edit view.
-        $scope.ratingLevel = undefined; //default rating filter
-        $scope.maxRating = 10; //maximum rating
         $scope.imgPath = ''; //image path
         $scope.tagArray = []; // holding tags pre-submit
         $scope.tagArrayRemove = [];
         $scope.usedTags = []; //for typeahead array.
-        $scope.statTags = []; //for stat table.
-        $scope.areTagless = false; //are any items tagless
-        $scope.taglessItem = false; //filter variable for showing tagless items.
         
         //allow retreival of local resource
         $scope.trustAsResourceUrl = function(url) {
             return $sce.trustAsResourceUrl(url);
         };
         
-        $scope.searchTags = '';
-        $scope.passTag = function(tag) {
-            if ($scope.searchTags.indexOf(tag) === -1) {
-                $scope.searchTags += tag + ',';
-                $scope.tagsForFilter = $scope.searchTags.substring(0, $scope.searchTags.length - 1).split(',');
-            }
-        };
         //for adding/removing tags.
         $scope.addTag = function () {
 //            console.log($scope.newTag);
@@ -174,8 +174,8 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.$watchCollection('animeitems', function() {
             if ($scope.animeitems!==undefined) {
 //                console.log($scope.animeitems);
-                $scope.areTagless = ListService.checkForTagless($scope.animeitems);
-                $scope.statTags = ItemService.buildStatTags($scope.animeitems, 0);
+                $scope.filterConfig.areTagless = ListService.checkForTagless($scope.animeitems);
+                $scope.filterConfig.statTags = ItemService.buildStatTags($scope.animeitems, 0);
             }
         });
         
@@ -463,6 +463,28 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
       }
   };
     
+})
+.directive('listFilters', function() {
+    return {
+        restrict: 'EA',
+        replace: true,
+        scope: {
+            filterConfig: '=',
+            items: '='
+        },
+        templateUrl: '/modules/animeitems/templates/list-filters.html',
+        link: function(scope, elem, attrs) {
+            scope.filterConfig.searchTags = '';
+            scope.passTag = function(tag) {
+                if (scope.filterConfig.searchTags.indexOf(tag) === -1) {
+                    scope.filterConfig.searchTags += tag + ',';
+                    scope.filterConfig.tagsForFilter = scope.filterConfig.searchTags.substring(0, scope.filterConfig.searchTags.length - 1).split(',');
+                }
+            };
+          
+        }
+        
+    };
 });
 'use strict';
 
@@ -1434,9 +1456,9 @@ angular.module('characters').directive('characterBack', function(){
         element.bind('click', function(event) {
 //            console.log('clear tags');
             scope.$apply(function() {
-                scope.searchTags = '';
-                scope.characterTags = '';
-                scope.tagsForFilter = [];
+                scope.filterConfig.searchTags = '';
+                scope.filterConfig.characterTags = '';
+                scope.filterConfig.tagsForFilter = [];
             });
         });
     };
@@ -1448,10 +1470,10 @@ angular.module('characters').directive('characterBack', function(){
             element.bind('click', function(event) {
                 scope.$apply(function() { 
                     var tag = attrs.deleteSearchTag;
-                    var index = scope.tagsForFilter.indexOf(tag);
+                    var index = scope.filterConfig.tagsForFilter.indexOf(tag);
 //                    console.log(tag, index);
-                    scope.$parent.searchTags = scope.searchTags.replace(tag + ',', '');
-                    scope.$parent.tagsForFilter.splice(index, 1);
+                    scope.filterConfig.searchTags = scope.filterConfig.searchTags.replace(tag + ',', '');
+                    scope.filterConfig.tagsForFilter.splice(index, 1);
 //                    console.log(scope.searchTags, scope.tagsForFilter);
                 });
             });

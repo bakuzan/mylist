@@ -99,4 +99,26 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
       }
   };
     
+})
+.directive('listFilters', function() {
+    return {
+        restrict: 'EA',
+        replace: true,
+        scope: {
+            filterConfig: '=',
+            items: '='
+        },
+        templateUrl: '/modules/animeitems/templates/list-filters.html',
+        link: function(scope, elem, attrs) {
+            scope.filterConfig.searchTags = '';
+            scope.passTag = function(tag) {
+                if (scope.filterConfig.searchTags.indexOf(tag) === -1) {
+                    scope.filterConfig.searchTags += tag + ',';
+                    scope.filterConfig.tagsForFilter = scope.filterConfig.searchTags.substring(0, scope.filterConfig.searchTags.length - 1).split(',');
+                }
+            };
+          
+        }
+        
+    };
 });

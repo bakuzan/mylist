@@ -15,6 +15,19 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             currentPage: 0,
             pageSize: 10
         };
+        $scope.filterConfig = {
+            showingCount: 0,
+            sortType: '',
+            sortReverse: false,
+            ratingLevel: undefined,
+            maxRating: 10,
+            searchTags: '',
+            tagsForFilter: [],
+            taglessItem: false,
+            areTagless: false,
+            selectListOptions: ListService.getSelectListOptions($scope.whichController),
+            statTags: ItemService.buildStatTags($scope.animeitems, 0)
+        };
         
         /** today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
          *      AND episode/start/latest auto-pop in create.
@@ -24,31 +37,18 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.latest = $scope.itemUpdate;
         $scope.episodes = 0;
         $scope.viewItemHistory = false; //default stat of item history popout.
-        $scope.selectListOptions = ListService.getSelectListOptions($scope.whichController);
 	    $scope.sortReverse = true; // default sort order
         $scope.finalNumbers = false; //default show status of final number fields in edit view.
-        $scope.ratingLevel = undefined; //default rating filter
-        $scope.maxRating = 10; //maximum rating
         $scope.imgPath = ''; //image path
         $scope.tagArray = []; // holding tags pre-submit
         $scope.tagArrayRemove = [];
         $scope.usedTags = []; //for typeahead array.
-        $scope.statTags = []; //for stat table.
-        $scope.areTagless = false; //are any items tagless
-        $scope.taglessItem = false; //filter variable for showing tagless items.
         
         //allow retreival of local resource
         $scope.trustAsResourceUrl = function(url) {
             return $sce.trustAsResourceUrl(url);
         };
         
-        $scope.searchTags = '';
-        $scope.passTag = function(tag) {
-            if ($scope.searchTags.indexOf(tag) === -1) {
-                $scope.searchTags += tag + ',';
-                $scope.tagsForFilter = $scope.searchTags.substring(0, $scope.searchTags.length - 1).split(',');
-            }
-        };
         //for adding/removing tags.
         $scope.addTag = function () {
 //            console.log($scope.newTag);
@@ -59,8 +59,8 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.$watchCollection('animeitems', function() {
             if ($scope.animeitems!==undefined) {
 //                console.log($scope.animeitems);
-                $scope.areTagless = ListService.checkForTagless($scope.animeitems);
-                $scope.statTags = ItemService.buildStatTags($scope.animeitems, 0);
+                $scope.filterConfig.areTagless = ListService.checkForTagless($scope.animeitems);
+                $scope.filterConfig.statTags = ItemService.buildStatTags($scope.animeitems, 0);
             }
         });
         

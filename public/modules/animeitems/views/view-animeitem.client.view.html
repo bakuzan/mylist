@@ -20,7 +20,7 @@
                 <span class="glyphicon glyphicon-cd" data-ng-show="animeitem.disc"></span> <span class="text-muted" data-ng-show="animeitem.status">(Completed)</span> <span class="text-muted" data-ng-show="animeitem.reWatching">(Watching)</span>
                 <h3>Episode </h3><span data-ng-bind="animeitem.episodes"></span>/<span data-ng-bind="animeitem.finalEpisode"></span>
                 <div class="related-media accent-alter-text">
-                    <p data-ng-show="animeitem.manga!==undefined">Related manga: <a href="/#!/mangaitems/{{animeitem.manga._id}}">{{animeitem.manga.title}}</a></p>
+                    <p data-ng-show="animeitem.manga!==null">Related manga: <a href="/#!/mangaitems/{{animeitem.manga._id}}">{{animeitem.manga.title}}</a></p>
                 </div>
                 <div class="col-md-9 item-tags">
                     <span class="col-md-3 tag-bubble" ng-repeat="tag in animeitem.tags">{{tag.text}}</span>
@@ -28,11 +28,11 @@
             </div>
         </div>
         <div class="text-right">
-            <span class="accent-alter-text" data-ng-show="animeitem.status">Re-watch count: {{ animeitem.reWatchCount }}</span>
+            <span class="accent-alter-text" data-ng-show="animeitem.status">{{ animeitem.reWatchCount }} rewatches</span>
         </div>
         <div class="text-right">
             <em class="accent-alter-text" data-ng-show="animeitem.rating==0">No rating</em>
-            <rating data-ng-model="animeitem.rating" class="view-item-rating-stars" data-ng-show="animeitem.rating!==0" readonly="true" max="maxRating" id="rating" name="rating"></rating>
+            <rating data-ng-model="animeitem.rating" class="view-item-rating-stars" data-ng-show="animeitem.rating!==0" readonly="true" max="filterConfig.maxRating" id="rating" name="rating"></rating>
         </div>
 	</div>
 	<small>

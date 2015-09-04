@@ -173,9 +173,9 @@ angular.module('characters').directive('characterBack', function(){
         element.bind('click', function(event) {
 //            console.log('clear tags');
             scope.$apply(function() {
-                scope.searchTags = '';
-                scope.characterTags = '';
-                scope.tagsForFilter = [];
+                scope.filterConfig.searchTags = '';
+                scope.filterConfig.characterTags = '';
+                scope.filterConfig.tagsForFilter = [];
             });
         });
     };
@@ -187,10 +187,10 @@ angular.module('characters').directive('characterBack', function(){
             element.bind('click', function(event) {
                 scope.$apply(function() { 
                     var tag = attrs.deleteSearchTag;
-                    var index = scope.tagsForFilter.indexOf(tag);
+                    var index = scope.filterConfig.tagsForFilter.indexOf(tag);
 //                    console.log(tag, index);
-                    scope.$parent.searchTags = scope.searchTags.replace(tag + ',', '');
-                    scope.$parent.tagsForFilter.splice(index, 1);
+                    scope.filterConfig.searchTags = scope.filterConfig.searchTags.replace(tag + ',', '');
+                    scope.filterConfig.tagsForFilter.splice(index, 1);
 //                    console.log(scope.searchTags, scope.tagsForFilter);
                 });
             });

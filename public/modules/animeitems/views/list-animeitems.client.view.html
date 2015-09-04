@@ -5,8 +5,8 @@
     </div>
     <div class="container">
         <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }">
-            <div page-controls page-config="pageConfig" showing-count="showing.length"></div>
-           <div class="input-group">
+            <div page-controls page-config="pageConfig" showing-count="showingCount"></div>
+            <div class="input-group">
                 <div class="input-group-addon">
                     <i class="fa fa-search"></i>
                 </div>
@@ -18,7 +18,7 @@
                 </div>
                <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags" typeahead="stat.tag for stat in statTags | filter: $viewValue" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
            </div>
-           <div class="input-group mt search-tag-list-container" ng-hide="searchTags===undefined || searchTags==='' || searchTags===null">
+            <div class="input-group mt search-tag-list-container" ng-hide="searchTags===undefined || searchTags==='' || searchTags===null">
                <ul class="tag-list col-lg-12 col-md-12">
                     <li class="tag-bubble col-lg-12 col-md-12" ng-repeat="tag in tagsForFilter track by $index">
                         {{tag}}
@@ -30,7 +30,7 @@
               <div class="input-group-addon">
                   <i class="fa fa-list-ol"></i>
               </div>
-                <input type="text" class="form-control" value="Showing {{ (showingCount = (animeitems | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem).length) }} anime." disabled>
+              <input type="text" class="form-control" value="Showing {{ (showingCount = (animeitems | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem).length) }} anime." disabled>
             </div>
             <div class="input-group mt">
               <div class="input-group-addon">
@@ -89,7 +89,7 @@
         <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
         <div class="col-lg-8 col-md-6 col-sm-6 item-list-container">
             <div class="list-group col-lg-12 col-md-12 col-sm-12">
-        <div data-ng-repeat="animeitem in (showing = (animeitems | orderBy: sortType:sortReverse | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem) | startFrom: pageConfig.currentPage*pageConfig.pageSize | limitTo: pageConfig.pageSize)" list_Back="{{trustAsResourceUrl(animeitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12" ng-hide="loading(animeitem.title)">
+            <div data-ng-repeat="animeitem in animeitems | orderBy: sortType:sortReverse | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem | startFrom: pageConfig.currentPage*pageConfig.pageSize | limitTo: pageConfig.pageSize" list_Back="{{trustAsResourceUrl(animeitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12" ng-hide="loading(animeitem.title)">
 			<div class="view-item-top">
             <small class="list-group-item-text">
                 <time ng-if="animeitem.latest.substring(0,10)===animeitem.meta.updated.substring(0,10)" title="{{animeitem.meta.updated | date: 'yyyy-MMM-dd HH:mm'}}" ng-bind="latestDate(animeitem.latest, animeitem.meta.updated)"></time>
@@ -142,7 +142,7 @@
                 </div>
             </div><!-- VIEW ITEM END-->
         </div><!-- LIST ITEM END -->
-    </div><!-- LIST -->
+            </div><!-- LIST -->
         </div>
     </div>
     <section class="loading-image" data-ng-if="isLoading"></section>

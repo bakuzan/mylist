@@ -36,7 +36,7 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
                 if (e.ctrlKey && e.keyCode===39 && scope.currentPage < scope.pageCount) {
                     scope.currentPage = scope.currentPage + 1;
                     if (scope.currentPage > scope.pageCount - 1) {
-                        scope.currentPage = scope.currentPage -1;
+                        scope.currentPage = scope.pageCount - 1;
                     }
                 } else if (e.ctrlKey && e.keyCode===37 && scope.currentPage > 0) {
                     scope.currentPage = scope.currentPage - 1;
@@ -57,7 +57,7 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
         }
     };
 })
-.directive('pageControls', ['$timeout', function($timeout) {
+.directive('pageControls', function() {
   return {
       restrict: 'EA',
       replace: true,
@@ -71,8 +71,7 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
            *    If showingCount isn't caluclated in time...
            *    If the pageSize is altered...
            */
-          $timeout(function() {
-              scope.$watch('[showingCount, pageConfig.pageSize]', function() {
+              scope.$watch('showingCount', function() {
                   scope.pageCount = Math.ceil(scope.showingCount / scope.pageConfig.pageSize);
                   if (scope.pageConfig.currentPage > scope.pageCount - 1) {
                       scope.last(); //in the event changing page size would put you above the last page.
@@ -80,7 +79,6 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
                       scope.first();
                   }
               });
-          });
           
           /** Button Functions
            *    go to next/prev pages. skip to first/last page.
@@ -101,4 +99,4 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
       }
   };
     
-}]);
+});

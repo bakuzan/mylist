@@ -133,14 +133,6 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             return areTagless;
         };
     
-        this.getBaseVariables = function(controller) {
-            var baseVariables = {};
-            
-            
-            
-            return baseVariables;
-        };
-    
         this.getCommonArrays = function(controller) {
             var commonArrays = {},
                 seasons = [ 
@@ -379,8 +371,8 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         };
     
         //builds counts for number of items given for each rating.
-        this.buildRatingsDistribution = function(items, maxCount) {
-            var possibleValues = [10,9,8,7,6,5,4,3,2,1,0], ratingsDistribution = [], i = possibleValues.length;
+        this.buildRatingsDistribution = function(items) {
+            var maxCount = items.length, possibleValues = [10,9,8,7,6,5,4,3,2,1,0], ratingsDistribution = [], i = possibleValues.length;
             while(i--) {
                 var count = $filter('filter')(items, { rating: i }, true).length;
                 ratingsDistribution.push({ number: i === 0 ? '-' : i,  
@@ -402,7 +394,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
     
         //complete by month stats
         this.completeByMonth = function(items) {
-            var self = this, completeByMonth = [], itemYears = self.endingYears(items), i = itemYears.length;
+            var self = this, monthDetails = {}, completeByMonth = [], maxCompleteMonth = 0, itemYears = self.endingYears(items), i = itemYears.length;
             //build comlpeteByMonths object.
             while(i--) {
                 //chuck the null end date. push the year part of the other end dates with months array.
@@ -424,9 +416,11 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             ] });
                 }
             }
+            maxCompleteMonth = self.maxCompleteMonth(items);
+            monthDetails = { completeByMonth: completeByMonth, maxCompleteMonth: maxCompleteMonth };
 
 //            console.log('completeByMonth', completeByMonth);
-            return completeByMonth;
+            return monthDetails;
         };
     
         //complete by season stats.

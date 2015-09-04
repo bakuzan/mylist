@@ -14,8 +14,13 @@ angular.module('characters').factory('Characters', ['$resource',
 .service('CharacterService', function() {
     
     //build the character gender distribution.
-    this.buildGenderDistribution = function(items, maxCount) {
-        var gender = { male: { count: 0, percentage: 0, text: '% male.'}, female: { count: 0, percentage: 0, text: '% female.'}, nosex: { count: 0, percentage: 0, text: '% unassigned.'} };
+    this.buildGenderDistribution = function(items) {
+        var maxCount = items.length,
+            gender = { 
+            male: { count: 0, percentage: 0, text: '% male.'},
+            female: { count: 0, percentage: 0, text: '% female.'},
+            nosex: { count: 0, percentage: 0, text: '% unassigned.'}
+        };
         angular.forEach(items, function(item) {
             if (item.tag === 'male') {
                 gender.male.count = item.count;

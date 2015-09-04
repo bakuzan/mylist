@@ -10,14 +10,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         
         $scope.view = 'Anime';
         $scope.historicalView = 'month'; //default historical view in stats.
-        $scope.maxCount = 0; //number of items.
-        $scope.maxRatedCount = 0; //number of items with a rating i.e not 0.
-        $scope.averageRating = 0; //average rating for items.
-        $scope.maxCompleteMonth = 0; //used to find the max number of ends in 1 month.
-        $scope.maxCompleteSeason = 0;
-        var commonArrays = ListService.getCommonArrays('statistics');
-        $scope.months = commonArrays.months;
-        $scope.seasons = commonArrays.seasons;
+        $scope.commonArrays = ListService.getCommonArrays('statistics');
         $scope.showDetail = false; //show month detail.
         $scope.statTagSortType = 'ratingWeighted'; //stat tag sort
         $scope.statTagSortReverse = true; //stat tag sort direction.
@@ -40,9 +33,6 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.voiceSearch = ''; //for filtering voice values.
         $scope.areTagless = false; //are any items tagless
         $scope.taglessItem = false; //filter variable for showing tagless items.
-        $scope.male = 0; //gender count for pb.
-        $scope.female = 0; //gender count for pb.
-        $scope.nosex = 0; //no gender count for pb.
         $scope.isLoading = true;
         $scope.loading = function(value) {
             $scope.isLoading = ListService.loader(value);
@@ -82,28 +72,21 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 if ($scope.items!==undefined) {
                     $scope.statTags = []; //clear to stop multiple views tags appearing.
                     $scope.overview = ItemService.buildOverview($scope.items);
-                    $scope.maxCompleteMonth = ItemService.maxCompleteMonth($scope.items);
-                    $scope.completeByMonth = ItemService.completeByMonth($scope.items);
+                    $scope.monthDetails = ItemService.completeByMonth($scope.items);
                     if ($scope.view === 'Anime') { 
-                        var seasonDetails = ItemService.completeBySeason($scope.items);
-                        $scope.completeBySeason = seasonDetails.completeBySeason;
-                        $scope.maxCompleteSeason = seasonDetails.maxCompleteSeason;
+                        $scope.seasonDetails = ItemService.completeBySeason($scope.items);
                     }
-                    $scope.maxCount = $scope.items.length;
-                    var ratingValues = ItemService.getRatingValues($scope.items);
-                    $scope.maxRatedCount = ratingValues.maxRatedCount;
-                    $scope.averageRating = ratingValues.averageRating;
-                    $scope.ratingsDistribution = ItemService.buildRatingsDistribution($scope.items, $scope.maxCount);
-                    $scope.statTags = ItemService.buildStatTags($scope.items, $scope.averageRating);
+                    $scope.ratingValues = ItemService.getRatingValues($scope.items);
+                    $scope.ratingsDistribution = ItemService.buildRatingsDistribution($scope.items);
+                    $scope.statTags = ItemService.buildStatTags($scope.items, $scope.ratingValues.averageRating);
                 }
             } else if ($scope.view === 'Character') {
                 if ($scope.items!==undefined) {
                     $scope.statTags = []; //clear previous views tags.
-                    $scope.maxCount = $scope.items.length;
                     $scope.statTags = CharacterService.buildCharacterTags($scope.items);
                     $scope.statSeries = CharacterService.buildSeriesList($scope.items);
                     $scope.voiceActors = CharacterService.buildVoiceActors($scope.items);
-                    $scope.gender = CharacterService.buildGenderDistribution($scope.statTags, $scope.maxCount);
+                    $scope.gender = CharacterService.buildGenderDistribution($scope.statTags);
                 }
             }
         });

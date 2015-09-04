@@ -125,15 +125,11 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         
         $scope.whichController = 'animeitem';
         $scope.isLoading = true;
-        //paging controls for the list view.
-        $scope.currentPage = 0;
-        $scope.pageSize = 10;
-        $scope.pageCount = 0;
-        $scope.$watch('showingCount', function() {
-            var pagingDetails = ListService.numberOfPages($scope.showingCount, $scope.pageSize, $scope.currentPage);
-            $scope.currentPage = pagingDetails.currentPage;
-            $scope.pageCount = pagingDetails.pageCount;
-        });
+        //paging variables.
+        $scope.pageConfig = {
+            currentPage: 0,
+            pageSize: 10
+        };
         
         /** today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
          *      AND episode/start/latest auto-pop in create.
@@ -178,11 +174,8 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.$watchCollection('animeitems', function() {
             if ($scope.animeitems!==undefined) {
 //                console.log($scope.animeitems);
-                
                 $scope.areTagless = ListService.checkForTagless($scope.animeitems);
-                var maxTagCount = ItemService.maxTagCount($scope.animeitems);
-                $scope.statTags = ItemService.buildStatTags($scope.animeitems, maxTagCount, 0);
-                
+                $scope.statTags = ItemService.buildStatTags($scope.animeitems, 0);
             }
         });
         
@@ -407,7 +400,7 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
                 if (e.ctrlKey && e.keyCode===39 && scope.currentPage < scope.pageCount) {
                     scope.currentPage = scope.currentPage + 1;
                     if (scope.currentPage > scope.pageCount - 1) {
-                        scope.currentPage = scope.currentPage -1;
+                        scope.currentPage = scope.pageCount - 1;
                     }
                 } else if (e.ctrlKey && e.keyCode===37 && scope.currentPage > 0) {
                     scope.currentPage = scope.currentPage - 1;
@@ -427,6 +420,49 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
             });
         }
     };
+})
+.directive('pageControls', function() {
+  return {
+      restrict: 'EA',
+      replace: true,
+      scope: {
+          pageConfig: '=',
+          showingCount: '='
+      },
+      templateUrl: '/modules/animeitems/templates/page-controls.html',
+      link: function(scope, elem, attrs) {
+          /** Calculate page count.
+           *    If showingCount isn't caluclated in time...
+           *    If the pageSize is altered...
+           */
+              scope.$watch('showingCount', function() {
+                  scope.pageCount = Math.ceil(scope.showingCount / scope.pageConfig.pageSize);
+                  if (scope.pageConfig.currentPage > scope.pageCount - 1) {
+                      scope.last(); //in the event changing page size would put you above the last page.
+                  } else if (scope.pageConfig.currentPage < 0) {
+                      scope.first();
+                  }
+              });
+          
+          /** Button Functions
+           *    go to next/prev pages. skip to first/last page.
+           */
+          scope.first = function() {
+              scope.pageConfig.currentPage = 0;
+          };
+          scope.last = function() {
+              scope.pageConfig.currentPage = scope.pageCount - 1;
+          };
+          scope.next = function() {
+              scope.pageConfig.currentPage += 1;
+          };
+          scope.prev = function() {
+              scope.pageConfig.currentPage -= 1;
+          };
+          
+      }
+  };
+    
 });
 'use strict';
 
@@ -873,8 +909,8 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         };
     
         //builds counts for number of items given for each rating.
-        this.buildRatingsDistribution = function(items, maxCount) {
-            var possibleValues = [10,9,8,7,6,5,4,3,2,1,0], ratingsDistribution = [], i = possibleValues.length;
+        this.buildRatingsDistribution = function(items) {
+            var maxCount = items.length, possibleValues = [10,9,8,7,6,5,4,3,2,1,0], ratingsDistribution = [], i = possibleValues.length;
             while(i--) {
                 var count = $filter('filter')(items, { rating: i }, true).length;
                 ratingsDistribution.push({ number: i === 0 ? '-' : i,  
@@ -896,7 +932,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
     
         //complete by month stats
         this.completeByMonth = function(items) {
-            var self = this, completeByMonth = [], itemYears = self.endingYears(items), i = itemYears.length;
+            var self = this, monthDetails = {}, completeByMonth = [], maxCompleteMonth = 0, itemYears = self.endingYears(items), i = itemYears.length;
             //build comlpeteByMonths object.
             while(i--) {
                 //chuck the null end date. push the year part of the other end dates with months array.
@@ -918,9 +954,11 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             ] });
                 }
             }
+            maxCompleteMonth = self.maxCompleteMonth(items);
+            monthDetails = { completeByMonth: completeByMonth, maxCompleteMonth: maxCompleteMonth };
 
 //            console.log('completeByMonth', completeByMonth);
-            return completeByMonth;
+            return monthDetails;
         };
     
         //complete by season stats.
@@ -1005,15 +1043,11 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         
         $scope.whichController = 'character';
         $scope.isLoading = true;
-        //paging controls for the list view.
-        $scope.currentPage = 0;
-        $scope.pageSize = 10;
-        $scope.pageCount = 0;
-        $scope.$watch('showingCount', function() {
-            var pagingDetails = ListService.numberOfPages($scope.showingCount, $scope.pageSize, $scope.currentPage);
-            $scope.currentPage = pagingDetails.currentPage;
-            $scope.pageCount = pagingDetails.pageCount;
-        });
+        //paging variables.
+        $scope.pageConfig = {
+            currentPage: 0,
+            pageSize: 10
+        };
         $scope.selectListOptions = ListService.getSelectListOptions($scope.whichController);
         $scope.isList = 'list'; //show list? or slider.
         $scope.maxItemCount = 0; //number of characters.
@@ -1592,8 +1626,13 @@ angular.module('characters').factory('Characters', ['$resource',
 .service('CharacterService', function() {
     
     //build the character gender distribution.
-    this.buildGenderDistribution = function(items, maxCount) {
-        var gender = { male: { count: 0, percentage: 0, text: '% male.'}, female: { count: 0, percentage: 0, text: '% female.'}, nosex: { count: 0, percentage: 0, text: '% unassigned.'} };
+    this.buildGenderDistribution = function(items) {
+        var maxCount = items.length,
+            gender = { 
+            male: { count: 0, percentage: 0, text: '% male.'},
+            female: { count: 0, percentage: 0, text: '% female.'},
+            nosex: { count: 0, percentage: 0, text: '% unassigned.'}
+        };
         angular.forEach(items, function(item) {
             if (item.tag === 'male') {
                 gender.male.count = item.count;
@@ -2825,15 +2864,11 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         
         $scope.whichController = 'mangaitem';
         $scope.isLoading = true;
-        //paging controls for the list view.
-        $scope.currentPage = 0;
-        $scope.pageSize = 10;
-        $scope.pageCount = 0;
-        $scope.$watch('showingCount', function() {
-            var pagingDetails = ListService.numberOfPages($scope.showingCount, $scope.pageSize, $scope.currentPage);
-            $scope.currentPage = pagingDetails.currentPage;
-            $scope.pageCount = pagingDetails.pageCount;
-        });
+        //paging variables.
+        $scope.pageConfig = {
+            currentPage: 0,
+            pageSize: 10
+        };
         
         /** today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
          *      AND chapter/volume/start/latest auto-pop in create.
@@ -2879,10 +2914,8 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         $scope.$watchCollection('mangaitems', function() {
             if ($scope.mangaitems!==undefined) {
 //                console.log($scope.mangaitems);
-                
                 $scope.areTagless = ListService.checkForTagless($scope.mangaitems);
-                var maxTagCount = ItemService.maxTagCount($scope.mangaitems);
-                $scope.statTags = ItemService.buildStatTags($scope.mangaitems, maxTagCount, 0);
+                $scope.statTags = ItemService.buildStatTags($scope.mangaitems, 0);
             }
         });
         
@@ -3150,15 +3183,11 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
 		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.view = 'Anime';
-        //paging controls for the list view.
-        $scope.currentPage = 0;
-        $scope.pageSize = 50;
-        $scope.pageCount = 0;
-        $scope.$watch('showingCount', function() {
-            var pagingDetails = ListService.numberOfPages($scope.showingCount, $scope.pageSize, $scope.currentPage);
-            $scope.currentPage = pagingDetails.currentPage;
-            $scope.pageCount = pagingDetails.pageCount;
-        });
+        //paging variables.
+        $scope.pageConfig = {
+            currentPage: 0,
+            pageSize: 50
+        };
         $scope.sortType = 'rating';
         $scope.sortReverse = true;
         $scope.ratingLevel = undefined; //default rating filter
@@ -3261,14 +3290,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         
         $scope.view = 'Anime';
         $scope.historicalView = 'month'; //default historical view in stats.
-        $scope.maxCount = 0; //number of items.
-        $scope.maxRatedCount = 0; //number of items with a rating i.e not 0.
-        $scope.averageRating = 0; //average rating for items.
-        $scope.maxCompleteMonth = 0; //used to find the max number of ends in 1 month.
-        $scope.maxCompleteSeason = 0;
-        var commonArrays = ListService.getCommonArrays('statistics');
-        $scope.months = commonArrays.months;
-        $scope.seasons = commonArrays.seasons;
+        $scope.commonArrays = ListService.getCommonArrays('statistics');
         $scope.showDetail = false; //show month detail.
         $scope.statTagSortType = 'ratingWeighted'; //stat tag sort
         $scope.statTagSortReverse = true; //stat tag sort direction.
@@ -3291,9 +3313,6 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.voiceSearch = ''; //for filtering voice values.
         $scope.areTagless = false; //are any items tagless
         $scope.taglessItem = false; //filter variable for showing tagless items.
-        $scope.male = 0; //gender count for pb.
-        $scope.female = 0; //gender count for pb.
-        $scope.nosex = 0; //no gender count for pb.
         $scope.isLoading = true;
         $scope.loading = function(value) {
             $scope.isLoading = ListService.loader(value);
@@ -3333,28 +3352,21 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 if ($scope.items!==undefined) {
                     $scope.statTags = []; //clear to stop multiple views tags appearing.
                     $scope.overview = ItemService.buildOverview($scope.items);
-                    $scope.maxCompleteMonth = ItemService.maxCompleteMonth($scope.items);
-                    $scope.completeByMonth = ItemService.completeByMonth($scope.items);
+                    $scope.monthDetails = ItemService.completeByMonth($scope.items);
                     if ($scope.view === 'Anime') { 
-                        var seasonDetails = ItemService.completeBySeason($scope.items);
-                        $scope.completeBySeason = seasonDetails.completeBySeason;
-                        $scope.maxCompleteSeason = seasonDetails.maxCompleteSeason;
+                        $scope.seasonDetails = ItemService.completeBySeason($scope.items);
                     }
-                    $scope.maxCount = $scope.items.length;
-                    var ratingValues = ItemService.getRatingValues($scope.items);
-                    $scope.maxRatedCount = ratingValues.maxRatedCount;
-                    $scope.averageRating = ratingValues.averageRating;
-                    $scope.ratingsDistribution = ItemService.buildRatingsDistribution($scope.items, $scope.maxCount);
-                    $scope.statTags = ItemService.buildStatTags($scope.items, $scope.averageRating);
+                    $scope.ratingValues = ItemService.getRatingValues($scope.items);
+                    $scope.ratingsDistribution = ItemService.buildRatingsDistribution($scope.items);
+                    $scope.statTags = ItemService.buildStatTags($scope.items, $scope.ratingValues.averageRating);
                 }
             } else if ($scope.view === 'Character') {
                 if ($scope.items!==undefined) {
                     $scope.statTags = []; //clear previous views tags.
-                    $scope.maxCount = $scope.items.length;
                     $scope.statTags = CharacterService.buildCharacterTags($scope.items);
                     $scope.statSeries = CharacterService.buildSeriesList($scope.items);
                     $scope.voiceActors = CharacterService.buildVoiceActors($scope.items);
-                    $scope.gender = CharacterService.buildGenderDistribution($scope.statTags, $scope.maxCount);
+                    $scope.gender = CharacterService.buildGenderDistribution($scope.statTags);
                 }
             }
         });

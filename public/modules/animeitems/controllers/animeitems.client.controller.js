@@ -25,7 +25,6 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.episodes = 0;
         $scope.viewItemHistory = false; //default stat of item history popout.
         $scope.selectListOptions = ListService.getSelectListOptions($scope.whichController);
-        $scope.baseVariables = ListService.getBaseVariables($scope.whichController);
 	    $scope.sortReverse = true; // default sort order
         $scope.finalNumbers = false; //default show status of final number fields in edit view.
         $scope.ratingLevel = undefined; //default rating filter

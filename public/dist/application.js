@@ -2474,12 +2474,12 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
         
         $scope.removeFavourite = function(kill) {
             //are you sure option...
-            var removal = $window.confirm('Are you sure you want to delete this task?');
+            var removal = $window.confirm('Are you sure you want to remove this favourite?');
             var deletingItem;
-            if (kill.anime !== undefined) {
-                deletingItem = $scope.favouriteAnimeitem;
-                $scope.favouriteAnimeitem = [];
-                if (removal) {
+            if (removal) {
+                if (kill.anime !== undefined) {
+                    deletingItem = $scope.favouriteAnimeitem;
+                    $scope.favouriteAnimeitem = [];
                     //update the complete task.
                     angular.forEach(deletingItem, function (item) {
                         if (item !== kill) {
@@ -2487,11 +2487,9 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
                         }
                     });
                     localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
-                }
-            } else if (kill.manga !== undefined) {
-                deletingItem = $scope.favouriteMangaitem;
-                $scope.favouriteMangaitem = [];
-                if (removal) {
+                } else if (kill.manga !== undefined) {
+                    deletingItem = $scope.favouriteMangaitem;
+                    $scope.favouriteMangaitem = [];
                     //update the complete task.
                     angular.forEach(deletingItem, function (item) {
                         if (item !== kill) {

@@ -9,84 +9,74 @@
                 <label class="btn btn-primary" ng-model="isList" btn-radio="'list'">List</label>
                 <label class="btn btn-primary" ng-model="isList" btn-radio="'slider'">Slider</label>
             </div>
-        <div class="paging-controls col-lg-12 col-md-12 col-sm-12" ng-hide="isList === 'slider'">
-            <button class="btn btn-accent btn-ends" ng-click="currentPage=0">First</button>
-            <button class="btn btn-primary" ng-disabled="currentPage <= 0" ng-click="currentPage=currentPage-1">
-                Previous
-            </button>
-            <span>{{currentPage+1}}</span>/<span>{{pageCount}}</span>
-            <button class="btn btn-primary" ng-disabled="currentPage >= showingCount/pageSize - 1" ng-click="currentPage=currentPage+1">
-                Next
-            </button>
-            <button class="btn btn-accent btn-ends" ng-click="currentPage=pageCount-1">Last</button>
-        </div>
-       <div class="input-group">
-            <div class="input-group-addon">
-                <i class="fa fa-search"></i>
+            <div page-controls page-config="pageConfig" showing-count="showingCount" ng-hide="isList === 'slider'"></div>
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </div>
+               <input type="text" class="form-control" placeholder="search characters" ng-model="search.name"><!-- typeahead="animeitem.title for animeitem in animeitems | filter: { title:$viewValue } " -->
+           </div>
+            <div class="input-group mt">
+                <div class="input-group-addon clickable" clear-tag-values>
+                    <i class="fa fa-tags"></i>
+                </div>
+               <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags" typeahead="stat.tag for stat in statTags | filter: $viewValue" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
+           </div>
+            <div class="input-group mt search-tag-list-container" ng-hide="searchTags===undefined || searchTags==='' || searchTags===null">
+               <ul class="tag-list col-lg-12 col-md-12 col-sm-12">
+                    <li class="tag-bubble col-lg-12 col-md-12 col-sm-12" ng-repeat="tag in tagsForFilter track by $index">
+                        {{tag}}
+                        <a class="bin-style clickable pull-right" aria-hidden="true" delete-search-tag="{{tag}}"><i class="fa fa-trash-o"></i></a>
+                    </li>
+                </ul>
+           </div>
+            <div class="input-group mt">
+              <div class="input-group-addon">
+                  <i class="fa fa-list-ol"></i>
+              </div>
+                <input type="text" class="form-control" value="Showing {{ (showingCount = (characters | filter: search | mediaFilter: media | tagFilter: searchTags:taglessItem).length) }} character(s)." disabled>
             </div>
-           <input type="text" class="form-control" placeholder="search characters" ng-model="search.name"><!-- typeahead="animeitem.title for animeitem in animeitems | filter: { title:$viewValue } " -->
-	   </div>
-       <div class="input-group mt">
-            <div class="input-group-addon clickable" clear-tag-values>
-                <i class="fa fa-tags"></i>
+            <div class="input-group mt" ng-hide="isList === 'slider'">
+              <div class="input-group-addon">
+                  <i class="fa fa-sort"></i>
+              </div>
+                <select class="form-control" ng-model="sortType" ng-init="sortType = 'name'" ng-options="so.v as so.n for so in selectListOptions.sortOptions">
+                </select>
             </div>
-           <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags" typeahead="stat.tag for stat in statTags | filter: $viewValue" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
-	   </div>
-       <div class="input-group mt search-tag-list-container" ng-hide="searchTags===undefined || searchTags==='' || searchTags===null">
-           <ul class="tag-list col-lg-12 col-md-12 col-sm-12">
-                <li class="tag-bubble col-lg-12 col-md-12 col-sm-12" ng-repeat="tag in tagsForFilter track by $index">
-                    {{tag}}
-                    <a class="bin-style clickable pull-right" aria-hidden="true" delete-search-tag="{{tag}}"><i class="fa fa-trash-o"></i></a>
-                </li>
-            </ul>
-       </div>
-        <div class="input-group mt">
-		  <div class="input-group-addon">
-		      <i class="fa fa-list-ol"></i>
-          </div>
-            <input type="text" class="form-control" value="Showing {{ (showingCount = (characters | filter: search | mediaFilter: media | tagFilter: searchTags:taglessItem).length) }} character(s)." disabled>
-        </div>
-        <div class="input-group mt" ng-hide="isList === 'slider'">
-		  <div class="input-group-addon">
-		      <i class="fa fa-sort"></i>
-          </div>
-            <select class="form-control" ng-model="sortType" ng-init="sortType = 'name'" ng-options="so.v as so.n for so in selectListOptions.sortOptions">
-            </select>
-        </div>
-        <div class="input-group mt clickable" ng-hide="isList === 'slider'" ng-click="sortReverse = !sortReverse">
-		  <div class="input-group-addon">
-		      <i class="fa" ng-class="sortReverse ? 'fa-sort-amount-desc' : 'fa-sort-amount-asc' "></i>
-          </div>
-            <input type="text" class="form-control" value="Ascending" ng-show="!sortReverse" disabled>
-            <input type="text" class="form-control" value="Descending" ng-show="sortReverse" disabled>
-        </div>
-        <div class="input-group mt">
-		  <div class="input-group-addon">
-		      <i class="fa fa-book"></i>
-          </div>
-            <select class="form-control" ng-model="media" ng-init="media = ''" ng-options="so.v as so.n for so in selectListOptions.media">
-            </select>
-        </div>
-        <div class="input-group mt">
-            <div class="input-group-addon">
-                <i class="fa fa-microphone"></i>
+            <div class="input-group mt clickable" ng-hide="isList === 'slider'" ng-click="sortReverse = !sortReverse">
+              <div class="input-group-addon">
+                  <i class="fa" ng-class="sortReverse ? 'fa-sort-amount-desc' : 'fa-sort-amount-asc' "></i>
+              </div>
+                <input type="text" class="form-control" value="Ascending" ng-show="!sortReverse" disabled>
+                <input type="text" class="form-control" value="Descending" ng-show="sortReverse" disabled>
             </div>
-            <input type="text" class="form-control" placeholder="search voice" ng-model="search.voice" typeahead="voice.name for voice in voiceActors | filter: $viewValue "><!-- -->
-	    </div>
-        <div class="input-group mt" data-ng-show="areTagless && isList === 'list'">
-            <div class="input-group-addon">
-                <span class="fa-stack fa-md">
-                    <i class="fa fa-tag fa-stack-1x"></i>
-                    <i class="fa fa-ban fa-stack-2x text-danger"></i>
-                </span>
+            <div class="input-group mt">
+              <div class="input-group-addon">
+                  <i class="fa fa-book"></i>
+              </div>
+                <select class="form-control" ng-model="media" ng-init="media = ''" ng-options="so.v as so.n for so in selectListOptions.media">
+                </select>
             </div>
-            <input class="form-control" type="checkbox" data-ng-model="taglessItem">
+            <div class="input-group mt">
+                <div class="input-group-addon">
+                    <i class="fa fa-microphone"></i>
+                </div>
+                <input type="text" class="form-control" placeholder="search voice" ng-model="search.voice" typeahead="voice.name for voice in voiceActors | filter: $viewValue "><!-- -->
+            </div>
+            <div class="input-group mt" data-ng-show="areTagless && isList === 'list'">
+                <div class="input-group-addon">
+                    <span class="fa-stack fa-md">
+                        <i class="fa fa-tag fa-stack-1x"></i>
+                        <i class="fa fa-ban fa-stack-2x text-danger"></i>
+                    </span>
+                </div>
+                <input class="form-control" type="checkbox" data-ng-model="taglessItem">
+            </div>
         </div>
-    </div>
         <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
         <div class="col-lg-8 col-md-6 col-sm-6 item-list-container">
             <div class="list-group col-lg-12 col-md-12 col-sm-12" data-ng-show="isList==='list'">
-        <div data-ng-repeat="character in characters | orderBy: sortType:sortReverse | filter: search | mediaFilter: media | tagFilter: searchTags:taglessItem | startFrom: currentPage*pageSize | limitTo: pageSize" character_Back="{{trustAsResourceUrl(character.image)}}" class="list-group-item" ng-class="viewItem===character ? 'col-lg-12 col-md-12 col-sm-12 character-expanded' : ' col-lg-6 col-md-6 col-sm-6 character-default'" ng-hide="loading(character.name)">
+                <div data-ng-repeat="character in characters | orderBy: sortType:sortReverse | filter: search | mediaFilter: media | tagFilter: searchTags:taglessItem | startFrom: pageConfig.currentPage*pageConfig.pageSize | limitTo: pageConfig.pageSize" character_Back="{{trustAsResourceUrl(character.image)}}" class="list-group-item" ng-class="viewItem===character ? 'col-lg-12 col-md-12 col-sm-12 character-expanded' : ' col-lg-6 col-md-6 col-sm-6 character-default'" ng-hide="loading(character.name)">
             <div class="clickable view-item-top" ng-click="viewItem===character ? viewItem='' : viewItem=character">
 			 <h4 class="dark-bordered-font-heading" data-ng-bind="character.name"></h4>
                 <p class="list-group-item-text">
@@ -110,7 +100,7 @@
                 </div>
             </div><!-- VIEW ITEM END-->
         </div><!-- LIST ITEM END -->
-    </div><!-- LIST END -->
+            </div><!-- LIST END -->
             <div class="slider-container col-lg-12 col-md-12 col-sm-12" data-ng-show="isList==='slider'">
                 <ul slider slides="characters" interval="1000"></ul>
             </div><!-- SLIDER END -->

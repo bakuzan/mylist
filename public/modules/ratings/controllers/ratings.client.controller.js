@@ -9,15 +9,11 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
 		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.view = 'Anime';
-        //paging controls for the list view.
-        $scope.currentPage = 0;
-        $scope.pageSize = 50;
-        $scope.pageCount = 0;
-        $scope.$watch('showingCount', function() {
-            var pagingDetails = ListService.numberOfPages($scope.showingCount, $scope.pageSize, $scope.currentPage);
-            $scope.currentPage = pagingDetails.currentPage;
-            $scope.pageCount = pagingDetails.pageCount;
-        });
+        //paging variables.
+        $scope.pageConfig = {
+            currentPage: 0,
+            pageSize: 50
+        };
         $scope.sortType = 'rating';
         $scope.sortReverse = true;
         $scope.ratingLevel = undefined; //default rating filter

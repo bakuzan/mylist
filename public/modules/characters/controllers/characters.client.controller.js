@@ -10,15 +10,11 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         
         $scope.whichController = 'character';
         $scope.isLoading = true;
-        //paging controls for the list view.
-        $scope.currentPage = 0;
-        $scope.pageSize = 10;
-        $scope.pageCount = 0;
-        $scope.$watch('showingCount', function() {
-            var pagingDetails = ListService.numberOfPages($scope.showingCount, $scope.pageSize, $scope.currentPage);
-            $scope.currentPage = pagingDetails.currentPage;
-            $scope.pageCount = pagingDetails.pageCount;
-        });
+        //paging variables.
+        $scope.pageConfig = {
+            currentPage: 0,
+            pageSize: 10
+        };
         $scope.selectListOptions = ListService.getSelectListOptions($scope.whichController);
         $scope.isList = 'list'; //show list? or slider.
         $scope.maxItemCount = 0; //number of characters.

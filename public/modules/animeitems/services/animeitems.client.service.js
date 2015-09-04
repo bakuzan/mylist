@@ -133,6 +133,14 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             return areTagless;
         };
     
+        this.getBaseVariables = function(controller) {
+            var baseVariables = {};
+            
+            
+            
+            return baseVariables;
+        };
+    
         this.getCommonArrays = function(controller) {
             var commonArrays = {},
                 seasons = [ 

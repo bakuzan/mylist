@@ -33,13 +33,13 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
             //keydown catch - alt+v for view, ctrl+left/right for list page.
             scope.$on('my:keydown', function(event, e) {
 //                console.log(event, e);
-                if (e.ctrlKey && e.keyCode===39 && scope.currentPage < scope.pageCount) {
-                    scope.currentPage = scope.currentPage + 1;
-                    if (scope.currentPage > scope.pageCount - 1) {
-                        scope.currentPage = scope.pageCount - 1;
+                if (e.ctrlKey && e.keyCode===39 && scope.pageConfig.currentPage < scope.pageCount) {
+                    scope.pageConfig.currentPage = scope.pageConfig.currentPage + 1;
+                    if (scope.pageConfig.currentPage > scope.pageCount - 1) {
+                        scope.pageConfig.currentPage = scope.pageCount - 1;
                     }
-                } else if (e.ctrlKey && e.keyCode===37 && scope.currentPage > 0) {
-                    scope.currentPage = scope.currentPage - 1;
+                } else if (e.ctrlKey && e.keyCode===37 && scope.pageConfig.currentPage > 0) {
+                    scope.pageConfig.currentPage -= 1;
                 } else if (e.altKey && e.keyCode===86) {
                     if (scope.isList==='list') {
                         scope.isList = 'slider';

@@ -56,7 +56,7 @@
                 <div class="form-group">
                     <label for="rating" class="col-md-2 control-label">Rating</label>
                     <div class="col-md-6">
-                        <rating class="form-control clickable rating-stars" data-ng-model="mangaitem.rating" readonly="false" max="maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></rating>
+                        <rating class="form-control clickable rating-stars" data-ng-model="mangaitem.rating" readonly="false" max="filterConfig.maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></rating>
                     </div>
                     <span data-ng-show="overStar!=null" class="label" ng-class="{'label-warning': percent<40, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}">{{percent}}%</span>
                 </div>
@@ -131,7 +131,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : mangaForm.tags.$invalid && !mangaForm.tags.$pristine }">
                     <label for="tags" class="col-md-2 control-label">Tags</label>
                     <div class="col-md-6">
-                        <input type="text" class="form-control" data-ng-model="newTag" enter-tag="addTag()" id="tags" name="tags" placeholder="tags..." typeahead="stat.tag for stat in statTags | filter: $viewValue">
+                        <input type="text" class="form-control" data-ng-model="newTag" enter-tag="addTag()" id="tags" name="tags" placeholder="tags..." typeahead="stat.tag for stat in filterConfig.statTags | filter: $viewValue">
                     </div>
                     <div class="col-md-4 form-group">
                         <a class="btn btn-primary" data-ng-click="addTag()" data-ng-disabled="newTag==='' || newTag===null || newTag===undefined">Add Tag</a>

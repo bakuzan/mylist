@@ -5,92 +5,13 @@
     </div>
     <div class="container">
         <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }">
-            <div page-controls page-config="pageConfig" showing-count="showingCount"></div>
-            <div class="input-group">
-                <div class="input-group-addon">
-                    <i class="fa fa-search"></i>
-                </div>
-               <input type="text" class="form-control" placeholder="search manga" ng-model="search.title"><!-- typeahead="mangaitem.title for mangaitem in mangaitems | filter: { title:$viewValue } " -->
-           </div>
-            <div class="input-group mt">
-                <div class="input-group-addon clickable" clear-tag-values>
-                    <i class="fa fa-tags"></i>
-                </div>
-               <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags" typeahead="stat.tag for stat in statTags | filter: $viewValue" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
-           </div>
-            <div class="input-group mt search-tag-list-container" ng-hide="searchTags===undefined || searchTags==='' || searchTags===null">
-               <ul class="tag-list col-lg-12 col-md-12">
-                    <li class="tag-bubble col-lg-12 col-md-12" ng-repeat="tag in tagsForFilter track by $index">
-                        {{tag}}
-                        <a class="bin-style clickable pull-right" aria-hidden="true" delete-search-tag="{{tag}}"><i class="fa fa-trash-o"></i></a>
-                    </li>
-                </ul>
-           </div>
-            <div class="input-group mt">
-              <div class="input-group-addon">
-                  <i class="fa fa-list-ol"></i>
-              </div>
-                <input type="text" class="form-control" value="Showing {{ (showingCount = (mangaitems | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem).length) }} manga." disabled>
-            </div>
-            <div class="input-group mt">
-              <div class="input-group-addon">
-                  <i class="fa fa-sort"></i>
-              </div>
-                <select class="form-control" ng-model="sortType" ng-init="sortType = selectListOptions.sortOptions[5].v" ng-options="so.v as so.n for so in selectListOptions.sortOptions">
-                </select>
-            </div>
-            <div class="input-group mt" ng-click="sortReverse = !sortReverse">
-              <div class="input-group-addon clickable">
-                  <i class="fa" ng-class="sortReverse ? 'fa-sort-amount-desc' : 'fa-sort-amount-asc' "></i>
-              </div>
-                <input type="text" class="form-control" value="Ascending" ng-show="!sortReverse" disabled>
-                <input type="text" class="form-control" value="Descending" ng-show="sortReverse" disabled>
-                <!--<input type="checkbox" class="form-control" data-ng-model="sortReverse" id="sortReverse">-->
-            </div>
-            <div class="input-group mt">
-              <div class="input-group-addon">
-                  <i class="fa fa-check"></i>
-              </div>
-                <select class="form-control" ng-model="search.status" ng-init="search.status = false" ng-options="so.v as so.n for so in selectListOptions.status">
-                </select>
-            </div>
-            <div class="input-group mt">
-              <div class="input-group-addon">
-                  <i class="fa fa-book"></i>
-              </div>
-                <select class="form-control" ng-model="search.hardcopy" ng-init="search.hardcopy = ''" ng-options="so.v as so.n for so in selectListOptions.media">
-                </select>
-            </div>
-            <div class="input-group mt">
-              <div class="input-group-addon">
-                  <i class="fa fa-repeat"></i>
-              </div>
-                <select class="form-control" ng-model="search.reReading" ng-init="search.reReading = ''" ng-options="so.v as so.n for so in selectListOptions.repeating">
-                </select>
-            </div>
-            <div class="input-group mt">
-                <div class="input-group-addon clickable" data-ng-click="ratingLevel=undefined">
-                    <i class="fa fa-star"></i>
-                </div>
-                   <rating class="form-control rating-stars clickable" data-ng-model="ratingLevel" readonly="false" max="maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></rating>
-                <div class="input-group-addon">
-                    <span data-ng-show="overStar!=null" class="label rating-label" ng-class="{'label-warning': percent<40, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}">{{percent}}%</span>
-                </div>
-            </div>
-            <div class="input-group mt" data-ng-show="areTagless">
-                <div class="input-group-addon">
-                    <span class="fa-stack fa-md">
-                        <i class="fa fa-tag fa-stack-1x"></i>
-                        <i class="fa fa-ban fa-stack-2x text-danger"></i>
-                    </span>
-                </div>
-                <input class="form-control" type="checkbox" data-ng-model="taglessItem">
-            </div>
+            <div page-controls page-config="pageConfig" showing-count="filterConfig.showingCount"></div>
+            <div list-filters filter-config="filterConfig" items="mangaitems"></div>
         </div>
         <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
         <div class="col-lg-8 col-md-6 col-sm-6 item-list-container">
             <div class="list-group col-lg-12 col-md-12 col-sm-12">
-                <div data-ng-repeat="mangaitem in mangaitems | orderBy: sortType:sortReverse | filter: search | ratingFilter: ratingLevel | tagFilter: searchTags:taglessItem | startFrom: pageConfig.currentPage*pageConfig.pageSize | limitTo: pageConfig.pageSize" list_Back="{{trustAsResourceUrl(mangaitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12" ng-hide="loading(mangaitem.title)">
+                <div data-ng-repeat="mangaitem in mangaitems | orderBy: filterConfig.sortType:filterConfig.sortReverse | filter: filterConfig.search | ratingFilter: filterConfig.ratingLevel | tagFilter: filterConfig.searchTags:filterConfig.taglessItem | startFrom: pageConfig.currentPage*pageConfig.pageSize | limitTo: pageConfig.pageSize" list_Back="{{trustAsResourceUrl(mangaitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12" ng-hide="loading(mangaitem.title)">
 			<div class="view-item-top">
             <small class="list-group-item-text">
                 <time ng-if="mangaitem.latest.substring(0,10)===mangaitem.meta.updated.substring(0,10)" title="{{mangaitem.meta.updated | date: 'yyyy-MMM-dd HH:mm'}}" ng-bind="latestDate(mangaitem.latest, mangaitem.meta.updated)"></time>
@@ -110,7 +31,7 @@
                 <div class="item-detail">
                     <p>
                         <em class="text-muted" data-ng-if="mangaitem.rating==0">No rating.</em>
-                        <rating data-ng-if="mangaitem.rating!=0" data-ng-model="mangaitem.rating" class="list-item-rating-stars" readonly="true" max="maxRating" id="rating" name="rating"></rating>
+                        <rating data-ng-if="mangaitem.rating!=0" data-ng-model="mangaitem.rating" class="list-item-rating-stars" readonly="true" max="filterConfig.maxRating" id="rating" name="rating"></rating>
                     </p>
                     <p ng-if="mangaitem.reReadCount!=0">{{mangaitem.reReadCount}} re-reads.</p>
                 </div>

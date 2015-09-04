@@ -37,7 +37,6 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.latest = $scope.itemUpdate;
         $scope.episodes = 0;
         $scope.viewItemHistory = false; //default stat of item history popout.
-	    $scope.sortReverse = true; // default sort order
         $scope.finalNumbers = false; //default show status of final number fields in edit view.
         $scope.imgPath = ''; //image path
         $scope.tagArray = []; // holding tags pre-submit

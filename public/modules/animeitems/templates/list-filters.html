@@ -29,7 +29,10 @@
               <div class="input-group-addon">
                   <i class="fa fa-sort"></i>
               </div>
-                <select class="form-control" ng-model="filterConfig.sortType" ng-init="filterConfig.sortType = filterConfig.selectListOptions.sortOptions[4].v" ng-options="so.v as so.n for so in filterConfig.selectListOptions.sortOptions">
+                <select class="form-control" 
+                        ng-model="filterConfig.sortType" 
+                        ng-init="filterConfig.sortType = filterConfig.selectListOptions.sortOptions[filterConfig.selectListOptions.sortOption].v" 
+                        ng-options="so.v as so.n for so in filterConfig.selectListOptions.sortOptions">
                 </select>
             </div>
             <div class="input-group mt clickable" ng-click="filterConfig.sortReverse = !filterConfig.sortReverse">
@@ -48,16 +51,22 @@
             </div>
             <div class="input-group mt">
               <div class="input-group-addon">
-                  <i class="glyphicon glyphicon-cd"></i>
+                  <i class="glyphicon" ng-class="{'glyphicon-cd' : filterConfig.selectListOptions.mediaType === 'disc', 'glyphicon-book' : filterConfig.selectListOptions.mediaType === 'hardcopy'}"></i>
               </div>
-                <select class="form-control" ng-model="filterConfig.search.disc" ng-init="filterConfig.search.disc = ''" ng-options="so.v as so.n for so in filterConfig.selectListOptions.media">
+                <select class="form-control" 
+                        ng-model="filterConfig.search[filterConfig.selectListOptions.mediaType]"
+                        ng-init="filterConfig.search[filterConfig.selectListOptions.mediaType] = ''"
+                        ng-options="so.v as so.n for so in filterConfig.selectListOptions.media">
                 </select>
             </div>
             <div class="input-group mt">
               <div class="input-group-addon">
                   <i class="fa fa-repeat"></i>
               </div>
-                <select class="form-control" ng-model="filterConfig.search.reWatching" ng-init="filterConfig.search.reWatching = ''" ng-options="so.v as so.n for so in filterConfig.selectListOptions.repeating">
+                <select class="form-control" 
+                        ng-model="filterConfig.search[filterConfig.selectListOptions.repeatType]" 
+                        ng-init="filterConfig.search[filterConfig.selectListOptions.repeatType] = ''" 
+                        ng-options="so.v as so.n for so in filterConfig.selectListOptions.repeating">
                 </select>
             </div>
             <div class="input-group mt">

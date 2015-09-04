@@ -106,7 +106,8 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
         replace: true,
         scope: {
             filterConfig: '=',
-            items: '='
+            items: '=',
+            page: '='
         },
         templateUrl: '/modules/animeitems/templates/list-filters.html',
         link: function(scope, elem, attrs) {

@@ -15,29 +15,26 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             currentPage: 0,
             pageSize: 10
         };
-        $scope.selectListOptions = ListService.getSelectListOptions($scope.whichController);
+        $scope.filterConfig = {
+            showingCount: 0,
+            sortType: '',
+            sortReverse: false,
+            searchTags: '',
+            media: '',
+            tagsForFilter: [],
+            taglessItem: false,
+            areTagless: false,
+            selectListOptions: ListService.getSelectListOptions($scope.whichController),
+            statTags: CharacterService.buildCharacterTags($scope.characters),
+            voiceActors: CharacterService.buildVoiceActors($scope.characters)
+        };
         $scope.isList = 'list'; //show list? or slider.
         $scope.maxItemCount = 0; //number of characters.
-        $scope.statTagSortType = 'count'; //stat tag sort
-        $scope.statTagSortReverse = true; //stat tag sort direction.
-        $scope.statTagDetailSortType = 'count'; //stat tag detail sort
-        $scope.statTagDetailSortReverse = true; //stat tag detail sort direction.
-        $scope.statSeriesSortType = 'count'; //stat series sort
-        $scope.statSeriesSortReverse = true; //stat series sort direction.
-	    $scope.sortReverse = false; // default sort order
         $scope.imgPath = ''; //image path
         $scope.tagArray = []; // holding tags pre-submit
         $scope.tagArrayRemove = [];
         $scope.usedTags = []; //for typeahead array.
-        $scope.voiceActors = []; //for typeahead array.
-        $scope.statTags = []; //for tag statistics;
-        $scope.showTagDetail = false; //visibility of detail for tags.
-        $scope.statSearch = ''; //filter value for tag detail.
-        $scope.statSeries = []; //for series statistics;
-        $scope.showSeriesDetail = false; //visibility of series drilldown.
         $scope.seriesSearch = ''; //for filtering series values.
-        $scope.areTagless = false; //are any items tagless
-        $scope.taglessItem = false; //filter variable for showing tagless items.
 
         //allow retreival of local resource
         $scope.trustAsResourceUrl = function(url) {
@@ -47,19 +44,12 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.$watchCollection('characters', function() {
             if ($scope.characters!==undefined) {
 //                console.log($scope.characters);
-                $scope.areTagless = ListService.checkForTagless($scope.characters);
-                $scope.statTags = CharacterService.buildCharacterTags($scope.characters);
-                $scope.voiceActors = CharacterService.buildVoiceActors($scope.characters);
+                $scope.filterConfig.areTagless = ListService.checkForTagless($scope.characters);
+                $scope.filterConfig.statTags = CharacterService.buildCharacterTags($scope.characters);
+                $scope.filterConfig.voiceActors = CharacterService.buildVoiceActors($scope.characters);
             }
         });
-        
-        $scope.searchTags = '';
-        $scope.passTag = function(tag) {
-            if ($scope.searchTags.indexOf(tag) === -1) {
-                $scope.searchTags += tag + ',';
-                $scope.tagsForFilter = $scope.searchTags.substring(0, $scope.searchTags.length - 1).split(',');
-            }
-        };
+
         //for adding/removing tags.
         $scope.addTag = function () {
 //            console.log($scope.newTag);

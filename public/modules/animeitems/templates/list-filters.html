@@ -3,7 +3,7 @@
                 <div class="input-group-addon">
                     <i class="fa fa-search"></i>
                 </div>
-               <input type="text" class="form-control" placeholder="search anime" ng-model="filterConfig.search.title">
+               <input type="text" class="form-control" placeholder="search anime" ng-model="filterConfig.search[filterConfig.searchName]">
            </div>
             <div class="input-group mt">
                 <div class="input-group-addon clickable" clear-tag-values>
@@ -23,9 +23,9 @@
               <div class="input-group-addon">
                   <i class="fa fa-list-ol"></i>
               </div>
-              <input type="text" class="form-control" value="Showing {{ (filterConfig.showingCount = (items | filter: filterConfig.search | ratingFilter: filterConfig.ratingLevel | tagFilter: filterConfig.searchTags:filterConfig.taglessItem).length) }} items." disabled>
+              <input type="text" class="form-control" value="Showing {{ (filterConfig.showingCount = (items | filter: filterConfig.search | mediaFilter: media | ratingFilter: filterConfig.ratingLevel | tagFilter: filterConfig.searchTags:filterConfig.taglessItem).length) }} items." disabled>
             </div>
-            <div class="input-group mt">
+            <div class="input-group mt" ng-hide="isList === 'slider'">
               <div class="input-group-addon">
                   <i class="fa fa-sort"></i>
               </div>
@@ -35,21 +35,21 @@
                         ng-options="so.v as so.n for so in filterConfig.selectListOptions.sortOptions">
                 </select>
             </div>
-            <div class="input-group mt clickable" ng-click="filterConfig.sortReverse = !filterConfig.sortReverse">
+            <div class="input-group mt clickable" ng-hide="isList === 'slider'" ng-click="filterConfig.sortReverse = !filterConfig.sortReverse">
               <div class="input-group-addon">
                   <i class="fa" ng-class="sortReverse ? 'fa-sort-amount-desc' : 'fa-sort-amount-asc' "></i>
               </div>
                 <input type="text" class="form-control" value="Ascending" ng-show="!filterConfig.sortReverse" disabled>
                 <input type="text" class="form-control" value="Descending" ng-show="filterConfig.sortReverse" disabled>
             </div>
-            <div class="input-group mt">
+            <div class="input-group mt" ng-if="page !== 'character'">
               <div class="input-group-addon">
                   <i class="fa fa-check"></i>
               </div>
                 <select class="form-control" ng-model="filterConfig.search.status" ng-init="filterConfig.search.status = false" ng-options="so.v as so.n for so in filterConfig.selectListOptions.status">
                 </select>
             </div>
-            <div class="input-group mt">
+            <div class="input-group mt" ng-if="page !== 'character'">
               <div class="input-group-addon">
                   <i class="glyphicon" ng-class="{'glyphicon-cd' : filterConfig.selectListOptions.mediaType === 'disc', 'glyphicon-book' : filterConfig.selectListOptions.mediaType === 'hardcopy'}"></i>
               </div>
@@ -59,7 +59,7 @@
                         ng-options="so.v as so.n for so in filterConfig.selectListOptions.media">
                 </select>
             </div>
-            <div class="input-group mt">
+            <div class="input-group mt" ng-if="page !== 'character'">
               <div class="input-group-addon">
                   <i class="fa fa-repeat"></i>
               </div>
@@ -69,7 +69,7 @@
                         ng-options="so.v as so.n for so in filterConfig.selectListOptions.repeating">
                 </select>
             </div>
-            <div class="input-group mt">
+            <div class="input-group mt" ng-if="page !== 'character'">
                 <div class="input-group-addon clickable" data-ng-click="filterConfig.ratingLevel=undefined">
                     <i class="fa fa-star"></i>
                 </div>
@@ -77,6 +77,19 @@
                 <div class="input-group-addon">
                     <span data-ng-show="overStar!=null" class="label rating-label" ng-class="{'label-warning': percent<40, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}">{{percent}}%</span>
                 </div>
+            </div>
+            <div class="input-group mt" ng-if="page === 'character'">
+              <div class="input-group-addon">
+                  <i class="fa fa-book"></i>
+              </div>
+                <select class="form-control" ng-model="filterConfig.media" ng-init="filterConfig.media = ''" ng-options="so.v as so.n for so in filterConfig.selectListOptions.media">
+                </select>
+            </div>
+            <div class="input-group mt" ng-if="page === 'character'">
+                <div class="input-group-addon">
+                    <i class="fa fa-microphone"></i>
+                </div>
+                <input type="text" class="form-control" placeholder="search voice" ng-model="search.voice" typeahead="voice.name for voice in filterConfig.voiceActors | filter: $viewValue "><!-- -->
             </div>
             <div class="input-group mt" data-ng-show="filterConfig.areTagless">
             <div class="input-group-addon">
@@ -88,3 +101,8 @@
             <input class="form-control" type="checkbox" data-ng-model="filterConfig.taglessItem">
         </div>
 </div>
+
+
+
+
+            

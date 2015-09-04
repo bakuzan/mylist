@@ -66,6 +66,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             var self = this, selectListOptions = [];
             if (controller !== 'character') {
                 selectListOptions.status = [ { v: '', n: 'All' }, { v: false, n: 'Ongoing' }, { v: true, n: 'Completed' } ];
+                selectListOptions.searchName = 'title';
                 if (controller === 'animeitem') {
                     selectListOptions.sortOptions = [ { v: 'title', n: 'Title' },{ v: 'episodes', n: 'Episodes' },{ v: 'start', n: 'Start date' },
                                                       { v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' } 
@@ -86,6 +87,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     selectListOptions.repeatType = 'reReading';
                 }
             } else if (controller === 'character') {
+                selectListOptions.searchName = 'name';
                 selectListOptions.sortOptions = [ { v: 'name', n: 'Name' }, { v: 'anime.title', n: 'Anime' }, { v: 'manga.title', n: 'Manga' }, { v: 'voice', n: 'Voice' }  ];
                 selectListOptions.sortOption = self.findWithAttr(selectListOptions.sortOptions, 'n', 'Name');
                 selectListOptions.media = [ { v: '', n: '-- choose media type --' }, { v: 'none', n: 'None' }, { v: 'anime', n: 'Anime-only' }, { v: 'manga', n: 'Manga-only' }, { v: 'both', n: 'Both' } ];

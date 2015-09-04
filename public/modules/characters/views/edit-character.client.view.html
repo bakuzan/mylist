@@ -51,7 +51,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : characterForm.voice.$invalid && !characterForm.voice.$pristine }">
                     <label for="voice" class="col-md-2 control-label">Voice</label>
                     <div class="col-md-6">
-                        <input type="text" class="form-control" data-ng-model="character.voice" id="voice" name="voice" placeholder="Voice" typeahead="voice.name for voice in voiceActors | filter: $viewValue " required>
+                        <input type="text" class="form-control" data-ng-model="character.voice" id="voice" name="voice" placeholder="Voice" typeahead="voice.name for voice in filterConfig.voiceActors | filter: $viewValue " required>
                     </div>
                     <div class="col-md-4">
 						<p ng-show="characterForm.voice.$invalid && !characterForm.voice.$pristine" class="help-block" >The voice is required.</p>
@@ -61,7 +61,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : characterForm.tags.$invalid && !characterForm.tags.$pristine }">
                     <label for="tags" class="col-md-2 control-label">Tags</label>
                     <div class="col-md-6">
-                        <input type="text" class="form-control" data-ng-model="newTag" enter-tag="addTag()" id="tags" name="tags" placeholder="tags..." typeahead="stat.tag for stat in statTags | filter: $viewValue">
+                        <input type="text" class="form-control" data-ng-model="newTag" enter-tag="addTag()" id="tags" name="tags" placeholder="tags..." typeahead="stat.tag for stat in filterConfig.statTags | filter: $viewValue">
                     </div>
                     <div class="col-md-4 form-group">
                         <a class="btn btn-primary" data-ng-click="addTag()" data-ng-disabled="newTag==='' || newTag===null || newTag===undefined">Add Tag</a>

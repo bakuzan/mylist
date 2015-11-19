@@ -18,7 +18,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         $scope.filterConfig = {
             showingCount: 0,
             sortType: '',
-            sortReverse: false,
+            sortReverse: true,
             ratingLevel: undefined,
             maxRating: 10,
             searchTags: '',

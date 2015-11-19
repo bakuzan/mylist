@@ -18,7 +18,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.filterConfig = {
             showingCount: 0,
             sortType: '',
-            sortReverse: false,
+            sortReverse: true,
             ratingLevel: undefined,
             maxRating: 10,
             searchTags: '',

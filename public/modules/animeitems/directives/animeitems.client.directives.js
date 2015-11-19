@@ -30,17 +30,10 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
     return {
         restrict: 'A',
         link: function postLink(scope, element, attrs) {
-            //keydown catch - alt+v for view, ctrl+left/right for list page.
+            //keydown catch - alt+v for view
             scope.$on('my:keydown', function(event, e) {
 //                console.log(event, e);
-                if (e.ctrlKey && e.keyCode===39 && scope.pageConfig.currentPage < scope.pageCount) {
-                    scope.pageConfig.currentPage = scope.pageConfig.currentPage + 1;
-                    if (scope.pageConfig.currentPage > scope.pageCount - 1) {
-                        scope.pageConfig.currentPage = scope.pageCount - 1;
-                    }
-                } else if (e.ctrlKey && e.keyCode===37 && scope.pageConfig.currentPage > 0) {
-                    scope.pageConfig.currentPage -= 1;
-                } else if (e.altKey && e.keyCode===86) {
+                if (e.altKey && e.keyCode===86) {
                     if (scope.isList==='list') {
                         scope.isList = 'slider';
                     } else if (scope.isList==='slider') {
@@ -84,17 +77,31 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
            *    go to next/prev pages. skip to first/last page.
            */
           scope.first = function() {
+//              console.log('first');
               scope.pageConfig.currentPage = 0;
           };
           scope.last = function() {
+//              console.log('last');
               scope.pageConfig.currentPage = scope.pageCount - 1;
           };
           scope.next = function() {
+//              console.log('next');
               scope.pageConfig.currentPage += 1;
           };
           scope.prev = function() {
+//              console.log('prev');
               scope.pageConfig.currentPage -= 1;
           };
+          
+          //Catches ctrl+left/right keypresses to change pages.
+          scope.$on('my:keydown', function(event, e) {
+//              console.log(event, e);
+            if (e.ctrlKey && e.keyCode===39 && scope.pageConfig.currentPage < scope.pageCount - 1) {
+                scope.next();
+            } else if (e.ctrlKey && e.keyCode===37 && scope.pageConfig.currentPage > 0) {
+                scope.prev();
+            }
+          });
           
       }
   };

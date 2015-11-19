@@ -689,7 +689,7 @@ div.popover {
     overflow-y: auto;
 }
 .options-list {
-    @extend .checklist-list;
+    list-style-type: decimal-leading-zero;
     li {
         position: relative;
         padding: 0;

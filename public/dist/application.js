@@ -133,7 +133,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.filterConfig = {
             showingCount: 0,
             sortType: '',
-            sortReverse: false,
+            sortReverse: true,
             ratingLevel: undefined,
             maxRating: 10,
             searchTags: '',
@@ -152,7 +152,6 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.latest = $scope.itemUpdate;
         $scope.episodes = 0;
         $scope.viewItemHistory = false; //default stat of item history popout.
-	    $scope.sortReverse = true; // default sort order
         $scope.finalNumbers = false; //default show status of final number fields in edit view.
         $scope.imgPath = ''; //image path
         $scope.tagArray = []; // holding tags pre-submit
@@ -394,17 +393,10 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
     return {
         restrict: 'A',
         link: function postLink(scope, element, attrs) {
-            //keydown catch - alt+v for view, ctrl+left/right for list page.
+            //keydown catch - alt+v for view
             scope.$on('my:keydown', function(event, e) {
 //                console.log(event, e);
-                if (e.ctrlKey && e.keyCode===39 && scope.currentPage < scope.pageCount) {
-                    scope.currentPage = scope.currentPage + 1;
-                    if (scope.currentPage > scope.pageCount - 1) {
-                        scope.currentPage = scope.pageCount - 1;
-                    }
-                } else if (e.ctrlKey && e.keyCode===37 && scope.currentPage > 0) {
-                    scope.currentPage = scope.currentPage - 1;
-                } else if (e.altKey && e.keyCode===86) {
+                if (e.altKey && e.keyCode===86) {
                     if (scope.isList==='list') {
                         scope.isList = 'slider';
                     } else if (scope.isList==='slider') {
@@ -448,17 +440,31 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
            *    go to next/prev pages. skip to first/last page.
            */
           scope.first = function() {
+//              console.log('first');
               scope.pageConfig.currentPage = 0;
           };
           scope.last = function() {
+//              console.log('last');
               scope.pageConfig.currentPage = scope.pageCount - 1;
           };
           scope.next = function() {
+//              console.log('next');
               scope.pageConfig.currentPage += 1;
           };
           scope.prev = function() {
+//              console.log('prev');
               scope.pageConfig.currentPage -= 1;
           };
+          
+          //Catches ctrl+left/right keypresses to change pages.
+          scope.$on('my:keydown', function(event, e) {
+//              console.log(event, e);
+            if (e.ctrlKey && e.keyCode===39 && scope.pageConfig.currentPage < scope.pageCount - 1) {
+                scope.next();
+            } else if (e.ctrlKey && e.keyCode===37 && scope.pageConfig.currentPage > 0) {
+                scope.prev();
+            }
+          });
           
       }
   };
@@ -470,7 +476,8 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
         replace: true,
         scope: {
             filterConfig: '=',
-            items: '='
+            items: '=',
+            page: '='
         },
         templateUrl: '/modules/animeitems/templates/list-filters.html',
         link: function(scope, elem, attrs) {
@@ -611,29 +618,48 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             var pagingDetails = { currentPage: currentPage, pageCount: pageCount };
             return pagingDetails;
         };
+    
+        //find index of object with given attr.
+        this.findWithAttr = function(array, attr, value) {
+            for(var i = 0; i < array.length; i += 1) {
+                if(array[i][attr] === value) {
+                    return i;
+                }
+            }   
+        };
         
         //returns the options for the various filters in list pages.
         this.getSelectListOptions = function(controller) {
-            var selectListOptions = [];
+            var self = this, selectListOptions = [];
             if (controller !== 'character') {
                 selectListOptions.status = [ { v: '', n: 'All' }, { v: false, n: 'Ongoing' }, { v: true, n: 'Completed' } ];
+                selectListOptions.searchName = 'title';
                 if (controller === 'animeitem') {
                     selectListOptions.sortOptions = [ { v: 'title', n: 'Title' },{ v: 'episodes', n: 'Episodes' },{ v: 'start', n: 'Start date' },
                                                       { v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' } 
                                                     ];
+                    selectListOptions.sortOption = self.findWithAttr(selectListOptions.sortOptions, 'n', 'Latest');
                     selectListOptions.media = [ { v: '', n: 'All' }, { v: false, n: 'Online' }, { v: true, n: 'Disc' } ];
+                    selectListOptions.mediaType = 'disc';
                     selectListOptions.repeating = [ { v: '', n: 'All' }, { v: false, n: 'Not Re-watching' }, { v: true, n: 'Re-watching' } ];
+                    selectListOptions.repeatType = 'reWatching';
                 } else if (controller === 'mangaitem') {
                     selectListOptions.sortOptions = [ { v: 'title', n: 'Title' },{ v: 'chapters', n: 'Chapters' },{ v: 'volumes', n: 'Volumes' },{ v: 'start', n: 'Start date' },
                                                       { v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' } 
                                                     ];
+                    selectListOptions.sortOption = self.findWithAttr(selectListOptions.sortOptions, 'n', 'Latest');
                     selectListOptions.media = [ { v: '', n: 'All' }, { v: false, n: 'Online' }, { v: true, n: 'Hardcopy' } ];
+                    selectListOptions.mediaType = 'hardcopy';
                     selectListOptions.repeating = [ { v: '', n: 'All' }, { v: false, n: 'Not Re-reading' }, { v: true, n: 'Re-reading' } ];
+                    selectListOptions.repeatType = 'reReading';
                 }
             } else if (controller === 'character') {
+                selectListOptions.searchName = 'name';
                 selectListOptions.sortOptions = [ { v: 'name', n: 'Name' }, { v: 'anime.title', n: 'Anime' }, { v: 'manga.title', n: 'Manga' }, { v: 'voice', n: 'Voice' }  ];
+                selectListOptions.sortOption = self.findWithAttr(selectListOptions.sortOptions, 'n', 'Name');
                 selectListOptions.media = [ { v: '', n: '-- choose media type --' }, { v: 'none', n: 'None' }, { v: 'anime', n: 'Anime-only' }, { v: 'manga', n: 'Manga-only' }, { v: 'both', n: 'Both' } ];
             }
+//            console.log(selectListOptions);
             return selectListOptions;
         };
     
@@ -1070,29 +1096,26 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             currentPage: 0,
             pageSize: 10
         };
-        $scope.selectListOptions = ListService.getSelectListOptions($scope.whichController);
+        $scope.filterConfig = {
+            showingCount: 0,
+            sortType: '',
+            sortReverse: false,
+            searchTags: '',
+            media: '',
+            tagsForFilter: [],
+            taglessItem: false,
+            areTagless: false,
+            selectListOptions: ListService.getSelectListOptions($scope.whichController),
+            statTags: CharacterService.buildCharacterTags($scope.characters),
+            voiceActors: CharacterService.buildVoiceActors($scope.characters)
+        };
         $scope.isList = 'list'; //show list? or slider.
         $scope.maxItemCount = 0; //number of characters.
-        $scope.statTagSortType = 'count'; //stat tag sort
-        $scope.statTagSortReverse = true; //stat tag sort direction.
-        $scope.statTagDetailSortType = 'count'; //stat tag detail sort
-        $scope.statTagDetailSortReverse = true; //stat tag detail sort direction.
-        $scope.statSeriesSortType = 'count'; //stat series sort
-        $scope.statSeriesSortReverse = true; //stat series sort direction.
-	    $scope.sortReverse = false; // default sort order
         $scope.imgPath = ''; //image path
         $scope.tagArray = []; // holding tags pre-submit
         $scope.tagArrayRemove = [];
         $scope.usedTags = []; //for typeahead array.
-        $scope.voiceActors = []; //for typeahead array.
-        $scope.statTags = []; //for tag statistics;
-        $scope.showTagDetail = false; //visibility of detail for tags.
-        $scope.statSearch = ''; //filter value for tag detail.
-        $scope.statSeries = []; //for series statistics;
-        $scope.showSeriesDetail = false; //visibility of series drilldown.
         $scope.seriesSearch = ''; //for filtering series values.
-        $scope.areTagless = false; //are any items tagless
-        $scope.taglessItem = false; //filter variable for showing tagless items.
 
         //allow retreival of local resource
         $scope.trustAsResourceUrl = function(url) {
@@ -1102,19 +1125,12 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.$watchCollection('characters', function() {
             if ($scope.characters!==undefined) {
 //                console.log($scope.characters);
-                $scope.areTagless = ListService.checkForTagless($scope.characters);
-                $scope.statTags = CharacterService.buildCharacterTags($scope.characters);
-                $scope.voiceActors = CharacterService.buildVoiceActors($scope.characters);
+                $scope.filterConfig.areTagless = ListService.checkForTagless($scope.characters);
+                $scope.filterConfig.statTags = CharacterService.buildCharacterTags($scope.characters);
+                $scope.filterConfig.voiceActors = CharacterService.buildVoiceActors($scope.characters);
             }
         });
-        
-        $scope.searchTags = '';
-        $scope.passTag = function(tag) {
-            if ($scope.searchTags.indexOf(tag) === -1) {
-                $scope.searchTags += tag + ',';
-                $scope.tagsForFilter = $scope.searchTags.substring(0, $scope.searchTags.length - 1).split(',');
-            }
-        };
+
         //for adding/removing tags.
         $scope.addTag = function () {
 //            console.log($scope.newTag);
@@ -1408,24 +1424,24 @@ angular.module('characters').directive('characterBack', function(){
            *    Note: the interval is removed and replaced to avoid the auto-slide fouling the
            *            change over up.
            */
-          scope.$watch('$parent.search', function(newValue) {
-              if (scope.$parent.search !== undefined) {
+          scope.$watch('$parent.filterConfig.search', function(newValue) {
+              if (scope.$parent.filterConfig.search !== undefined) {
                   var temp = scope.interval;
                   scope.interval = null;
                   scope.search = newValue;
                   scope.interval = temp;
               }
           });
-          scope.$watch('$parent.media', function(newValue) {
-              if (scope.$parent.media !== undefined) {
+          scope.$watch('$parent.filterConfig.media', function(newValue) {
+              if (scope.$parent.filterConfig.media !== undefined) {
                   var temp = scope.interval;
                   scope.interval = null;
                   scope.media = newValue;
                   scope.interval = temp;
               }
           });
-          scope.$watch('$parent.searchTags', function(newValue) {
-              if (scope.$parent.media !== undefined) {
+          scope.$watch('$parent.filterConfig.searchTags', function(newValue) {
+              if (scope.$parent.filterConfig.media !== undefined) {
                   var temp = scope.interval;
                   scope.interval = null;
                   scope.searchTags = newValue;
@@ -1648,25 +1664,32 @@ angular.module('characters').factory('Characters', ['$resource',
 .service('CharacterService', function() {
     
     //build the character gender distribution.
-    this.buildGenderDistribution = function(items) {
-        var maxCount = items.length,
+    this.buildGenderDistribution = function(items, maxCount) {
+        var check, 
             gender = { 
-            male: { count: 0, percentage: 0, text: '% male.'},
-            female: { count: 0, percentage: 0, text: '% female.'},
-            nosex: { count: 0, percentage: 0, text: '% unassigned.'}
-        };
+                male: { count: 0, percentage: 0, text: '% male.'},
+                female: { count: 0, percentage: 0, text: '% female.'},
+                nosex: { count: 0, percentage: 0, text: '% unassigned.'}
+            };
         angular.forEach(items, function(item) {
             if (item.tag === 'male') {
                 gender.male.count = item.count;
-                gender.male.percentage = ((item.count / maxCount) * 100).toFixed(2);
+                gender.male.percentage = Number(((item.count / maxCount) * 100).toFixed(2));
             } else if (item.tag === 'female') {
                 gender.female.count = item.count;
-                gender.female.percentage = ((item.count / maxCount) * 100).toFixed(2);
+                gender.female.percentage = Number(((item.count / maxCount) * 100).toFixed(2));
             }
         });
-        var nosex = maxCount - gender.male.count - gender.female.count;
-        gender.nosex.count = nosex;
-        gender.nosex.percentage = ((nosex / maxCount) * 100).toFixed(2);
+        gender.nosex.count = maxCount - gender.male.count - gender.female.count;
+        gender.nosex.percentage = Number(((gender.nosex.count / maxCount) * 100).toFixed(2));
+        
+        //Fudge any rounding errors.
+        check = gender.female.percentage + gender.male.percentage + gender.nosex.percentage;
+        if (check > 100) {
+            gender.nosex.percentage -= (check - 100).toFixed(2);
+        } else if (check < 100) {
+            gender.nosex.percentage += (100 - check).toFixed(2);
+        }
 //        console.log('GD: ', gender);
         return gender;
     };
@@ -2889,6 +2912,19 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             currentPage: 0,
             pageSize: 10
         };
+        $scope.filterConfig = {
+            showingCount: 0,
+            sortType: '',
+            sortReverse: true,
+            ratingLevel: undefined,
+            maxRating: 10,
+            searchTags: '',
+            tagsForFilter: [],
+            taglessItem: false,
+            areTagless: false,
+            selectListOptions: ListService.getSelectListOptions($scope.whichController),
+            statTags: ItemService.buildStatTags($scope.animeitems, 0)
+        };
         
         /** today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
          *      AND chapter/volume/start/latest auto-pop in create.
@@ -2898,32 +2934,17 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         $scope.latest = $scope.itemUpdate;
         $scope.chapters = 0;
         $scope.volumes = 0;
-        $scope.selectListOptions = ListService.getSelectListOptions($scope.whichController);
-	    $scope.sortReverse = true; // default sort order
         $scope.finalNumbers = false; //default show status of final number fields in edit view.
-        $scope.ratingLevel = undefined; //default rating selection
-        $scope.maxRating = 10; //maximum rating
-        $scope.imgExtension = ''; //image path extension.
         $scope.imgPath = ''; //image path
         $scope.tagArray = []; // holding tags pre-submit
         $scope.tagArrayRemove = [];
         $scope.usedTags = []; //for typeahead array.
-        $scope.statTags = []; //for stat table.
-        $scope.areTagless = false; //are any items tagless
-        $scope.taglessItem = false; //filter variable for showing tagless items.
 
         //allow retreival of local resource
         $scope.trustAsResourceUrl = function(url) {
             return $sce.trustAsResourceUrl(url);
         };
-        
-        $scope.searchTags = '';
-        $scope.passTag = function(tag) {
-            if ($scope.searchTags.indexOf(tag) === -1) {
-                $scope.searchTags += tag + ',';
-                $scope.tagsForFilter = $scope.searchTags.substring(0, $scope.searchTags.length - 1).split(',');
-            }
-        };
+
         //for adding/removing tags.
         $scope.addTag = function () {
 //            console.log($scope.newTag);
@@ -2933,16 +2954,16 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         
         $scope.$watchCollection('mangaitems', function() {
             if ($scope.mangaitems!==undefined) {
-//                console.log($scope.mangaitems);
-                $scope.areTagless = ListService.checkForTagless($scope.mangaitems);
-                $scope.statTags = ItemService.buildStatTags($scope.mangaitems, 0);
+                console.log($scope.mangaitems, $scope.filterConfig);
+                $scope.filterConfig.areTagless = ListService.checkForTagless($scope.mangaitems);
+                $scope.filterConfig.statTags = ItemService.buildStatTags($scope.mangaitems, 0);
             }
         });
         
         //rating 'tooltip' function
         $scope.hoveringOver = function(value) {
             $scope.overStar = value;
-            $scope.percent = 100 * (value / $scope.maxRating);
+            $scope.percent = 100 * (value / $scope.filterConfig.maxRating);
         };
         
         // Create new Mangaitem
@@ -3083,7 +3104,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		// Find a list of Mangaitems
 		$scope.find = function() {
 			$scope.mangaitems = Mangaitems.query();
-            //console.log($scope.mangaitems);
 		};
 
 		// Find existing Mangaitem
@@ -3386,7 +3406,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                     $scope.statTags = CharacterService.buildCharacterTags($scope.items);
                     $scope.statSeries = CharacterService.buildSeriesList($scope.items);
                     $scope.voiceActors = CharacterService.buildVoiceActors($scope.items);
-                    $scope.gender = CharacterService.buildGenderDistribution($scope.statTags);
+                    $scope.gender = CharacterService.buildGenderDistribution($scope.statTags, $scope.items.length);
                 }
             }
         });

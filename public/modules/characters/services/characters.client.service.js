@@ -33,6 +33,7 @@ angular.module('characters').factory('Characters', ['$resource',
         gender.nosex.count = maxCount - gender.male.count - gender.female.count;
         gender.nosex.percentage = Number(((gender.nosex.count / maxCount) * 100).toFixed(2));
         
+        //Fudge any rounding errors.
         check = gender.female.percentage + gender.male.percentage + gender.nosex.percentage;
         if (check > 100) {
             gender.nosex.percentage -= (check - 100).toFixed(2);

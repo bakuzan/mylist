@@ -298,7 +298,6 @@ nav {
     letter-spacing: 0.5px;
     .checklist-list-container {
         max-height: 350px;
-        overflow-y: auto;
     }
     @media (min-width: $break-small) and (max-width: $break-medium) {
         span.task-description-text {
@@ -333,6 +332,8 @@ nav {
     font-weight: bold;
     text-transform: uppercase;
     display: block;
+    width: 10%;
+    white-space: nowrap;
     margin-left: 41px;
 }
 
@@ -679,6 +680,8 @@ div.popover {
 }
 
 .checklist-list {
+    max-height: 250px;
+    overflow-y: auto;
     list-style-type: decimal-leading-zero;
 }
 .options-list-container {
@@ -744,15 +747,15 @@ div.popover {
  */
 
 /* Add this attribute to the element that needs a tooltip */
-[data-tooltip] {
+[hover-data] {
   position: relative;
   z-index: 2;
   cursor: pointer;
 }
 
 /* Hide the tooltip content by default */
-[data-tooltip]:before,
-[data-tooltip]:after {
+[hover-data]:before,
+[hover-data]:after {
   visibility: hidden;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: "progid: DXImageTransform.Microsoft.Alpha(Opacity=0)";
@@ -761,7 +764,7 @@ div.popover {
 }
 
 /* Position tooltip above the element */
-[data-tooltip]:before {
+[hover-data]:before {
   position: absolute;
   bottom: 150%;
   left: 50%;
@@ -775,14 +778,14 @@ div.popover {
   background-color: #000;
   background-color: hsla(0, 0%, 20%, 0.9);
   color: #fff;
-  content: attr(data-tooltip);
+  content: attr(hover-data);
   text-align: center;
   font-size: 14px;
   line-height: 1.2;
 }
 
 /* Triangle hack to make tooltip look like a speech bubble */
-[data-tooltip]:after {
+[hover-data]:after {
   position: absolute;
   bottom: 150%;
   left: 50%;
@@ -798,8 +801,8 @@ div.popover {
 }
 
 /* Show tooltip content on hover */
-[data-tooltip]:hover:before,
-[data-tooltip]:hover:after {
+[hover-data]:hover:before,
+[hover-data]:hover:after {
   visibility: visible;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
   filter: "progid: DXImageTransform.Microsoft.Alpha(Opacity=100)";

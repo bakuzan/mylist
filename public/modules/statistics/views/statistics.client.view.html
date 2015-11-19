@@ -21,37 +21,39 @@
                 </div>
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12 stat-history" ng-init="showHistory = true">
-            <table class="col-lg-12 col-md-12 col-sm-12" ng-show="historicalView === 'month' && showHistory">
-                <thead>
+                <table class="col-lg-12 col-md-12 col-sm-12" ng-show="historicalView === 'month' && showHistory">
+                    <thead>
                     <tr>
                         <th></th>
                         <th class="text-center stat-month-header" ng-repeat="month in commonArrays.months">{{month.text.substring(0,3)}}</th>
                     </tr>
                 </thead>
-                <tbody>
+                    <tbody>
                     <tr ng-repeat="year in monthDetails.completeByMonth | orderBy: '-year'" ng-hide="loading(year.year)">
                         <th><span>{{year.year}}</span></th>
-                        <td  class="stat-month-box" ng-repeat="month in year.months" ng-click="monthDetail(year.year, month.number, month.text);"  popover="{{month.count}} completed {{month.text}} {{year.year}}." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true" ng-style="{'opacity': month.count / monthDetails.maxCompleteMonth }">
+                        <td ng-repeat="month in year.months" ng-click="monthDetail(year.year, month.number, month.text);" hover-data="{{month.count}} completed {{month.text}} {{year.year}}.">
+                            <span class="stat-month-box" ng-style="{'opacity': month.count / monthDetails.maxCompleteMonth }"></span>
                         </td>
                     </tr>
                 </tbody>
-            </table><!-- MONTH HISTORY TABLE END -->
-            <table class="col-lg-12 col-md-12 col-sm-12" ng-show="historicalView === 'season' && showHistory && view === 'Anime'">
-                <thead>
+                </table><!-- MONTH HISTORY TABLE END -->
+                <table class="col-lg-12 col-md-12 col-sm-12" ng-show="historicalView === 'season' && showHistory && view === 'Anime'">
+                    <thead>
                     <tr>
                         <th class=""></th>
                         <th class="text-center stat-season-header" ng-repeat="season in commonArrays.seasons">{{season.text}}</th>
                     </tr>
                 </thead>
-                <tbody>
+                    <tbody>
                     <tr ng-repeat="year in seasonDetails.completeBySeason | orderBy: '-year'">
                         <th><span>{{year.year}}</span></th>
-                        <td  class="stat-month-box" ng-repeat="season in year.seasons" ng-click="seasonDetail(year.year, season.number, season.text)" popover="{{ season.count }} completed {{season.text}} {{year.year}}." popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true" ng-style="{'opacity': season.count / seasonDetails.maxCompleteSeason }">
+                        <td ng-repeat="season in year.seasons" ng-click="seasonDetail(year.year, season.number, season.text)" hover-data="{{ season.count }} completed {{season.text}} {{year.year}}.">
+                            <span class="stat-month-box" ng-style="{'opacity': season.count / seasonDetails.maxCompleteSeason }"></span>
                         </td>
                     </tr>
                 </tbody>
-            </table><!-- SEASON HISTORY TABLE END -->
-        </div><!-- HISTORY PANEL END -->
+                </table><!-- SEASON HISTORY TABLE END -->
+            </div><!-- HISTORY PANEL END -->
             <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="showDetail && showHistory">
             <div class="col-lg-9 col-md-9 col-sm-9 stat-detail">
                 <div class="stat-detail-header">
@@ -88,8 +90,8 @@
                         <tr ng-repeat="rating in ratingsDistribution">
                             <th class="col-lg-1 col-md-1 col-sm-1 text-right mb"><span>{{rating.number}}</span></th>
                             <td class="col-lg-11 col-md-11 col-sm-11 col-xs-11 stat-rating-box">
-                                <div class="progress-container">
-                                    <div class="progress progress-bar-placement" max="100" value="{{rating.percentage}}" popover="{{rating.text}}." popover-trigger="mouseenter" popover-placement="left" popover-append-to-body="false">
+                                <div class="progress-container"  hover-data="{{rating.text}}.">
+                                    <div class="progress progress-bar-placement" max="100" value="{{rating.percentage}}">
                                         <div class="bar current-progress" style="width: {{rating.percentage}}%">{{rating.percentage}}%</div>
                                     </div>
                                 </div>

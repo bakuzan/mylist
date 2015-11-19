@@ -1,6 +1,8 @@
 .stat-month-box {
     cursor: pointer;
     background-color: $brand-accent-alter;
+    display: block;
+    min-height: 20px;
 }
 
 .stat-month-box:hover {

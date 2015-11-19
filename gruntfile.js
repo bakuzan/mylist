@@ -167,11 +167,11 @@ module.exports = function(grunt) {
 		      compass: false
 		    },
 		    files: {
-		      'public/dist/main.min.css': 'public/style/main.scss',
-              'public/dist/main-red.min.css': 'public/style/main-red.scss',
-              'public/dist/main-purple.min.css': 'public/style/main-purple.scss',
-              'public/dist/main-day.min.css': 'public/style/main-day.scss',
-              'public/dist/main-night.min.css': 'public/style/main-night.scss'
+		      'public/style/main.min.css': 'public/style/main.scss',
+              'public/style/main-red.min.css': 'public/style/main-red.scss',
+              'public/style/main-purple.min.css': 'public/style/main-purple.scss',
+              'public/style/main-day.min.css': 'public/style/main-day.scss',
+              'public/style/main-night.min.css': 'public/style/main-night.scss'
 		    }
 		  }
         }

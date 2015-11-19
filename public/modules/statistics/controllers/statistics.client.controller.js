@@ -86,7 +86,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                     $scope.statTags = CharacterService.buildCharacterTags($scope.items);
                     $scope.statSeries = CharacterService.buildSeriesList($scope.items);
                     $scope.voiceActors = CharacterService.buildVoiceActors($scope.items);
-                    $scope.gender = CharacterService.buildGenderDistribution($scope.statTags);
+                    $scope.gender = CharacterService.buildGenderDistribution($scope.statTags, $scope.items.length);
                 }
             }
         });

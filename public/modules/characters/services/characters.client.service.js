@@ -14,25 +14,31 @@ angular.module('characters').factory('Characters', ['$resource',
 .service('CharacterService', function() {
     
     //build the character gender distribution.
-    this.buildGenderDistribution = function(items) {
-        var maxCount = items.length,
+    this.buildGenderDistribution = function(items, maxCount) {
+        var check, 
             gender = { 
-            male: { count: 0, percentage: 0, text: '% male.'},
-            female: { count: 0, percentage: 0, text: '% female.'},
-            nosex: { count: 0, percentage: 0, text: '% unassigned.'}
-        };
+                male: { count: 0, percentage: 0, text: '% male.'},
+                female: { count: 0, percentage: 0, text: '% female.'},
+                nosex: { count: 0, percentage: 0, text: '% unassigned.'}
+            };
         angular.forEach(items, function(item) {
             if (item.tag === 'male') {
                 gender.male.count = item.count;
-                gender.male.percentage = ((item.count / maxCount) * 100).toFixed(2);
+                gender.male.percentage = Number(((item.count / maxCount) * 100).toFixed(2));
             } else if (item.tag === 'female') {
                 gender.female.count = item.count;
-                gender.female.percentage = ((item.count / maxCount) * 100).toFixed(2);
+                gender.female.percentage = Number(((item.count / maxCount) * 100).toFixed(2));
             }
         });
-        var nosex = maxCount - gender.male.count - gender.female.count;
-        gender.nosex.count = nosex;
-        gender.nosex.percentage = ((nosex / maxCount) * 100).toFixed(2);
+        gender.nosex.count = maxCount - gender.male.count - gender.female.count;
+        gender.nosex.percentage = Number(((gender.nosex.count / maxCount) * 100).toFixed(2));
+        
+        check = gender.female.percentage + gender.male.percentage + gender.nosex.percentage;
+        if (check > 100) {
+            gender.nosex.percentage -= (check - 100).toFixed(2);
+        } else if (check < 100) {
+            gender.nosex.percentage += (100 - check).toFixed(2);
+        }
 //        console.log('GD: ', gender);
         return gender;
     };

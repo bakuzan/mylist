@@ -125,24 +125,24 @@ angular.module('characters').directive('characterBack', function(){
            *    Note: the interval is removed and replaced to avoid the auto-slide fouling the
            *            change over up.
            */
-          scope.$watch('$parent.search', function(newValue) {
-              if (scope.$parent.search !== undefined) {
+          scope.$watch('$parent.filterConfig.search', function(newValue) {
+              if (scope.$parent.filterConfig.search !== undefined) {
                   var temp = scope.interval;
                   scope.interval = null;
                   scope.search = newValue;
                   scope.interval = temp;
               }
           });
-          scope.$watch('$parent.media', function(newValue) {
-              if (scope.$parent.media !== undefined) {
+          scope.$watch('$parent.filterConfig.media', function(newValue) {
+              if (scope.$parent.filterConfig.media !== undefined) {
                   var temp = scope.interval;
                   scope.interval = null;
                   scope.media = newValue;
                   scope.interval = temp;
               }
           });
-          scope.$watch('$parent.searchTags', function(newValue) {
-              if (scope.$parent.media !== undefined) {
+          scope.$watch('$parent.filterConfig.searchTags', function(newValue) {
+              if (scope.$parent.filterConfig.media !== undefined) {
                   var temp = scope.interval;
                   scope.interval = null;
                   scope.searchTags = newValue;

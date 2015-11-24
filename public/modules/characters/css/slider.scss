@@ -20,7 +20,6 @@
   overflow: hidden;
   min-height: 300px;
   margin: auto;
-  @include box-shadow(0px, 0px, 15px, $brand-accent);
   a {
       text-decoration: none;
       .slide-image {
@@ -87,17 +86,15 @@
         height: 16px;
         width: 16px;
         margin: 0 12px;
+        border-radius: 50%;
         background-color: $grey-light;
         @include transition(background-color 0.3s);
-        border-radius: 50%;
     }
     li.indicator.active {
         @extend li.indicator;
-        background-color: $brand-accent;
     }
     li.indicator.active.locked {
         @extend li.indicator;
-        background-color: $brand-accent-alter;
     }
 }
 

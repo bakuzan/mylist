@@ -1839,7 +1839,7 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
         };
         
         $scope.saved = localStorage.getItem('theme');
-        $scope.theme = (localStorage.getItem('theme')!==null) ? JSON.parse($scope.saved) : 'style/main.min.css';
+        $scope.theme = (localStorage.getItem('theme')!==null) ? JSON.parse($scope.saved) : 'dist/main.min.css';
         localStorage.setItem('theme', JSON.stringify($scope.theme));
         
         $scope.isTimedTheme = localStorage.getItem('timedTheme');
@@ -1848,11 +1848,11 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
         
         //user-selected style options/defaults.
         $scope.styles = [
-            { name: 'Blue', url: 'style/main.min.css' },
-            { name: 'Red', url: 'style/main-red.min.css' },
-            { name: 'Purple', url: 'style/main-purple.min.css' },
-            { name: 'Day', url: 'style/main-day.min.css' },
-            { name: 'Night', url: 'style/main-night.min.css' }
+            { name: 'Blue', url: 'dist/main.min.css' },
+            { name: 'Red', url: 'dist/main-red.min.css' },
+            { name: 'Purple', url: 'dist/main-purple.min.css' },
+            { name: 'Day', url: 'dist/main-day.min.css' },
+            { name: 'Night', url: 'dist/main-night.min.css' }
         ];
         
         $scope.changeTheme = function() {
@@ -1863,13 +1863,13 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
             } else {
                 var time = new Date().getHours();
                 if (time > 20 || time < 6) {
-                    localStorage.setItem('theme', JSON.stringify('style/main-night.min.css'));
+                    localStorage.setItem('theme', JSON.stringify('dist/main-night.min.css'));
                 } else if (time > 17) {
-                    localStorage.setItem('theme', JSON.stringify('style/main-purple.min.css'));
+                    localStorage.setItem('theme', JSON.stringify('dist/main-purple.min.css'));
                 } else if (time > 9) {
-                    localStorage.setItem('theme', JSON.stringify('style/main-day.min.css'));
+                    localStorage.setItem('theme', JSON.stringify('dist/main-day.min.css'));
                 } else if (time > 6) {
-                    localStorage.setItem('theme', JSON.stringify('style/main.min.css'));
+                    localStorage.setItem('theme', JSON.stringify('dist/main.min.css'));
                 }
             }
             var storedValue = localStorage.getItem('theme'),

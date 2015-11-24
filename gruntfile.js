@@ -154,11 +154,11 @@ module.exports = function(grunt) {
 		sass: {
 		  dev: {		    
               options: {
-		      style: 'compressed',
 		      compass: false
 		    },
 		    files: {
-		      'public/style/main.min.css': 'public/style/main.scss'
+		      'public/style/main.css': 'public/style/main.scss',
+              'public/style/components.css': 'public/style/components.scss',
 		    }
 		  },
 		  dist: {
@@ -167,11 +167,12 @@ module.exports = function(grunt) {
 		      compass: false
 		    },
 		    files: {
-		      'public/style/main.min.css': 'public/style/main.scss',
-              'public/style/main-red.min.css': 'public/style/main-red.scss',
-              'public/style/main-purple.min.css': 'public/style/main-purple.scss',
-              'public/style/main-day.min.css': 'public/style/main-day.scss',
-              'public/style/main-night.min.css': 'public/style/main-night.scss'
+		      'public/dist/main.min.css': 'public/style/main.scss',
+              'public/dist/main-red.min.css': 'public/style/main-red.scss',
+              'public/dist/main-purple.min.css': 'public/style/main-purple.scss',
+              'public/dist/main-day.min.css': 'public/style/main-day.scss',
+              'public/dist/main-night.min.css': 'public/style/main-night.scss',
+              'public/dist/components.min.css': 'public/style/components.scss',
 		    }
 		  }
         }

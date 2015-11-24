@@ -135,7 +135,11 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             sortType: '',
             sortReverse: true,
             ratingLevel: undefined,
-            maxRating: 10,
+            ratingActions: {
+                maxRating: 10,
+                percent: undefined,
+                overStar: null
+            },
             searchTags: '',
             tagsForFilter: [],
             taglessItem: false,
@@ -177,12 +181,6 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 $scope.filterConfig.statTags = ItemService.buildStatTags($scope.animeitems, 0);
             }
         });
-        
-        //rating 'tooltip' function
-        $scope.hoveringOver = function(value) {
-            $scope.overStar = value;
-            $scope.percent = 100 * (value / $scope.maxRating);
-        };
 
 		// Create new Animeitem
 		$scope.create = function() {
@@ -487,6 +485,11 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
                     scope.filterConfig.searchTags += tag + ',';
                     scope.filterConfig.tagsForFilter = scope.filterConfig.searchTags.substring(0, scope.filterConfig.searchTags.length - 1).split(',');
                 }
+            };
+            //rating 'tooltip' function
+            scope.hoveringOver = function(value) {
+                scope.filterConfig.ratingActions.overStar = value;
+                scope.filterConfig.ratingActions.percent = 100 * (value / scope.filterConfig.ratingActions.maxRating);
             };
           
         }
@@ -2917,7 +2920,11 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             sortType: '',
             sortReverse: true,
             ratingLevel: undefined,
-            maxRating: 10,
+            ratingActions: {
+                maxRating: 10,
+                percent: undefined,
+                overStar: null
+            },
             searchTags: '',
             tagsForFilter: [],
             taglessItem: false,

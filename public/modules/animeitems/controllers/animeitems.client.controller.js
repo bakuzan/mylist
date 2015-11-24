@@ -20,7 +20,11 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             sortType: '',
             sortReverse: true,
             ratingLevel: undefined,
-            maxRating: 10,
+            ratingActions: {
+                maxRating: 10,
+                percent: undefined,
+                overStar: null
+            },
             searchTags: '',
             tagsForFilter: [],
             taglessItem: false,
@@ -62,12 +66,6 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 $scope.filterConfig.statTags = ItemService.buildStatTags($scope.animeitems, 0);
             }
         });
-        
-        //rating 'tooltip' function
-        $scope.hoveringOver = function(value) {
-            $scope.overStar = value;
-            $scope.percent = 100 * (value / $scope.maxRating);
-        };
 
 		// Create new Animeitem
 		$scope.create = function() {

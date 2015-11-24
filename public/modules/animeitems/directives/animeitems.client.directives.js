@@ -125,6 +125,11 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
                     scope.filterConfig.tagsForFilter = scope.filterConfig.searchTags.substring(0, scope.filterConfig.searchTags.length - 1).split(',');
                 }
             };
+            //rating 'tooltip' function
+            scope.hoveringOver = function(value) {
+                scope.filterConfig.ratingActions.overStar = value;
+                scope.filterConfig.ratingActions.percent = 100 * (value / scope.filterConfig.ratingActions.maxRating);
+            };
           
         }
         

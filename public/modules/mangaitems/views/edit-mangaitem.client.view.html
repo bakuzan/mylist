@@ -56,7 +56,7 @@
                 <div class="form-group">
                     <label for="rating" class="col-md-2 control-label">Rating</label>
                     <div class="col-md-6">
-                        <rating class="form-control clickable rating-stars" data-ng-model="mangaitem.rating" readonly="false" max="filterConfig.maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></rating>
+                        <rating class="form-control clickable rating-stars" data-ng-model="mangaitem.rating" readonly="false" max="filterConfig.ratingActions.maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></rating>
                     </div>
                     <span data-ng-show="overStar!=null" class="label" ng-class="{'label-warning': percent<40, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}">{{percent}}%</span>
                 </div>

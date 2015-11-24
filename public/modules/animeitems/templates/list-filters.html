@@ -73,9 +73,11 @@
                 <div class="input-group-addon clickable" data-ng-click="filterConfig.ratingLevel=undefined">
                     <i class="fa fa-star"></i>
                 </div>
-                   <rating class="form-control rating-stars clickable" ng-model="filterConfig.ratingLevel" readonly="false" max="filterConfig.maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></rating>
+                   <rating class="form-control rating-stars clickable" ng-model="filterConfig.ratingLevel" readonly="false" max="filterConfig.ratingActions.maxRating" on-hover="hoveringOver(value)" on-leave="filterConfig.ratingActions.overStar = null" id="rating" name="rating"></rating>
                 <div class="input-group-addon">
-                    <span data-ng-show="overStar!=null" class="label rating-label" ng-class="{'label-warning': percent<40, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}">{{percent}}%</span>
+                    <span data-ng-show="filterConfig.ratingActions.overStar!=null" 
+                          class="label rating-label" 
+                          ng-class="{'label-warning': filterConfig.ratingActions.percent<40, 'label-info': filterConfig.ratingActions.percent>=30 && percent<70, 'label-success': filterConfig.ratingActions.percent>=70}">{{filterConfig.ratingActions.percent}}%</span>
                 </div>
             </div>
             <div class="input-group mt" ng-if="page === 'character'">

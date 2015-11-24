@@ -29,7 +29,7 @@
                 <div class="item-detail">
                     <p>
                         <em class="text-muted" data-ng-if="animeitem.rating==0">No rating.</em>
-                        <rating data-ng-if="animeitem.rating!=0" data-ng-model="animeitem.rating" class="list-item-rating-stars" readonly="true" max="filterConfig.maxRating" id="rating" name="rating"></rating>
+                        <rating data-ng-if="animeitem.rating!=0" data-ng-model="animeitem.rating" class="list-item-rating-stars" readonly="true" max="filterConfig.ratingActions.maxRating" id="rating" name="rating"></rating>
                     </p>
                     <p ng-if="animeitem.reWatchCount!=0">{{animeitem.reWatchCount}} re-watches.</p>
                 </div>

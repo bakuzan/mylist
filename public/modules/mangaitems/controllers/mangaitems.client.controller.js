@@ -20,7 +20,11 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             sortType: '',
             sortReverse: true,
             ratingLevel: undefined,
-            maxRating: 10,
+            ratingActions: {
+                maxRating: 10,
+                percent: undefined,
+                overStar: null
+            },
             searchTags: '',
             tagsForFilter: [],
             taglessItem: false,

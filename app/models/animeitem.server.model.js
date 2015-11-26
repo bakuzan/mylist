@@ -46,6 +46,16 @@ var AnimeitemSchema = new Schema({
     default: '0',
     trim: true
   },
+  season: {
+      season: {
+          type: String,
+          default: ''
+      },
+      year: {
+          type: String,
+          default: ''
+      }
+  },
   rating: {
     type: Number,
     default: 0

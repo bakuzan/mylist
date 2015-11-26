@@ -174,14 +174,28 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     { number: '11', text: 'November' },
                     { number: '12', text: 'December' }
                 ];
-            if (controller === 'statistics') {
-                commonArrays = { months: months, seasons: seasons };
-            }
+            commonArrays = { months: months, seasons: seasons };
             return commonArrays;
         };
     
 })
-.service('ItemService', ['moment', '$filter', function(moment, $filter) {
+.service('ItemService', ['moment', '$filter', 'ListService', function(moment, $filter, ListService) {
+    
+        //get current season.
+        this.getCurrentSeason = function() {
+            var season = '', today = new Date(), year = today.getFullYear(), month = today.getMonth() + 1, commonArrays = ListService.getCommonArrays(),
+                i = commonArrays.seasons.length;
+            while(i--) {
+                if (month > Number(commonArrays.seasons[i].number) && season === '') {
+                    season = { season: commonArrays.seasons[i+1].text, year: year };
+                }
+                //catch winter.
+                if (i === 0 && season === '') {
+                    season = { season: commonArrays.seasons[i].text, year: year };
+                }
+            }
+            return season;
+        };
         
         //add history entry to item.
         this.itemHistory = function(item, updateHistory, type) {

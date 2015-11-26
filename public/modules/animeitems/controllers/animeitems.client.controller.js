@@ -61,7 +61,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         
         $scope.$watchCollection('animeitems', function() {
             if ($scope.animeitems!==undefined) {
-//                console.log($scope.animeitems);
+                console.log($scope.animeitems);
                 $scope.filterConfig.areTagless = ListService.checkForTagless($scope.animeitems);
                 $scope.filterConfig.statTags = ItemService.buildStatTags($scope.animeitems, 0);
             }
@@ -71,32 +71,18 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		$scope.create = function() {
 			// Create new Animeitem object
             var animeitem = new Animeitems();
-            if (this.manga!==undefined && this.manga!==null) {
-                animeitem = new Animeitems ({
-				    title: this.title,
-                    episodes: this.episodes,
-                    start: this.start,
-                    latest: this.latest,
-                    finalEpisode: this.finalEpisode,
-                    disc: this.disc,
-                    manga: this.manga._id,
-                    tags: $scope.tagArray,
-                    user: this.user
-			     });
-            } else {
-                animeitem = new Animeitems ({
-				    title: this.title,
-                    episodes: this.episodes,
-                    start: this.start,
-                    latest: this.latest,
-                    finalEpisode: this.finalEpisode,
-                    disc: this.disc,
-                    manga: this.manga,
-                    tags: $scope.tagArray,
-                    user: this.user
-			    });
-            }
-
+            animeitem = new Animeitems ({
+                title: this.title,
+                episodes: this.episodes,
+                start: this.start,
+                latest: this.latest,
+                finalEpisode: this.finalEpisode,
+                season: this.season === true ? ItemService.getCurrentSeason() : '',
+                disc: this.disc,
+                manga: this.manga!==undefined && this.manga!==null ? this.manga._id : this.manga,
+                tags: $scope.tagArray,
+                user: this.user
+             });
 
 			// Redirect after save
 			animeitem.$save(function(response) {

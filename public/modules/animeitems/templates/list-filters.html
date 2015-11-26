@@ -77,7 +77,7 @@
                 <div class="input-group-addon">
                     <span data-ng-show="filterConfig.ratingActions.overStar!=null" 
                           class="label rating-label" 
-                          ng-class="{'label-warning': filterConfig.ratingActions.percent<40, 'label-info': filterConfig.ratingActions.percent>=30 && percent<70, 'label-success': filterConfig.ratingActions.percent>=70}">{{filterConfig.ratingActions.percent}}%</span>
+                          ng-class="{'label-warning': filterConfig.ratingActions.percent<40, 'label-info': filterConfig.ratingActions.percent>=30 && filterConfig.ratingActions.percent<70, 'label-success': filterConfig.ratingActions.percent>=70}">{{filterConfig.ratingActions.percent}}%</span>
                 </div>
             </div>
             <div class="input-group mt" ng-if="page === 'character'">

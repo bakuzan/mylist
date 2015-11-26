@@ -72,7 +72,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             
             var mangaitem = new Mangaitems();
             //Handle situation if objects not selected.
-			if (this.anime!==undefined && this.anime!==null) {
                 // Create new Mangaitem object
 			     mangaitem = new Mangaitems ({
 				    title: this.title,
@@ -83,26 +82,10 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                     finalChapter: this.finalChapter,
                     finalVolume: this.finalVolume,
                     hardcopy: this.hardcopy,
-                    anime: this.anime._id,
+                    anime: this.anime!==undefined && this.anime!==null ? this.anime._id : this.anime,
                     tags: $scope.tagArray,
                     user: this.user
 			     });
-            } else {
-                // Create new Mangaitem object
-			     mangaitem = new Mangaitems ({
-				    title: this.title,
-                    chapters: this.chapters,
-                    volumes: this.volumes,
-                    start: this.start,
-                    latest: this.latest,
-                    finalChapter: this.finalChapter,
-                    finalVolume: this.finalVolume,
-                    hardcopy: this.hardcopy,
-                    anime: this.anime,
-                    tags: $scope.tagArray,
-                    user: this.user
-			     });
-            }
 
 			// Redirect after save
 			mangaitem.$save(function(response) {

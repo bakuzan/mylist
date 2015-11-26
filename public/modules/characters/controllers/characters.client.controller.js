@@ -61,50 +61,17 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 		$scope.create = function() {
             //console.log($scope.tagArray);
             var character = new Characters();
-            //Handle situation if objects not selected.
-			if (this.anime!==undefined && this.manga!==undefined && this.anime!==null && this.manga!==null) {
              // Create new Character object
 			 character = new Characters ({
 				name: this.name,
                 image: $scope.imgPath,
-                anime: this.anime._id,
-                manga: this.manga._id,
+                anime: this.anime!==undefined && this.anime!==null ? this.anime._id : this.anime,
+                manga: this.manga!==undefined && this.manga!==null ? this.manga._id : this.manga,
                 voice: this.voice,
                 tags: $scope.tagArray,
                 user: this.user
 			 });
-            } else if (this.anime!==undefined && this.anime!==null) {
-             character = new Characters ({
-				name: this.name,
-                image: $scope.imgPath,
-                anime: this.anime._id,
-                manga: this.manga,
-                voice: this.voice,
-                tags: $scope.tagArray,
-                user: this.user
-			 });
-            } else if (this.manga!==undefined && this.manga!==null) {
-             character = new Characters ({
-				name: this.name,
-                image: $scope.imgPath,
-                anime: this.anime,
-                manga: this.manga._id,
-                voice: this.voice,
-                tags: $scope.tagArray,
-                user: this.user
-			 });
-            } else {
-             character = new Characters ({
-				name: this.name,
-                image: $scope.imgPath,
-                anime: this.anime,
-                manga: this.manga,
-                voice: this.voice,
-                tags: $scope.tagArray,
-                user: this.user
-			 });
-            }
-            
+
 			// Redirect after save
 			character.$save(function(response) {
 				$location.path('characters/' + response._id);

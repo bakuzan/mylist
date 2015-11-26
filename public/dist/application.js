@@ -2967,12 +2967,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             }
         });
         
-        //rating 'tooltip' function
-        $scope.hoveringOver = function(value) {
-            $scope.overStar = value;
-            $scope.percent = 100 * (value / $scope.filterConfig.maxRating);
-        };
-        
         // Create new Mangaitem
 		$scope.create = function() {
             

@@ -1,6 +1,6 @@
 <section data-ng-controller="HomeController" data-ng-show="authentication.user" data-ng-init="checkStatus();" class="site-wrap" ng-class="{ 'show-nav' : isAddTask }">
-    <div class="col-lg-12 col-md-12 col-sm-12 add-task-popout" ng-show="isAddTask">
-            <a class="close-button mt" data-ng-click="isAddTask=!isAddTask"><i class="fa fa-times"></i></a>
+    <div class="col-lg-12 col-md-12 col-sm-12 add-task-popout" ng-show="isAddTask" anywhere-but-here>
+            <a class="close-button mt" data-ng-click="isAddTask = false;"><i class="fa fa-times"></i></a>
             <h4 class="popout-header">Add new task</h4>
             <div class="col-md-12 mt">
                 <form name="scheduleForm" class="form-horizontal" novalidate>
@@ -86,8 +86,8 @@
 	</div>
     <div class="container">
         <div class="col-lg-4 col-md-4 col-sm-4 mt filter-container" ng-class="{ 'in-the-way' : inTheWay }">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <a class="menu-header-bar clickable" ng-click="isAddTask=!isAddTask"><i class="fa" ng-class="isAddTask === false ? 'fa-plus-square' : 'fa-minus-square'"></i> Add task</a>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+        <a class="menu-header-bar clickable" ng-click="isAddTask = true;" ignore-here="true"><i class="fa" ng-class="isAddTask === false ? 'fa-plus-square' : 'fa-minus-square'"></i> Add task</a>
         <a class="menu-header-bar" style="display: none;">Filters</a>
         <div class="col-lg-12 col-md-12 col-sm-12 mt">
             <div class="col-lg-12 col-md-12 col-sm-12 input-group">
@@ -145,7 +145,7 @@
             </div><!-- search.days -->
         </div><!-- collapse FILTERS -->
     </div><!-- col-md-12 FILTERS -->
-    </div><!-- col-md-6 ACTIONS+FILTERS -->
+        </div><!-- col-md-6 ACTIONS+FILTERS -->
         <div class="col-lg-3 col-md-5 col-sm-5 mt placeholder-container"></div>
         <div class="col-lg-8 col-md-6 col-sm-6 mt task-list-container">
             <ul class="taskList col-lg-12 col-md-12 col-sm-12">

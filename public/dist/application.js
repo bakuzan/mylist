@@ -176,7 +176,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         
         $scope.$watchCollection('animeitems', function() {
             if ($scope.animeitems!==undefined) {
-//                console.log($scope.animeitems);
+                console.log($scope.animeitems);
                 $scope.filterConfig.areTagless = ListService.checkForTagless($scope.animeitems);
                 $scope.filterConfig.statTags = ItemService.buildStatTags($scope.animeitems, 0);
             }
@@ -186,32 +186,18 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		$scope.create = function() {
 			// Create new Animeitem object
             var animeitem = new Animeitems();
-            if (this.manga!==undefined && this.manga!==null) {
-                animeitem = new Animeitems ({
-				    title: this.title,
-                    episodes: this.episodes,
-                    start: this.start,
-                    latest: this.latest,
-                    finalEpisode: this.finalEpisode,
-                    disc: this.disc,
-                    manga: this.manga._id,
-                    tags: $scope.tagArray,
-                    user: this.user
-			     });
-            } else {
-                animeitem = new Animeitems ({
-				    title: this.title,
-                    episodes: this.episodes,
-                    start: this.start,
-                    latest: this.latest,
-                    finalEpisode: this.finalEpisode,
-                    disc: this.disc,
-                    manga: this.manga,
-                    tags: $scope.tagArray,
-                    user: this.user
-			    });
-            }
-
+            animeitem = new Animeitems ({
+                title: this.title,
+                episodes: this.episodes,
+                start: this.start,
+                latest: this.latest,
+                finalEpisode: this.finalEpisode,
+                season: this.season === true ? ItemService.getCurrentSeason() : '',
+                disc: this.disc,
+                manga: this.manga!==undefined && this.manga!==null ? this.manga._id : this.manga,
+                tags: $scope.tagArray,
+                user: this.user
+             });
 
 			// Redirect after save
 			animeitem.$save(function(response) {
@@ -744,14 +730,28 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     { number: '11', text: 'November' },
                     { number: '12', text: 'December' }
                 ];
-            if (controller === 'statistics') {
-                commonArrays = { months: months, seasons: seasons };
-            }
+            commonArrays = { months: months, seasons: seasons };
             return commonArrays;
         };
     
 })
-.service('ItemService', ['moment', '$filter', function(moment, $filter) {
+.service('ItemService', ['moment', '$filter', 'ListService', function(moment, $filter, ListService) {
+    
+        //get current season.
+        this.getCurrentSeason = function() {
+            var season = '', today = new Date(), year = today.getFullYear(), month = today.getMonth() + 1, commonArrays = ListService.getCommonArrays(),
+                i = commonArrays.seasons.length;
+            while(i--) {
+                if (month > Number(commonArrays.seasons[i].number) && season === '') {
+                    season = { season: commonArrays.seasons[i+1].text, year: year };
+                }
+                //catch winter.
+                if (i === 0 && season === '') {
+                    season = { season: commonArrays.seasons[i].text, year: year };
+                }
+            }
+            return season;
+        };
         
         //add history entry to item.
         this.itemHistory = function(item, updateHistory, type) {
@@ -1145,50 +1145,17 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 		$scope.create = function() {
             //console.log($scope.tagArray);
             var character = new Characters();
-            //Handle situation if objects not selected.
-			if (this.anime!==undefined && this.manga!==undefined && this.anime!==null && this.manga!==null) {
              // Create new Character object
 			 character = new Characters ({
 				name: this.name,
                 image: $scope.imgPath,
-                anime: this.anime._id,
-                manga: this.manga._id,
+                anime: this.anime!==undefined && this.anime!==null ? this.anime._id : this.anime,
+                manga: this.manga!==undefined && this.manga!==null ? this.manga._id : this.manga,
                 voice: this.voice,
                 tags: $scope.tagArray,
                 user: this.user
 			 });
-            } else if (this.anime!==undefined && this.anime!==null) {
-             character = new Characters ({
-				name: this.name,
-                image: $scope.imgPath,
-                anime: this.anime._id,
-                manga: this.manga,
-                voice: this.voice,
-                tags: $scope.tagArray,
-                user: this.user
-			 });
-            } else if (this.manga!==undefined && this.manga!==null) {
-             character = new Characters ({
-				name: this.name,
-                image: $scope.imgPath,
-                anime: this.anime,
-                manga: this.manga._id,
-                voice: this.voice,
-                tags: $scope.tagArray,
-                user: this.user
-			 });
-            } else {
-             character = new Characters ({
-				name: this.name,
-                image: $scope.imgPath,
-                anime: this.anime,
-                manga: this.manga,
-                voice: this.voice,
-                tags: $scope.tagArray,
-                user: this.user
-			 });
-            }
-            
+
 			// Redirect after save
 			character.$save(function(response) {
 				$location.path('characters/' + response._id);
@@ -2161,13 +2128,32 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
 
 angular.module('core').directive('myProgress', function() {
   return function(scope, element, attrs) {
-  scope.$watch(attrs.myProgress, function(val) {
-      
-      var type = 'checklist-progress';
-      
-       element.html('<div class="' + type + '" style="width: ' + val + '%;height: 100%"></div>');
-  });
+      scope.$watch(attrs.myProgress, function(val) {
+          var type = 'checklist-progress';
+          element.html('<div class="' + type + '" style="width: ' + val + '%;height: 100%"></div>');
+      });
   };
+})
+.directive('anywhereButHere', function ($document, $window) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            element.data('thing', true);
+
+            /** On click, check what you clicked and whether you can ignore it.
+             *    Based on checks false the ng-show of the anywhere-but-here element.
+             */
+            angular.element($document[0].body).on('click', function (e) {
+                var inThing = angular.element(e.target).inheritedData('thing'),
+                    ignore = angular.element(e.target).attr('ignore-here');
+                if (!inThing && !ignore) {
+                    scope.$apply(function () {
+                        scope[attrs.ngShow] = false;
+                    });
+                }
+            });
+        }
+    };
 });
 'use strict';
 
@@ -2972,7 +2958,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             
             var mangaitem = new Mangaitems();
             //Handle situation if objects not selected.
-			if (this.anime!==undefined && this.anime!==null) {
                 // Create new Mangaitem object
 			     mangaitem = new Mangaitems ({
 				    title: this.title,
@@ -2983,26 +2968,10 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                     finalChapter: this.finalChapter,
                     finalVolume: this.finalVolume,
                     hardcopy: this.hardcopy,
-                    anime: this.anime._id,
+                    anime: this.anime!==undefined && this.anime!==null ? this.anime._id : this.anime,
                     tags: $scope.tagArray,
                     user: this.user
 			     });
-            } else {
-                // Create new Mangaitem object
-			     mangaitem = new Mangaitems ({
-				    title: this.title,
-                    chapters: this.chapters,
-                    volumes: this.volumes,
-                    start: this.start,
-                    latest: this.latest,
-                    finalChapter: this.finalChapter,
-                    finalVolume: this.finalVolume,
-                    hardcopy: this.hardcopy,
-                    anime: this.anime,
-                    tags: $scope.tagArray,
-                    user: this.user
-			     });
-            }
 
 			// Redirect after save
 			mangaitem.$save(function(response) {

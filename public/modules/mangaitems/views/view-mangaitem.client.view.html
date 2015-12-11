@@ -1,10 +1,10 @@
 <section data-ng-controller="MangaitemsController" data-ng-init="findOne()" data-ng-show="authentication.user">
-	<div class="page-header">
-        <div class="col-md-12">
-           <div class="col-md-3 pull-left" >
+	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 page-header">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 pull-left">
                 <img ng-src="{{trustAsResourceUrl(mangaitem.image)}}" height="100%" width="100%"/>
             </div>
-            <div class="col-md-9 pull-left">
+            <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 pull-left">
                 <div class="pull-right" data-ng-show="((authentication.user) && (authentication.user._id == mangaitem.user._id))">
 		          <a class="btn btn-accent" href="/#!/mangaitems">
 			         <i class="glyphicon glyphicon-chevron-left"></i>
@@ -23,8 +23,8 @@
                 <div class="related-media accent-alter-text">
                     <p data-ng-show="mangaitem.anime!==null">Related anime: <a href="/#!/animeitems/{{mangaitem.anime._id}}">{{mangaitem.anime.title}}</a></p>
                 </div>
-                <div class="col-md-9 item-tags">
-                    <span class="col-md-3 tag-bubble" ng-repeat="tag in mangaitem.tags">{{tag.text}}</span>
+                <div class="col-lg-9 col-md-9 col-sm-12 item-tags">
+                    <span class="col-lg-3 col-md-3 col-sm-3 tag-bubble" ng-repeat="tag in mangaitem.tags">{{tag.text}}</span>
                 </div>
             </div>
         </div>

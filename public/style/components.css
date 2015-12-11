@@ -252,6 +252,7 @@
   position: absolute;
   bottom: 2%;
   width: 100%;
+  padding-left: 0;
   text-align: center; }
   .slider-indicators li.indicator, .slider-indicators li.indicator.active, .slider-indicators li.indicator.active.locked {
     display: inline-block;
@@ -259,7 +260,7 @@
     cursor: pointer;
     height: 16px;
     width: 16px;
-    margin: 0 12px;
+    margin: 0 8px;
     border-radius: 50%;
     background-color: #eee;
     -webkit-transition: background-color 0.3s;

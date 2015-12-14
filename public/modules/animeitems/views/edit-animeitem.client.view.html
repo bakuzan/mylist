@@ -81,7 +81,7 @@
                 </div>
                 <p class="clickable accent-text" ng-init="showOthers = false" ng-click="showOthers=!showOthers"><i class="fa" ng-class="showOthers ? 'fa-minus-square' : 'fa-plus-square'"></i> Completion properties</p>
                 <div ng-show="showOthers">
-                <div class="form-group">
+                <div class="form-group" ng-show="!animeitem.status || animeitem.reWatching">
                     <label for="onHold" class="col-md-2 control-label">On Hold?</label>
                     <div class="col-md-6">
                         <input type="checkbox" class="form-control" data-ng-model="animeitem.onHold" id="onHold" name="onHold">

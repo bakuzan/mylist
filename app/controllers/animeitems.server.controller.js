@@ -112,10 +112,10 @@ exports.delete = function(req, res) {
  * List of Animeitems
  */
 exports.list = function(req, res) { 
-    console.log('PARAMS STATUS: ', req.query.status, (req.query.status === '1'));
-    var current = [false], all = [true, false], status = (req.query.status === '1') ? all : current;
+    var current = [false], all = [true, false], 
+        status = (req.query.status === '1') ? all : current;
     console.log('PARAMS STATUS: ', req.query.status, 'QUERY STATUS: ', status);
-	Animeitem.find({ status: {$in: status } }).sort('-created').populate('user', 'displayName').populate('manga', 'title').exec(function(err, animeitems) {
+	Animeitem.find({ $or: [ { status: {$in: status } }, { reWatching: true } ] }).sort('-created').populate('user', 'displayName').populate('manga', 'title').exec(function(err, animeitems) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)

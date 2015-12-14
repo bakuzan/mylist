@@ -356,13 +356,16 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             });
 		}
         
+        //Set defaults on requery and "neutralise" the other search variable.
         $scope.itemsAvailable = function() {
             $scope.animeitems = undefined;
             if ($scope.filterConfig.ongoingList === true) {
-                $scope.filterConfig.search.status = false;
+                $scope.filterConfig.search.onHold = false;
+                $scope.filterConfig.search.status = '';
                 getAnime(0);
             } else {
                 $scope.filterConfig.search.onHold = '';
+                $scope.filterConfig.search.status = false;
                 getAnime(1);
             }
         };

@@ -113,8 +113,8 @@ exports.delete = function(req, res) {
  */
 exports.list = function(req, res) { 
     var current = [false], all = [true, false], 
-        status = (req.query.status === '1') ? all : current;
-    console.log('PARAMS STATUS: ', req.query.status, 'QUERY STATUS: ', status);
+        status = (req.query.status === '0') ? current : all;
+
 	Animeitem.find({ $or: [ { status: {$in: status } }, { reWatching: true } ] }).sort('-created').populate('user', 'displayName').populate('manga', 'title').exec(function(err, animeitems) {
 		if (err) {
 			return res.status(400).send({

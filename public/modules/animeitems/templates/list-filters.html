@@ -44,7 +44,7 @@
             </div>
             <div class="input-group mt" ng-if="page === 'animeitem'">        
                 <div class="input-group-addon">
-                    <i class="fa fa-compress"></i>
+                    <i class="fa" ng-class="(filterConfig.ongoingList) ? 'fa-compress' : 'fa-expand'"></i>
                 </div>
                 <input class="form-control" type="checkbox" data-ng-model="filterConfig.ongoingList" ng-change="itemsAvailable()">
             </div>

@@ -37,6 +37,10 @@ var AnimeitemSchema = new Schema({
     type: Boolean,
     default: false
   },
+  onHold: {
+      type: Boolean,
+      default: false
+  },
   disc: {
     type: Boolean,
     default: false

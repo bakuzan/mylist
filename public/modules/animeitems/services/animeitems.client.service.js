@@ -3,12 +3,7 @@
 //Animeitems service used to communicate Animeitems REST endpoints
 angular.module('animeitems').factory('Animeitems', ['$resource',
 	function($resource) {
-		return $resource('animeitems/:animeitemId', { animeitemId: '@_id'
-		}, {
-			update: {
-				method: 'PUT'
-			}
-		});
+		return $resource('animeitems/:animeitemId', { animeitemId: '@_id' }, { update: { method: 'PUT' } });
 	}
 ])
 .service('fileUpload', ['$http', function ($http) {
@@ -68,6 +63,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 selectListOptions.status = [ { v: '', n: 'All' }, { v: false, n: 'Ongoing' }, { v: true, n: 'Completed' } ];
                 selectListOptions.searchName = 'title';
                 if (controller === 'animeitem') {
+                    selectListOptions.onHold = [ { v: '', n: 'All' }, { v: false, n: 'Ongoing' }, { v: true, n: 'On Hold' } ];
                     selectListOptions.sortOptions = [ { v: 'title', n: 'Title' },{ v: 'episodes', n: 'Episodes' },{ v: 'start', n: 'Start date' },
                                                       { v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' } 
                                                     ];

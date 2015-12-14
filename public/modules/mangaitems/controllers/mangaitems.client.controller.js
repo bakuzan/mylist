@@ -61,7 +61,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         
         $scope.$watchCollection('mangaitems', function() {
             if ($scope.mangaitems!==undefined) {
-                console.log($scope.mangaitems, $scope.filterConfig);
+//                console.log($scope.mangaitems);
                 $scope.filterConfig.areTagless = ListService.checkForTagless($scope.mangaitems);
                 $scope.filterConfig.statTags = ItemService.buildStatTags($scope.mangaitems, 0);
             }

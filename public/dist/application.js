@@ -131,6 +131,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             pageSize: 10
         };
         $scope.filterConfig = {
+            ongoingList: true,
             showingCount: 0,
             sortType: '',
             sortReverse: true,
@@ -140,6 +141,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 percent: undefined,
                 overStar: null
             },
+            search: {},
             searchTags: '',
             tagsForFilter: [],
             taglessItem: false,
@@ -180,6 +182,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 $scope.filterConfig.areTagless = ListService.checkForTagless($scope.animeitems);
                 $scope.filterConfig.statTags = ItemService.buildStatTags($scope.animeitems, 0);
             }
+//            console.log($scope.animeitems);
         });
 
 		// Create new Animeitem
@@ -275,6 +278,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             //handle status: completed.
             if(animeitem.end!==undefined && animeitem.end!==null) {
                 animeitem.status = true;
+                animeitem.onHold = false;
             } else {
                 //if no end date, not complete.
                 animeitem.status = false;
@@ -299,12 +303,11 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             $scope.animeitem = item;
             $scope.update();
         };
-
-		// Find a list of Animeitems
-		$scope.find = function() {
-			$scope.animeitems = Animeitems.query();
-//            console.log($scope.animeitems);
-		};
+        
+        // Find a list of Animeitems
+        $scope.find = function() {
+            $scope.animeitems = Animeitems.query();
+        };
 
 		// Find existing Animeitem
 		$scope.findOne = function() {
@@ -340,6 +343,27 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             if (removal) {
                 $scope.animeitem = ItemService.deleteHistory(item, history);
                 $scope.update();
+            }
+        };
+        
+		/** Find a list of Animeitems for values:
+         *  (0) returns only ongoing series. (1) returns all series.
+         */
+		function getAnime(value) {
+            console.log('getting', $scope.filterConfig.ongoingList);
+			$scope.animeitems = Animeitems.query({
+                status: value
+            });
+		}
+        
+        $scope.itemsAvailable = function() {
+            $scope.animeitems = undefined;
+            if ($scope.filterConfig.ongoingList === true) {
+                $scope.filterConfig.search.status = false;
+                getAnime(0);
+            } else {
+                $scope.filterConfig.search.onHold = '';
+                getAnime(1);
             }
         };
         
@@ -477,6 +501,10 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
                 scope.filterConfig.ratingActions.overStar = value;
                 scope.filterConfig.ratingActions.percent = 100 * (value / scope.filterConfig.ratingActions.maxRating);
             };
+            
+            scope.itemsAvailable = function() {
+              scope.$parent.itemsAvailable();  
+            };
           
         }
         
@@ -486,8 +514,10 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
 
 angular.module('animeitems').filter('startFrom', function() {
     return function(input, start) {
-        start = +start; //parse to int
-        return input.slice(start);
+        if (input !== undefined) {
+            start = +start; //parse to int
+            return input.slice(start);
+        }
     };
 })
 .filter('ratingFilter', function() {
@@ -559,12 +589,7 @@ angular.module('animeitems').filter('startFrom', function() {
 //Animeitems service used to communicate Animeitems REST endpoints
 angular.module('animeitems').factory('Animeitems', ['$resource',
 	function($resource) {
-		return $resource('animeitems/:animeitemId', { animeitemId: '@_id'
-		}, {
-			update: {
-				method: 'PUT'
-			}
-		});
+		return $resource('animeitems/:animeitemId', { animeitemId: '@_id' }, { update: { method: 'PUT' } });
 	}
 ])
 .service('fileUpload', ['$http', function ($http) {
@@ -624,6 +649,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 selectListOptions.status = [ { v: '', n: 'All' }, { v: false, n: 'Ongoing' }, { v: true, n: 'Completed' } ];
                 selectListOptions.searchName = 'title';
                 if (controller === 'animeitem') {
+                    selectListOptions.onHold = [ { v: '', n: 'All' }, { v: false, n: 'Ongoing' }, { v: true, n: 'On Hold' } ];
                     selectListOptions.sortOptions = [ { v: 'title', n: 'Title' },{ v: 'episodes', n: 'Episodes' },{ v: 'start', n: 'Start date' },
                                                       { v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' } 
                                                     ];
@@ -1579,43 +1605,45 @@ angular.module('characters').filter('seriesDetailFilter', function() {
 })
 .filter('tagFilter', function() {
     return function(array, searchTags, taglessItem) {
-        return array.filter(function(item) {
-            //special tag filter
-            var found = false;
-            var i = 0;
-            var tagsToSearch = [];
-            var tagsForFilter;
-            
-            //if tagless is checked return tagless and nothing else.
-            if (taglessItem===true) {
-                if (item.tags.length===0) {
-                    return item;
-                }
-            } else {
-                if (searchTags===undefined || searchTags==='') {
-                    return true;
-                } else {
-                    //get tags that are being looked for
-                    tagsForFilter = searchTags.substring(0, searchTags.length - 1).split(',');
-                    //console.log(tagsForFilter);
-                
-                    //get tags of items to filter
-                    angular.forEach(item.tags, function(tag) {
-                        tagsToSearch.push(tag.text);
-                    });
-                
-                    //filter: check in 'query' is in tags.
-                    for(i = 0; i < tagsForFilter.length; i++) {
-                        if (tagsToSearch.indexOf(tagsForFilter[i]) !== -1) {
-                            found = true;
-                        } else {
-                            return false;
-                        }
+        if (array !== undefined) {
+            return array.filter(function(item) {
+                //special tag filter
+                var found = false;
+                var i = 0;
+                var tagsToSearch = [];
+                var tagsForFilter;
+
+                //if tagless is checked return tagless and nothing else.
+                if (taglessItem===true) {
+                    if (item.tags.length===0) {
+                        return item;
                     }
-                    return found;
+                } else {
+                    if (searchTags===undefined || searchTags==='') {
+                        return true;
+                    } else {
+                        //get tags that are being looked for
+                        tagsForFilter = searchTags.substring(0, searchTags.length - 1).split(',');
+                        //console.log(tagsForFilter);
+
+                        //get tags of items to filter
+                        angular.forEach(item.tags, function(tag) {
+                            tagsToSearch.push(tag.text);
+                        });
+
+                        //filter: check in 'query' is in tags.
+                        for(i = 0; i < tagsForFilter.length; i++) {
+                            if (tagsToSearch.indexOf(tagsForFilter[i]) !== -1) {
+                                found = true;
+                            } else {
+                                return false;
+                            }
+                        }
+                        return found;
+                    }
                 }
-            }
-        });
+            });
+        }
     };
 });
 'use strict';
@@ -2947,7 +2975,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         
         $scope.$watchCollection('mangaitems', function() {
             if ($scope.mangaitems!==undefined) {
-                console.log($scope.mangaitems, $scope.filterConfig);
+//                console.log($scope.mangaitems);
                 $scope.filterConfig.areTagless = ListService.checkForTagless($scope.mangaitems);
                 $scope.filterConfig.statTags = ItemService.buildStatTags($scope.mangaitems, 0);
             }

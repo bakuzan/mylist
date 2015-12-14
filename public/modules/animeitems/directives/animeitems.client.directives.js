@@ -130,6 +130,10 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
                 scope.filterConfig.ratingActions.overStar = value;
                 scope.filterConfig.ratingActions.percent = 100 * (value / scope.filterConfig.ratingActions.maxRating);
             };
+            
+            scope.itemsAvailable = function() {
+              scope.$parent.itemsAvailable();  
+            };
           
         }
         

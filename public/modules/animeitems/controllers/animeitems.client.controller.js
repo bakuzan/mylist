@@ -16,6 +16,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             pageSize: 10
         };
         $scope.filterConfig = {
+            ongoingList: true,
             showingCount: 0,
             sortType: '',
             sortReverse: true,
@@ -25,6 +26,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 percent: undefined,
                 overStar: null
             },
+            search: {},
             searchTags: '',
             tagsForFilter: [],
             taglessItem: false,
@@ -65,6 +67,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 $scope.filterConfig.areTagless = ListService.checkForTagless($scope.animeitems);
                 $scope.filterConfig.statTags = ItemService.buildStatTags($scope.animeitems, 0);
             }
+//            console.log($scope.animeitems);
         });
 
 		// Create new Animeitem
@@ -160,6 +163,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             //handle status: completed.
             if(animeitem.end!==undefined && animeitem.end!==null) {
                 animeitem.status = true;
+                animeitem.onHold = false;
             } else {
                 //if no end date, not complete.
                 animeitem.status = false;
@@ -184,12 +188,11 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             $scope.animeitem = item;
             $scope.update();
         };
-
-		// Find a list of Animeitems
-		$scope.find = function() {
-			$scope.animeitems = Animeitems.query();
-//            console.log($scope.animeitems);
-		};
+        
+        // Find a list of Animeitems
+        $scope.find = function() {
+            $scope.animeitems = Animeitems.query();
+        };
 
 		// Find existing Animeitem
 		$scope.findOne = function() {
@@ -225,6 +228,27 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             if (removal) {
                 $scope.animeitem = ItemService.deleteHistory(item, history);
                 $scope.update();
+            }
+        };
+        
+		/** Find a list of Animeitems for values:
+         *  (0) returns only ongoing series. (1) returns all series.
+         */
+		function getAnime(value) {
+            console.log('getting', $scope.filterConfig.ongoingList);
+			$scope.animeitems = Animeitems.query({
+                status: value
+            });
+		}
+        
+        $scope.itemsAvailable = function() {
+            $scope.animeitems = undefined;
+            if ($scope.filterConfig.ongoingList === true) {
+                $scope.filterConfig.search.status = false;
+                getAnime(0);
+            } else {
+                $scope.filterConfig.search.onHold = '';
+                getAnime(1);
             }
         };
         

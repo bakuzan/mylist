@@ -72,7 +72,8 @@
                     <h3>{{bySeasonItems.length}} Completed {{detailSeasonName}} {{detailSeasonYear}}</h3>
                 </div>
                 <ul class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
-                    <li ng-repeat="item in (bySeasonItems = (items | endedSeason: detailSeasonYear:detailSeason | orderBy: 'title'))">
+                    <button class="btn btn-accent" ng-click="generateSeasons()">Apply season</button>
+                    <li ng-repeat="item in (bySeasonItems = (items | season: detailSeasonYear:detailSeasonName | orderBy: 'title'))">
                         <a href="/#!/animeitems/{{item._id}}"><span>{{item.title}}</span></a> - <span>{{item.rating}}</span>
                         <p>{{item.start | date: 'MM/yyyy'}} - {{item.end | date: 'MM/yyyy'}}</p>
                     </li>

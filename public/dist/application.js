@@ -195,7 +195,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 start: this.start,
                 latest: this.latest,
                 finalEpisode: this.finalEpisode,
-                season: this.season === true ? ItemService.getCurrentSeason() : '',
+                season: this.season === true ? ItemService.convertDateToSeason(new Date(this.start)) : '',
                 disc: this.disc,
                 manga: this.manga!==undefined && this.manga!==null ? this.manga._id : this.manga,
                 tags: $scope.tagArray,
@@ -515,7 +515,8 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
 });
 'use strict';
 
-angular.module('animeitems').filter('startFrom', function() {
+angular.module('animeitems')
+.filter('startFrom', function() {
     return function(input, start) {
         if (input !== undefined) {
             start = +start; //parse to int
@@ -586,7 +587,16 @@ angular.module('animeitems').filter('startFrom', function() {
                 }
         });
     };
-}]);
+}])
+.filter('season', function() {
+    return function(array, year, month) {
+        return array.filter(function(item) {
+            if (item.end!== undefined && item.end !== null && item.season.year === year && item.season.season === month) {
+                return item;
+            }
+        });
+    };
+});
 'use strict';
 
 //Animeitems service used to communicate Animeitems REST endpoints
@@ -766,10 +776,11 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
 })
 .service('ItemService', ['moment', '$filter', 'ListService', function(moment, $filter, ListService) {
     
-        //get current season.
-        this.getCurrentSeason = function() {
-            var season = '', today = new Date(), year = today.getFullYear(), month = today.getMonth() + 1, commonArrays = ListService.getCommonArrays(),
+        //Using the date, returns the season.
+        this.convertDateToSeason = function(date) {
+            var season = '', year = date.getFullYear(), month = date.getMonth() + 1, commonArrays = ListService.getCommonArrays(),
                 i = commonArrays.seasons.length;
+//            console.log('convert: ', year, month);
             while(i--) {
                 if (month > Number(commonArrays.seasons[i].number) && season === '') {
                     season = { season: commonArrays.seasons[i+1].text, year: year };
@@ -779,6 +790,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     season = { season: commonArrays.seasons[i].text, year: year };
                 }
             }
+//            console.log('to: ', season);
             return season;
         };
         
@@ -1050,10 +1062,10 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 if (itemYears[i].end !== undefined && itemYears[i].end !== null) {
                     completeBySeason.push({ year: itemYears[i].end.substring(0,4),
                                             seasons: [
-                { number: '03', text: 'Winter', count: $filter('endedSeason')(items, itemYears[i].end.substring(0,4), '03').length },
-                { number: '06', text: 'Spring', count: $filter('endedSeason')(items, itemYears[i].end.substring(0,4), '06').length },
-                { number: '09', text: 'Summer', count: $filter('endedSeason')(items, itemYears[i].end.substring(0,4), '09').length },
-                { number: '12', text: 'Fall', count: $filter('endedSeason')(items, itemYears[i].end.substring(0,4), '12').length }
+                { number: '03', text: 'Winter', count: $filter('season')(items, itemYears[i].end.substring(0,4), 'Winter').length },
+                { number: '06', text: 'Spring', count: $filter('season')(items, itemYears[i].end.substring(0,4), 'Spring').length },
+                { number: '09', text: 'Summer', count: $filter('season')(items, itemYears[i].end.substring(0,4), 'Summer').length },
+                { number: '12', text: 'Fall', count: $filter('season')(items, itemYears[i].end.substring(0,4), 'Fall').length }
             ] });
                 }
             }
@@ -1071,10 +1083,17 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             return seasonDetails;
         };
         
+        //Temporary function to generate the season data for pre-exisiting items in db.
+        this.setSeason = function(items, year, season) {
+            var self = this, array = $filter('endedSeason')(items, year, season);
+            angular.forEach(array, function(item) {
+                console.log(item.title);
+                item.season = self.convertDateToSeason(new Date(item.start));
+            });
+            return array;
+        };
+        
 }]);
-
-
-
 'use strict';
 
 // Configuring the Articles module
@@ -3287,9 +3306,6 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         };
     }
 ]);
-
-
-
 'use strict';
 
 angular.module('ratings').directive('focusOnShow', function($timeout) {
@@ -3389,9 +3405,9 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         });
         //watch for items changes...occurs on view change.
         $scope.$watchCollection('items', function() {
-            if ($scope.view !== 'Character') {
-                if ($scope.items!==undefined) {
-                    $scope.statTags = []; //clear to stop multiple views tags appearing.
+            if ($scope.items !== undefined) {
+                $scope.statTags = []; //clear to stop multiple views tags appearing.
+                if ($scope.view !== 'Character') {
                     $scope.overview = ItemService.buildOverview($scope.items);
                     $scope.monthDetails = ItemService.completeByMonth($scope.items);
                     if ($scope.view === 'Anime') { 
@@ -3400,10 +3416,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                     $scope.ratingValues = ItemService.getRatingValues($scope.items);
                     $scope.ratingsDistribution = ItemService.buildRatingsDistribution($scope.items);
                     $scope.statTags = ItemService.buildStatTags($scope.items, $scope.ratingValues.averageRating);
-                }
-            } else if ($scope.view === 'Character') {
-                if ($scope.items!==undefined) {
-                    $scope.statTags = []; //clear previous views tags.
+                } else if ($scope.view === 'Character') {
                     $scope.statTags = CharacterService.buildCharacterTags($scope.items);
                     $scope.statSeries = CharacterService.buildSeriesList($scope.items);
                     $scope.voiceActors = CharacterService.buildVoiceActors($scope.items);
@@ -3478,6 +3491,23 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 $scope.voiceSearch = name;
                 $scope.detailVoiceName = name;
                 $scope.showVoiceDetail = true;
+            }
+        };
+        
+        /** Using the start date of confirmed 'in-season' shows
+         *  to populate the new season attrs. that will work with the new
+         *  filters in the hopes accuracy and speed will increase.
+         */
+        $scope.generateSeasons = function() {
+            if ($scope.view === 'Anime') {
+                var array = ItemService.setSeason($scope.items, $scope.detailSeasonYear, $scope.detailSeason);
+                angular.forEach(array, function(item) {
+                    item.$update(function() {
+                        console.log(item);
+                    }, function(errorResponse) {
+                        $scope.error = errorResponse.data.message;
+                    });
+                });
             }
         };
         

@@ -42,7 +42,8 @@
             End
 			<span data-ng-bind="animeitem.end | date:'yyyy-MMM-dd'"></span><br/>
 			Latest
-			<span data-ng-bind="animeitem.latest | date:'yyyy-MMM-dd'"></span>
+			<span data-ng-bind="animeitem.latest | date:'yyyy-MMM-dd'"></span><br/>
+			<span data-ng-bind="animeitem.season.season"></span>&nbsp;<span ng-bind="animeitem.season.year"></span>
 		</em>
 	</small>
 </section>

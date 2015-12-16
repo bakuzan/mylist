@@ -80,7 +80,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 start: this.start,
                 latest: this.latest,
                 finalEpisode: this.finalEpisode,
-                season: this.season === true ? ItemService.getCurrentSeason() : '',
+                season: this.season === true ? ItemService.convertDateToSeason(new Date(this.start)) : '',
                 disc: this.disc,
                 manga: this.manga!==undefined && this.manga!==null ? this.manga._id : this.manga,
                 tags: $scope.tagArray,

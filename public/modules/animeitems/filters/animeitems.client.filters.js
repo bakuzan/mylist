@@ -1,6 +1,7 @@
 'use strict';
 
-angular.module('animeitems').filter('startFrom', function() {
+angular.module('animeitems')
+.filter('startFrom', function() {
     return function(input, start) {
         if (input !== undefined) {
             start = +start; //parse to int
@@ -71,4 +72,13 @@ angular.module('animeitems').filter('startFrom', function() {
                 }
         });
     };
-}]);
+}])
+.filter('season', function() {
+    return function(array, year, month) {
+        return array.filter(function(item) {
+            if (item.end!== undefined && item.end !== null && item.season.year === year && item.season.season === month) {
+                return item;
+            }
+        });
+    };
+});

@@ -68,9 +68,9 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         });
         //watch for items changes...occurs on view change.
         $scope.$watchCollection('items', function() {
-            if ($scope.view !== 'Character') {
-                if ($scope.items!==undefined) {
-                    $scope.statTags = []; //clear to stop multiple views tags appearing.
+            if ($scope.items !== undefined) {
+                $scope.statTags = []; //clear to stop multiple views tags appearing.
+                if ($scope.view !== 'Character') {
                     $scope.overview = ItemService.buildOverview($scope.items);
                     $scope.monthDetails = ItemService.completeByMonth($scope.items);
                     if ($scope.view === 'Anime') { 
@@ -79,10 +79,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                     $scope.ratingValues = ItemService.getRatingValues($scope.items);
                     $scope.ratingsDistribution = ItemService.buildRatingsDistribution($scope.items);
                     $scope.statTags = ItemService.buildStatTags($scope.items, $scope.ratingValues.averageRating);
-                }
-            } else if ($scope.view === 'Character') {
-                if ($scope.items!==undefined) {
-                    $scope.statTags = []; //clear previous views tags.
+                } else if ($scope.view === 'Character') {
                     $scope.statTags = CharacterService.buildCharacterTags($scope.items);
                     $scope.statSeries = CharacterService.buildSeriesList($scope.items);
                     $scope.voiceActors = CharacterService.buildVoiceActors($scope.items);
@@ -157,6 +154,23 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 $scope.voiceSearch = name;
                 $scope.detailVoiceName = name;
                 $scope.showVoiceDetail = true;
+            }
+        };
+        
+        /** Using the start date of confirmed 'in-season' shows
+         *  to populate the new season attrs. that will work with the new
+         *  filters in the hopes accuracy and speed will increase.
+         */
+        $scope.generateSeasons = function() {
+            if ($scope.view === 'Anime') {
+                var array = ItemService.setSeason($scope.items, $scope.detailSeasonYear, $scope.detailSeason);
+                angular.forEach(array, function(item) {
+                    item.$update(function() {
+                        console.log(item);
+                    }, function(errorResponse) {
+                        $scope.error = errorResponse.data.message;
+                    });
+                });
             }
         };
         

@@ -72,5 +72,3 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         };
     }
 ]);
-
-

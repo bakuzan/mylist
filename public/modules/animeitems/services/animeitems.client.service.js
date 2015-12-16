@@ -177,10 +177,11 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
 })
 .service('ItemService', ['moment', '$filter', 'ListService', function(moment, $filter, ListService) {
     
-        //get current season.
-        this.getCurrentSeason = function() {
-            var season = '', today = new Date(), year = today.getFullYear(), month = today.getMonth() + 1, commonArrays = ListService.getCommonArrays(),
+        //Using the date, returns the season.
+        this.convertDateToSeason = function(date) {
+            var season = '', year = date.getFullYear(), month = date.getMonth() + 1, commonArrays = ListService.getCommonArrays(),
                 i = commonArrays.seasons.length;
+//            console.log('convert: ', year, month);
             while(i--) {
                 if (month > Number(commonArrays.seasons[i].number) && season === '') {
                     season = { season: commonArrays.seasons[i+1].text, year: year };
@@ -190,6 +191,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     season = { season: commonArrays.seasons[i].text, year: year };
                 }
             }
+//            console.log('to: ', season);
             return season;
         };
         
@@ -461,10 +463,10 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 if (itemYears[i].end !== undefined && itemYears[i].end !== null) {
                     completeBySeason.push({ year: itemYears[i].end.substring(0,4),
                                             seasons: [
-                { number: '03', text: 'Winter', count: $filter('endedSeason')(items, itemYears[i].end.substring(0,4), '03').length },
-                { number: '06', text: 'Spring', count: $filter('endedSeason')(items, itemYears[i].end.substring(0,4), '06').length },
-                { number: '09', text: 'Summer', count: $filter('endedSeason')(items, itemYears[i].end.substring(0,4), '09').length },
-                { number: '12', text: 'Fall', count: $filter('endedSeason')(items, itemYears[i].end.substring(0,4), '12').length }
+                { number: '03', text: 'Winter', count: $filter('season')(items, itemYears[i].end.substring(0,4), 'Winter').length },
+                { number: '06', text: 'Spring', count: $filter('season')(items, itemYears[i].end.substring(0,4), 'Spring').length },
+                { number: '09', text: 'Summer', count: $filter('season')(items, itemYears[i].end.substring(0,4), 'Summer').length },
+                { number: '12', text: 'Fall', count: $filter('season')(items, itemYears[i].end.substring(0,4), 'Fall').length }
             ] });
                 }
             }
@@ -482,6 +484,14 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             return seasonDetails;
         };
         
+        //Temporary function to generate the season data for pre-exisiting items in db.
+        this.setSeason = function(items, year, season) {
+            var self = this, array = $filter('endedSeason')(items, year, season);
+            angular.forEach(array, function(item) {
+                console.log(item.title);
+                item.season = self.convertDateToSeason(new Date(item.start));
+            });
+            return array;
+        };
+        
 }]);
-
-

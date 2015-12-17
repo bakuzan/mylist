@@ -33,3 +33,19 @@ $grey-line: 1px solid $grey-light;
 $break-small: 768px;
 $break-medium: 992px;
 $break-large: 1200px;
+
+
+//Unit helpers:
+$pixel: 'px';
+$percent: '%';
+
+//Helper variables:
+
+//TEXT:
+$font-sizes: 10 12 14 15 20 22 25 30 35 40;
+$text-align: left right center;
+
+//BOX MODEL:
+$percentage-sizes: 25 30 33 50 60 66 75 100;
+$positions: absolute relative;
+$boxing: 0 5 10 15 20 25 30 55;

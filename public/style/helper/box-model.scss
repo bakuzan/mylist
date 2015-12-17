@@ -1,0 +1,48 @@
+@import '../../../public/style/partials/_var';
+@import '../../../public/style/partials/_mix';
+
+@each $size in $percentage-sizes {
+    .width-#{$size} {
+        width: #{$size}#{$percent};
+    }
+}
+
+@each $place in $positions {
+    .#{$place} {
+        position: #{$place};
+    }
+}
+
+.position-top {
+    top: 0;
+}
+.position-left {
+    left: 0;
+}
+.position-right {
+    right: 0;
+}
+.position-bottom {
+    bottom: 0;
+}
+
+@each $box in $boxing {
+    .padding-#{$box} {
+        padding: #{$box}#{$pixel};
+    }
+    .padding-top-#{$box} {
+        padding-top: #{$box}#{$pixel};
+    }
+    .padding-bottom-#{$box} {
+        padding-bottom: #{$box}#{$pixel};
+    }
+    .margin-#{$box} {
+        margin: #{$box}#{$pixel};
+    }
+    .margin-top-#{$box} {
+        margin-top: #{$box}#{$pixel};
+    }
+    .margin-bottom-#{$box} {
+        margin-bottom: #{$box}#{$pixel};
+    }
+}

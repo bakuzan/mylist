@@ -1,8 +1,8 @@
 'use strict';
 
 // Statistics controller
-angular.module('statistics').controller('StatisticsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'Characters', 'ListService', 'ItemService', 'CharacterService',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, Characters, ListService, ItemService, CharacterService) {
+angular.module('statistics').controller('StatisticsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'Characters', 'ListService', 'ItemService', 'CharacterService', 'StatisticsService',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, Characters, ListService, ItemService, CharacterService, StatisticsService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -12,6 +12,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.historicalView = 'month'; //default historical view in stats.
         $scope.commonArrays = ListService.getCommonArrays('statistics');
         $scope.showDetail = false; //show month detail.
+        $scope.showSeasonDetail = false;
         $scope.statTagSortType = 'ratingWeighted'; //stat tag sort
         $scope.statTagSortReverse = true; //stat tag sort direction.
         $scope.statTagDetailSortType = 'count'; //stat tag detail sort
@@ -102,6 +103,22 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 $scope.showDetail = false;
             }
         };
+        
+        //Builds ratings aggregates.
+        function getSummaryFunctions(array) {
+            $scope.seasonDetails.summaryFunctions = StatisticsService.buildSummaryFunctions(array);
+        }
+        $scope.$watchCollection('monthItems', function(newValue) {
+            if (newValue !== undefined) {
+                getSummaryFunctions(newValue);
+            }
+        });
+        $scope.$watchCollection('seasonItems', function(newValue) {
+            if (newValue !== undefined) {
+                getSummaryFunctions(newValue);
+            }
+        });
+        
         //show month detail.
         $scope.monthDetail = function(year, month, monthText) {
 //            console.log(year+'-'+month, monthText);

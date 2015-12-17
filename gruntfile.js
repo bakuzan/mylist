@@ -9,7 +9,7 @@ module.exports = function(grunt) {
 		clientJS: ['public/js/*.js', 'public/modules/**/*.js'],
 		clientCSS: ['public/modules/**/*.css'],
 		mochaTests: ['app/tests/**/*.js'],
-        sass: ['public/modules/**/*.scss']
+        sass: ['public/modules/**/*.scss', 'public/style/helper/*.scss']
 	};
 
 	// Project Configuration
@@ -157,8 +157,10 @@ module.exports = function(grunt) {
 		      compass: false
 		    },
 		    files: {
-		      'public/style/main.css': 'public/style/main.scss',
-              'public/style/components.css': 'public/style/components.scss',
+		      'public/style/css/main.css': 'public/style/main.scss',
+              'public/style/css/components.css': 'public/style/components.scss',
+              'public/style/helper/css/box-model.css': 'public/style/helper/box-model.scss',
+              'public/style/helper/css/text.css': 'public/style/helper/text.scss',
 		    }
 		  },
 		  dist: {
@@ -173,6 +175,8 @@ module.exports = function(grunt) {
               'public/dist/main-day.min.css': 'public/style/main-day.scss',
               'public/dist/main-night.min.css': 'public/style/main-night.scss',
               'public/dist/components.min.css': 'public/style/components.scss',
+              'public/dist/box-model.min.css': 'public/style/helper/box-model.scss',
+              'public/dist/text.min.css': 'public/style/helper/text.scss',
 		    }
 		  }
         }

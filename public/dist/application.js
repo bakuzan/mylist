@@ -1031,19 +1031,20 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 if (itemYears[i].end !== undefined && itemYears[i].end !== null) {
                     completeByMonth.push({ year: itemYears[i].end.substring(0,4),
                                           months: [
-                { number: '01', text: 'January', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '01').length  },
-                { number: '02', text: 'February', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '02').length },
-                { number: '03', text: 'March', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '03').length },
-                { number: '04', text: 'April', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '04').length },
-                { number: '05', text: 'May', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '05').length },
-                { number: '06', text: 'June', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '06').length },
-                { number: '07', text: 'July', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '07').length },
-                { number: '08', text: 'August', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '08').length },
-                { number: '09', text: 'September', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '09').length },
-                { number: '10', text: 'October', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '10').length },
-                { number: '11', text: 'November', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '11').length },
-                { number: '12', text: 'December', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '12').length }
-            ] });
+                                                    { number: '01', text: 'January', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '01').length  },
+                                                    { number: '02', text: 'February', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '02').length },
+                                                    { number: '03', text: 'March', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '03').length },
+                                                    { number: '04', text: 'April', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '04').length },
+                                                    { number: '05', text: 'May', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '05').length },
+                                                    { number: '06', text: 'June', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '06').length },
+                                                    { number: '07', text: 'July', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '07').length },
+                                                    { number: '08', text: 'August', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '08').length },
+                                                    { number: '09', text: 'September', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '09').length },
+                                                    { number: '10', text: 'October', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '10').length },
+                                                    { number: '11', text: 'November', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '11').length },
+                                                    { number: '12', text: 'December', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '12').length }
+                                          ]
+                                         });
                 }
             }
             maxCompleteMonth = self.maxCompleteMonth(items);
@@ -1062,11 +1063,12 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 if (itemYears[i].end !== undefined && itemYears[i].end !== null) {
                     completeBySeason.push({ year: itemYears[i].end.substring(0,4),
                                             seasons: [
-                { number: '03', text: 'Winter', count: $filter('season')(items, itemYears[i].end.substring(0,4), 'Winter').length },
-                { number: '06', text: 'Spring', count: $filter('season')(items, itemYears[i].end.substring(0,4), 'Spring').length },
-                { number: '09', text: 'Summer', count: $filter('season')(items, itemYears[i].end.substring(0,4), 'Summer').length },
-                { number: '12', text: 'Fall', count: $filter('season')(items, itemYears[i].end.substring(0,4), 'Fall').length }
-            ] });
+                                                        { number: '03', text: 'Winter', count: $filter('season')(items, itemYears[i].end.substring(0,4), 'Winter').length },
+                                                        { number: '06', text: 'Spring', count: $filter('season')(items, itemYears[i].end.substring(0,4), 'Spring').length },
+                                                        { number: '09', text: 'Summer', count: $filter('season')(items, itemYears[i].end.substring(0,4), 'Summer').length },
+                                                        { number: '12', text: 'Fall', count: $filter('season')(items, itemYears[i].end.substring(0,4), 'Fall').length }
+                                            ]
+                                          });
                 }
             }
             //find maximum complete in a season.
@@ -3338,8 +3340,8 @@ angular.module('statistics').config(['$stateProvider', '$urlRouterProvider',
 'use strict';
 
 // Statistics controller
-angular.module('statistics').controller('StatisticsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'Characters', 'ListService', 'ItemService', 'CharacterService',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, Characters, ListService, ItemService, CharacterService) {
+angular.module('statistics').controller('StatisticsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'Characters', 'ListService', 'ItemService', 'CharacterService', 'StatisticsService',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, Characters, ListService, ItemService, CharacterService, StatisticsService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -3349,6 +3351,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.historicalView = 'month'; //default historical view in stats.
         $scope.commonArrays = ListService.getCommonArrays('statistics');
         $scope.showDetail = false; //show month detail.
+        $scope.showSeasonDetail = false;
         $scope.statTagSortType = 'ratingWeighted'; //stat tag sort
         $scope.statTagSortReverse = true; //stat tag sort direction.
         $scope.statTagDetailSortType = 'count'; //stat tag detail sort
@@ -3439,6 +3442,22 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 $scope.showDetail = false;
             }
         };
+        
+        //Builds ratings aggregates.
+        function getSummaryFunctions(array) {
+            $scope.seasonDetails.summaryFunctions = StatisticsService.buildSummaryFunctions(array);
+        }
+        $scope.$watchCollection('monthItems', function(newValue) {
+            if (newValue !== undefined) {
+                getSummaryFunctions(newValue);
+            }
+        });
+        $scope.$watchCollection('seasonItems', function(newValue) {
+            if (newValue !== undefined) {
+                getSummaryFunctions(newValue);
+            }
+        });
+        
         //show month detail.
         $scope.monthDetail = function(year, month, monthText) {
 //            console.log(year+'-'+month, monthText);
@@ -3513,6 +3532,27 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         
     }
 ]);
+'use strict';
+
+//Statistics service 
+angular.module('statistics').service('StatisticsService', function() {
+    
+    this.buildSummaryFunctions = function(array) {
+        if (array !== undefined) {
+            var i = array.length, highestRating = 0, lowestRating = 10, averageRating = 0, ratings = { count: 0, sum: 0 };
+            while(i--) {
+//                console.log(array[i]);
+                highestRating = array[i].rating > highestRating ? array[i].rating : highestRating;
+                lowestRating = 0 < array[i].rating && array[i].rating < lowestRating ? array[i].rating : lowestRating;
+                ratings.count += array[i].rating > 0 ? 1 : 0;
+                ratings.sum += array[i].rating;
+                averageRating = (ratings.sum / ratings.count).toFixed(2);
+            }
+            return [ { metric: 'Average rating', value: averageRating },{ metric: 'Highest rating', value: highestRating },{ metric: 'Lowest rating', value: lowestRating } ];
+        }
+    };
+    
+});
 'use strict';
 
 // Config HTTP Error Handling

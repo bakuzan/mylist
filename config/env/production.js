@@ -27,8 +27,7 @@ module.exports = {
 		},
         css: [
 			'public/dist/application.min.css',
-            'public/lib/components-font-awesome/css/font-awesome.min.css',
-            'public/dist/components.min.css'
+            'public/lib/components-font-awesome/css/font-awesome.min.css'
 		],
 		js: 'public/dist/application.min.js'
 	},

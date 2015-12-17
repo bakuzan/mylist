@@ -54,32 +54,43 @@
                 </tbody>
                 </table><!-- SEASON HISTORY TABLE END -->
             </div><!-- HISTORY PANEL END -->
-            <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="showDetail && showHistory">
-            <div class="col-lg-9 col-md-9 col-sm-9 stat-detail">
-                <div class="stat-detail-header">
-                    <h3>{{byMonthItems.length}} Completed {{detailMonthName}} {{detailYear}}</h3>
+            <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="showHistory && (showDetail || showSeasonDetail)">
+                <div class="col-lg-8 col-md-8 col-sm-8 stat-detail" ng-show="showDetail">
+                    <div class="stat-detail-header">
+                        <h3>{{monthItems.length}} Completed {{detailMonthName}} {{detailYear}}</h3>
+                    </div>
+                    <ul class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
+                        <li ng-repeat="item in (monthItems = (items | endedMonth: detailYear:detailMonth | orderBy: 'title'))">
+                            <a href="/#!/{{view.toLowerCase()}}items/{{item._id}}"><span>{{item.title}}</span></a> - <span>{{item.rating}}</span>
+                        </li>
+                    </ul>
                 </div>
-                <ul class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
-                    <li ng-repeat="item in (byMonthItems = (items | endedMonth: detailYear:detailMonth | orderBy: 'title'))">
-                        <a href="/#!/{{view.toLowerCase()}}items/{{item._id}}"><span>{{item.title}}</span></a> - <span>{{item.rating}}</span>
-                    </li>
-                </ul>
-            </div>
-        </div><!-- MONTH DETAIL PANEL END -->
-            <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="showSeasonDetail && showHistory && view === 'Anime'">
-            <div class="col-lg-9 col-md-9 col-sm-9 stat-detail">
-                <div class="stat-detail-header">
-                    <h3>{{bySeasonItems.length}} Completed {{detailSeasonName}} {{detailSeasonYear}}</h3>
+                <div class="col-lg-8 col-md-8 col-sm-8 stat-detail" ng-show="showSeasonDetail && view === 'Anime'">
+                    <div class="stat-detail-header">
+                        <h3>{{seasonItems.length}} Watched {{detailSeasonName}} {{detailSeasonYear}}</h3>
+                    </div>
+                    <ul class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
+                        <button class="btn btn-accent" ng-click="generateSeasons()">Apply season</button>
+                        <li ng-repeat="item in (seasonItems = (items | season: detailSeasonYear:detailSeasonName | orderBy: 'title'))">
+                            <a href="/#!/animeitems/{{item._id}}"><span>{{item.title}}</span></a> - <span>{{item.rating}}</span>
+                            <p>{{item.start | date: 'MM/yyyy'}} - {{item.end | date: 'MM/yyyy'}}</p>
+                        </li>
+                    </ul>
                 </div>
-                <ul class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
-                    <button class="btn btn-accent" ng-click="generateSeasons()">Apply season</button>
-                    <li ng-repeat="item in (bySeasonItems = (items | season: detailSeasonYear:detailSeasonName | orderBy: 'title'))">
-                        <a href="/#!/animeitems/{{item._id}}"><span>{{item.title}}</span></a> - <span>{{item.rating}}</span>
-                        <p>{{item.start | date: 'MM/yyyy'}} - {{item.end | date: 'MM/yyyy'}}</p>
-                    </li>
-                </ul>
-            </div>
-        </div><!-- SEASON DETAIL PANEL END -->
+                <table class="col-lg-4 col-md-4 col-sm-4 margin-top-55" ng-show="(showDetail && monthItems.length > 0) || (showSeasonDetail && seasonItems.length > 0)">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in seasonDetails.summaryFunctions">
+                            <th>{{item.metric}}</th><td>{{item.value}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div><!-- SEASON DETAIL PANEL END -->
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6 stat-rating-panel" ng-init="showRatings = true">
             <div class="stat-header">

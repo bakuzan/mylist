@@ -1,0 +1,49 @@
+.text-left {
+  text-align: left; }
+
+.text-right {
+  text-align: right; }
+
+.text-center {
+  text-align: center; }
+
+.bold {
+  font-weight: bold; }
+
+.thin {
+  font-weight: lighter; }
+
+.font-10 {
+  font-size: 10px; }
+
+.font-12 {
+  font-size: 12px; }
+
+.font-14 {
+  font-size: 14px; }
+
+.font-15 {
+  font-size: 15px; }
+
+.font-20 {
+  font-size: 20px; }
+
+.font-22 {
+  font-size: 22px; }
+
+.font-25 {
+  font-size: 25px; }
+
+.font-30 {
+  font-size: 30px; }
+
+.font-35 {
+  font-size: 35px; }
+
+.font-40 {
+  font-size: 40px; }
+
+.no-wrap {
+  white-space: nowrap; }
+
+/*# sourceMappingURL=text.css.map */

@@ -78,12 +78,6 @@
                     </ul>
                 </div>
                 <table class="col-lg-4 col-md-4 col-sm-4 margin-top-55 margin-bottom-20" ng-show="(showDetail && monthItems.length > 0) || (showSeasonDetail && seasonItems.length > 0)">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
                     <tbody>
                         <tr ng-repeat="item in seasonDetails.summaryFunctions">
                             <th>{{item.metric}}</th><td>{{item.value}}</td>

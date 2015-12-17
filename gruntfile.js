@@ -157,7 +157,6 @@ module.exports = function(grunt) {
 		      compass: false
 		    },
 		    files: {
-		      'public/style/css/main.css': 'public/style/main.scss',
               'public/style/css/components.css': 'public/style/components.scss',
               'public/style/helper/css/box-model.css': 'public/style/helper/box-model.scss',
               'public/style/helper/css/text.css': 'public/style/helper/text.scss',
@@ -174,9 +173,6 @@ module.exports = function(grunt) {
               'public/dist/main-purple.min.css': 'public/style/main-purple.scss',
               'public/dist/main-day.min.css': 'public/style/main-day.scss',
               'public/dist/main-night.min.css': 'public/style/main-night.scss',
-              'public/dist/components.min.css': 'public/style/components.scss',
-              'public/dist/box-model.min.css': 'public/style/helper/box-model.scss',
-              'public/dist/text.min.css': 'public/style/helper/text.scss',
 		    }
 		  }
         }

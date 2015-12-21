@@ -1549,12 +1549,20 @@ angular.module('characters').directive('characterBack', function(){
         }
     };
 })
-.directive('dropTag', ['$window', function($window) {
+.directive('dropTag', ['NotificationFactory', function(NotificationFactory) {
     return function(scope, element, attrs) {
         element.bind('click', function(event) {    
             var text = attrs.dropTag;
-            var removal = $window.confirm('Are you sure you don\'t want to add this tag?');
-            if (removal) {
+             //are you sure option...
+            swal({
+                title: 'Are you sure?', 
+                text: 'Are you sure that you want to drop this tag?', 
+                type: 'warning',
+                showCancelButton: true,
+                closeOnConfirm: true,
+                confirmButtonText: 'Yes, delete it!',
+                confirmButtonColor: '#ec6c62'
+            }, function() {
                 scope.$apply(function() {
                     var deletingItem = scope.tagArray;
                     scope.$parent.tagArray = [];
@@ -1566,20 +1574,29 @@ angular.module('characters').directive('characterBack', function(){
                         }
                     });
                 });
-            }
+                NotificationFactory.warning('Dropped!', 'Tag was successfully dropped');
+            });
         });
     };
 }])
-.directive('removeTag', ['$window', function($window) {
+.directive('removeTag', ['NotificationFactory', function(NotificationFactory) {
     return {
         restrict: 'A',
         link: function(scope, element, attrs) {
             element.bind('click', function(event) {
-                var tag = attrs.removeTag;
-                var i;
-                var entry_type = scope.whichController;
-                var removal = $window.confirm('Are you sure you want to remove this tag from the entry?');
-                if (removal) {
+                var tag = attrs.removeTag,
+                    i,
+                    entry_type = scope.whichController;
+                //are you sure option...
+                swal({
+                    title: 'Are you sure?', 
+                    text: 'Are you sure that you want to delete this tag?', 
+                    type: 'warning',
+                    showCancelButton: true,
+                    closeOnConfirm: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    confirmButtonColor: '#ec6c62'
+                }, function() {
                     scope.$apply(function () {
                         var index;
                         if (entry_type === 'character') {
@@ -1609,7 +1626,8 @@ angular.module('characters').directive('characterBack', function(){
                         }
 //                        console.log(index, tag);
                     });
-                }
+                    NotificationFactory.warning('Deleted!', 'Tag was successfully deleted');
+                });
             });
         }
     };

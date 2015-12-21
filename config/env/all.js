@@ -15,8 +15,11 @@ module.exports = {
 			css: [
 				'public/lib/bootstrap/dist/css/bootstrap.css',
 				'public/lib/bootstrap/dist/css/bootstrap-theme.css',
+                'public/lib/sweetalert/dist/sweetalert.css',
+                'public/lib/toastr/toastr.min.css'
 			],
 			js: [
+                'public/lib/jquery/dist/jquery.min.js',
 				'public/lib/angular/angular.js',
 				'public/lib/angular-resource/angular-resource.js', 
 				'public/lib/angular-cookies/angular-cookies.js', 
@@ -30,7 +33,9 @@ module.exports = {
                 'public/lib/ng-file-upload/angular-file-upload.min.js',
                 'public/lib/ng-file-upload/angular-file-upload-shim.min.js',
                 'public/lib/moment/min/moment.min.js',
-                'public/lib/angular-moment/angular-moment.min.js'
+                'public/lib/angular-moment/angular-moment.min.js',
+                'public/lib/sweetalert/dist/sweetalert.min.js',
+                'public/lib/toastr/toastr.min.js'
                 
 			]
 		},

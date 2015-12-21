@@ -1,8 +1,8 @@
 'use strict';
 
 // Characters controller
-angular.module('characters').controller('CharactersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Characters', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ListService', 'CharacterService',
-	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window, ListService, CharacterService) {
+angular.module('characters').controller('CharactersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Characters', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ListService', 'CharacterService', 'NotificationFactory',
+	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window, ListService, CharacterService, NotificationFactory) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -75,7 +75,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 			// Redirect after save
 			character.$save(function(response) {
 				$location.path('characters/' + response._id);
-
+                NotificationFactory.success('Saved!', 'Character was saved successfully');
 				// Clear form fields
 				$scope.name = '';
                 $scope.image = '';
@@ -83,27 +83,37 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                 $scope.tags = '';
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
+                NotificationFactory.error('Error!', errorResponse.data.message);
 			});
 		};
 
 		// Remove existing Character
 		$scope.remove = function(character) {
-            var removal = $window.confirm('Are you sure you want to delete this item?');
-            if (removal) {
-			 if ( character ) { 
-				character.$remove();
+            //are you sure option...
+            swal({
+                title: 'Are you sure?', 
+                text: 'Are you sure that you want to delete this character?', 
+                type: 'warning',
+                showCancelButton: true,
+                closeOnConfirm: true,
+                confirmButtonText: 'Yes, delete it!',
+                confirmButtonColor: '#ec6c62'
+            }, function() {
+                if ( character ) { 
+                    character.$remove();
 
-				for (var i in $scope.characters) {
-					if ($scope.characters [i] === character) {
-						$scope.characters.splice(i, 1);
-					}
-				}
-			 } else {
-				$scope.character.$remove(function() {
-					$location.path('characters');
-				});
-			 }
-            }
+                    for (var i in $scope.characters) {
+                        if ($scope.characters [i] === character) {
+                            $scope.characters.splice(i, 1);
+                        }
+                    }
+                } else {
+                    $scope.character.$remove(function() {
+                        $location.path('characters');
+                    });
+                }
+                NotificationFactory.warning('Deleted!', 'Character was successfully deleted.');
+            });
 		};
 
 		// Update existing Character
@@ -128,8 +138,10 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             
 			character.$update(function() {
 				$location.path('characters');
+                NotificationFactory.success('Saved!', 'Character was saved successfully');
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
+                NotificationFactory.error('Error!', errorResponse.data.message);
 			});
 		};
 

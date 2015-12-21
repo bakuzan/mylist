@@ -6,7 +6,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
 		return $resource('animeitems/:animeitemId', { animeitemId: '@_id' }, { update: { method: 'PUT' } });
 	}
 ])
-.service('fileUpload', ['$http', function ($http) {
+.service('fileUpload', ['$http', 'NotificationFactory', function ($http, NotificationFactory) {
     this.uploadFileToUrl = function(file, uploadUrl){
         var fd = new FormData();
         fd.append('file', file);
@@ -15,10 +15,14 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             headers: {'Content-Type': undefined}
         })
         .success(function(response){
-            alert('File Uploaded!');
+            NotificationFactory.success('Uploaded!', 'Image was saved successfully');
         })
         .error(function(err){
-            alert('File Upload Failed: ' + err.message);
+            swal({ 
+                title: 'Woops!',
+                text: 'Something went wrong! \n' + err,
+                type: 'error'
+            });
         });
     };
 }])

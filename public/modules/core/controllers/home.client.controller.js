@@ -1,8 +1,8 @@
 'use strict';
 
 
-angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Authentication', '$window', '$location', 'Animeitems', 'Mangaitems', '$filter',
-	function($scope, $rootScope, Authentication, $window, $location, Animeitems, Mangaitems, $filter) {
+angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Authentication', '$window', '$location', 'Animeitems', 'Mangaitems', '$filter', 'NotificationFactory',
+	function($scope, $rootScope, Authentication, $window, $location, Animeitems, Mangaitems, $filter, NotificationFactory) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
         
@@ -13,7 +13,6 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
 		if (!$scope.authentication.user) $location.path('/signin');
     
     $scope.isAddTask = false;
-        
     $scope.today = new Date();
     $scope.datesSelected = 'current';
     $scope.saved = localStorage.getItem('taskItems');
@@ -133,17 +132,14 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
             $scope.newOption = '';
     };
     $scope.dropOption = function(text) {
-        var removal = $window.confirm('Are you sure you don\'t want to add this option?');
-        if (removal) {
-            var deletingItem = $scope.optionArray;
-            $scope.optionArray = [];
-            //update the task.
-            angular.forEach(deletingItem, function(item) {
-                if (item.text !== text) {
-                    $scope.optionArray.push(item);
-                }
-            });
-        }
+        var deletingItem = $scope.optionArray;
+        $scope.optionArray = [];
+        //update the task.
+        angular.forEach(deletingItem, function(item) {
+            if (item.text !== text) {
+                $scope.optionArray.push(item);
+            }
+        });
     };
         
     $scope.addNew = function () {
@@ -194,11 +190,19 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
         $scope.newTaskChecklist = false;
         $scope.optionArray = [];
         localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
+        NotificationFactory.success('Saved!', 'Task was saved successfully');
     };
     $scope.deleteTask = function (description) {
         //are you sure option...
-        var removal = $window.confirm('Are you sure you want to delete this task?');
-        if (removal) {
+        swal({
+            title: 'Are you sure?', 
+            text: 'Are you sure that you want to delete this task?', 
+            type: 'warning',
+            showCancelButton: true,
+            closeOnConfirm: true,
+            confirmButtonText: 'Yes, delete it!',
+            confirmButtonColor: '#ec6c62'
+        }, function() {
             var deletingItem = $scope.taskItem;
             $scope.taskItem = [];
             //update the complete task.
@@ -208,7 +212,8 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
                 }
             });
             localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
-        }
+            NotificationFactory.warning('Deleted!', 'Task was successfully deleted');
+        });
     };
     
     $scope.save = function (description) {
@@ -265,7 +270,11 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
             });
             localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
              if (alreadyAdded === true) {
-                alert('Option already exists.\nPlease re-name and try again.');
+                swal({ 
+                    title: 'Option already exists.',
+                    text: 'Please re-name and try again.',
+                    type: 'error'
+                });
              }
         }
     };

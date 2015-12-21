@@ -1,8 +1,8 @@
 'use strict';
 
 // Mangaitems controller
-angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService',
-	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService) {
+angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory',
+	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -90,7 +90,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 			// Redirect after save
 			mangaitem.$save(function(response) {
 				$location.path('/mangaitems/' + response._id);
-
+                NotificationFactory.success('Saved!', 'Manga was saved successfully');
 				// Clear form fields
 				$scope.title = '';
                 $scope.chapters = '';
@@ -101,28 +101,37 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                 $scope.tags = '';
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
+                NotificationFactory.error('Error!', errorResponse.data.message);
 			});
 		};
 
 		// Remove existing Mangaitem
 		$scope.remove = function(mangaitem) {
             //are you sure option...
-            var removal = $window.confirm('Are you sure you want to delete this item?');
-            if (removal) {
-			 if ( mangaitem ) { 
-				mangaitem.$remove();
+            swal({
+                title: 'Are you sure?', 
+                text: 'Are you sure that you want to delete this manga?', 
+                type: 'warning',
+                showCancelButton: true,
+                closeOnConfirm: true,
+                confirmButtonText: 'Yes, delete it!',
+                confirmButtonColor: '#ec6c62'
+            }, function() {
+                if ( mangaitem ) { 
+                    mangaitem.$remove();
 
-				for (var i in $scope.mangaitems) {
-					if ($scope.mangaitems [i] === mangaitem) {
-						$scope.mangaitems.splice(i, 1);
-					}
-				}
-			 } else {
-				$scope.mangaitem.$remove(function() {
-					$location.path('/mangaitems');
-				});
-			 }
-            }
+                    for (var i in $scope.mangaitems) {
+                        if ($scope.mangaitems [i] === mangaitem) {
+                            $scope.mangaitems.splice(i, 1);
+                        }
+                    }
+                } else {
+                    $scope.mangaitem.$remove(function() {
+                        $location.path('/mangaitems');
+                    });
+                }
+                NotificationFactory.warning('Deleted!', 'Manga was successfully deleted.');
+            });
 		};
 
 		// Update existing Mangaitem
@@ -172,8 +181,10 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 
 			mangaitem.$update(function() {
 				$location.path('/mangaitems');
+                NotificationFactory.success('Saved!', 'Manga was saved successfully');
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
+                NotificationFactory.error('Error!', errorResponse.data.message);
 			});
             
 		};
@@ -220,11 +231,18 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         
         $scope.deleteHistory = function(item, history) {
             //are you sure option...
-            var removal = $window.confirm('Are you sure you want to delete this history?');
-            if (removal) {
+            swal({
+                title: 'Are you sure?', 
+                text: 'Are you sure that you want to delete this history?', 
+                type: 'warning',
+                showCancelButton: true,
+                closeOnConfirm: true,
+                confirmButtonText: 'Yes, delete it!',
+                confirmButtonColor: '#ec6c62'
+            }, function() {
                 $scope.mangaitem = ItemService.deleteHistory(item, history);
                 $scope.update();
-            }
+            });
         };
 	}
 ]);

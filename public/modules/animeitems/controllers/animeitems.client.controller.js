@@ -1,8 +1,8 @@
 'use strict';
 
 // Animeitems controller
-angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService) {
+angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -90,9 +90,8 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 			// Redirect after save
 			animeitem.$save(function(response) {
 				$location.path('/animeitems/' + response._id);
-
+                NotificationFactory.success('Saved!', 'Anime was saved successfully');
 				// Clear form fields
-								// Clear form fields
 				$scope.title = '';
                 $scope.episodes = '';
                 $scope.start = '';
@@ -101,28 +100,37 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
                 $scope.tags = '';
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
+                NotificationFactory.error('Error!', errorResponse.data.message);
 			});
 		};
 
 		// Remove existing Animeitem
 		$scope.remove = function(animeitem) {
-            //are you sure option...
-            var removal = $window.confirm('Are you sure you want to delete this item?');
-            if (removal) {
-			 if ( animeitem ) { 
-				animeitem.$remove();
+             //are you sure option...
+            swal({
+                title: 'Are you sure?', 
+                text: 'Are you sure that you want to delete this anime?', 
+                type: 'warning',
+                showCancelButton: true,
+                closeOnConfirm: true,
+                confirmButtonText: 'Yes, delete it!',
+                confirmButtonColor: '#ec6c62'
+            }, function() {
+                if ( animeitem ) { 
+                    animeitem.$remove();
 
-				for (var i in $scope.animeitems) {
-					if ($scope.animeitems [i] === animeitem) {
-						$scope.animeitems.splice(i, 1);
-					}
-				}
-			 } else {
-				$scope.animeitem.$remove(function() {
-					$location.path('animeitems');
-				});
-			 }
-            }
+                    for (var i in $scope.animeitems) {
+                        if ($scope.animeitems [i] === animeitem) {
+                            $scope.animeitems.splice(i, 1);
+                        }
+                    }
+                } else {
+                    $scope.animeitem.$remove(function() {
+                        $location.path('animeitems');
+                    });
+                }
+                NotificationFactory.warning('Deleted!', 'Anime was successfully deleted.');
+            });
 		};
 
 		// Update existing Animeitem
@@ -177,8 +185,10 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 
 			animeitem.$update(function() {
 				$location.path('animeitems');
+			    NotificationFactory.success('Saved!', 'Anime was saved successfully');
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
+                NotificationFactory.error('Error!', errorResponse.data.message);
 			});
 		};
         $scope.tickOff = function(item) {
@@ -224,11 +234,18 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         
         $scope.deleteHistory = function(item, history) {
             //are you sure option...
-            var removal = $window.confirm('Are you sure you want to delete this history?');
-            if (removal) {
+            swal({
+                title: 'Are you sure?', 
+                text: 'Are you sure that you want to delete this history?', 
+                type: 'warning',
+                showCancelButton: true,
+                closeOnConfirm: true,
+                confirmButtonText: 'Yes, delete it!',
+                confirmButtonColor: '#ec6c62'
+            }, function() {
                 $scope.animeitem = ItemService.deleteHistory(item, history);
                 $scope.update();
-            }
+            });
         };
         
 		/** Find a list of Animeitems for values:

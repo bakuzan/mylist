@@ -1,8 +1,8 @@
 'use strict';
 
 // History controller
-angular.module('ratings').controller('RatingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'ListService',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, ListService) {
+angular.module('ratings').controller('RatingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'ListService', 'NotificationFactory',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, ListService, NotificationFactory) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -63,8 +63,10 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
 
                 item.$update(function() {
                     $location.path('ratings');
+                    NotificationFactory.success('Saved!', 'New rating was saved successfully');
                 }, function(errorResponse) {
                     $scope.error = errorResponse.data.message;
+                    NotificationFactory.error('Error!', 'Your change failed!');
                 }); 
 //                console.log('update');
             }

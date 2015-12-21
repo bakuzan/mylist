@@ -1,8 +1,8 @@
 'use strict';
 
 
-angular.module('favourites').controller('FavouritesController', ['$scope', 'Authentication', '$window', '$sce', 'Animeitems', 'Mangaitems', '$location',
-	function($scope, Authentication, $window, $sce, Animeitems, Mangaitems, $location) {
+angular.module('favourites').controller('FavouritesController', ['$scope', 'Authentication', '$window', '$sce', 'Animeitems', 'Mangaitems', '$location', 'NotificationFactory',
+	function($scope, Authentication, $window, $sce, Animeitems, Mangaitems, $location, NotificationFactory) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
         
@@ -38,6 +38,14 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
             //console.log($scope.characters);
 		};
         
+        function favouriteLimitReached() {
+            swal({ 
+                title: 'Favourite limit reached!',
+                text: 'Only allowed 5 favourites. \nPlease remove one if you wish to add another.',
+                type: 'error'
+            });
+        }
+        
         /**
          *  Add, reorder, remove FAVOURITES
          */
@@ -48,7 +56,7 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
                     localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
                     $scope.favourite = '';
                 } else {
-                    alert('Only allowed 5 favourites! Remove one.');
+                    favouriteLimitReached();
                 }
             } else if (type === 'manga') {
                 if ($scope.favouriteMangaitem.length < 5) {
@@ -56,17 +64,23 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
                     localStorage.setItem('favouriteMangaitems', JSON.stringify($scope.favouriteMangaitem));
                     $scope.favourite = '';
                 } else {
-                    alert('Only allowed 5 favourites! Remove one.');
-                    console.log('here');
+                    favouriteLimitReached();
                 }
             }
         };
         
         $scope.removeFavourite = function(kill) {
             //are you sure option...
-            var removal = $window.confirm('Are you sure you want to remove this favourite?');
-            var deletingItem;
-            if (removal) {
+            swal({
+                title: 'Are you sure?', 
+                text: 'Are you sure that you want to delete this favourite?', 
+                type: 'warning',
+                showCancelButton: true,
+                closeOnConfirm: true,
+                confirmButtonText: 'Yes, delete it!',
+                confirmButtonColor: '#ec6c62'
+            }, function() {
+                var deletingItem;
                 if (kill.anime !== undefined) {
                     deletingItem = $scope.favouriteAnimeitem;
                     $scope.favouriteAnimeitem = [];
@@ -77,6 +91,8 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
                         }
                     });
                     localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
+                    $scope.$apply();
+                    NotificationFactory.warning('Deleted!', 'Favourite was successfully deleted');
                 } else if (kill.manga !== undefined) {
                     deletingItem = $scope.favouriteMangaitem;
                     $scope.favouriteMangaitem = [];
@@ -87,8 +103,10 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
                         }
                     });
                     localStorage.setItem('favouriteMangaitems', JSON.stringify($scope.favouriteMangaitem));
+                    $scope.$apply();
+                    NotificationFactory.warning('Deleted!', 'Favourite was successfully deleted');
                 }
-            }
+            });
         };
         
         $scope.reorderFavourites = function(favourite) {
@@ -112,6 +130,7 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
                         
 //                        console.log($scope.favouriteAnimeitem);
                         localStorage.setItem('favouriteAnimeitems', JSON.stringify($scope.favouriteAnimeitem));
+                        NotificationFactory.success('Moved!', 'Favourite was successfully moved');
                         $scope.selectedFavourite = undefined;
                         $scope.selectedFavouriteTwo = undefined;
                     } else if ($scope.selectedFavourite.manga!==undefined) {
@@ -124,6 +143,7 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
                         
 //                        console.log($scope.favouriteMangaitem);
                         localStorage.setItem('favouriteMangaitems', JSON.stringify($scope.favouriteMangaitem));
+                        NotificationFactory.success('Moved!', 'Favourite was successfully moved');
                         $scope.selectedFavourite = undefined;
                         $scope.selectedFavouriteTwo = undefined;
                     }

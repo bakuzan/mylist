@@ -43,19 +43,19 @@
         link = document.createElement( "link" );
         if (timeOfDayTheme === 'false' || !timeOfDayTheme) {
             if (!storedValue) {
-                localStorage.setItem('theme', JSON.stringify('dist/main.min.css'));
+                localStorage.setItem('theme', JSON.stringify('dist/main-night.min.css'));
             }
         } else {
             var time = new Date().getHours();
                 console.log(time);
-            if (time > 20 || time < 6) {
+            if (time > 20 || time < 8) {
                 localStorage.setItem('theme', JSON.stringify('dist/main-night.min.css'));
-            } else if (time > 17) {
-                localStorage.setItem('theme', JSON.stringify('dist/main-purple.min.css'));
-            } else if (time > 9) {
+//            } else if (time > 17) {
+//                localStorage.setItem('theme', JSON.stringify('dist/main-purple.min.css'));
+//            } else if (time > 9) {
+//                localStorage.setItem('theme', JSON.stringify('dist/main-day.min.css'));
+            } else if (time > 8) {
                 localStorage.setItem('theme', JSON.stringify('dist/main-day.min.css'));
-            } else if (time > 6) {
-                localStorage.setItem('theme', JSON.stringify('dist/main.min.css'));
             }
         }
         storedValue = localStorage.getItem('theme');

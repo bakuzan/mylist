@@ -75,6 +75,10 @@ ApplicationConfiguration.registerModule('ratings');
 ApplicationConfiguration.registerModule('statistics');
 'use strict';
 
+// Use applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('tasks');
+'use strict';
+
 // Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('users');
 'use strict';
@@ -1912,7 +1916,7 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
         };
         
         $scope.saved = localStorage.getItem('theme');
-        $scope.theme = (localStorage.getItem('theme')!==null) ? JSON.parse($scope.saved) : 'dist/main.min.css';
+        $scope.theme = (localStorage.getItem('theme')!==null) ? JSON.parse($scope.saved) : 'dist/main-night.min.css';
         localStorage.setItem('theme', JSON.stringify($scope.theme));
         
         $scope.isTimedTheme = localStorage.getItem('timedTheme');
@@ -1921,9 +1925,9 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
         
         //user-selected style options/defaults.
         $scope.styles = [
-            { name: 'Blue', url: 'dist/main.min.css' },
-            { name: 'Red', url: 'dist/main-red.min.css' },
-            { name: 'Purple', url: 'dist/main-purple.min.css' },
+//            { name: 'Blue', url: 'dist/main.min.css' },
+//            { name: 'Red', url: 'dist/main-red.min.css' },
+//            { name: 'Purple', url: 'dist/main-purple.min.css' },
             { name: 'Day', url: 'dist/main-day.min.css' },
             { name: 'Night', url: 'dist/main-night.min.css' }
         ];
@@ -1935,14 +1939,14 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
                 localStorage.setItem('theme', JSON.stringify($scope.theme));
             } else {
                 var time = new Date().getHours();
-                if (time > 20 || time < 6) {
+                if (time > 20 || time < 8) {
                     localStorage.setItem('theme', JSON.stringify('dist/main-night.min.css'));
-                } else if (time > 17) {
-                    localStorage.setItem('theme', JSON.stringify('dist/main-purple.min.css'));
-                } else if (time > 9) {
+//                } else if (time > 17) {
+//                    localStorage.setItem('theme', JSON.stringify('dist/main-purple.min.css'));
+//                } else if (time > 9) {
+//                    localStorage.setItem('theme', JSON.stringify('dist/main-day.min.css'));
+                } else if (time > 8) {
                     localStorage.setItem('theme', JSON.stringify('dist/main-day.min.css'));
-                } else if (time > 6) {
-                    localStorage.setItem('theme', JSON.stringify('dist/main.min.css'));
                 }
             }
             var storedValue = localStorage.getItem('theme'),
@@ -3687,6 +3691,121 @@ angular.module('statistics').service('StatisticsService', function() {
     };
     
 });
+'use strict';
+
+// Configuring the Articles module
+angular.module('tasks').run(['Menus',
+	function(Menus) {
+		// Set top bar menu items
+		Menus.addMenuItem('topbar', 'Tasks', 'tasks', 'dropdown', '/tasks(/create)?');
+		Menus.addSubMenuItem('topbar', 'tasks', 'List Tasks', 'tasks');
+		Menus.addSubMenuItem('topbar', 'tasks', 'New Task', 'tasks/create');
+	}
+]);
+'use strict';
+
+//Setting up route
+angular.module('tasks').config(['$stateProvider',
+	function($stateProvider) {
+		// Tasks state routing
+		$stateProvider.
+		state('listTasks', {
+			url: '/tasks',
+			templateUrl: 'modules/tasks/views/list-tasks.client.view.html'
+		}).
+		state('createTask', {
+			url: '/tasks/create',
+			templateUrl: 'modules/tasks/views/create-task.client.view.html'
+		}).
+		state('viewTask', {
+			url: '/tasks/:taskId',
+			templateUrl: 'modules/tasks/views/view-task.client.view.html'
+		}).
+		state('editTask', {
+			url: '/tasks/:taskId/edit',
+			templateUrl: 'modules/tasks/views/edit-task.client.view.html'
+		});
+	}
+]);
+'use strict';
+
+// Tasks controller
+angular.module('tasks').controller('TasksController', ['$scope', '$stateParams', '$location', 'Authentication', 'Tasks',
+	function($scope, $stateParams, $location, Authentication, Tasks) {
+		$scope.authentication = Authentication;
+
+		// Create new Task
+		$scope.create = function() {
+			// Create new Task object
+			var task = new Tasks ({
+				name: this.name
+			});
+
+			// Redirect after save
+			task.$save(function(response) {
+				$location.path('tasks/' + response._id);
+
+				// Clear form fields
+				$scope.name = '';
+			}, function(errorResponse) {
+				$scope.error = errorResponse.data.message;
+			});
+		};
+
+		// Remove existing Task
+		$scope.remove = function(task) {
+			if ( task ) { 
+				task.$remove();
+
+				for (var i in $scope.tasks) {
+					if ($scope.tasks [i] === task) {
+						$scope.tasks.splice(i, 1);
+					}
+				}
+			} else {
+				$scope.task.$remove(function() {
+					$location.path('tasks');
+				});
+			}
+		};
+
+		// Update existing Task
+		$scope.update = function() {
+			var task = $scope.task;
+
+			task.$update(function() {
+				$location.path('tasks/' + task._id);
+			}, function(errorResponse) {
+				$scope.error = errorResponse.data.message;
+			});
+		};
+
+		// Find a list of Tasks
+		$scope.find = function() {
+			$scope.tasks = Tasks.query();
+		};
+
+		// Find existing Task
+		$scope.findOne = function() {
+			$scope.task = Tasks.get({ 
+				taskId: $stateParams.taskId
+			});
+		};
+	}
+]);
+'use strict';
+
+//Tasks service used to communicate Tasks REST endpoints
+angular.module('tasks').factory('Tasks', ['$resource',
+	function($resource) {
+		return $resource('tasks/:taskId', { taskId: '@_id'
+		}, {
+			update: {
+				method: 'PUT'
+			}
+		});
+	}
+]);
 'use strict';
 
 // Config HTTP Error Handling

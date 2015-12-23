@@ -20,7 +20,7 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
         };
         
         $scope.saved = localStorage.getItem('theme');
-        $scope.theme = (localStorage.getItem('theme')!==null) ? JSON.parse($scope.saved) : 'dist/main.min.css';
+        $scope.theme = (localStorage.getItem('theme')!==null) ? JSON.parse($scope.saved) : 'dist/main-night.min.css';
         localStorage.setItem('theme', JSON.stringify($scope.theme));
         
         $scope.isTimedTheme = localStorage.getItem('timedTheme');
@@ -29,9 +29,9 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
         
         //user-selected style options/defaults.
         $scope.styles = [
-            { name: 'Blue', url: 'dist/main.min.css' },
-            { name: 'Red', url: 'dist/main-red.min.css' },
-            { name: 'Purple', url: 'dist/main-purple.min.css' },
+//            { name: 'Blue', url: 'dist/main.min.css' },
+//            { name: 'Red', url: 'dist/main-red.min.css' },
+//            { name: 'Purple', url: 'dist/main-purple.min.css' },
             { name: 'Day', url: 'dist/main-day.min.css' },
             { name: 'Night', url: 'dist/main-night.min.css' }
         ];
@@ -43,14 +43,14 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
                 localStorage.setItem('theme', JSON.stringify($scope.theme));
             } else {
                 var time = new Date().getHours();
-                if (time > 20 || time < 6) {
+                if (time > 20 || time < 8) {
                     localStorage.setItem('theme', JSON.stringify('dist/main-night.min.css'));
-                } else if (time > 17) {
-                    localStorage.setItem('theme', JSON.stringify('dist/main-purple.min.css'));
-                } else if (time > 9) {
+//                } else if (time > 17) {
+//                    localStorage.setItem('theme', JSON.stringify('dist/main-purple.min.css'));
+//                } else if (time > 9) {
+//                    localStorage.setItem('theme', JSON.stringify('dist/main-day.min.css'));
+                } else if (time > 8) {
                     localStorage.setItem('theme', JSON.stringify('dist/main-day.min.css'));
-                } else if (time > 6) {
-                    localStorage.setItem('theme', JSON.stringify('dist/main.min.css'));
                 }
             }
             var storedValue = localStorage.getItem('theme'),

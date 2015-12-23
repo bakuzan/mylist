@@ -147,7 +147,8 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             taglessItem: false,
             areTagless: false,
             selectListOptions: ListService.getSelectListOptions($scope.whichController),
-            statTags: ItemService.buildStatTags($scope.animeitems, 0)
+            statTags: ItemService.buildStatTags($scope.animeitems, 0),
+            commonArrays: ListService.getCommonArrays()
         };
         
         /** today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.

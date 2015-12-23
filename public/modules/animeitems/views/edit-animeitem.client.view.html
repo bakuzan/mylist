@@ -87,6 +87,18 @@
                         <input type="checkbox" class="form-control" data-ng-model="animeitem.onHold" id="onHold" name="onHold">
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="season" class="col-md-2 control-label">In Season?</label>
+                    <div ng-class="(animeitem.season.season === null) ? 'col-md-6' : 'col-md-3'">
+                        <select class="form-control" ng-options="option.text as option.text for option in filterConfig.commonArrays.seasons" ng-model="animeitem.season.season"
+                                ng-change="(animeitem.season.season === null) ? animeitem.season.year = null : animeitem.season.year = animeitem.start.substring(0,4)" id="season" name="season">
+                            <option value="">No Season</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3" ng-if="animeitem.season.year !== null">
+                        <input type="text" class="form-control text-center" ng-model="animeitem.season.year" disabled />
+                    </div>
+                </div>
                 <div class="form-group" ng-class="{ 'has-error' : animeForm.end.$invalid }">
                     <label for="end" class="col-md-2 control-label">End</label>
                     <div class="col-md-6">

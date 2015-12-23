@@ -5,17 +5,48 @@
             <button class="btn btn-primary show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</button>
         </h1>
     </div>
-    <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }"></div>
+    <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }">
+        <div page-controls page-config="pageConfig" showing-count="filterConfig.showingCount"></div>
+    </div>
     <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
     <div class="col-lg-8 col-md-6 col-sm-6 item-list-container">
-        <a data-ng-repeat="task in tasks" data-ng-href="#!/tasks/{{task._id}}" class="list-group-item">
-			<small class="list-group-item-text">
-				Posted on
-				<span data-ng-bind="task.created | date:'medium'"></span>
-				by
-				<span data-ng-bind="task.user.displayName"></span>
-			</small>
-			<h4 class="list-group-item-heading" data-ng-bind="task.name"></h4>
-        </a>
+        <ul class="taskList col-lg-12 col-md-12 col-sm-12">
+            <li class="taskItem" ng-repeat="taskItem in (filteredTasks = (tasks | filter: search)) track by $index" ng-hide="loading(taskItem)">
+                <input type="checkbox" class="taskCheckbox" ng-model="taskItem.complete" ng-change="save(taskItem.description)" ng-disabled="taskItem.complete || taskItem.checklist">
+                <span class="task-description-text complete-{{taskItem.complete}}" ng-class="taskItem.checklist === true ? 'clickable' : ''" ng-click="taskItem.checklist === true ? viewTask = !viewTask : ''">{{taskItem.description}}</span>
+                <span class="separator"> - </span>
+                <span class="task-times-text complete-{{taskItem.complete}}">{{taskItem.completeTimes}}/{{taskItem.repeat}}</span>
+                <span class="category-{{taskItem.category}}">{{taskItem.category}}</span>
+                <a class="bin-style clickable" aria-hidden="true" ng-click="remove(taskItem)">
+                    <i class="fa fa-trash-o"></i>
+                </a>
+                <strong class="taskDate complete-{{taskItem.complete}}" hover-data="{{taskItem.date}}">
+                    <i class="fa fa-calendar"></i>
+                    <span ng-hide="taskItem.daily">{{taskItem.day}}</span>
+                    <span ng-show="taskItem.daily">DAILY</span>
+                </strong>
+                <div class="progress-container" hover-data="{{ ((taskItem.checklistOptions | filter: {complete: true}).length / taskItem.checklistOptions.length)*100 | number: 2 }}%"
+                     ng-if="taskItem.checklist">
+                    <div class="progress checklist-progress-bar" value="((taskItem.checklistOptions | filter: {complete: true}).length / taskItem.checklistOptions.length) * 100">
+                        <div class="bar checklist-progress" style="width: {{ ((taskItem.checklistOptions | filter: {complete: true}).length / taskItem.checklistOptions.length) * 100}}%"></div>
+                    </div>
+                </div>
+                <div ng-if="taskItem.checklist" class="checklist-list-container" ng-show="viewTask">
+                    <input ng-show="!taskItem.complete && addingToChecklist" type="text" class="form-control" ng-model="insertNewOption" enter-tag="insertOption(taskItem.description, insertNewOption); insertNewOption = ''">
+                    <a ng-show="!taskItem.complete" class="btn btn-accent" ng-click="addingToChecklist=!addingToChecklist">
+                        <i ng-hide="addingToChecklist" class="fa fa-plus"></i>
+                        <i ng-show="addingToChecklist" class="fa fa-minus"></i>
+                    </a>
+                    <a ng-show="!taskItem.complete && addingToChecklist"class="btn btn-accent" ng-click="insertOption(taskItem.description, insertNewOption); insertNewOption = ''" ng-disabled="insertNewOption==='' || insertNewOption===null || insertNewOption===undefined">Add</a>
+                    <ul class="checklist-list">
+                        <li class="checklist-item" ng-repeat="option in taskItem.checklistOptions track by $index">
+                            <input type="checkbox" class="taskCheckbox" ng-model="option.complete" ng-change="tickOff(taskItem.description, option.text)" ng-disabled="option.complete">
+                            <span class="complete-{{option.complete}}">{{option.text}}</span>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
     </div>
+    <section class="loading-image" data-ng-if="isLoading"></section>
 </section>

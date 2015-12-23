@@ -29,6 +29,18 @@ angular.module('core').factory('NotificationFactory', function() {
         },
         error: function (title, text) {
             toastr.error(text, title, 'Error');
+        },
+        confirmation: function (thenDo) {
+              //are you sure option...
+            swal({
+                title: 'Are you sure?', 
+                text: 'Are you sure that you want to delete this task?', 
+                type: 'warning',
+                showCancelButton: true,
+                closeOnConfirm: true,
+                confirmButtonText: 'Yes, delete it!',
+                confirmButtonColor: '#ec6c62'
+            }, thenDo);
         }
     };
 });

@@ -108,15 +108,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		// Remove existing Mangaitem
 		$scope.remove = function(mangaitem) {
             //are you sure option...
-            swal({
-                title: 'Are you sure?', 
-                text: 'Are you sure that you want to delete this manga?', 
-                type: 'warning',
-                showCancelButton: true,
-                closeOnConfirm: true,
-                confirmButtonText: 'Yes, delete it!',
-                confirmButtonColor: '#ec6c62'
-            }, function() {
+            NotificationFactory.confirmation(function() {
                 if ( mangaitem ) { 
                     mangaitem.$remove();
 
@@ -231,15 +223,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         
         $scope.deleteHistory = function(item, history) {
             //are you sure option...
-            swal({
-                title: 'Are you sure?', 
-                text: 'Are you sure that you want to delete this history?', 
-                type: 'warning',
-                showCancelButton: true,
-                closeOnConfirm: true,
-                confirmButtonText: 'Yes, delete it!',
-                confirmButtonColor: '#ec6c62'
-            }, function() {
+           NotificationFactory.confirmation(function() {
                 $scope.mangaitem = ItemService.deleteHistory(item, history);
                 $scope.update();
             });

@@ -107,15 +107,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		// Remove existing Animeitem
 		$scope.remove = function(animeitem) {
              //are you sure option...
-            swal({
-                title: 'Are you sure?', 
-                text: 'Are you sure that you want to delete this anime?', 
-                type: 'warning',
-                showCancelButton: true,
-                closeOnConfirm: true,
-                confirmButtonText: 'Yes, delete it!',
-                confirmButtonColor: '#ec6c62'
-            }, function() {
+            NotificationFactory.confirmation(function() {
                 if ( animeitem ) { 
                     animeitem.$remove();
 
@@ -234,15 +226,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         
         $scope.deleteHistory = function(item, history) {
             //are you sure option...
-            swal({
-                title: 'Are you sure?', 
-                text: 'Are you sure that you want to delete this history?', 
-                type: 'warning',
-                showCancelButton: true,
-                closeOnConfirm: true,
-                confirmButtonText: 'Yes, delete it!',
-                confirmButtonColor: '#ec6c62'
-            }, function() {
+            NotificationFactory.confirmation(function() {
                 $scope.animeitem = ItemService.deleteHistory(item, history);
                 $scope.update();
             });

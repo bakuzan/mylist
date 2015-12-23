@@ -157,8 +157,6 @@ module.exports = function(grunt) {
 		      compass: false
 		    },
 		    files: {
-              'public/dist/main-day.min.css': 'public/style/main-day.scss',
-              'public/dist/main-night.min.css': 'public/style/main-night.scss',
               'public/style/css/components.css': 'public/style/components.scss',
               'public/style/helper/css/box-model.css': 'public/style/helper/box-model.scss',
               'public/style/helper/css/text.css': 'public/style/helper/text.scss',

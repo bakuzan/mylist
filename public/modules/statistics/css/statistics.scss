@@ -13,12 +13,10 @@
 }
 
 .stat-rating-panel {
-    @extend .tile-style;
     margin-bottom: 10px;
 }
 
 .stat-history-panel {
-    @extend .tile-style;
     margin-bottom: 10px;
 }
 
@@ -50,11 +48,9 @@
 }
 
 .stat-tag-panel {
-    @extend .tile-style;
     margin-bottom: 10px;
 }
 .stat-tag-detail {
-    @extend .tile-style;
     margin-bottom: 10px;
 }
 
@@ -75,7 +71,7 @@
 .stat-header-label.ng-valid.ng-dirty.active,
 .stat-header-label:focus {
     color: $brand-accent;
-    background-color: $brand-secondary;
+    background-color: $brand-primary;
     border-color: $brand-primary;
 }
 
@@ -93,7 +89,7 @@
 }
 
 .stat-overview {
-    @extend .tile-style;
+    background-color: $brand-primary;
     text-align: center;
     font-size: 18px;
     font-weight: bold;
@@ -103,11 +99,9 @@
 
 
 .stat-media-panel {
-    @extend .tile-style;
     margin-bottom: 10px;
 }
 .stat-media-detail {
-    @extend .tile-style;
     margin-bottom: 10px;
 }
 
@@ -117,7 +111,6 @@
 }
 
 .stat-gender-panel {
-    @extend .tile-style;
     text-align: center;
     vertical-align: middle;
     height: 35px;
@@ -140,15 +133,12 @@
 }
 
 .stat-month-detail {
-    @extend .tile-style;
     margin-bottom: 10px;
 }
 
 .stat-voice-panel {
-    @extend .tile-style;
     margin-bottom: 10px;
 }
 .stat-voice-detail {
-    @extend .tile-style;
     margin-bottom: 10px;
 }

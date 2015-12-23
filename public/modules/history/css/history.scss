@@ -6,6 +6,7 @@
 
 .history-list-item {
     h4 {
+        background-color: $brand-primary;
         border-bottom: $accent-line;
     }
     
@@ -16,12 +17,7 @@
 }
 
 .history-list-container {
-    @extend .tile-style;
     padding: 10px 15px;
-    
-    .history-list {
-        background-color: $brand-primary;
-    }
 }
 
 .history-group-header {

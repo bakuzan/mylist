@@ -6,7 +6,11 @@
         </h1>
     </div>
     <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }">
-        <div page-controls page-config="pageConfig" showing-count="filterConfig.showingCount"></div>
+        <a class="menu-header-bar clickable" ng-init="isAddTask=false" ng-click="isAddTask = !isAddTask;" ignore-here="true">
+            <i class="fa" ng-class="(isAddTask === false) ? 'fa-plus-square' : 'fa-minus-square'"></i> Add task
+        </a>
+        <div page-controls page-config="pageConfig" showing-count="filterConfig.showingCount" class="margin-top-10"></div>
+        <div task-create></div>
     </div>
     <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
     <div class="col-lg-8 col-md-6 col-sm-6 item-list-container">

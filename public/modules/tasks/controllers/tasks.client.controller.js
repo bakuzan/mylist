@@ -30,15 +30,29 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
 		$scope.create = function() {
 			// Create new Task object
 			var task = new Tasks ({
-				name: this.name
+				description: this.description,
+                link: {
+                    linked: this.linked,
+                    type: this.linkType,
+                    id: this.linkItem
+                },
+                day: this.day,
+                repeat: this.repeat,
+                completeTimes: this.completeTimes,
+                updateCheck: this.updateCheck,
+                complete: false,
+                category: this.category,
+                daily: this.daily,
+                dailyRefresh: new Date(),
+                checklist: this.checklist,
+                checklistItems: this.checklistArray
 			});
 
 			// Redirect after save
 			task.$save(function(response) {
 				$location.path('tasks/' + response._id);
-
-				// Clear form fields
-				$scope.name = '';
+                NotificationFactory.success('Saved!', 'New Task was successfully saved!');
+				// Clear form fields?
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});
@@ -70,6 +84,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
 
 			task.$update(function() {
 				$location.path('tasks/' + task._id);
+                NotificationFactory.success('Saved!', 'Task was successfully saved!');
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});

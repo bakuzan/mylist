@@ -18,11 +18,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             NotificationFactory.success('Uploaded!', 'Image was saved successfully');
         })
         .error(function(err){
-            swal({ 
-                title: 'Woops!',
-                text: 'Something went wrong! \n' + err,
-                type: 'error'
-            });
+            NotificationFactory.popup('Woops!', 'Something went wrong! \n' + err, 'error');
         });
     };
 }])
@@ -173,8 +169,24 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     { number: '10', text: 'October' },
                     { number: '11', text: 'November' },
                     { number: '12', text: 'December' }
+                ],
+                categories = [
+                    {name: 'Watch'},
+                    {name: 'Read'},
+                    {name: 'Play'},
+                    {name: 'Other'}
+                ],
+                days = [
+                    {name: 'Any'},
+                    {name: 'Monday'},
+                    {name: 'Tuesday'},
+                    {name: 'Wednesday'},
+                    {name: 'Thursday'},
+                    {name: 'Friday'},
+                    {name: 'Saturday'},
+                    {name: 'Sunday'}
                 ];
-            commonArrays = { months: months, seasons: seasons };
+            commonArrays = { months: months, seasons: seasons, categories: categories, days: days };
             return commonArrays;
         };
     

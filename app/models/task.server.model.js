@@ -48,6 +48,10 @@ var TaskSchema = new Schema({
         type: String,
         default: 'Any'
     },
+    date: {
+        type: Date,
+        default: Date.now
+    },
     repeat: {
         type: Number,
         default: 1
@@ -57,8 +61,8 @@ var TaskSchema = new Schema({
         default: 0
     },
     updateCheck: {
-        type: Date,
-        default: Date.now
+        type: Boolean,
+        default: true
     },
     complete: {
         type: Boolean,
@@ -74,7 +78,7 @@ var TaskSchema = new Schema({
     },
     dailyRefresh: {
         type: Date,
-        default: Date.now
+        default: new Date().toISOString().slice(0,10)
     },
     checklist: {
         type: Boolean,

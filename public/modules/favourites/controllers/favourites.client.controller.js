@@ -39,11 +39,7 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
 		};
         
         function favouriteLimitReached() {
-            swal({ 
-                title: 'Favourite limit reached!',
-                text: 'Only allowed 5 favourites. \nPlease remove one if you wish to add another.',
-                type: 'error'
-            });
+            NotificationFactory.popup('Favourite limit reached!', 'Only allowed 5 favourites. \nPlease remove one if you wish to add another.', 'error');
         }
         
         /**

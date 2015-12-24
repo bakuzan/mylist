@@ -226,15 +226,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		// Remove existing Animeitem
 		$scope.remove = function(animeitem) {
              //are you sure option...
-            swal({
-                title: 'Are you sure?', 
-                text: 'Are you sure that you want to delete this anime?', 
-                type: 'warning',
-                showCancelButton: true,
-                closeOnConfirm: true,
-                confirmButtonText: 'Yes, delete it!',
-                confirmButtonColor: '#ec6c62'
-            }, function() {
+            NotificationFactory.confirmation(function() {
                 if ( animeitem ) { 
                     animeitem.$remove();
 
@@ -353,15 +345,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         
         $scope.deleteHistory = function(item, history) {
             //are you sure option...
-            swal({
-                title: 'Are you sure?', 
-                text: 'Are you sure that you want to delete this history?', 
-                type: 'warning',
-                showCancelButton: true,
-                closeOnConfirm: true,
-                confirmButtonText: 'Yes, delete it!',
-                confirmButtonColor: '#ec6c62'
-            }, function() {
+            NotificationFactory.confirmation(function() {
                 $scope.animeitem = ItemService.deleteHistory(item, history);
                 $scope.update();
             });
@@ -638,11 +622,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             NotificationFactory.success('Uploaded!', 'Image was saved successfully');
         })
         .error(function(err){
-            swal({ 
-                title: 'Woops!',
-                text: 'Something went wrong! \n' + err,
-                type: 'error'
-            });
+            NotificationFactory.popup('Woops!', 'Something went wrong! \n' + err, 'error');
         });
     };
 }])
@@ -793,8 +773,24 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     { number: '10', text: 'October' },
                     { number: '11', text: 'November' },
                     { number: '12', text: 'December' }
+                ],
+                categories = [
+                    {name: 'Watch'},
+                    {name: 'Read'},
+                    {name: 'Play'},
+                    {name: 'Other'}
+                ],
+                days = [
+                    {name: 'Any'},
+                    {name: 'Monday'},
+                    {name: 'Tuesday'},
+                    {name: 'Wednesday'},
+                    {name: 'Thursday'},
+                    {name: 'Friday'},
+                    {name: 'Saturday'},
+                    {name: 'Sunday'}
                 ];
-            commonArrays = { months: months, seasons: seasons };
+            commonArrays = { months: months, seasons: seasons, categories: categories, days: days };
             return commonArrays;
         };
     
@@ -1249,15 +1245,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 		// Remove existing Character
 		$scope.remove = function(character) {
             //are you sure option...
-            swal({
-                title: 'Are you sure?', 
-                text: 'Are you sure that you want to delete this character?', 
-                type: 'warning',
-                showCancelButton: true,
-                closeOnConfirm: true,
-                confirmButtonText: 'Yes, delete it!',
-                confirmButtonColor: '#ec6c62'
-            }, function() {
+            NotificationFactory.confirmation(function() {
                 if ( character ) { 
                     character.$remove();
 
@@ -1558,15 +1546,7 @@ angular.module('characters').directive('characterBack', function(){
         element.bind('click', function(event) {    
             var text = attrs.dropTag;
              //are you sure option...
-            swal({
-                title: 'Are you sure?', 
-                text: 'Are you sure that you want to drop this tag?', 
-                type: 'warning',
-                showCancelButton: true,
-                closeOnConfirm: true,
-                confirmButtonText: 'Yes, delete it!',
-                confirmButtonColor: '#ec6c62'
-            }, function() {
+            NotificationFactory.confirmation(function() {
                 scope.$apply(function() {
                     var deletingItem = scope.tagArray;
                     scope.$parent.tagArray = [];
@@ -1592,15 +1572,7 @@ angular.module('characters').directive('characterBack', function(){
                     i,
                     entry_type = scope.whichController;
                 //are you sure option...
-                swal({
-                    title: 'Are you sure?', 
-                    text: 'Are you sure that you want to delete this tag?', 
-                    type: 'warning',
-                    showCancelButton: true,
-                    closeOnConfirm: true,
-                    confirmButtonText: 'Yes, delete it!',
-                    confirmButtonColor: '#ec6c62'
-                }, function() {
+              NotificationFactory.confirmation(function() {
                     scope.$apply(function () {
                         var index;
                         if (entry_type === 'character') {
@@ -2153,15 +2125,7 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
     };
     $scope.deleteTask = function (description) {
         //are you sure option...
-        swal({
-            title: 'Are you sure?', 
-            text: 'Are you sure that you want to delete this task?', 
-            type: 'warning',
-            showCancelButton: true,
-            closeOnConfirm: true,
-            confirmButtonText: 'Yes, delete it!',
-            confirmButtonColor: '#ec6c62'
-        }, function() {
+       NotificationFactory.confirmation(function() {
             var deletingItem = $scope.taskItem;
             $scope.taskItem = [];
             //update the complete task.
@@ -2229,11 +2193,7 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
             });
             localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
              if (alreadyAdded === true) {
-                swal({ 
-                    title: 'Option already exists.',
-                    text: 'Please re-name and try again.',
-                    type: 'error'
-                });
+                 NotificationFactory.popup('Option already exists.', 'Please re-name and try again.', 'error');
              }
         }
     };
@@ -2395,6 +2355,25 @@ angular.module('core').factory('NotificationFactory', function() {
         },
         error: function (title, text) {
             toastr.error(text, title, 'Error');
+        },
+        popup: function (title, text, type) {
+            swal({ 
+                title: title,
+                text: text,
+                type: type
+            });
+        },
+        confirmation: function (thenDo) {
+              //are you sure option...
+            swal({
+                title: 'Are you sure?', 
+                text: 'Are you sure that you want to delete this?', 
+                type: 'warning',
+                showCancelButton: true,
+                closeOnConfirm: true,
+                confirmButtonText: 'Yes, delete it!',
+                confirmButtonColor: '#ec6c62'
+            }, thenDo);
         }
     };
 });
@@ -2633,11 +2612,7 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
 		};
         
         function favouriteLimitReached() {
-            swal({ 
-                title: 'Favourite limit reached!',
-                text: 'Only allowed 5 favourites. \nPlease remove one if you wish to add another.',
-                type: 'error'
-            });
+            NotificationFactory.popup('Favourite limit reached!', 'Only allowed 5 favourites. \nPlease remove one if you wish to add another.', 'error');
         }
         
         /**
@@ -2665,15 +2640,7 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
         
         $scope.removeFavourite = function(kill) {
             //are you sure option...
-            swal({
-                title: 'Are you sure?', 
-                text: 'Are you sure that you want to delete this favourite?', 
-                type: 'warning',
-                showCancelButton: true,
-                closeOnConfirm: true,
-                confirmButtonText: 'Yes, delete it!',
-                confirmButtonColor: '#ec6c62'
-            }, function() {
+            NotificationFactory.confirmation(function() {
                 var deletingItem;
                 if (kill.anime !== undefined) {
                     deletingItem = $scope.favouriteAnimeitem;
@@ -3164,15 +3131,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		// Remove existing Mangaitem
 		$scope.remove = function(mangaitem) {
             //are you sure option...
-            swal({
-                title: 'Are you sure?', 
-                text: 'Are you sure that you want to delete this manga?', 
-                type: 'warning',
-                showCancelButton: true,
-                closeOnConfirm: true,
-                confirmButtonText: 'Yes, delete it!',
-                confirmButtonColor: '#ec6c62'
-            }, function() {
+            NotificationFactory.confirmation(function() {
                 if ( mangaitem ) { 
                     mangaitem.$remove();
 
@@ -3287,15 +3246,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         
         $scope.deleteHistory = function(item, history) {
             //are you sure option...
-            swal({
-                title: 'Are you sure?', 
-                text: 'Are you sure that you want to delete this history?', 
-                type: 'warning',
-                showCancelButton: true,
-                closeOnConfirm: true,
-                confirmButtonText: 'Yes, delete it!',
-                confirmButtonColor: '#ec6c62'
-            }, function() {
+           NotificationFactory.confirmation(function() {
                 $scope.mangaitem = ItemService.deleteHistory(item, history);
                 $scope.update();
             });
@@ -3730,60 +3681,221 @@ angular.module('tasks').config(['$stateProvider',
 'use strict';
 
 // Tasks controller
-angular.module('tasks').controller('TasksController', ['$scope', '$stateParams', '$location', 'Authentication', 'Tasks',
-	function($scope, $stateParams, $location, Authentication, Tasks) {
+angular.module('tasks').controller('TasksController', ['$scope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'DiscoveryFactory',
+	function($scope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, DiscoveryFactory) {
 		$scope.authentication = Authentication;
+        
+        // If user is not signed in then redirect back to signin.
+		if (!$scope.authentication.user) $location.path('/signin');
+        
+        $scope.whichController = 'task';
+        $scope.isLoading = true;
+        //paging variables.
+        $scope.pageConfig = {
+            currentPage: 0,
+            pageSize: 10
+        };
+        $scope.filterConfig = {
+            showingCount: 0,
+            sortType: '',
+            sortReverse: true,
+            search: {},
+        };
+        
+        $scope.loading = function(value) {
+            $scope.isLoading = ListService.loader(value);
+        };
+        
+        $scope.weekBeginning = function() {
+            return DiscoveryFactory.getWeekBeginning();
+        };
 
 		// Create new Task
 		$scope.create = function() {
 			// Create new Task object
 			var task = new Tasks ({
-				name: this.name
+				description: this.newTask.description,
+                link: {
+                    linked: this.newTask.linked,
+                    type: this.newTask.linkType,
+                    id: this.newTask.linkItem
+                },
+                day: this.newTask.day,
+                repeat: this.newTask.repeat,
+                completeTimes: this.newTask.completeTimes,
+                updateCheck: this.newTask.updateCheck,
+                complete: false,
+                category: this.newTask.category,
+                daily: this.newTask.daily,
+                dailyRefresh: new Date(),
+                checklist: this.newTask.checklist,
+                checklistItems: this.newTask.checklistArray
 			});
-
+            console.log($scope.newTask, task, this.newTask);
 			// Redirect after save
 			task.$save(function(response) {
-				$location.path('tasks/' + response._id);
-
-				// Clear form fields
-				$scope.name = '';
+				$location.path('tasks/');
+                NotificationFactory.success('Saved!', 'New Task was successfully saved!');
+				// Clear form fields?
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
+                NotificationFactory.error('Error!', 'New Task failed to save!');
 			});
 		};
+        
+        function remove(task) {
+            if ( task ) { 
+                task.$remove();
+
+                for (var i in $scope.tasks) {
+                    if ($scope.tasks [i] === task) {
+                        $scope.tasks.splice(i, 1);
+                    }
+                }
+            } else {
+                $scope.task.$remove(function() {
+                    $location.path('tasks');
+                });
+            }
+            NotificationFactory.warning('Deleted!', 'Task was successfully deleted.');
+        }
 
 		// Remove existing Task
-		$scope.remove = function(task) {
-			if ( task ) { 
-				task.$remove();
-
-				for (var i in $scope.tasks) {
-					if ($scope.tasks [i] === task) {
-						$scope.tasks.splice(i, 1);
-					}
-				}
-			} else {
-				$scope.task.$remove(function() {
-					$location.path('tasks');
-				});
-			}
+		$scope.deleteTask = function(task) {
+            NotificationFactory.confirmation(remove(task));
 		};
 
 		// Update existing Task
-		$scope.update = function() {
+		function update() {
+            console.log('update');
 			var task = $scope.task;
 
 			task.$update(function() {
-				$location.path('tasks/' + task._id);
+				$location.path('tasks');
+                NotificationFactory.success('Saved!', 'Task was successfully updated!');
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
+                NotificationFactory.error('Error!', 'Task failed to save!');
 			});
-		};
+		}
+        
+        //Tick off a task.
+        $scope.tickOff = function(task) {
+            task.completeTimes += 1;
+            $scope.task = task;
+            update();
+        };
+        
+        //Tick of a checklist item.
+        $scope.tickOffChecklist = function(task) {
+            //update the option for the task.
+            var length = task.checklistItems.length,
+                completeCount = 0;
+            angular.forEach(task.checklistItems, function (item) {
+                if (item.complete === true) {
+                    completeCount += 1;
+                }
+            });
+            //if all options complete, complete the task.
+            if (length === completeCount) {
+                task.completeTimes += 1;
+                task.complete = true;
+            }
+            $scope.task = task;
+            update();                                           
+        };
+        
+        //Add new checklist item.
+        $scope.insertChecklistItem = function (task, newChecklistItem) {
+            if (newChecklistItem!=='' && newChecklistItem!==undefined) {
+                var alreadyAdded = false;
+                //find the item and insert the option.
+                angular.forEach(task.checklistItems, function (item) {
+                    if (item === newChecklistItem) {
+                        alreadyAdded = true;
+                    }
+                });
+                
+                //if not in array add it.
+                if (alreadyAdded === false) {
+                    task.checklistItems.push({ text: newChecklistItem, complete: false });
+                } else if (alreadyAdded === true) {
+                    NotificationFactory.popup('Option already exists.', 'Please re-name and try again.', 'error');
+                }
+            }
+            $scope.task = task;
+            update();
+        };
+         
+         //check things
+        function checkStatus() {
+            var today = new Date(),
+                day = today.getDay();
+            if (day === 1) {
+                console.log('monday', day);
+                angular.forEach($scope.tasks, function (task) {
+                    //has it been updated today?
+                    if(task.updateCheck === false) {
+                        console.log('update', task.description);
+                        //has it reached the necessary number of repeats?
+                        if(task.completeTimes !== task.repeat) {
+                            console.log('not complete', task.description);
+                            task.complete = false;
+                            task.updateCheck = true;
+                            $scope.task = task;
+                            update();
+                        } else if (task.completeTimes === task.repeat) {
+                            console.log('complete - delete', task.description);
+                            remove(task);
+                        }
+                    }
+                });
+            } else {
+                console.log('not monday', day);
+                angular.forEach($scope.tasks, function (task) {
+                    var change = task.updateCheck === false ? false : true;
+                    task.updateCheck = false;
+                    //is it a daily task?
+                    if (task.daily === true) {
+                        console.log('daily', task.description);
+                        //has it reached the necessary number of repeats?
+                        if(task.completeTimes !== task.repeat) {
+                            console.log('not complete', task.description);
+                            var refresh = today.toISOString().slice(0,10);
+                            //has it been refreshed today?
+                            if (task.dailyRefresh.slice(0,10) !== refresh) {
+                                console.log('not complete - update', task.description);
+                                task.complete = false;
+                                task.dailyRefresh = refresh;
+                                $scope.task = task;
+                                update();
+                            }
+                        } else if (task.completeTimes === task.repeat) {
+                            console.log('complete - delete', task.description);
+                            remove(task);
+                        }
+                    } else if (task.daily === false && change) {
+                        $scope.task = task;
+                        update();
+                    }
+                });
+            }
+        }
 
 		// Find a list of Tasks
-		$scope.find = function() {
-			$scope.tasks = Tasks.query();
-		};
+		function find() {
+			Tasks.query(function(result) {
+                $scope.tasks = result;
+                checkStatus();
+            });
+		}
+        find();
+        
+        $scope.$watchCollection('tasks', function(newValue) {
+            if ($scope.tasks !== undefined) {
+                console.log(newValue, new Date().toISOString());
+            }
+        });
 
 		// Find existing Task
 		$scope.findOne = function() {
@@ -3791,8 +3903,62 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
 				taskId: $stateParams.taskId
 			});
 		};
+
 	}
 ]);
+'use strict';
+
+angular.module('tasks')
+.directive('taskCreate', ['ListService', function (ListService) {
+    return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+            create: '='
+        },
+        templateUrl: '/modules/tasks/views/create-task.client.view.html',
+        link: function (scope, element, attrs) {
+            scope.newTask = scope.create;
+            scope.commonArrays = ListService.getCommonArrays();
+            
+            scope.newTask.checklistArray = [];
+            //for adding/removing options.
+            scope.addChecklistItem = function () {
+                    if (scope.newTask.checklistItem!=='' && scope.newTask.checklistItem!==undefined) {
+                        var i = 0;
+                        var alreadyAdded = false;
+                        if (scope.newTask.checklistArray.length > 0) {
+                            while(i < scope.newTask.checklistArray.length) {
+                                if (scope.newTask.checklistArray[i].text === scope.newTask.checklistItem) {
+                                    alreadyAdded = true;
+                                }
+                                i++;
+                            }
+                            //if not in array add it.
+                            if (alreadyAdded === false) {
+                                scope.newTask.checklistArray.push({ text: scope.newTask.checklistItem, complete: false });
+                            }
+                        } else {
+                            scope.newTask.checklistArray.push({ text: scope.newTask.checklistItem, complete: false });
+                        }
+                    }
+                    scope.newTask.checklistItem = '';
+            };
+            scope.dropChecklistItem = function(text) {
+                var deletingItem = scope.newTask.checklistArray;
+                scope.newTask.checklistArray = [];
+                //update the task.
+                angular.forEach(deletingItem, function(item) {
+                    if (item.text !== text) {
+                        scope.newTask.checklistArray.push(item);
+                    }
+                });
+            };
+
+            
+        }
+    };
+}]);
 'use strict';
 
 //Tasks service used to communicate Tasks REST endpoints
@@ -3805,7 +3971,18 @@ angular.module('tasks').factory('Tasks', ['$resource',
 			}
 		});
 	}
-]);
+])
+.factory('DiscoveryFactory', function() {
+    return {
+        getWeekBeginning: function() {
+            var newDate = new Date(),
+                day = newDate.getDay(),
+                diff = newDate.getDate() - day + (day === 0 ? -6:1); // adjust when day is sunday
+            var wkBeg = new Date();
+            return new Date(wkBeg.setDate(diff));
+        }
+    };
+});
 'use strict';
 
 // Config HTTP Error Handling

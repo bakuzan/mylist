@@ -194,15 +194,7 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
     };
     $scope.deleteTask = function (description) {
         //are you sure option...
-        swal({
-            title: 'Are you sure?', 
-            text: 'Are you sure that you want to delete this task?', 
-            type: 'warning',
-            showCancelButton: true,
-            closeOnConfirm: true,
-            confirmButtonText: 'Yes, delete it!',
-            confirmButtonColor: '#ec6c62'
-        }, function() {
+       NotificationFactory.confirmation(function() {
             var deletingItem = $scope.taskItem;
             $scope.taskItem = [];
             //update the complete task.
@@ -270,11 +262,7 @@ angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Au
             });
             localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
              if (alreadyAdded === true) {
-                swal({ 
-                    title: 'Option already exists.',
-                    text: 'Please re-name and try again.',
-                    type: 'error'
-                });
+                 NotificationFactory.popup('Option already exists.', 'Please re-name and try again.', 'error');
              }
         }
     };

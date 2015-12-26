@@ -1,5 +1,5 @@
 .tab-filter {
-    width: 11%;
+    width: (100 / 9) * 1%;
     height: 25px;
     min-height: 25px;
     padding: 2px 0;
@@ -7,6 +7,10 @@
         height: 25px;
         margin: 0;
     }
+}
+
+.tab-filter.tab-transition {
+    @include transition(all 0.5s linear);
 }
 
 .tab-filter.tab-in {

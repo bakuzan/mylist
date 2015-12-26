@@ -19,11 +19,16 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             showingCount: 0,
             sortType: '',
             sortReverse: true,
-            search: {},
+            search: { day: '' }
         };
+        $scope.commonArrays = ListService.getCommonArrays();
         
         $scope.loading = function(value) {
             $scope.isLoading = ListService.loader(value);
+        };
+        
+        $scope.tabFilter = function(tabName) {
+            $scope.filterConfig.search.day = tabName;
         };
         
         $scope.weekBeginning = function() {

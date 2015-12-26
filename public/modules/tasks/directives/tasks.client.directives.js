@@ -11,7 +11,6 @@ angular.module('tasks')
         templateUrl: '/modules/tasks/views/create-task.client.view.html',
         link: function (scope, element, attrs) {
             scope.newTask = scope.create;
-            scope.commonArrays = ListService.getCommonArrays();
             
             scope.newTask.checklistArray = [];
             //for adding/removing options.

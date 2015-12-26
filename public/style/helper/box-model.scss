@@ -46,3 +46,9 @@
         margin-bottom: #{$box}#{$pixel};
     }
 }
+
+@each $display in $displays {
+    .display-#{$display} {
+        display: #{$display};
+    }
+}

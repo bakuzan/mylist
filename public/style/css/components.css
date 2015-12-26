@@ -284,4 +284,19 @@
 .slide.ng-hide-remove.ng-hide-remove-active {
   opacity: 1; }
 
+.tab-filter {
+  width: 11%;
+  height: 25px;
+  min-height: 25px;
+  padding: 2px 0; }
+  .tab-filter label {
+    height: 25px;
+    margin: 0; }
+
+.tab-filter.tab-in {
+  opacity: 1; }
+
+.tab-filter.tab-out {
+  opacity: 0.6; }
+
 /*# sourceMappingURL=components.css.map */

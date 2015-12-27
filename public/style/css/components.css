@@ -295,13 +295,15 @@
   position: relative;
   display: inline-block;
   background: #ECECEC;
-  width: 11.11111%;
+  width: 12%;
   height: 25px;
   padding: 0 10px;
   margin: 0 -5px;
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
   z-index: 0; }
+  .tab-filter:first-child, .tab-filter:nth-child(2) {
+    width: 8%; }
   .tab-filter label {
     height: 25px;
     margin: 0; }

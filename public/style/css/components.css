@@ -284,25 +284,31 @@
 .slide.ng-hide-remove.ng-hide-remove-active {
   opacity: 1; }
 
+/** Tab filter base styling **/
+.tab-filter-container {
+  position: relative;
+  text-align: center;
+  padding: 0;
+  margin: 0; }
+
 .tab-filter {
+  position: relative;
+  display: inline-block;
+  background: #ECECEC;
   width: 11.11111%;
   height: 25px;
-  min-height: 25px;
-  padding: 2px 0; }
+  padding: 0 10px;
+  margin: 0 -5px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  z-index: 0; }
   .tab-filter label {
     height: 25px;
     margin: 0; }
 
-.tab-filter.tab-transition {
-  -webkit-transition: all 0.5s linear;
-  -o-transition: all 0.5s linear;
-  -moz-transition: all 0.5s linear;
-  transition: all 0.5s linear; }
-
 .tab-filter.tab-in {
-  opacity: 1; }
-
-.tab-filter.tab-out {
-  opacity: 0.6; }
+  background: #FFF;
+  border-bottom-color: #FFF;
+  z-index: 2; }
 
 /*# sourceMappingURL=components.css.map */

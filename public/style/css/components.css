@@ -284,11 +284,47 @@
 .slide.ng-hide-remove.ng-hide-remove-active {
   opacity: 1; }
 
+.tab-filter-container {
+  position: relative; }
+  .tab-filter-container:after {
+    position: absolute;
+    content: '';
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    border-bottom: 1px solid #AAA;
+    z-index: 1; }
+  .tab-filter-container:before {
+    z-index: 1; }
+
 .tab-filter {
-  width: 11.11111%;
   height: 25px;
   min-height: 25px;
-  padding: 2px 0; }
+  background: linear-gradient(to bottom, #ECECEC 50%, #D1D1D1 100%);
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.4), inset 0 1px 0 #FFF;
+  text-shadow: 0 1px #FFF;
+  padding: 0 20px;
+  margin: 0 -5px;
+  z-index: 0;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px; }
+  .tab-filter:before, .tab-filter:after {
+    position: absolute;
+    bottom: -1px;
+    width: 6px;
+    height: 6px;
+    content: '';
+    border: 1px solid #AAA; }
+  .tab-filter:before {
+    left: -6px;
+    border-bottom-right-radius: 6px;
+    border-width: 0 1px 1px 0;
+    box-shadow: 2px 2px 0 #ECECEC; }
+  .tab-filter:after {
+    right: -6px;
+    border-bottom-left-radius: 6px;
+    border-width: 0 0 1px 1px;
+    box-shadow: -2px 2px 0 #ECECEC; }
   .tab-filter label {
     height: 25px;
     margin: 0; }
@@ -300,9 +336,15 @@
   transition: all 0.5s linear; }
 
 .tab-filter.tab-in {
-  opacity: 1; }
+  z-index: 2; }
+  .tab-filter.tab-in:before, .tab-filter.tab-in:after {
+    border-bottom-color: #FFF; }
+  .tab-filter.tab-in:before {
+    box-shadow: 2px 2px 0 #FFF; }
+  .tab-filter.tab-in:after {
+    box-shadow: -2px 2px 0 #FFF; }
 
 .tab-filter.tab-out {
-  opacity: 0.6; }
+  z-index: 0; }
 
 /*# sourceMappingURL=components.css.map */

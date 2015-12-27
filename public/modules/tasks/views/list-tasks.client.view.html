@@ -23,8 +23,8 @@
                 <label class="width-100 text-center" ng-click="tabFilter(day.name)">{{day.name}}</label>
             </div>
         </div>
-        <ul class="taskList col-lg-12 col-md-12 col-sm-12 tab-body">
-            <div ng-if="filteredTasks.length === 0" class="relative width-100 text-center">
+        <ul class="taskList col-lg-12 col-md-12 col-sm-12">
+            <div ng-if="filteredTasks.length === 0" class="relative width-100 text-center margin-top-20">
                 <p class="relative width-100">No items were found using your selection criteria.</p>
             </div>
             <li class="taskItem" ng-repeat="taskItem in (filteredTasks = (tasks | filter: filterConfig.search.day))" ng-hide="loading(taskItem)">

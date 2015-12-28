@@ -9,7 +9,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
 		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.whichController = 'task';
-        $scope.isLoading = true;
+        $scope.isLoading = false;
         //paging variables.
         $scope.pageConfig = {
             currentPage: 0,
@@ -41,24 +41,24 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
         
         function setNewTask() {
             $scope.newTask = {
-                    description: '',
-                    link: {
-                        linked: '',
-                        type: '',
-                        id: ''
-                    },
-                    day: '',
-                    date: '',
-                    repeat: 0,
-                    category: '',
-                    daily: false,
-                    checklist: false,
-                    checklistItems: [],
-                    isAddTask: false
-                };
+                description: '',
+                link: {
+                    linked: '',
+                    type: '',
+                    id: ''
+                },
+                day: '',
+                date: '',
+                repeat: 0,
+                category: '',
+                daily: false,
+                checklist: false,
+                checklistItems: [],
+                isAddTask: false
+            };
         }
         setNewTask();
-
+        
 		// Create new Task
 		$scope.create = function() {
 			// Create new Task object
@@ -70,7 +70,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                     id: this.newTask.linkItem
                 },
                 day: this.newTask.day,
-                date: this.newTask.date,
+                date: this.newTask.date === '' ? new Date() : this.newTask.date,
                 repeat: this.newTask.repeat,
                 completeTimes: this.newTask.completeTimes,
                 updateCheck: this.newTask.updateCheck,
@@ -86,8 +86,6 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
 			task.$save(function(response) {
 				$location.path('tasks');
                 NotificationFactory.success('Saved!', 'New Task was successfully saved!');
-                
-				// Clear form fields?
                 setNewTask();
                 find();
 			}, function(errorResponse) {

@@ -319,7 +319,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  min-height: inherit;
+  min-height: 250px;
   height: inherit;
   width: 100%;
   opacity: 0;

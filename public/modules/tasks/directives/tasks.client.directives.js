@@ -56,6 +56,10 @@ angular.module('tasks')
             scope.takeStep = function() {
                 scope.stepConfig.currentStep += 1;
             };
+            scope.cancel = function() {
+                scope.stepConfig.currentStep = 1;
+                scope.newTask.isAddTask = false;
+            };
             
         }
     };

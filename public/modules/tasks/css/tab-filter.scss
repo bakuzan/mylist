@@ -1,74 +1,72 @@
+/** Tab filter base styling **/
+
 .tab-filter-container {
     position: relative;
-    &:after {
-        position: absolute;
-        content: '';
-        width: 100%;
-        bottom: 0;
-        left: 0;
-        border-bottom: 1px solid #AAA;
-        z-index: 1;
-    }
-    &:before {
-        z-index: 1;
-    }
+    text-align: center;
+    padding: 0;
+    margin: 0;
+//    &:after {
+//        position: absolute;
+//        bottom: 0;
+//        left: 0;
+//        content: '';
+//        width: 100%;
+//        border-bottom: 1px solid #AAA;
+//        z-index: 1;
+//    }
+//    &:before {
+//        z-index: 1;
+//    }
 }
 
 .tab-filter {
-//    width: (100 / 9) * 1%;
+    position: relative;
+    display: inline-block;
+    background: #ECECEC;
+    width: (84 / 7) * 1%;
     height: 25px;
-    min-height: 25px;
-    background: linear-gradient(to bottom, #ECECEC 50%, #D1D1D1 100%);
-    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.4), inset 0 1px 0 #FFF;
-    text-shadow: 0 1px #FFF;
-    padding: 0 20px;
+    padding: 0 10px;
     margin: 0 -5px;
-    z-index: 0;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
-    &:before, &:after {
-        position: absolute;
-        bottom: -1px;
-        width: 6px;
-        height: 6px;
-        content: '';
-        border: 1px solid #AAA;
+    z-index: 0;
+    &:first-child, &:nth-child(2) {
+        width: 8%;
     }
-    &:before {
-        left: -6px;
-        border-bottom-right-radius: 6px;
-        border-width: 0 1px 1px 0;
-        box-shadow: 2px 2px 0 #ECECEC;
-    }
-    &:after {
-        right: -6px;
-        border-bottom-left-radius: 6px;
-        border-width: 0 0 1px 1px;
-        box-shadow: -2px 2px 0 #ECECEC;
-    }
+//    &:before, &:after {
+//        position: absolute;
+//        bottom: -1px;
+//        width: 6px;
+//        height: 6px;
+//        content: '';
+//        border: 1px solid #AAA;
+//    }
+//    &:before {
+//        left: -6px;
+//        border-bottom-right-radius: 6px;
+//        border-width: 0 1px 1px 0;
+//        box-shadow: 2px 2px 0 #ECECEC;
+//    }
+//    &:after {
+//        right: -6px;
+//        border-bottom-left-radius: 6px;
+//        border-width: 0 0 1px 1px;
+//        box-shadow: -2px 2px 0 #ECECEC;
+//    }
     label {
         height: 25px;
         margin: 0;
     }
 }
 
-.tab-filter.tab-transition {
-    @include transition(all 0.5s linear);
-}
-
 .tab-filter.tab-in {
+    background: #FFF;
+    border-bottom-color: #FFF;
     z-index: 2;
-    &:before, &:after {
-        border-bottom-color: #FFF;
-    }
-    &:before {
-        box-shadow: 2px 2px 0 #FFF;
-    }
-    &:after {
-        box-shadow: -2px 2px 0 #FFF;
-    }
-}
-
-.tab-filter.tab-out {
-    z-index: 0;
+//    &:before {
+//        box-shadow: 2px 2px 0 #FFF;
+//    }
+//    &:after {
+//        box-shadow: -2px 2px 0 #FFF;
+//    }
 }

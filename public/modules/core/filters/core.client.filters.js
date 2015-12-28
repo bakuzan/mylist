@@ -28,12 +28,12 @@ angular.module('core').filter('dayFilter', function() {
         });
     };
 })
-.filter('dateFilter', function() {
+.filter('calendarFilter', function() {
     return function(array, datesSelected) {
         return array.filter(function(item) {
             //date filter
-            if (item.date===null || item.date===undefined) {
-                if (datesSelected==='current') {
+            if (item.date === null || item.date === undefined) {
+                if (datesSelected === false) {
                     return item;
                 }
                 return false;
@@ -49,7 +49,7 @@ angular.module('core').filter('dayFilter', function() {
 //            console.log('diff: ' + diff);
 //              console.log('wk-end: ' + currentWkEnd); // 0123-56-89
 
-            if (datesSelected==='current') {
+            if (datesSelected === false) {
                 if (item.date.substr(0,4) < currentWkEnd.substr(0,4)) {
                     return item;
                 } else if (item.date.substr(0,4) === currentWkEnd.substr(0,4)) {
@@ -61,7 +61,7 @@ angular.module('core').filter('dayFilter', function() {
                         }
                     }
                 }
-            } else if (datesSelected==='future') {
+            } else if (datesSelected === true) {
                 if (item.date.substr(0,4) > currentWkEnd.substr(0,4)) {
                     return item;
                 } else if (item.date.substr(0,4) === currentWkEnd.substr(0,4)) {

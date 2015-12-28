@@ -1,9 +1,10 @@
 <div>
+    <div ng-if="page !== 'task'">
             <div class="input-group">
                 <div class="input-group-addon">
                     <i class="fa fa-search"></i>
                 </div>
-               <input type="text" class="form-control" placeholder="search anime" ng-model="filterConfig.search[filterConfig.selectListOptions.searchName]">
+               <input type="text" class="form-control" placeholder="search" ng-model="filterConfig.search[filterConfig.selectListOptions.searchName]">
            </div>
             <div class="input-group mt">
                 <div class="input-group-addon clickable" clear-tag-values>
@@ -115,6 +116,34 @@
             </div>
             <input class="form-control" type="checkbox" data-ng-model="filterConfig.taglessItem">
         </div>
+    </div>
+    <div ng-if="page === 'task'">
+        <div class="input-group">
+            <div class="input-group-addon">
+                <i class="fa fa-search"></i>
+            </div>
+           <input type="text" class="form-control" placeholder="search" ng-model="filterConfig.search.description">
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 input-group mt">
+            <div class="input-group-addon">
+              <i class="fa fa-list-ol"></i>
+            </div>
+            <input type="text" class="form-control" value="Showing {{ items.length }} tasks." disabled>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 mt input-group">
+            <div class="input-group-addon">
+              <i class="fa fa-check-square"></i>
+            </div>
+            <input type="text" class="form-control" 
+                   value="{{ (items | filter: { complete: false }).length }} remaining of {{ items.length }} current tasks." disabled>
+        </div>
+        <div class="input-group mt">        
+            <div class="input-group-addon">
+                <i class="fa fa-calendar-o"></i>
+            </div>
+            <input class="form-control" type="checkbox" data-ng-model="filterConfig.datesSelected">
+        </div>
+    </div>
 </div>
 
 

@@ -3,21 +3,16 @@
 
 .tab-filter-container {
     &:after {
-        border-bottom: 1px solid $brand-secondary;
+        border-bottom: 1px solid $brand-primary;
     }
 }
 
 .tab-filter {
-    background: linear-gradient(to bottom, $brand-primary 50%, lighten($brand-primary, 10%) 100%);
-    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.4), inset 0 1px 0 $brand-primary;
-    text-shadow: 0 1px $brand-accent;
+    background: $brand-primary;
+    border: 1px solid $brand-secondary;
 }
 
 .tab-filter.tab-in {
     background: $brand-secondary;
-    border-bottom: 1px solid $brand-secondary;
-}
-
-.tab-filter.tab-out {
-    background: $brand-primary;
+    border-bottom-color: $brand-secondary;
 }

@@ -6,15 +6,17 @@
         </h3>
     </div>
     <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }">
-        <a class="menu-header-bar clickable" ng-init="newTask.isAddTask=false" ng-click="newTask.isAddTask = !newTask.isAddTask;" ignore-here="true">
+        <a class="menu-header-bar clickable" ng-init="newTask.isAddTask=false" 
+           ng-click="newTask.isAddTask = !newTask.isAddTask;" ignore-here="true">
             <i class="fa" ng-class="(newTask.isAddTask === false) ? 'fa-plus-square' : 'fa-minus-square'"></i> Add task
         </a>
-        <div page-controls page-config="pageConfig" showing-count="filterConfig.showingCount" class="margin-top-10"></div>
         <div task-create create="newTask" ng-show="newTask.isAddTask"></div>
+        <div page-controls page-config="pageConfig" showing-count="filterConfig.showingCount" class="margin-top-10"></div>
+<!--        <div list-filters filter-config="filterConfig" items="filteredTasks" page="whichController"></div>-->
     </div>
     <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
     <div class="col-lg-8 col-md-6 col-sm-6 item-list-container">
-        <div class="tab-filter-container display-inline-flex width-100">
+        <div class="tab-filter-container width-100">
             <div class="relative tab-filter clickable" ng-class="(filterConfig.search.day === '') ? 'tab-in' : 'tab-out' ">
                 <label class="width-100 text-center" ng-click="tabFilter('')">ALL</label>
             </div>
@@ -24,10 +26,10 @@
             </div>
         </div>
         <ul class="taskList col-lg-12 col-md-12 col-sm-12">
-            <div ng-if="filteredTasks.length === 0" class="relative width-100 text-center margin-top-20">
+            <div ng-if="filteredTasks.length === 0" class="relative width-100 margin-top-20 text-center">
                 <p class="relative width-100">No items were found using your selection criteria.</p>
             </div>
-            <li class="taskItem" ng-repeat="taskItem in (filteredTasks = (tasks | filter: filterConfig.search.day))" ng-hide="loading(taskItem)">
+            <li class="taskItem" ng-repeat="taskItem in (filteredTasks = (tasks | filter: filterConfig.search))" ng-hide="loading(taskItem)">
                 <input type="checkbox" class="taskCheckbox" ng-model="taskItem.complete" ng-change="tickOff(taskItem)" ng-disabled="taskItem.complete || taskItem.checklist">
                 <span class="task-description-text complete-{{taskItem.complete}}" ng-class="taskItem.checklist === true ? 'clickable' : ''"
                       ng-click="taskItem.checklist === true ? viewTask = !viewTask : ''">

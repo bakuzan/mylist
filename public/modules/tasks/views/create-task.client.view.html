@@ -14,7 +14,7 @@
                     <label for="category" class="col-md-2 control-label">Category</label>
                     <!--<i class="fa fa-caret-down selectArrow"></i>-->
                     <div class="col-md-8">
-                        <select required id="category" class="form-control" ng-model="newTask.category" ng-options="obj.name as obj.name for obj in commonArrays.categories">
+                        <select required id="category" class="form-control" ng-model="newTask.category" ng-options="obj.name as obj.name for obj in $parent.commonArrays.categories">
                             <option class="disabled" value="">Choose a category</option>
                         </select>
                     </div>
@@ -23,7 +23,7 @@
                     <label for="day" class="col-md-2 control-label">Day</label>
                     <!--<i class="fa fa-caret-down selectArrow"></i>-->
                     <div class="col-md-8">
-                        <select required id="day" class="form-control" ng-model="newTask.day" ng-options="obj.name as obj.name for obj in commonArrays.days">
+                        <select required id="day" class="form-control" ng-model="newTask.day" ng-options="obj.name as obj.name for obj in $parent.commonArrays.days">
                             <option class="disabled" value="">Choose a day</option>
                         </select>
                     </div>

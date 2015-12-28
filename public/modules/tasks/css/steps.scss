@@ -1,0 +1,46 @@
+/** Step base styling **/
+
+.step {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-height: inherit;
+    height: inherit;
+    width: 100%;
+    opacity: 0;
+    z-index: 1;
+}
+.step-inner-container {
+    min-height: inherit;
+    height: inherit;
+}
+
+.step.ng-hide-add,
+.step.ng-hide-remove {
+  @include transition(all linear 0.5s);
+  display: block!important;
+}
+.step-transition {
+  @include transition(all linear 0.5s);
+}
+.step.ng-hide-add.ng-hide-add-active,
+.step.ng-hide-remove {
+  opacity: 0;
+}
+.step-out {
+    opacity: 0;
+}
+.step-in {
+    opacity: 1;
+}
+.step.ng-hide-add,
+.step.ng-hide-remove.ng-hide-remove-active {
+  opacity: 1;
+}
+
+.step-button-group {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    display: inline-flex;
+}

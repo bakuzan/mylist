@@ -461,13 +461,13 @@ nav {
   top: 10vh;
   left: 20vw;
   width: 60vw;
-  height: 75vh;
+  height: 50vh;
   @extend .tile-style;
 //  border: 5px solid $blue;
   margin-top: 10px; 
   background-color: #FFF;
   align-content: center;
-  overflow-y: auto;
+//  overflow-y: auto;
   z-index: 1000;
 }
 

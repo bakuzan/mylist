@@ -2261,53 +2261,55 @@ angular.module('core').filter('dayFilter', function() {
         });
     };
 })
-.filter('dateFilter', function() {
+.filter('calendarFilter', function() {
     return function(array, datesSelected) {
-        return array.filter(function(item) {
-            //date filter
-            if (item.date===null || item.date===undefined) {
-                if (datesSelected==='current') {
-                    return item;
+        if (array) {
+            return array.filter(function(item) {
+                //date filter
+                if (item.date === null || item.date === undefined) {
+                    if (datesSelected === false) {
+                        return item;
+                    }
+                    return false;
                 }
-                return false;
-            }
-            //console.log(item.date);
-            var day = new Date().getDay(),
-            diff = new Date().getDate() - day + (day === 0 ? 0:7);
-            var temp = new Date();
-            var wkEnd = new Date(temp.setDate(diff));
-            var currentWkEnd = wkEnd.toISOString().substring(0,10);
-//            console.log('day: ' + day);
-//            console.log('date: ' + $scope.today.getDate());
-//            console.log('diff: ' + diff);
-//              console.log('wk-end: ' + currentWkEnd); // 0123-56-89
+                //console.log(item.date);
+                var day = new Date().getDay(),
+                diff = new Date().getDate() - day + (day === 0 ? 0:7);
+                var temp = new Date();
+                var wkEnd = new Date(temp.setDate(diff));
+                var currentWkEnd = wkEnd.toISOString().substring(0,10);
+    //            console.log('day: ' + day);
+    //            console.log('date: ' + $scope.today.getDate());
+    //            console.log('diff: ' + diff);
+    //              console.log('wk-end: ' + currentWkEnd); // 0123-56-89
 
-            if (datesSelected==='current') {
-                if (item.date.substr(0,4) < currentWkEnd.substr(0,4)) {
-                    return item;
-                } else if (item.date.substr(0,4) === currentWkEnd.substr(0,4)) {
-                    if (item.date.substr(5,2) < currentWkEnd.substr(5,2)) {
+                if (datesSelected === false) {
+                    if (item.date.substr(0,4) < currentWkEnd.substr(0,4)) {
                         return item;
-                    } else if (item.date.substr(5,2) === currentWkEnd.substr(5,2)) {
-                        if (item.date.substr(8,2) <= currentWkEnd.substr(8,2)) {
+                    } else if (item.date.substr(0,4) === currentWkEnd.substr(0,4)) {
+                        if (item.date.substr(5,2) < currentWkEnd.substr(5,2)) {
                             return item;
+                        } else if (item.date.substr(5,2) === currentWkEnd.substr(5,2)) {
+                            if (item.date.substr(8,2) <= currentWkEnd.substr(8,2)) {
+                                return item;
+                            }
+                        }
+                    }
+                } else if (datesSelected === true) {
+                    if (item.date.substr(0,4) > currentWkEnd.substr(0,4)) {
+                        return item;
+                    } else if (item.date.substr(0,4) === currentWkEnd.substr(0,4)) {
+                        if (item.date.substr(5,2) > currentWkEnd.substr(5,2)) {
+                            return item;
+                        } else if (item.date.substr(5,2) === currentWkEnd.substr(5,2)) {
+                            if (item.date.substr(8,2) > currentWkEnd.substr(8,2)) {
+                                return item;
+                            }
                         }
                     }
                 }
-            } else if (datesSelected==='future') {
-                if (item.date.substr(0,4) > currentWkEnd.substr(0,4)) {
-                    return item;
-                } else if (item.date.substr(0,4) === currentWkEnd.substr(0,4)) {
-                    if (item.date.substr(5,2) > currentWkEnd.substr(5,2)) {
-                        return item;
-                    } else if (item.date.substr(5,2) === currentWkEnd.substr(5,2)) {
-                        if (item.date.substr(8,2) > currentWkEnd.substr(8,2)) {
-                            return item;
-                        }
-                    }
-                }
-            }
-        });
+            });
+        }
     };
 })
 .filter('dateSuffix', function($filter) {
@@ -3699,7 +3701,11 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             showingCount: 0,
             sortType: '',
             sortReverse: true,
-            search: { day: '' }
+            search: {
+                description: '',
+                day: ''
+            },
+            datesSelected: false
         };
         $scope.commonArrays = ListService.getCommonArrays();
         
@@ -3714,6 +3720,26 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
         $scope.weekBeginning = function() {
             return DiscoveryFactory.getWeekBeginning();
         };
+        
+        function setNewTask() {
+            $scope.newTask = {
+                    description: '',
+                    link: {
+                        linked: '',
+                        type: '',
+                        id: ''
+                    },
+                    day: '',
+                    date: '',
+                    repeat: 0,
+                    category: '',
+                    daily: false,
+                    checklist: false,
+                    checklistItems: [],
+                    isAddTask: false
+                };
+        }
+        setNewTask();
 
 		// Create new Task
 		$scope.create = function() {
@@ -3726,6 +3752,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                     id: this.newTask.linkItem
                 },
                 day: this.newTask.day,
+                date: this.newTask.date,
                 repeat: this.newTask.repeat,
                 completeTimes: this.newTask.completeTimes,
                 updateCheck: this.newTask.updateCheck,
@@ -3739,9 +3766,12 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             console.log($scope.newTask, task, this.newTask);
 			// Redirect after save
 			task.$save(function(response) {
-				$location.path('tasks/');
+				$location.path('tasks');
                 NotificationFactory.success('Saved!', 'New Task was successfully saved!');
+                
 				// Clear form fields?
+                setNewTask();
+                find();
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
                 NotificationFactory.error('Error!', 'New Task failed to save!');
@@ -3767,7 +3797,9 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
 
 		// Remove existing Task
 		$scope.deleteTask = function(task) {
-            NotificationFactory.confirmation(remove(task));
+            NotificationFactory.confirmation(function() { 
+                remove(task);
+            });
 		};
 
 		// Update existing Task
@@ -3924,6 +3956,10 @@ angular.module('tasks')
         templateUrl: '/modules/tasks/views/create-task.client.view.html',
         link: function (scope, element, attrs) {
             scope.newTask = scope.create;
+            scope.stepConfig = {
+                currentStep: 1,
+                stepCount: 2
+            };
             
             scope.newTask.checklistArray = [];
             //for adding/removing options.
@@ -3958,7 +3994,13 @@ angular.module('tasks')
                     }
                 });
             };
-
+            
+            scope.backStep = function() {
+                scope.stepConfig.currentStep -= 1;
+            };
+            scope.takeStep = function() {
+                scope.stepConfig.currentStep += 1;
+            };
             
         }
     };

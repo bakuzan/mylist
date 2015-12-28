@@ -11,6 +11,10 @@ angular.module('tasks')
         templateUrl: '/modules/tasks/views/create-task.client.view.html',
         link: function (scope, element, attrs) {
             scope.newTask = scope.create;
+            scope.stepConfig = {
+                currentStep: 1,
+                stepCount: 2
+            };
             
             scope.newTask.checklistArray = [];
             //for adding/removing options.
@@ -45,7 +49,13 @@ angular.module('tasks')
                     }
                 });
             };
-
+            
+            scope.backStep = function() {
+                scope.stepConfig.currentStep -= 1;
+            };
+            scope.takeStep = function() {
+                scope.stepConfig.currentStep += 1;
+            };
             
         }
     };

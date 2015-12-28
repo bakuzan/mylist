@@ -19,7 +19,11 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             showingCount: 0,
             sortType: '',
             sortReverse: true,
-            search: { day: '' }
+            search: {
+                description: '',
+                day: ''
+            },
+            datesSelected: false
         };
         $scope.commonArrays = ListService.getCommonArrays();
         
@@ -34,6 +38,26 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
         $scope.weekBeginning = function() {
             return DiscoveryFactory.getWeekBeginning();
         };
+        
+        function setNewTask() {
+            $scope.newTask = {
+                    description: '',
+                    link: {
+                        linked: '',
+                        type: '',
+                        id: ''
+                    },
+                    day: '',
+                    date: '',
+                    repeat: 0,
+                    category: '',
+                    daily: false,
+                    checklist: false,
+                    checklistItems: [],
+                    isAddTask: false
+                };
+        }
+        setNewTask();
 
 		// Create new Task
 		$scope.create = function() {
@@ -46,6 +70,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                     id: this.newTask.linkItem
                 },
                 day: this.newTask.day,
+                date: this.newTask.date,
                 repeat: this.newTask.repeat,
                 completeTimes: this.newTask.completeTimes,
                 updateCheck: this.newTask.updateCheck,
@@ -59,9 +84,12 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             console.log($scope.newTask, task, this.newTask);
 			// Redirect after save
 			task.$save(function(response) {
-				$location.path('tasks/');
+				$location.path('tasks');
                 NotificationFactory.success('Saved!', 'New Task was successfully saved!');
+                
 				// Clear form fields?
+                setNewTask();
+                find();
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
                 NotificationFactory.error('Error!', 'New Task failed to save!');
@@ -87,7 +115,9 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
 
 		// Remove existing Task
 		$scope.deleteTask = function(task) {
-            NotificationFactory.confirmation(remove(task));
+            NotificationFactory.confirmation(function() { 
+                remove(task);
+            });
 		};
 
 		// Update existing Task

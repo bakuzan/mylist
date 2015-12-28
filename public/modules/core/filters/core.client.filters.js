@@ -30,51 +30,53 @@ angular.module('core').filter('dayFilter', function() {
 })
 .filter('calendarFilter', function() {
     return function(array, datesSelected) {
-        return array.filter(function(item) {
-            //date filter
-            if (item.date === null || item.date === undefined) {
-                if (datesSelected === false) {
-                    return item;
+        if (array) {
+            return array.filter(function(item) {
+                //date filter
+                if (item.date === null || item.date === undefined) {
+                    if (datesSelected === false) {
+                        return item;
+                    }
+                    return false;
                 }
-                return false;
-            }
-            //console.log(item.date);
-            var day = new Date().getDay(),
-            diff = new Date().getDate() - day + (day === 0 ? 0:7);
-            var temp = new Date();
-            var wkEnd = new Date(temp.setDate(diff));
-            var currentWkEnd = wkEnd.toISOString().substring(0,10);
-//            console.log('day: ' + day);
-//            console.log('date: ' + $scope.today.getDate());
-//            console.log('diff: ' + diff);
-//              console.log('wk-end: ' + currentWkEnd); // 0123-56-89
+                //console.log(item.date);
+                var day = new Date().getDay(),
+                diff = new Date().getDate() - day + (day === 0 ? 0:7);
+                var temp = new Date();
+                var wkEnd = new Date(temp.setDate(diff));
+                var currentWkEnd = wkEnd.toISOString().substring(0,10);
+    //            console.log('day: ' + day);
+    //            console.log('date: ' + $scope.today.getDate());
+    //            console.log('diff: ' + diff);
+    //              console.log('wk-end: ' + currentWkEnd); // 0123-56-89
 
-            if (datesSelected === false) {
-                if (item.date.substr(0,4) < currentWkEnd.substr(0,4)) {
-                    return item;
-                } else if (item.date.substr(0,4) === currentWkEnd.substr(0,4)) {
-                    if (item.date.substr(5,2) < currentWkEnd.substr(5,2)) {
+                if (datesSelected === false) {
+                    if (item.date.substr(0,4) < currentWkEnd.substr(0,4)) {
                         return item;
-                    } else if (item.date.substr(5,2) === currentWkEnd.substr(5,2)) {
-                        if (item.date.substr(8,2) <= currentWkEnd.substr(8,2)) {
+                    } else if (item.date.substr(0,4) === currentWkEnd.substr(0,4)) {
+                        if (item.date.substr(5,2) < currentWkEnd.substr(5,2)) {
                             return item;
+                        } else if (item.date.substr(5,2) === currentWkEnd.substr(5,2)) {
+                            if (item.date.substr(8,2) <= currentWkEnd.substr(8,2)) {
+                                return item;
+                            }
+                        }
+                    }
+                } else if (datesSelected === true) {
+                    if (item.date.substr(0,4) > currentWkEnd.substr(0,4)) {
+                        return item;
+                    } else if (item.date.substr(0,4) === currentWkEnd.substr(0,4)) {
+                        if (item.date.substr(5,2) > currentWkEnd.substr(5,2)) {
+                            return item;
+                        } else if (item.date.substr(5,2) === currentWkEnd.substr(5,2)) {
+                            if (item.date.substr(8,2) > currentWkEnd.substr(8,2)) {
+                                return item;
+                            }
                         }
                     }
                 }
-            } else if (datesSelected === true) {
-                if (item.date.substr(0,4) > currentWkEnd.substr(0,4)) {
-                    return item;
-                } else if (item.date.substr(0,4) === currentWkEnd.substr(0,4)) {
-                    if (item.date.substr(5,2) > currentWkEnd.substr(5,2)) {
-                        return item;
-                    } else if (item.date.substr(5,2) === currentWkEnd.substr(5,2)) {
-                        if (item.date.substr(8,2) > currentWkEnd.substr(8,2)) {
-                            return item;
-                        }
-                    }
-                }
-            }
-        });
+            });
+        }
     };
 })
 .filter('dateSuffix', function($filter) {

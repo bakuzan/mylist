@@ -100,7 +100,7 @@
                 <div class="input-group-addon">
                   <i class="fa fa-check-square"></i>
                 </div>
-                <input type="text" class="form-control" value="{{ (taskItem | filter: {complete: false } | dateFilter: 'current').length }} remaining of {{ (taskItem | dateFilter: 'current').length }} current tasks." disabled>
+                <input type="text" class="form-control" value="{{ (taskItem | filter: {complete: false } | calendarFilter: 'current').length }} remaining of {{ (taskItem | calendarFilter: 'current').length }} current tasks." disabled>
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12 mt input-group">
                 <div class="input-group-addon">
@@ -149,7 +149,7 @@
         <div class="col-lg-3 col-md-5 col-sm-5 mt placeholder-container"></div>
         <div class="col-lg-8 col-md-6 col-sm-6 mt task-list-container">
             <ul class="taskList col-lg-12 col-md-12 col-sm-12">
-                <li class="taskItem" ng-repeat="taskItem in (filteredTasks = (taskItem | filter: search | dayFilter: daySelected | dateFilter: datesSelected)) track by $index" ng-model="taskItem">
+                <li class="taskItem" ng-repeat="taskItem in (filteredTasks = (taskItem | filter: search | dayFilter: daySelected | calendarFilter: datesSelected)) track by $index" ng-model="taskItem">
                     <input type="checkbox" class="taskCheckbox" ng-model="taskItem.complete" ng-change="save(taskItem.description)" ng-disabled="taskItem.complete || taskItem.checklist">
                     <span class="task-description-text complete-{{taskItem.complete}}" ng-class="taskItem.checklist === true ? 'clickable' : ''" ng-click="taskItem.checklist === true ? viewTask = !viewTask : ''">{{taskItem.description}}</span>
                     <span class="separator"> - </span>

@@ -295,7 +295,7 @@
   position: relative;
   display: inline-block;
   background: #ECECEC;
-  width: 12%;
+  width: 13%;
   height: 25px;
   padding: 0 10px;
   margin: 0 -5px;
@@ -303,10 +303,11 @@
   border-top-right-radius: 6px;
   z-index: 0; }
   .tab-filter:first-child, .tab-filter:nth-child(2) {
-    width: 8%; }
+    width: 9%; }
   .tab-filter label {
     height: 25px;
-    margin: 0; }
+    margin: 0;
+    overflow: hidden; }
 
 .tab-filter.tab-in {
   background: #FFF;

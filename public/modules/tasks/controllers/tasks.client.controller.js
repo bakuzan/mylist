@@ -62,36 +62,41 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
 		// Create new Task
 		$scope.create = function() {
 			// Create new Task object
+            console.log(this.newTask.link);
 			var task = new Tasks ({
 				description: this.newTask.description,
                 link: {
-                    linked: this.newTask.linked,
-                    type: this.newTask.linkType,
-                    id: this.newTask.linkItem
+                    linked: this.newTask.link.linked,
+                    type: (this.newTask.link.linked === false) ? ''      : 
+                          (this.newTask.category === 'Watch')  ? 'anime' : 
+                                                                 'manga' ,
+                    id: this.newTask.link.item === '' ? '' : this.newTask.link.item._id 
                 },
-                day: this.newTask.day,
+                day: this.newTask.daily === true ? 'Any' : this.newTask.day,
                 date: this.newTask.date === '' ? new Date() : this.newTask.date,
-                repeat: this.newTask.repeat,
-                completeTimes: this.newTask.completeTimes,
-                updateCheck: this.newTask.updateCheck,
+                repeat: (this.newTask.link.linked === false) ? this.newTask.repeat                 : 
+                        (this.newTask.category === 'Watch')  ? this.newTask.link.item.finalEpisode :
+                                                               this.newTask.link.item.finalChapter ,
+                completeTimes: (this.newTask.link.linked === false) ? 0                               :
+                               (this.newTask.category === 'Watch')  ? this.newTask.link.item.episodes :
+                                                                      this.newTask.link.item.chapters ,
                 complete: false,
-                category: this.newTask.category,
-                daily: this.newTask.daily,
+                category: this.newTask.category === '' ? 'Other' : this.newTask.category,
+                daily: this.newTask.checklist === true ? false : this.newTask.daily,
                 dailyRefresh: new Date(),
                 checklist: this.newTask.checklist,
-                checklistItems: this.newTask.checklistArray
+                checklistItems: this.newTask.checklistItems
 			});
-            console.log($scope.newTask, task, this.newTask);
-			// Redirect after save
-			task.$save(function(response) {
-				$location.path('tasks');
-                NotificationFactory.success('Saved!', 'New Task was successfully saved!');
-                setNewTask();
-                find();
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-                NotificationFactory.error('Error!', 'New Task failed to save!');
-			});
+            console.log(task, this.newTask);
+//			// Redirect after save
+//			task.$save(function(response) {
+//				$location.path('tasks');
+//                NotificationFactory.success('Saved!', 'New Task was successfully saved!');
+//                find();
+//			}, function(errorResponse) {
+//				$scope.error = errorResponse.data.message;
+//                NotificationFactory.error('Error!', 'New Task failed to save!');
+//			});
 		};
         
         function remove(task) {

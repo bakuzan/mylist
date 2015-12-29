@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tasks')
-.directive('taskCreate', ['ListService', function (ListService) {
+.directive('taskCreate', ['ListService', 'NotificationFactory', 'Animeitems', 'Mangaitems', function (ListService, NotificationFactory, Animeitems, Mangaitems) {
     return {
         restrict: 'A',
         replace: true,
@@ -10,56 +10,81 @@ angular.module('tasks')
         },
         templateUrl: '/modules/tasks/views/create-task.client.view.html',
         link: function (scope, element, attrs) {
+            var newTaskModel = {};
             scope.newTask = scope.create;
+            angular.copy(scope.newTask, newTaskModel);
             scope.stepConfig = {
                 currentStep: 1,
                 stepCount: 2
             };
             
-            scope.newTask.checklistArray = [];
             //for adding/removing options.
             scope.addChecklistItem = function () {
                     if (scope.newTask.checklistItem!=='' && scope.newTask.checklistItem!==undefined) {
                         var i = 0;
                         var alreadyAdded = false;
-                        if (scope.newTask.checklistArray.length > 0) {
-                            while(i < scope.newTask.checklistArray.length) {
-                                if (scope.newTask.checklistArray[i].text === scope.newTask.checklistItem) {
+                        if (scope.newTask.checklistItems.length > 0) {
+                            while(i < scope.newTask.checklistItems.length) {
+                                if (scope.newTask.checklistItems[i].text === scope.newTask.checklistItem) {
                                     alreadyAdded = true;
                                 }
                                 i++;
                             }
                             //if not in array add it.
                             if (alreadyAdded === false) {
-                                scope.newTask.checklistArray.push({ text: scope.newTask.checklistItem, complete: false });
+                                scope.newTask.checklistItems.push({ text: scope.newTask.checklistItem, complete: false });
                             }
                         } else {
-                            scope.newTask.checklistArray.push({ text: scope.newTask.checklistItem, complete: false });
+                            scope.newTask.checklistItems.push({ text: scope.newTask.checklistItem, complete: false });
                         }
                     }
                     scope.newTask.checklistItem = '';
             };
             scope.dropChecklistItem = function(text) {
-                var deletingItem = scope.newTask.checklistArray;
-                scope.newTask.checklistArray = [];
+                var deletingItem = scope.newTask.checklistItems;
+                scope.newTask.checklistItems = [];
                 //update the task.
                 angular.forEach(deletingItem, function(item) {
                     if (item.text !== text) {
-                        scope.newTask.checklistArray.push(item);
+                        scope.newTask.checklistItems.push(item);
                     }
                 });
             };
             
-            scope.backStep = function() {
+            scope.backStep = function(step) {
                 scope.stepConfig.currentStep -= 1;
             };
-            scope.takeStep = function() {
-                scope.stepConfig.currentStep += 1;
+            scope.takeStep = function(step) {
+                var check = process(step);
+                if (check.valid) {
+                    scope.stepConfig.currentStep += 1;
+                } else {
+                    NotificationFactory.popup('Attention!', check.message, 'warning');
+                }
             };
             scope.cancel = function() {
                 scope.stepConfig.currentStep = 1;
-                scope.newTask.isAddTask = false;
+                angular.copy(newTaskModel, scope.newTask);
+                scope.scheduleForm.$setPristine();
             };
+            
+            function process(step) {
+                switch(step) {
+                    case 1:
+                        if (scope.newTask.link.linked === true) {
+                            var category = scope.newTask.category;
+                            if (category === 'Watch') {
+                                scope.linkItems = Animeitems.query();
+                            } else if (category === 'Read') {
+                                scope.linkItems = Mangaitems.query();
+                            } else {
+                                return { valid: false, message: 'Category must be either Watch or Read for linked items!' };
+                            }
+                        }
+                        return { valid: true };
+                        break;
+                }
+            }
             
         }
     };

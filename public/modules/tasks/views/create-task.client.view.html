@@ -36,17 +36,6 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="checklist" class="col-lg-3 col-md-3 col-sm-3 control-label">Checklist?</label>
-                            <div class="col-lg-8 col-md-8 col-sm-8">
-                                <input type="checkbox" id="checklist" class="form-control" ng-model="newTask.checklist" ng-change="newTask.repeat = (newTask.checklist === true) ? 1 : 0">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="step" ng-style="{'z-index': stepConfig.currentStep === 2 ? 2 : 1 }" 
-                     ng-class="(stepConfig.currentStep === 2) ? 'step-transition step-in' : 'step-transition step-out'">
-                    <div class="step-inner-container">
-                        <div class="form-group">
                             <label for="category" class="col-lg-3 col-md-3 col-sm-3 control-label">Category</label>
                             <!--<i class="fa fa-caret-down selectArrow"></i>-->
                             <div class="col-lg-8 col-md-8 col-sm-8">
@@ -55,45 +44,75 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group" ng-hide="newTask.checklist">
-                            <label for="daily" class="col-lg-3 col-md-3 col-sm-3 control-label">Daily?</label>
-                            <div class="col-lg-8 col-md-8 col-sm-8">
-                                <input type="checkbox" id="daily" class="form-control" ng-model="newTask.daily">
+                    </div>
+                </div>
+                <div class="step" ng-style="{'z-index': stepConfig.currentStep === 2 ? 2 : 1 }" 
+                     ng-class="(stepConfig.currentStep === 2) ? 'step-transition step-in' : 'step-transition step-out'">
+                    <div class="step-inner-container">
+                        <div ng-hide="newTask.link.linked">
+                            <div class="form-group" ng-hide="newTask.daily">
+                                <label for="checklist" class="col-lg-3 col-md-3 col-sm-3 control-label">Checklist?</label>
+                                <div class="col-lg-8 col-md-8 col-sm-8">
+                                    <input type="checkbox" id="checklist" class="form-control" ng-model="newTask.checklist" ng-change="newTask.repeat = (newTask.checklist === true) ? 1 : 0; newTask.daily = (newTask.checklist === true) ? false : newTask.daily">
+                                </div>
+                            </div>
+                            <div class="form-group" ng-hide="newTask.checklist">
+                                <label for="daily" class="col-lg-3 col-md-3 col-sm-3 control-label">Daily?</label>
+                                <div class="col-lg-8 col-md-8 col-sm-8">
+                                    <input type="checkbox" id="daily" class="form-control" ng-model="newTask.daily"
+                                           ng-change="newTask.checklist = (newTask.daily === true) ? false : newTask.checklist">
+                                </div>
+                            </div>
+                            <div class="form-group" ng-hide="newTask.checklist">
+                                <label for="repeat" class="col-lg-3 col-md-3 col-sm-3 control-label">Repeat</label>
+                                <div class="col-lg-8 col-md-8 col-sm-8">
+                                    <input type="number" required id="repeat" min="0" class="form-control" placeholder="1" ng-model="newTask.repeat">
+                                </div>
+                            </div>
+                            <div class="form-group" ng-show="newTask.checklist">
+                                <label for="checklistOptions" class="col-lg-3 col-md-3 col-sm-3 control-label">Options</label>
+                                <div class="col-lg-7 col-md-7 col-sm-7">
+                                    <input type="text" id="checklistOptions" class="form-control" ng-model="newTask.checklistItem" enter-tag="addChecklistItem()">
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+                                    <a class="btn btn-primary" data-ng-click="addChecklistItem()" ng-disabled="newTask.checklistItem==='' || newTask.checklistItem===null || newTask.checklistItem===undefined">Add</a>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-show="newTask.checklist">
+                                <div class="col-lg-3 col-md-3 col-sm-3"></div>
+                                <div class="options-list-container col-lg-8 col-md-8 col-sm-8">
+                                    <ul class="options-list">
+                                        <li class="col-lg-12 col-md-12 col-sm-12" ng-repeat="option in newTask.checklistItems track by $index">
+                                            <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="dropChecklistItem(option.text)"><i class="fa fa-trash-o"></i></a>
+                                            <p>{{option.text}}</p>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group" ng-hide="newTask.checklist">
-                            <label for="repeat" class="col-lg-3 col-md-3 col-sm-3 control-label">Repeat</label>
-                            <div class="col-lg-8 col-md-8 col-sm-8">
-                                <input type="number" required id="repeat" class="form-control" placeholder="1" ng-model="newTask.repeat">
-                            </div>
-                        </div>
-                        <div class="form-group" ng-show="newTask.checklist">
-                            <label for="checklistOptions" class="col-lg-3 col-md-3 col-sm-3 control-label">Options</label>
-                            <div class="col-lg-7 col-md-7 col-sm-7">
-                                <input type="text" id="checklistOptions" class="form-control" ng-model="newTask.checklistItem" enter-tag="addChecklistItem()">
-                            </div>
-                            <div class="col-lg-2 col-md-2 col-sm-2 form-group">
-                                <a class="btn btn-primary" data-ng-click="addChecklistItem()" ng-disabled="newTask.checklistItem==='' || newTask.checklistItem===null || newTask.checklistItem===undefined">Add</a>
-                            </div>
-                        </div>
-                        <div class="form-group" ng-show="newTask.checklist">
-                            <div class="col-lg-3 col-md-3 col-sm-3"></div>
-                            <div class="options-list-container col-lg-8 col-md-8 col-sm-8">
-                                <ul class="options-list">
-                                    <li class="col-lg-12 col-md-12 col-sm-12" ng-repeat="option in newTask.checklistArray track by $index">
-                                        <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="dropChecklistItem(option.text)"><i class="fa fa-trash-o"></i></a>
-                                        <p>{{option.text}}</p>
-                                    </li>
-                                </ul>
+                        <div ng-show="newTask.link.linked">
+                            <div class="form-group">
+                                <label for="link.id" class="col-lg-3 col-md-3 col-sm-3 control-label">Link to</label>
+                                <div class="col-lg-8 col-md-8 col-sm-8">
+                                    <select required id="link-id" class="form-control" ng-model="newTask.link.item"
+                                            ng-options="obj as obj.title for obj in linkItems">
+                                        <option class="disabled" value="">Choose link item</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="form-group step-button-group padding-5">
-                    <button class="btn btn-primary width-50" ng-click="cancel()" ng-show="stepConfig.currentStep === 1">CANCEL</button>
-                    <button class="btn btn-primary width-50" ng-click="backStep()" ng-show="stepConfig.currentStep === 2">BACK</button>
-                    <button class="btn btn-primary width-50" ng-click="takeStep()" ng-show="stepConfig.currentStep === 1">NEXT</button>
-                    <button class="btn btn-primary width-50" ng-click="$parent.create(); cancel()" ng-show="stepConfig.currentStep === 2" ng-disabled="scheduleForm.$invalid">CREATE</button>
+                    <button class="btn btn-primary width-50" 
+                            ng-click="cancel()" ng-show="stepConfig.currentStep === 1">CANCEL</button>
+                    <button class="btn btn-primary width-50" 
+                            ng-click="backStep(stepConfig.currentStep)" ng-show="stepConfig.currentStep === 2">BACK</button>
+                    <button class="btn btn-primary width-50" 
+                            ng-click="takeStep(stepConfig.currentStep)" ng-show="stepConfig.currentStep === 1">NEXT</button>
+                    <button class="btn btn-primary width-50" 
+                            ng-click="$parent.create(); cancel();" ng-show="stepConfig.currentStep === 2"
+                            ng-disabled="scheduleForm.$invalid">CREATE</button>
                 </div>
             </fieldset>
         </form><!-- </form> -->

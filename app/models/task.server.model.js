@@ -40,8 +40,13 @@ var TaskSchema = new Schema({
             type: String,
             default: ''
         },
-        id: {
-            type: Schema.ObjectId
+        anime: {
+            type: Schema.ObjectId,
+            ref: 'Animeitem'
+        },
+        manga: {
+            type: Schema.ObjectId,
+            ref: 'Mangaitem'
         }
     },
     day: {

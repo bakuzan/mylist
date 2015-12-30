@@ -74,15 +74,20 @@ angular.module('tasks')
                         if (scope.newTask.link.linked === true) {
                             var category = scope.newTask.category;
                             if (category === 'Watch') {
-                                scope.linkItems = Animeitems.query();
+                                scope.linkItems = Animeitems.query({
+                                    status: 0
+                                });
+                                scope.linkType = 'anime';
                             } else if (category === 'Read') {
-                                scope.linkItems = Mangaitems.query();
+                                scope.linkItems = Mangaitems.query({
+                                    status: 0
+                                });
+                                scope.linkType = 'manga';
                             } else {
                                 return { valid: false, message: 'Category must be either Watch or Read for linked items!' };
                             }
                         }
                         return { valid: true };
-                        break;
                 }
             }
             

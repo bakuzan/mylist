@@ -45,7 +45,8 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                 link: {
                     linked: '',
                     type: '',
-                    id: ''
+                    anime: '',
+                    manga: ''
                 },
                 day: '',
                 date: '',
@@ -62,7 +63,6 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
 		// Create new Task
 		$scope.create = function() {
 			// Create new Task object
-            console.log(this.newTask.link);
 			var task = new Tasks ({
 				description: this.newTask.description,
                 link: {
@@ -70,33 +70,35 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                     type: (this.newTask.link.linked === false) ? ''      : 
                           (this.newTask.category === 'Watch')  ? 'anime' : 
                                                                  'manga' ,
-                    id: this.newTask.link.item === '' ? '' : this.newTask.link.item._id 
+                    anime: (this.newTask.link.anime === '')    ? ''      : this.newTask.link.anime._id ,
+                    manga: (this.newTask.link.manga === '')    ? ''      : this.newTask.link.manga._id 
                 },
                 day: this.newTask.daily === true ? 'Any' : this.newTask.day,
                 date: this.newTask.date === '' ? new Date() : this.newTask.date,
-                repeat: (this.newTask.link.linked === false) ? this.newTask.repeat                 : 
-                        (this.newTask.category === 'Watch')  ? this.newTask.link.item.finalEpisode :
-                                                               this.newTask.link.item.finalChapter ,
-                completeTimes: (this.newTask.link.linked === false) ? 0                               :
-                               (this.newTask.category === 'Watch')  ? this.newTask.link.item.episodes :
-                                                                      this.newTask.link.item.chapters ,
+                repeat: (this.newTask.link.linked === false) ? this.newTask.repeat                     : 
+                        (this.newTask.category === 'Watch')  ? this.newTask.link.anime.finalEpisode    :
+                                                               this.newTask.link.manga.finalChapter    ,
+                completeTimes: (this.newTask.link.linked === false) ? 0                                     :
+                               (this.newTask.category === 'Watch')  ? this.newTask.link.anime.episodes      :
+                                                                      this.newTask.link.manga.chapters      ,
                 complete: false,
                 category: this.newTask.category === '' ? 'Other' : this.newTask.category,
-                daily: this.newTask.checklist === true ? false : this.newTask.daily,
+                daily: this.newTask.checklist === true ? false   : this.newTask.daily,
                 dailyRefresh: new Date(),
                 checklist: this.newTask.checklist,
                 checklistItems: this.newTask.checklistItems
 			});
             console.log(task, this.newTask);
 //			// Redirect after save
-//			task.$save(function(response) {
-//				$location.path('tasks');
-//                NotificationFactory.success('Saved!', 'New Task was successfully saved!');
-//                find();
-//			}, function(errorResponse) {
-//				$scope.error = errorResponse.data.message;
-//                NotificationFactory.error('Error!', 'New Task failed to save!');
-//			});
+			task.$save(function(response) {
+				$location.path('tasks');
+                NotificationFactory.success('Saved!', 'New Task was successfully saved!');
+                find();
+			}, function(errorResponse) {
+				$scope.error = errorResponse.data.message;
+                console.log(errorResponse);
+                NotificationFactory.error('Error!', 'New Task failed to save!');
+			});
 		};
         
         function remove(task) {

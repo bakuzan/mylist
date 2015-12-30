@@ -94,7 +94,7 @@
                             <div class="form-group">
                                 <label for="link.id" class="col-lg-3 col-md-3 col-sm-3 control-label">Link to</label>
                                 <div class="col-lg-8 col-md-8 col-sm-8">
-                                    <select required id="link-id" class="form-control" ng-model="newTask.link[linkType]"
+                                    <select id="link-id" class="form-control" ng-model="newTask.link[linkType]"
                                             ng-options="obj as obj.title for obj in linkItems">
                                         <option class="disabled" value="">Choose link item</option>
                                     </select>

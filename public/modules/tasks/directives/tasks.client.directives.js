@@ -86,6 +86,11 @@ angular.module('tasks')
                             } else {
                                 return { valid: false, message: 'Category must be either Watch or Read for linked items!' };
                             }
+                        } else {
+                            //Ensure that stuff is cleared when not linked.
+                            scope.linkType = '';
+                            scope.newTask.link.anime = undefined;
+                            scope.newTask.link.manga = undefined;
                         }
                         return { valid: true };
                 }

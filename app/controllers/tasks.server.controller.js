@@ -14,7 +14,7 @@ var mongoose = require('mongoose'),
 exports.create = function(req, res) {
 	var task = new Task(req.body);
 	task.user = req.user;
-    console.log(req);
+
 	task.save(function(err) {
 		if (err) {
 			return res.status(400).send({
@@ -37,11 +37,12 @@ exports.read = function(req, res) {
  * Update a Task
  */
 exports.update = function(req, res) {
-	var task = req.task ;
+	var task = req.task;
 
 	task = _.extend(task , req.body);
     task.meta.updated = Date.now();
-
+    
+    console.log('task: ', task,  '\nbody: ', req.body);
 	task.save(function(err) {
 		if (err) {
 			return res.status(400).send({

@@ -43,10 +43,10 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             $scope.newTask = {
                 description: '',
                 link: {
-                    linked: '',
+                    linked: false,
                     type: '',
-                    anime: '',
-                    manga: ''
+                    anime: undefined,
+                    manga: undefined
                 },
                 day: '',
                 date: '',
@@ -70,8 +70,8 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                     type: (this.newTask.link.linked === false) ? ''      : 
                           (this.newTask.category === 'Watch')  ? 'anime' : 
                                                                  'manga' ,
-                    anime: (this.newTask.link.anime === '')    ? ''      : this.newTask.link.anime._id ,
-                    manga: (this.newTask.link.manga === '')    ? ''      : this.newTask.link.manga._id 
+                    anime: (this.newTask.link.anime === undefined) ? undefined : this.newTask.link.anime._id ,
+                    manga: (this.newTask.link.manga === undefined) ? undefined : this.newTask.link.manga._id 
                 },
                 day: this.newTask.daily === true ? 'Any' : this.newTask.day,
                 date: this.newTask.date === '' ? new Date() : this.newTask.date,
@@ -81,10 +81,10 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                 completeTimes: (this.newTask.link.linked === false) ? 0                                     :
                                (this.newTask.category === 'Watch')  ? this.newTask.link.anime.episodes      :
                                                                       this.newTask.link.manga.chapters      ,
+                updateCheck: new Date().getDay() === 1 ? true : false,
                 complete: false,
                 category: this.newTask.category === '' ? 'Other' : this.newTask.category,
                 daily: this.newTask.checklist === true ? false   : this.newTask.daily,
-                dailyRefresh: new Date(),
                 checklist: this.newTask.checklist,
                 checklistItems: this.newTask.checklistItems
 			});
@@ -129,12 +129,13 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
 		function update() {
             console.log('update');
 			var task = $scope.task;
-
+            console.log(task);
 			task.$update(function() {
 				$location.path('tasks');
                 NotificationFactory.success('Saved!', 'Task was successfully updated!');
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
+                console.log(errorResponse);
                 NotificationFactory.error('Error!', 'Task failed to save!');
 			});
 		}
@@ -196,7 +197,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                 angular.forEach($scope.tasks, function (task) {
                     //has it been updated today?
                     if(task.updateCheck === false) {
-                        console.log('update', task.description);
+                        console.log('updating - ', task.description);
                         //has it reached the necessary number of repeats?
                         if(task.completeTimes !== task.repeat) {
                             console.log('not complete', task.description);
@@ -234,7 +235,8 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                             console.log('complete - delete', task.description);
                             remove(task);
                         }
-                    } else if (task.daily === false && change) {
+                    } else if ((task.daily === false) && change) {
+                        console.log('weekly update: ', task.description);
                         $scope.task = task;
                         update();
                     }

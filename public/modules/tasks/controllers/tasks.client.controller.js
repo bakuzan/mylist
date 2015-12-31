@@ -88,7 +88,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                 checklist: this.newTask.checklist,
                 checklistItems: this.newTask.checklistItems
 			});
-            console.log(task, this.newTask);
+//            console.log(task, this.newTask);
 //			// Redirect after save
 			task.$save(function(response) {
 				$location.path('tasks');
@@ -129,7 +129,12 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
 		function update() {
             console.log('update');
 			var task = $scope.task;
-            console.log(task);
+            if (task.link.anime) {
+                task.link.anime = task.link.anime._id;
+            } else if (task.link.manga) {
+                task.link.manga = task.link.manga._id;
+            }
+            
 			task.$update(function() {
 				$location.path('tasks');
                 NotificationFactory.success('Saved!', 'Task was successfully updated!');

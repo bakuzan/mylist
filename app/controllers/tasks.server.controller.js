@@ -41,8 +41,7 @@ exports.update = function(req, res) {
 
 	task = _.extend(task , req.body);
     task.meta.updated = Date.now();
-    
-    console.log('task: ', task,  '\nbody: ', req.body);
+
 	task.save(function(err) {
 		if (err) {
 			return res.status(400).send({

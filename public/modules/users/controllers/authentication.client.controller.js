@@ -5,7 +5,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 		$scope.authentication = Authentication;
 
 		// If user is signed in then redirect back home
-		if ($scope.authentication.user) $location.path('/');
+		if ($scope.authentication.user) $location.path('/tasks');
 
 		$scope.signup = function() {
 			$http.post('/auth/signup', $scope.credentials).success(function(response) {
@@ -29,7 +29,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
                 $scope.loginBody = true;
 
 				// And redirect to the index page
-				$location.path('/');
+				$location.path('/tasks');
 			}).error(function(response) {
 				$scope.error = response.message;
 			});

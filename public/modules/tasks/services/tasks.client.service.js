@@ -11,7 +11,7 @@ angular.module('tasks').factory('Tasks', ['$resource',
 		});
 	}
 ])
-.factory('DiscoveryFactory', function() {
+.factory('TaskFactory', ['Animeitems', 'Mangaitems', 'AnimeFactory', 'MangaFactory', function(Animeitems, Mangaitems, AnimeFactory, MangaFactory) {
     return {
         getWeekBeginning: function() {
             var newDate = new Date(),
@@ -19,6 +19,18 @@ angular.module('tasks').factory('Tasks', ['$resource',
                 diff = newDate.getDate() - day + (day === 0 ? -6:1); // adjust when day is sunday
             var wkBeg = new Date();
             return new Date(wkBeg.setDate(diff));
+        },
+        updateAnimeitem: function(task) {
+            var anime = Animeitems.get({ 
+				animeitemId: task.link.anime._id
+			});
+            
+        },
+        updateMangaitem: function(task) {
+            var manga = Mangaitems.get({ 
+				mangaitemId: task.link.manga._id
+			});
+            
         }
     };
-});
+}]);

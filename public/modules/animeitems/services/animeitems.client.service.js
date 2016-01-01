@@ -6,6 +6,13 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
 		return $resource('animeitems/:animeitemId', { animeitemId: '@_id' }, { update: { method: 'PUT' } });
 	}
 ])
+.factory('AnimeFactory', ['Animeitems', function(Animeitems) {
+    return {
+        update: function() {
+            
+        }
+    };
+}])
 .service('fileUpload', ['$http', 'NotificationFactory', function ($http, NotificationFactory) {
     this.uploadFileToUrl = function(file, uploadUrl){
         var fd = new FormData();

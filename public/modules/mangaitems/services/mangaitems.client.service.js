@@ -10,4 +10,11 @@ angular.module('mangaitems').factory('Mangaitems', ['$resource',
 			}
 		});
 	}
-]);
+])
+.factory('MangaFactory', ['Mangaitems', function(Mangaitems) {
+    return {
+        update: function() {
+            
+        }
+    };
+}]);

@@ -1,8 +1,8 @@
 'use strict';
 
 // Tasks controller
-angular.module('tasks').controller('TasksController', ['$scope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'DiscoveryFactory',
-	function($scope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, DiscoveryFactory) {
+angular.module('tasks').controller('TasksController', ['$scope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory',
+	function($scope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -36,7 +36,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
         };
         
         $scope.weekBeginning = function() {
-            return DiscoveryFactory.getWeekBeginning();
+            return TaskFactory.getWeekBeginning();
         };
         
         function setNewTask() {
@@ -147,9 +147,26 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
         
         //Tick off a task.
         $scope.tickOff = function(task) {
-            task.completeTimes += 1;
+            //Is it linked?
+            if (task.link.linked === false) {
+                task.completeTimes += 1;
+            } else if (task.link.linked === true) {
+                /** Anime or manga?
+                 *   Update the item value AND the complete/repeat values.
+                 */
+                if (task.link.type === 'anime') {
+                    task.completeTimes = task.link.anime.episodes + 1;
+                    task.repeat = task.link.anime.finalEpisode;
+                    TaskFactory.updateAnimeitem(task);
+                } else if (task.link.type === 'manga') {
+                    task.completeTimes = task.link.manga.chapters + 1;
+                    task.repeat = task.link.manga.finalChapter;
+                    TaskFactory.updateMangaitem(task);
+                }
+            }
             $scope.task = task;
-            update();
+            console.log($scope.task);
+//            update();
         };
         
         //Tick of a checklist item.

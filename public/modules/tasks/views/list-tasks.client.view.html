@@ -15,7 +15,7 @@
     </div>
     <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
     <div class="col-lg-8 col-md-6 col-sm-6 item-list-container">
-        <div class="tab-filter-container width-100 margin-top-10">
+        <div class="tab-filter-container width-100 margin-top-10" ng-hide="loading(tasks)">
             <div class="relative tab-filter clickable" ng-class="(filterConfig.search.day === '') ? 'tab-in' : 'tab-out' ">
                 <label class="width-100 clickable text-center" ng-click="tabFilter('')">ALL</label>
             </div>
@@ -28,7 +28,7 @@
             <div ng-if="filterConfig.showingCount === 0" class="relative width-100 margin-top-20 text-center">
                 <p class="relative width-100">No items were found using your selection criteria.</p>
             </div>
-            <li class="taskItem" ng-repeat="taskItem in tasks | filter: filterConfig.search | calendarFilter:filterConfig.datesSelected | startFrom: pageConfig.currentPage*pageConfig.pageSize | limitTo: pageConfig.pageSize" ng-hide="loading(taskItem)">
+            <li class="taskItem" ng-repeat="taskItem in tasks | filter: filterConfig.search | calendarFilter:filterConfig.datesSelected | startFrom: pageConfig.currentPage*pageConfig.pageSize | limitTo: pageConfig.pageSize">
                 <input type="checkbox" class="taskCheckbox" ng-model="taskItem.complete" ng-change="tickOff(taskItem)" ng-disabled="taskItem.complete || taskItem.checklist">
                 <span class="task-description-text complete-{{taskItem.complete}}" ng-class="taskItem.checklist === true ? 'clickable' : ''"
                       ng-click="taskItem.checklist === true ? viewTask = !viewTask : ''">
@@ -38,7 +38,15 @@
                     - 
                 </span>
                 <span class="task-times-text complete-{{taskItem.complete}}">
-                    {{taskItem.completeTimes}}/{{taskItem.repeat}}
+                    <span ng-if="!taskItem.link.linked">{{taskItem.completeTimes}}/{{taskItem.repeat}}</span>
+                    <span ng-if="taskItem.link.linked">
+                        <span ng-if="taskItem.link.type==='anime'">
+                            {{taskItem.link.anime.episodes}}/{{taskItem.link.anime.finalEpisode}}
+                        </span>
+                        <span ng-if="taskItem.link.type==='manga'">
+                            {{taskItem.link.manga.chapters}}/{{taskItem.link.manga.finalChapter}}
+                        </span>
+                    </span>
                 </span>
                 <span class="category-{{taskItem.category}}">
                     {{taskItem.category}}

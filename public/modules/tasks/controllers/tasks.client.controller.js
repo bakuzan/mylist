@@ -166,7 +166,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             }
             $scope.task = task;
             console.log($scope.task);
-//            update();
+            update();
         };
         
         //Tick of a checklist item.

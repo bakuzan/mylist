@@ -24,13 +24,13 @@ angular.module('tasks').factory('Tasks', ['$resource',
             var anime = Animeitems.get({ 
 				animeitemId: task.link.anime._id
 			});
-            
+            AnimeFactory.update(anime, undefined, true, undefined);
         },
         updateMangaitem: function(task) {
             var manga = Mangaitems.get({ 
 				mangaitemId: task.link.manga._id
 			});
-            
+            MangaFactory.update(manga, undefined, true, undefined);
         }
     };
 }]);

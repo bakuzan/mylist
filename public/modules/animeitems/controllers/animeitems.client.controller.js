@@ -1,8 +1,8 @@
 'use strict';
 
 // Animeitems controller
-angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory) {
+angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, AnimeFactory) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -129,59 +129,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		$scope.update = function() {
 			var animeitem = $scope.animeitem;
 //            console.log(animeitem);
-            //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
-            if ($scope.animeitem.manga!==null && $scope.animeitem.manga!==undefined) {
-                animeitem.manga = $scope.animeitem.manga._id;
-            }
-            
-            if ($scope.tagArray!==undefined) {
-                animeitem.tags = ListService.concatenateTagArrays(animeitem.tags, $scope.tagArray);
-            }
-            
-            //update the item history.
-            animeitem = ItemService.itemHistory(animeitem, $scope.updateHistory, 'anime');
-            
-            if ($scope.imgPath!==undefined && $scope.imgPath!==null && $scope.imgPath!=='') {
-                animeitem.image = $scope.imgPath;
-            }
-            //console.log($scope.imgPath);
-            //console.log(animeitem.image);
-            
-            //handle end date
-            if (animeitem.episodes === animeitem.finalEpisode && animeitem.finalEpisode!==0) {
-                if (animeitem.end===undefined || animeitem.end === null) {
-                    animeitem.end = animeitem.latest.substring(0,10);
-//                    console.log(animeitem.end);
-                }
-            } else if (animeitem.reWatching === false) {
-                //in the event the 'complete-ness' of an entry needs to be undone.
-                //this will undo the end date.
-                animeitem.end = null;
-//                console.log(animeitem.end);
-            }
-            
-            //handle status: completed.
-            if(animeitem.end!==undefined && animeitem.end!==null) {
-                animeitem.status = true;
-                animeitem.onHold = false;
-            } else {
-                //if no end date, not complete.
-                animeitem.status = false;
-            }
-            
-            //handle re-reading, re-read count.
-            if (animeitem.reWatching===true && animeitem.episodes===animeitem.finalEpisode) {
-                animeitem.reWatchCount += 1;
-                animeitem.reWatching = false;
-            }
-
-			animeitem.$update(function() {
-				$location.path('animeitems');
-			    NotificationFactory.success('Saved!', 'Anime was saved successfully');
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-                NotificationFactory.error('Error!', errorResponse.data.message);
-			});
+            AnimeFactory.update(animeitem, $scope.tagArray, $scope.updateHistory, $scope.imgPath);
 		};
         $scope.tickOff = function(item) {
             item.episodes += 1;

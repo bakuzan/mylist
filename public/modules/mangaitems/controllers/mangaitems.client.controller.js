@@ -1,8 +1,8 @@
 'use strict';
 
 // Mangaitems controller
-angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory',
-	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory) {
+angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'MangaFactory',
+	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, MangaFactory) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -129,56 +129,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		// Update existing Mangaitem
 		$scope.update = function() {
 			var mangaitem = $scope.mangaitem;
-            //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
-            if ($scope.mangaitem.anime!==null && $scope.mangaitem.anime!==undefined) {
-                mangaitem.anime = $scope.mangaitem.anime._id;
-            }
-            
-            if ($scope.tagArray!==undefined) {
-                mangaitem.tags = ListService.concatenateTagArrays(mangaitem.tags, $scope.tagArray);
-            }
-            
-            //update the item history.
-            mangaitem = ItemService.itemHistory(mangaitem, $scope.updateHistory, 'manga');
-            
-            if ($scope.imgPath!==undefined && $scope.imgPath!==null && $scope.imgPath!=='') {
-                mangaitem.image = $scope.imgPath;
-            }
-            //console.log($scope.imgPath);
-            //console.log(mangaitem.image);
-            
-            //handle end date
-            if (mangaitem.chapters===mangaitem.finalChapter && mangaitem.finalChapter!==0) {
-                if (mangaitem.end===undefined || mangaitem.end===null) {
-                    mangaitem.volumes = mangaitem.finalVolume;
-                    mangaitem.end = mangaitem.latest.substring(0,10);
-                    //console.log(animeitem.end);
-                }
-            } else if (mangaitem.reReading === false) {
-                mangaitem.end = null;
-            }
-            
-            //handle status: completed.
-            if(mangaitem.end!==undefined && mangaitem.end!==null) {
-                mangaitem.status = true;
-            } else {
-                mangaitem.status = false;
-            }
-            
-            //handle re-reading, re-read count.
-            if (mangaitem.reReading===true && mangaitem.chapters===mangaitem.finalChapter && mangaitem.volumes===mangaitem.finalVolume) {
-                mangaitem.reReadCount += 1;
-                mangaitem.reReading = false;
-            }
-
-			mangaitem.$update(function() {
-				$location.path('/mangaitems');
-                NotificationFactory.success('Saved!', 'Manga was saved successfully');
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-                NotificationFactory.error('Error!', errorResponse.data.message);
-			});
-            
+            MangaFactory.update(mangaitem, $scope.tagArray, $scope.updateHistory, $scope.imgPath);
 		};
         $scope.tickOff = function(item) {
             item.chapters += 1;

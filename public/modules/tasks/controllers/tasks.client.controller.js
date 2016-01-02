@@ -221,16 +221,33 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                     //has it been updated today?
                     if(task.updateCheck === false) {
                         console.log('updating - ', task.description);
-                        //has it reached the necessary number of repeats?
-                        if(task.completeTimes !== task.repeat) {
-                            console.log('not complete', task.description);
-                            task.complete = false;
-                            task.updateCheck = true;
-                            $scope.task = task;
-                            update();
-                        } else if (task.completeTimes === task.repeat) {
-                            console.log('complete - delete', task.description);
-                            remove(task);
+                        if (task.link.linked === false) {
+                            //has it reached the necessary number of repeats?
+                            if(task.completeTimes !== task.repeat) {
+                                console.log('not complete', task.description);
+                                task.complete = false;
+                                task.updateCheck = true;
+                                $scope.task = task;
+                                update();
+                            } else if (task.completeTimes === task.repeat) {
+                                console.log('complete - delete', task.description);
+                                remove(task);
+                            }
+                        } else if (task.link.linked === true) {
+                            console.log('linked');
+                            var type = task.link.type,
+                                parts = (type === 'anime') ? { single: 'episodes', all: 'finalEpisode' } :
+                                                             { single: 'chapters', all: 'finalChapter' } ; 
+                            if (task.link[type][parts.single] !== task.link[type][parts.all]) {
+                                console.log('linked not complete', task.description);
+                                task.complete = false;
+                                task.updateCheck = true;
+                                $scope.task = task;
+                                update();
+                            } else if (task.link[type][parts.single] === task.link[type][parts.all]) {
+                                console.log('linked complete - delete', task.description);
+                                remove(task);
+                            }
                         }
                     }
                 });

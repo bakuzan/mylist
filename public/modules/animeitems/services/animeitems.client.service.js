@@ -10,7 +10,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
     return {
         update: function(item, tagArray, updateHistory, imgPath) {
             var animeitem = item;
-            
+            console.log(animeitem);
             //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
             if (item.manga!==null && item.manga!==undefined) {
                 animeitem.manga = item.manga._id;
@@ -59,6 +59,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
 
 			animeitem.$update(function() {
 				if (window.location.href.indexOf('tasks') === -1) $location.path('animeitems');
+
 			    NotificationFactory.success('Saved!', 'Anime was saved successfully');
 			}, function(errorResponse) {
 				var error = errorResponse.data.message;
@@ -274,21 +275,31 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         
         //add history entry to item.
         this.itemHistory = function(item, updateHistory, type) {
+            console.log('item history: ', item, item.meta);
             //populate the history of when each part was 'checked' off.
             if (item.meta.history.length !== 0) {
-                var latestHistory = item.meta.history[item.meta.history.length - 1].value;
-                var length = type === 'anime' ? item.episodes - latestHistory : item.chapters - latestHistory;
+                var latestHistory = item.meta.history[item.meta.history.length - 1].value,
+                    length = type === 'anime' ? item.episodes - latestHistory : item.chapters - latestHistory;
                 if (length > 0 && (type === 'anime' ? item.reWatching === false : item.reReading === false)) {
                     for(var i = 1; i <= length; i++) {
-                        item.meta.history.push({ date: Date.now(), value: latestHistory + i, title: item.title, id: item._id });
+                        item.meta.history.push({ 
+                            date: Date.now(), 
+                            value: latestHistory + i, 
+                            title: item.title, 
+                            id: item._id 
+                        });
                     }
                 }
             } else {
                 if (updateHistory && (type === 'anime' ? item.reWatching === false : item.reReading === false)) {
-                    item.meta.history.push({ date: Date.now(), value: (type === 'anime' ? item.episodes : item.chapters), title: item.title, id: item._id });
+                    item.meta.history.push({ 
+                        date: Date.now(), 
+                        value: (type === 'anime' ? item.episodes : item.chapters), 
+                        title: item.title, 
+                        id: item._id 
+                    });
                 }
             }
-            
             return item;
         };
         

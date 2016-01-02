@@ -128,7 +128,6 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		// Update existing Animeitem
 		$scope.update = function() {
 			var animeitem = $scope.animeitem;
-//            console.log(animeitem);
             AnimeFactory.update(animeitem, $scope.tagArray, $scope.updateHistory, $scope.imgPath);
 		};
         $scope.tickOff = function(item) {

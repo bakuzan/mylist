@@ -9,8 +9,8 @@ module.exports = function(app) {
 		.get(animeitems.list)
 		.post(users.requiresLogin, animeitems.create);
     
-    app.route('/animeitems/list/:status')
-		.get(animeitems.list);
+//    app.route('/animeitems/list/:status')
+//		.get(animeitems.list);
 
 	app.route('/animeitems/:animeitemId')
 		.get(animeitems.read)

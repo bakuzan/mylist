@@ -138,6 +138,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
 			task.$update(function() {
 				$location.path('tasks');
                 NotificationFactory.success('Saved!', 'Task was successfully updated!');
+                find();
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
                 console.log(errorResponse);

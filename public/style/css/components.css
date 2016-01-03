@@ -7,6 +7,9 @@
   position: relative;
   cursor: pointer; }
 
+[hover-data='']:before, [hover-data='']:after {
+  display: none; }
+
 /* Base styles for the entire hover-data */
 [hover-data]:before,
 [hover-data]:after,

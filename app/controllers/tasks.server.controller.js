@@ -76,8 +76,8 @@ exports.delete = function(req, res) {
 exports.list = function(req, res) { 
 	Task.find()
         .sort('-created')
-        .populate('link.anime', 'episodes finalEpisode')
-        .populate('link.manga', 'chapters finalChapter')
+        .populate('link.anime', 'title episodes finalEpisode')
+        .populate('link.manga', 'title chapters finalChapter')
         .populate('user', 'displayName').exec(function(err, tasks) {
         if (err) {
 			return res.status(400).send({

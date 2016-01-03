@@ -48,7 +48,12 @@
                         </span>
                     </span>
                 </span>
-                <span class="category-{{taskItem.category}}">
+                <span class="category-{{taskItem.category}}"
+                      hover-data="{{taskItem.link.linked ? (taskItem.link.type ===  'anime') ?
+                                                            taskItem.link.anime.title        :
+                                                            taskItem.link.manga.title        :
+                                                            ''
+                                  }}">
                     {{taskItem.category}}
                 </span>
                 <a class="bin-style clickable" aria-hidden="true" ng-click="deleteTask(taskItem)">

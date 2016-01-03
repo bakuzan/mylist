@@ -126,7 +126,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
 		};
 
 		// Update existing Task
-		function update() {
+		function update(refresh) {
             console.log('update');
 			var task = $scope.task;
             if (task.link.anime) {
@@ -138,7 +138,11 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
 			task.$update(function() {
 				$location.path('tasks');
                 NotificationFactory.success('Saved!', 'Task was successfully updated!');
-                find();
+                //Refresh items if the callee wasn't checkStatus.
+                if (refresh === true) {
+                    console.log('update + refresh items');
+                    find();
+                }
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
                 console.log(errorResponse);
@@ -167,7 +171,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             }
             $scope.task = task;
             console.log($scope.task);
-            update();
+            update(true);
         };
         
         //Tick of a checklist item.
@@ -186,7 +190,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                 task.complete = true;
             }
             $scope.task = task;
-            update();                                           
+            update(true);                                           
         };
         
         //Add new checklist item.
@@ -208,7 +212,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                 }
             }
             $scope.task = task;
-            update();
+            update(true);
         };
          
          //check things
@@ -282,16 +286,17 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                     }
                 });
             }
+            find();
         }
 
 		// Find a list of Tasks
 		function find() {
 			Tasks.query(function(result) {
                 $scope.tasks = result;
-                checkStatus();
             });
 		}
         find();
+        checkStatus();
         
         $scope.$watchCollection('tasks', function(newValue) {
             if ($scope.tasks !== undefined) {

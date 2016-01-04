@@ -21,12 +21,14 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             sortReverse: false,
             searchTags: '',
             media: '',
+            seriesFilter: '',
             tagsForFilter: [],
             taglessItem: false,
             areTagless: false,
             selectListOptions: ListService.getSelectListOptions($scope.whichController),
-            statTags: CharacterService.buildCharacterTags($scope.characters),
-            voiceActors: CharacterService.buildVoiceActors($scope.characters)
+            statTags: [],
+            voiceActors: [],
+            series: []
         };
         $scope.isList = 'list'; //show list? or slider.
         $scope.maxItemCount = 0; //number of characters.
@@ -34,7 +36,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.tagArray = []; // holding tags pre-submit
         $scope.tagArrayRemove = [];
         $scope.usedTags = []; //for typeahead array.
-        $scope.seriesSearch = ''; //for filtering series values.
 
         //allow retreival of local resource
         $scope.trustAsResourceUrl = function(url) {
@@ -47,6 +48,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
                 $scope.filterConfig.areTagless = ListService.checkForTagless($scope.characters);
                 $scope.filterConfig.statTags = CharacterService.buildCharacterTags($scope.characters);
                 $scope.filterConfig.voiceActors = CharacterService.buildVoiceActors($scope.characters);
+                $scope.filterConfig.series = CharacterService.buildSeriesList($scope.characters);
             }
         });
 

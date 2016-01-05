@@ -103,6 +103,23 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
             }
           });
           
+          window.addEventListener('scroll', function (evt) {
+
+              // This value is your scroll distance from the top
+              var distance_from_top = document.getElementById('list-paging-controls').scrollTop;
+
+              // The user has scrolled to the tippy top of the page. Set appropriate style.
+              if (distance_from_top === 0) {
+                  console.log('top hit : ', distance_from_top);
+              }
+
+              // The user has scrolled down the page.
+              if(distance_from_top > 0) {
+                  console.log('we are at: ', distance_from_top);
+              }
+
+          });
+          
       }
   };
     

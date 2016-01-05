@@ -134,6 +134,12 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
             scope.itemsAvailable = function() {
               scope.$parent.itemsAvailable();  
             };
+            
+            scope.$watch('$parent.isList', function(newValue) {
+                if (newValue !== undefined) {
+                    scope.isList = newValue;
+                }
+            });
           
         }
         

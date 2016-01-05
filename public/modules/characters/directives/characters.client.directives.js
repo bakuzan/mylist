@@ -141,6 +141,14 @@ angular.module('characters').directive('characterBack', function(){
                   scope.interval = temp;
               }
           });
+          scope.$watch('$parent.filterConfig.seriesFilter', function(newValue) {
+              if (scope.$parent.filterConfig.seriesFilter !== undefined) {
+                  var temp = scope.interval;
+                  scope.interval = null;
+                  scope.seriesFilter = newValue;
+                  scope.interval = temp;
+              }
+          });
           scope.$watch('$parent.filterConfig.searchTags', function(newValue) {
               if (scope.$parent.filterConfig.media !== undefined) {
                   var temp = scope.interval;

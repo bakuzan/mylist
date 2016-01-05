@@ -23,7 +23,7 @@
               <div class="input-group-addon">
                   <i class="fa fa-list-ol"></i>
               </div>
-              <input type="text" class="form-control" value="Showing {{ (filterConfig.showingCount = (items | filter: filterConfig.search | mediaFilter: filterConfig.media | ratingFilter: filterConfig.ratingLevel | tagFilter: filterConfig.searchTags:filterConfig.taglessItem).length) }} items." disabled>
+              <input type="text" class="form-control" value="Showing {{ (filterConfig.showingCount = (items | filter: filterConfig.search | mediaFilter: filterConfig.media | seriesFilter:filterConfig.seriesFilter | ratingFilter: filterConfig.ratingLevel | tagFilter: filterConfig.searchTags:filterConfig.taglessItem).length) }} items." disabled>
             </div>
             <div class="input-group mt" ng-hide="$parent.isList === 'slider'">
               <div class="input-group-addon">

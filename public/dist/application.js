@@ -1496,6 +1496,14 @@ angular.module('characters').directive('characterBack', function(){
                   scope.interval = temp;
               }
           });
+          scope.$watch('$parent.filterConfig.seriesFilter', function(newValue) {
+              if (scope.$parent.filterConfig.seriesFilter !== undefined) {
+                  var temp = scope.interval;
+                  scope.interval = null;
+                  scope.seriesFilter = newValue;
+                  scope.interval = temp;
+              }
+          });
           scope.$watch('$parent.filterConfig.searchTags', function(newValue) {
               if (scope.$parent.filterConfig.media !== undefined) {
                   var temp = scope.interval;
@@ -1650,6 +1658,22 @@ angular.module('characters').filter('seriesDetailFilter', function() {
                     if (item.manga.title===detailSeriesName) {
                         return item;
                     }
+                }
+            } else { 
+                return item;
+            }
+        });
+    };
+})
+.filter('seriesFilter', function() {
+    return function(array, series) {
+        return array.filter(function(item) {
+            if (series !== '' && series !== undefined) {
+                //filter stat series detail.
+                if (item.anime!==null && item.anime!==undefined) {
+                    return item.anime.title.toLowerCase().indexOf(series.toLowerCase()) > -1;
+                } else if (item.manga!==null && item.manga!==undefined) {
+                    return item.manga.title.toLowerCase().indexOf(series.toLowerCase()) > -1;
                 }
             } else { 
                 return item;

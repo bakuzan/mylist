@@ -120,8 +120,8 @@ angular.module('animeitems').config(['$stateProvider',
 'use strict';
 
 // Animeitems controller
-angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory) {
+angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, AnimeFactory) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -247,60 +247,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		// Update existing Animeitem
 		$scope.update = function() {
 			var animeitem = $scope.animeitem;
-//            console.log(animeitem);
-            //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
-            if ($scope.animeitem.manga!==null && $scope.animeitem.manga!==undefined) {
-                animeitem.manga = $scope.animeitem.manga._id;
-            }
-            
-            if ($scope.tagArray!==undefined) {
-                animeitem.tags = ListService.concatenateTagArrays(animeitem.tags, $scope.tagArray);
-            }
-            
-            //update the item history.
-            animeitem = ItemService.itemHistory(animeitem, $scope.updateHistory, 'anime');
-            
-            if ($scope.imgPath!==undefined && $scope.imgPath!==null && $scope.imgPath!=='') {
-                animeitem.image = $scope.imgPath;
-            }
-            //console.log($scope.imgPath);
-            //console.log(animeitem.image);
-            
-            //handle end date
-            if (animeitem.episodes === animeitem.finalEpisode && animeitem.finalEpisode!==0) {
-                if (animeitem.end===undefined || animeitem.end === null) {
-                    animeitem.end = animeitem.latest.substring(0,10);
-//                    console.log(animeitem.end);
-                }
-            } else if (animeitem.reWatching === false) {
-                //in the event the 'complete-ness' of an entry needs to be undone.
-                //this will undo the end date.
-                animeitem.end = null;
-//                console.log(animeitem.end);
-            }
-            
-            //handle status: completed.
-            if(animeitem.end!==undefined && animeitem.end!==null) {
-                animeitem.status = true;
-                animeitem.onHold = false;
-            } else {
-                //if no end date, not complete.
-                animeitem.status = false;
-            }
-            
-            //handle re-reading, re-read count.
-            if (animeitem.reWatching===true && animeitem.episodes===animeitem.finalEpisode) {
-                animeitem.reWatchCount += 1;
-                animeitem.reWatching = false;
-            }
-
-			animeitem.$update(function() {
-				$location.path('animeitems');
-			    NotificationFactory.success('Saved!', 'Anime was saved successfully');
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-                NotificationFactory.error('Error!', errorResponse.data.message);
-			});
+            AnimeFactory.update(animeitem, $scope.tagArray, $scope.updateHistory, $scope.imgPath);
 		};
         $scope.tickOff = function(item) {
             item.episodes += 1;
@@ -610,6 +557,68 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
 		return $resource('animeitems/:animeitemId', { animeitemId: '@_id' }, { update: { method: 'PUT' } });
 	}
 ])
+.factory('AnimeFactory', ['Animeitems', 'ListService', 'ItemService', 'NotificationFactory', '$location', function(Animeitems, ListService, ItemService, NotificationFactory, $location) {
+    return {
+        update: function(item, tagArray, updateHistory, imgPath) {
+            var animeitem = item;
+            console.log(animeitem);
+            //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
+            if (item.manga!==null && item.manga!==undefined) {
+                animeitem.manga = item.manga._id;
+            }
+            
+            if (tagArray!==undefined) {
+                animeitem.tags = ListService.concatenateTagArrays(animeitem.tags, tagArray);
+            }
+            
+            //update the item history.
+            animeitem = ItemService.itemHistory(animeitem, updateHistory, 'anime');
+            
+            if (imgPath!==undefined && imgPath!==null && imgPath!=='') {
+                animeitem.image = imgPath;
+            }
+            //console.log($scope.imgPath);
+            //console.log(animeitem.image);
+            
+            //handle end date
+            if (animeitem.episodes === animeitem.finalEpisode && animeitem.finalEpisode!==0) {
+                if (animeitem.end===undefined || animeitem.end === null) {
+                    animeitem.end = animeitem.latest.substring(0,10);
+//                    console.log(animeitem.end);
+                }
+            } else if (animeitem.reWatching === false) {
+                //in the event the 'complete-ness' of an entry needs to be undone.
+                //this will undo the end date.
+                animeitem.end = null;
+//                console.log(animeitem.end);
+            }
+            
+            //handle status: completed.
+            if(animeitem.end!==undefined && animeitem.end!==null) {
+                animeitem.status = true;
+                animeitem.onHold = false;
+            } else {
+                //if no end date, not complete.
+                animeitem.status = false;
+            }
+            
+            //handle re-reading, re-read count.
+            if (animeitem.reWatching===true && animeitem.episodes===animeitem.finalEpisode) {
+                animeitem.reWatchCount += 1;
+                animeitem.reWatching = false;
+            }
+
+			animeitem.$update(function() {
+				if (window.location.href.indexOf('tasks') === -1) $location.path('animeitems');
+
+			    NotificationFactory.success('Saved!', 'Anime was saved successfully');
+			}, function(errorResponse) {
+				var error = errorResponse.data.message;
+                NotificationFactory.error('Error!', errorResponse.data.message);
+			});
+        }
+    };
+}])
 .service('fileUpload', ['$http', 'NotificationFactory', function ($http, NotificationFactory) {
     this.uploadFileToUrl = function(file, uploadUrl){
         var fd = new FormData();
@@ -817,21 +826,31 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         
         //add history entry to item.
         this.itemHistory = function(item, updateHistory, type) {
+            console.log('item history: ', item, item.meta);
             //populate the history of when each part was 'checked' off.
             if (item.meta.history.length !== 0) {
-                var latestHistory = item.meta.history[item.meta.history.length - 1].value;
-                var length = type === 'anime' ? item.episodes - latestHistory : item.chapters - latestHistory;
+                var latestHistory = item.meta.history[item.meta.history.length - 1].value,
+                    length = type === 'anime' ? item.episodes - latestHistory : item.chapters - latestHistory;
                 if (length > 0 && (type === 'anime' ? item.reWatching === false : item.reReading === false)) {
                     for(var i = 1; i <= length; i++) {
-                        item.meta.history.push({ date: Date.now(), value: latestHistory + i, title: item.title, id: item._id });
+                        item.meta.history.push({ 
+                            date: Date.now(), 
+                            value: latestHistory + i, 
+                            title: item.title, 
+                            id: item._id 
+                        });
                     }
                 }
             } else {
                 if (updateHistory && (type === 'anime' ? item.reWatching === false : item.reReading === false)) {
-                    item.meta.history.push({ date: Date.now(), value: (type === 'anime' ? item.episodes : item.chapters), title: item.title, id: item._id });
+                    item.meta.history.push({ 
+                        date: Date.now(), 
+                        value: (type === 'anime' ? item.episodes : item.chapters), 
+                        title: item.title, 
+                        id: item._id 
+                    });
                 }
             }
-            
             return item;
         };
         
@@ -1859,11 +1878,11 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 		$urlRouterProvider.otherwise('/signin');
 
 		// Home state routing
-		$stateProvider
-        .state('home', {
-			url: '/',
-			templateUrl: 'modules/core/views/home.client.view.html'
-		});
+//		$stateProvider
+//        .state('home', {
+//			url: '/',
+//			templateUrl: 'modules/core/views/home.client.view.html'
+//		});
 	}
 ]);
 'use strict';
@@ -3026,8 +3045,8 @@ angular.module('mangaitems').config(['$stateProvider',
 'use strict';
 
 // Mangaitems controller
-angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory',
-	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory) {
+angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'MangaFactory',
+	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, MangaFactory) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -3154,56 +3173,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		// Update existing Mangaitem
 		$scope.update = function() {
 			var mangaitem = $scope.mangaitem;
-            //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
-            if ($scope.mangaitem.anime!==null && $scope.mangaitem.anime!==undefined) {
-                mangaitem.anime = $scope.mangaitem.anime._id;
-            }
-            
-            if ($scope.tagArray!==undefined) {
-                mangaitem.tags = ListService.concatenateTagArrays(mangaitem.tags, $scope.tagArray);
-            }
-            
-            //update the item history.
-            mangaitem = ItemService.itemHistory(mangaitem, $scope.updateHistory, 'manga');
-            
-            if ($scope.imgPath!==undefined && $scope.imgPath!==null && $scope.imgPath!=='') {
-                mangaitem.image = $scope.imgPath;
-            }
-            //console.log($scope.imgPath);
-            //console.log(mangaitem.image);
-            
-            //handle end date
-            if (mangaitem.chapters===mangaitem.finalChapter && mangaitem.finalChapter!==0) {
-                if (mangaitem.end===undefined || mangaitem.end===null) {
-                    mangaitem.volumes = mangaitem.finalVolume;
-                    mangaitem.end = mangaitem.latest.substring(0,10);
-                    //console.log(animeitem.end);
-                }
-            } else if (mangaitem.reReading === false) {
-                mangaitem.end = null;
-            }
-            
-            //handle status: completed.
-            if(mangaitem.end!==undefined && mangaitem.end!==null) {
-                mangaitem.status = true;
-            } else {
-                mangaitem.status = false;
-            }
-            
-            //handle re-reading, re-read count.
-            if (mangaitem.reReading===true && mangaitem.chapters===mangaitem.finalChapter && mangaitem.volumes===mangaitem.finalVolume) {
-                mangaitem.reReadCount += 1;
-                mangaitem.reReading = false;
-            }
-
-			mangaitem.$update(function() {
-				$location.path('/mangaitems');
-                NotificationFactory.success('Saved!', 'Manga was saved successfully');
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-                NotificationFactory.error('Error!', errorResponse.data.message);
-			});
-            
+            MangaFactory.update(mangaitem, $scope.tagArray, $scope.updateHistory, $scope.imgPath);
 		};
         $scope.tickOff = function(item) {
             item.chapters += 1;
@@ -3306,7 +3276,68 @@ angular.module('mangaitems').factory('Mangaitems', ['$resource',
 			}
 		});
 	}
-]);
+])
+.factory('MangaFactory', ['Mangaitems', 'ListService', 'ItemService', 'NotificationFactory', '$location', function(Mangaitems, ListService, ItemService, NotificationFactory, $location) {
+    return {
+        update: function(item, tagArray, updateHistory, imgPath) {
+            var mangaitem = item;
+            console.log(mangaitem);
+            //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
+            if (item.anime!==null && item.anime!==undefined) {
+                mangaitem.anime = item.anime._id;
+            }
+            
+            if (tagArray!==undefined) {
+                mangaitem.tags = ListService.concatenateTagArrays(mangaitem.tags, tagArray);
+            }
+            
+            //update the item history.
+            mangaitem = ItemService.itemHistory(mangaitem, updateHistory, 'manga');
+            
+            if (imgPath!==undefined && imgPath!==null && imgPath!=='') {
+                mangaitem.image = imgPath;
+            }
+            //console.log($scope.imgPath);
+            //console.log(mangaitem.image);
+            
+            //handle end date
+            if (mangaitem.chapters===mangaitem.finalChapter && mangaitem.finalChapter!==0) {
+                if (mangaitem.end===undefined || mangaitem.end===null) {
+                    mangaitem.volumes = mangaitem.finalVolume;
+                    mangaitem.end = mangaitem.latest.substring(0,10);
+                    //console.log(animeitem.end);
+                }
+            } else if (mangaitem.reReading === false) {
+                mangaitem.end = null;
+            }
+            
+            //handle status: completed.
+            if(mangaitem.end!==undefined && mangaitem.end!==null) {
+                mangaitem.status = true;
+            } else {
+                mangaitem.status = false;
+            }
+            
+            //handle re-reading, re-read count.
+            if (mangaitem.reReading===true && mangaitem.chapters===mangaitem.finalChapter) {
+                mangaitem.volumes = mangaitem.finalVolume;
+                mangaitem.reReadCount += 1;
+                mangaitem.reReading = false;
+            }
+            
+			mangaitem.$update(function() {
+				if (window.location.href.indexOf('tasks') === -1) $location.path('/mangaitems');
+
+                NotificationFactory.success('Saved!', 'Manga was saved successfully');
+			}, function(errorResponse) {
+				var error = errorResponse.data.message;
+                NotificationFactory.error('Error!', errorResponse.data.message);
+			});
+            
+            
+        }
+    };
+}]);
 'use strict';
 
 // Setting up route
@@ -3646,15 +3677,15 @@ angular.module('statistics').service('StatisticsService', function() {
 });
 'use strict';
 
-// Configuring the Articles module
-angular.module('tasks').run(['Menus',
-	function(Menus) {
-		// Set top bar menu items
-		Menus.addMenuItem('topbar', 'Tasks', 'tasks', 'dropdown', '/tasks(/create)?');
-		Menus.addSubMenuItem('topbar', 'tasks', 'List Tasks', 'tasks');
-		Menus.addSubMenuItem('topbar', 'tasks', 'New Task', 'tasks/create');
-	}
-]);
+//// Configuring the Articles module
+//angular.module('tasks').run(['Menus',
+//	function(Menus) {
+//		// Set top bar menu items
+//		Menus.addMenuItem('topbar', 'Tasks', 'tasks', 'dropdown', '/tasks(/create)?');
+//		Menus.addSubMenuItem('topbar', 'tasks', 'List Tasks', 'tasks');
+//		Menus.addSubMenuItem('topbar', 'tasks', 'New Task', 'tasks/create');
+//	}
+//]);
 'use strict';
 
 //Setting up route
@@ -3683,15 +3714,15 @@ angular.module('tasks').config(['$stateProvider',
 'use strict';
 
 // Tasks controller
-angular.module('tasks').controller('TasksController', ['$scope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'DiscoveryFactory',
-	function($scope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, DiscoveryFactory) {
+angular.module('tasks').controller('TasksController', ['$scope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory',
+	function($scope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.whichController = 'task';
-        $scope.isLoading = true;
+        $scope.isLoading = false;
         //paging variables.
         $scope.pageConfig = {
             currentPage: 0,
@@ -3718,62 +3749,67 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
         };
         
         $scope.weekBeginning = function() {
-            return DiscoveryFactory.getWeekBeginning();
+            return TaskFactory.getWeekBeginning();
         };
         
         function setNewTask() {
             $scope.newTask = {
-                    description: '',
-                    link: {
-                        linked: '',
-                        type: '',
-                        id: ''
-                    },
-                    day: '',
-                    date: '',
-                    repeat: 0,
-                    category: '',
-                    daily: false,
-                    checklist: false,
-                    checklistItems: [],
-                    isAddTask: false
-                };
+                description: '',
+                link: {
+                    linked: false,
+                    type: '',
+                    anime: undefined,
+                    manga: undefined
+                },
+                day: '',
+                date: '',
+                repeat: 0,
+                category: '',
+                daily: false,
+                checklist: false,
+                checklistItems: [],
+                isAddTask: false
+            };
         }
         setNewTask();
-
+        
 		// Create new Task
 		$scope.create = function() {
 			// Create new Task object
 			var task = new Tasks ({
 				description: this.newTask.description,
                 link: {
-                    linked: this.newTask.linked,
-                    type: this.newTask.linkType,
-                    id: this.newTask.linkItem
+                    linked: this.newTask.link.linked,
+                    type: (this.newTask.link.linked === false) ? ''      : 
+                          (this.newTask.category === 'Watch')  ? 'anime' : 
+                                                                 'manga' ,
+                    anime: (this.newTask.link.anime === undefined) ? undefined : this.newTask.link.anime._id ,
+                    manga: (this.newTask.link.manga === undefined) ? undefined : this.newTask.link.manga._id 
                 },
-                day: this.newTask.day,
-                date: this.newTask.date,
-                repeat: this.newTask.repeat,
-                completeTimes: this.newTask.completeTimes,
-                updateCheck: this.newTask.updateCheck,
+                day: this.newTask.daily === true ? 'Any' : this.newTask.day,
+                date: this.newTask.date === '' ? new Date() : this.newTask.date,
+                repeat: (this.newTask.link.linked === false) ? this.newTask.repeat                     : 
+                        (this.newTask.category === 'Watch')  ? this.newTask.link.anime.finalEpisode    :
+                                                               this.newTask.link.manga.finalChapter    ,
+                completeTimes: (this.newTask.link.linked === false) ? 0                                     :
+                               (this.newTask.category === 'Watch')  ? this.newTask.link.anime.episodes      :
+                                                                      this.newTask.link.manga.chapters      ,
+                updateCheck: new Date().getDay() === 1 ? true : false,
                 complete: false,
-                category: this.newTask.category,
-                daily: this.newTask.daily,
-                dailyRefresh: new Date(),
+                category: this.newTask.category === '' ? 'Other' : this.newTask.category,
+                daily: this.newTask.checklist === true ? false   : this.newTask.daily,
                 checklist: this.newTask.checklist,
-                checklistItems: this.newTask.checklistArray
+                checklistItems: this.newTask.checklistItems
 			});
-            console.log($scope.newTask, task, this.newTask);
-			// Redirect after save
+//            console.log(task, this.newTask);
+//			// Redirect after save
 			task.$save(function(response) {
 				$location.path('tasks');
                 NotificationFactory.success('Saved!', 'New Task was successfully saved!');
-                
-				// Clear form fields?
-                setNewTask();
                 find();
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
+                console.log(errorResponse);
                 NotificationFactory.error('Error!', 'New Task failed to save!');
 			});
 		};
@@ -3803,24 +3839,52 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
 		};
 
 		// Update existing Task
-		function update() {
+		function update(refresh) {
             console.log('update');
 			var task = $scope.task;
-
+            if (task.link.anime) {
+                task.link.anime = task.link.anime._id;
+            } else if (task.link.manga) {
+                task.link.manga = task.link.manga._id;
+            }
+            
 			task.$update(function() {
 				$location.path('tasks');
                 NotificationFactory.success('Saved!', 'Task was successfully updated!');
+                //Refresh items if the callee wasn't checkStatus.
+                if (refresh === true) {
+                    console.log('update + refresh items');
+                    find();
+                }
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
+                console.log(errorResponse);
                 NotificationFactory.error('Error!', 'Task failed to save!');
 			});
 		}
         
         //Tick off a task.
         $scope.tickOff = function(task) {
-            task.completeTimes += 1;
+            //Is it linked?
+            if (task.link.linked === false) {
+                task.completeTimes += 1;
+            } else if (task.link.linked === true) {
+                /** Anime or manga?
+                 *   Update the item value AND the complete/repeat values.
+                 */
+                if (task.link.type === 'anime') {
+                    task.completeTimes = task.link.anime.episodes + 1;
+                    task.repeat = task.link.anime.finalEpisode;
+                    TaskFactory.updateAnimeitem(task);
+                } else if (task.link.type === 'manga') {
+                    task.completeTimes = task.link.manga.chapters + 1;
+                    task.repeat = task.link.manga.finalChapter;
+                    TaskFactory.updateMangaitem(task);
+                }
+            }
             $scope.task = task;
-            update();
+            console.log($scope.task);
+            update(true);
         };
         
         //Tick of a checklist item.
@@ -3839,7 +3903,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                 task.complete = true;
             }
             $scope.task = task;
-            update();                                           
+            update(true);                                           
         };
         
         //Add new checklist item.
@@ -3861,29 +3925,54 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                 }
             }
             $scope.task = task;
-            update();
+            update(true);
         };
+        
+        //Defaults the tab filter to the current day of the week.
+        function setTabFilterDay(day) {
+            var index = day === 0 ? 7 : day; //Adjust for Sunday.
+            $scope.filterConfig.search.day = $scope.commonArrays.days[index].name;
+            console.log(day, $scope.filterConfig.search.day);
+        }
          
          //check things
         function checkStatus() {
             var today = new Date(),
                 day = today.getDay();
+            setTabFilterDay(day);
             if (day === 1) {
                 console.log('monday', day);
                 angular.forEach($scope.tasks, function (task) {
                     //has it been updated today?
                     if(task.updateCheck === false) {
-                        console.log('update', task.description);
-                        //has it reached the necessary number of repeats?
-                        if(task.completeTimes !== task.repeat) {
-                            console.log('not complete', task.description);
-                            task.complete = false;
-                            task.updateCheck = true;
-                            $scope.task = task;
-                            update();
-                        } else if (task.completeTimes === task.repeat) {
-                            console.log('complete - delete', task.description);
-                            remove(task);
+                        console.log('updating - ', task.description);
+                        if (task.link.linked === false) {
+                            //has it reached the necessary number of repeats?
+                            if(task.completeTimes !== task.repeat) {
+                                console.log('not complete', task.description);
+                                task.complete = false;
+                                task.updateCheck = true;
+                                $scope.task = task;
+                                update();
+                            } else if (task.completeTimes === task.repeat) {
+                                console.log('complete - delete', task.description);
+                                remove(task);
+                            }
+                        } else if (task.link.linked === true) {
+                            console.log('linked');
+                            var type = task.link.type,
+                                parts = (type === 'anime') ? { single: 'episodes', all: 'finalEpisode' } :
+                                                             { single: 'chapters', all: 'finalChapter' } ; 
+                            if (task.link[type][parts.single] !== task.link[type][parts.all]) {
+                                console.log('linked not complete', task.description);
+                                task.complete = false;
+                                task.updateCheck = true;
+                                $scope.task = task;
+                                update();
+                            } else if (task.link[type][parts.single] === task.link[type][parts.all]) {
+                                console.log('linked complete - delete', task.description);
+                                remove(task);
+                            }
                         }
                     }
                 });
@@ -3911,22 +4000,24 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                             console.log('complete - delete', task.description);
                             remove(task);
                         }
-                    } else if (task.daily === false && change) {
+                    } else if ((task.daily === false) && change) {
+                        console.log('weekly update: ', task.description);
                         $scope.task = task;
                         update();
                     }
                 });
             }
+            find();
         }
 
 		// Find a list of Tasks
 		function find() {
 			Tasks.query(function(result) {
                 $scope.tasks = result;
-                checkStatus();
             });
 		}
         find();
+        checkStatus();
         
         $scope.$watchCollection('tasks', function(newValue) {
             if ($scope.tasks !== undefined) {
@@ -3946,7 +4037,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
 'use strict';
 
 angular.module('tasks')
-.directive('taskCreate', ['ListService', function (ListService) {
+.directive('taskCreate', ['ListService', 'NotificationFactory', 'Animeitems', 'Mangaitems', function (ListService, NotificationFactory, Animeitems, Mangaitems) {
     return {
         restrict: 'A',
         replace: true,
@@ -3955,52 +4046,91 @@ angular.module('tasks')
         },
         templateUrl: '/modules/tasks/views/create-task.client.view.html',
         link: function (scope, element, attrs) {
+            var newTaskModel = {};
             scope.newTask = scope.create;
+            angular.copy(scope.newTask, newTaskModel);
             scope.stepConfig = {
                 currentStep: 1,
                 stepCount: 2
             };
             
-            scope.newTask.checklistArray = [];
             //for adding/removing options.
             scope.addChecklistItem = function () {
                     if (scope.newTask.checklistItem!=='' && scope.newTask.checklistItem!==undefined) {
                         var i = 0;
                         var alreadyAdded = false;
-                        if (scope.newTask.checklistArray.length > 0) {
-                            while(i < scope.newTask.checklistArray.length) {
-                                if (scope.newTask.checklistArray[i].text === scope.newTask.checklistItem) {
+                        if (scope.newTask.checklistItems.length > 0) {
+                            while(i < scope.newTask.checklistItems.length) {
+                                if (scope.newTask.checklistItems[i].text === scope.newTask.checklistItem) {
                                     alreadyAdded = true;
                                 }
                                 i++;
                             }
                             //if not in array add it.
                             if (alreadyAdded === false) {
-                                scope.newTask.checklistArray.push({ text: scope.newTask.checklistItem, complete: false });
+                                scope.newTask.checklistItems.push({ text: scope.newTask.checklistItem, complete: false });
                             }
                         } else {
-                            scope.newTask.checklistArray.push({ text: scope.newTask.checklistItem, complete: false });
+                            scope.newTask.checklistItems.push({ text: scope.newTask.checklistItem, complete: false });
                         }
                     }
                     scope.newTask.checklistItem = '';
             };
             scope.dropChecklistItem = function(text) {
-                var deletingItem = scope.newTask.checklistArray;
-                scope.newTask.checklistArray = [];
+                var deletingItem = scope.newTask.checklistItems;
+                scope.newTask.checklistItems = [];
                 //update the task.
                 angular.forEach(deletingItem, function(item) {
                     if (item.text !== text) {
-                        scope.newTask.checklistArray.push(item);
+                        scope.newTask.checklistItems.push(item);
                     }
                 });
             };
             
-            scope.backStep = function() {
+            scope.backStep = function(step) {
                 scope.stepConfig.currentStep -= 1;
             };
-            scope.takeStep = function() {
-                scope.stepConfig.currentStep += 1;
+            scope.takeStep = function(step) {
+                var check = process(step);
+                if (check.valid) {
+                    scope.stepConfig.currentStep += 1;
+                } else {
+                    NotificationFactory.popup('Attention!', check.message, 'warning');
+                }
             };
+            scope.cancel = function() {
+                scope.stepConfig.currentStep = 1;
+                angular.copy(newTaskModel, scope.newTask);
+                scope.scheduleForm.$setPristine();
+            };
+            
+            function process(step) {
+                switch(step) {
+                    case 1:
+                        if (scope.newTask.link.linked === true) {
+                            var category = scope.newTask.category;
+                            if (category === 'Watch') {
+                                scope.linkItems = Animeitems.query({
+                                    status: 0
+                                });
+                                scope.linkType = 'anime';
+                            } else if (category === 'Read') {
+                                scope.linkItems = Mangaitems.query({
+                                    status: 0
+                                });
+                                scope.linkType = 'manga';
+                            } else {
+                                return { valid: false, message: 'Category must be either Watch or Read for linked items!' };
+                            }
+                        } else {
+                            //Ensure that stuff is cleared when not linked.
+                            scope.linkType = '';
+                            scope.newTask.link.anime = undefined;
+                            scope.newTask.link.manga = undefined;
+                        }
+                        return { valid: true };
+                }
+            }
             
         }
     };
@@ -4018,17 +4148,44 @@ angular.module('tasks').factory('Tasks', ['$resource',
 		});
 	}
 ])
-.factory('DiscoveryFactory', function() {
-    return {
-        getWeekBeginning: function() {
+.factory('TaskFactory', ['Animeitems', 'Mangaitems', 'AnimeFactory', 'MangaFactory', function(Animeitems, Mangaitems, AnimeFactory, MangaFactory) {
+    var obj = {},
+        itemUpdate = new Date().toISOString().substring(0,10);
+    
+        obj.getWeekBeginning = function() {
             var newDate = new Date(),
                 day = newDate.getDay(),
                 diff = newDate.getDate() - day + (day === 0 ? -6:1); // adjust when day is sunday
             var wkBeg = new Date();
             return new Date(wkBeg.setDate(diff));
-        }
-    };
-});
+        };
+    
+        obj.updateAnimeitem = function(task) {
+            var query = Animeitems.get({ 
+				animeitemId: task.link.anime._id
+			});
+            query.$promise.then(function(data) {
+                console.log(data);
+                data.episodes += 1;
+                data.latest = itemUpdate;
+                AnimeFactory.update(data, undefined, true, undefined);
+            });
+        };
+    
+        obj.updateMangaitem = function(task) {
+            var query = Mangaitems.get({ 
+				mangaitemId: task.link.manga._id
+			});
+            query.$promise.then(function(data) {
+                console.log(data);
+                data.chapters += 1;
+                data.latest = itemUpdate;
+                MangaFactory.update(data, undefined, true, undefined);
+            });
+        };
+    
+    return obj;
+}]);
 'use strict';
 
 // Config HTTP Error Handling
@@ -4111,7 +4268,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 		$scope.authentication = Authentication;
 
 		// If user is signed in then redirect back home
-		if ($scope.authentication.user) $location.path('/');
+		if ($scope.authentication.user) $location.path('/tasks');
 
 		$scope.signup = function() {
 			$http.post('/auth/signup', $scope.credentials).success(function(response) {
@@ -4135,7 +4292,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
                 $scope.loginBody = true;
 
 				// And redirect to the index page
-				$location.path('/');
+				$location.path('/tasks');
 			}).error(function(response) {
 				$scope.error = response.message;
 			});

@@ -214,11 +214,19 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             $scope.task = task;
             update(true);
         };
+        
+        //Defaults the tab filter to the current day of the week.
+        function setTabFilterDay(day) {
+            var index = day === 0 ? 7 : day; //Adjust for Sunday.
+            $scope.filterConfig.search.day = $scope.commonArrays.days[index].name;
+            console.log(day, $scope.filterConfig.search.day);
+        }
          
          //check things
         function checkStatus() {
             var today = new Date(),
                 day = today.getDay();
+            setTabFilterDay(day);
             if (day === 1) {
                 console.log('monday', day);
                 angular.forEach($scope.tasks, function (task) {

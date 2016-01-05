@@ -160,6 +160,7 @@ module.exports = function(grunt) {
               'public/style/css/components.css': 'public/style/components.scss',
               'public/style/helper/css/box-model.css': 'public/style/helper/box-model.scss',
               'public/style/helper/css/text.css': 'public/style/helper/text.scss',
+              'public/style/helper/css/animation.css': 'public/style/helper/animation.scss',
 		    }
 		  },
 		  dist: {

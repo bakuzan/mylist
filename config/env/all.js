@@ -43,7 +43,8 @@ module.exports = {
             'public/lib/components-font-awesome/css/font-awesome.min.css',
             'public/style/css/components.css',
             'public/style/helper/css/box-model.css',
-            'public/style/helper/css/text.css'
+            'public/style/helper/css/text.css',
+            'public/style/helper/css/animation.css'
 		],
 		js: [
 			'public/config.js',

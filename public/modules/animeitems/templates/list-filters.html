@@ -1,11 +1,23 @@
 <div>
     <div ng-if="page !== 'task'">
-            <div class="input-group">
-                <div class="input-group-addon">
-                    <i class="fa fa-search"></i>
-                </div>
-               <input type="text" class="form-control" placeholder="search" ng-model="filterConfig.search[filterConfig.selectListOptions.searchName]">
-           </div>
+        <div class="input-group">
+            <div class="input-group-addon">
+                <i class="fa fa-search"></i>
+            </div>
+            <input type="text" class="form-control" placeholder="search" ng-model="filterConfig.search[filterConfig.selectListOptions.searchName]">
+       </div>
+        <div class="input-group mt" ng-if="items !== undefined">
+            <div class="input-group-addon">
+                <i class="fa fa-list-ol"></i>
+            </div>
+            <input type="text" class="form-control" value="Showing {{ (filterConfig.showingCount = (items | filter: filterConfig.search | mediaFilter: filterConfig.media | ratingFilter: filterConfig.ratingLevel | tagFilter: filterConfig.searchTags:filterConfig.taglessItem).length) }} items." disabled>
+        </div>
+        <div class="input-group mt">
+            <div class="input-group-addon" ng-click="filterConfig.expandFilters=!filterConfig.expandFilters">
+                <i class="fa fa-filter"></i>
+            </div>
+        </div>
+        <div class="animate" ng-class="(filterConfig.expandFilters) ? 'ease-in animate-transition' : 'ease-out animate-transition'">
             <div class="input-group mt">
                 <div class="input-group-addon clickable" clear-tag-values>
                     <i class="fa fa-tags"></i>
@@ -20,12 +32,6 @@
                     </li>
                 </ul>
            </div>
-            <div class="input-group mt" ng-if="items !== undefined">
-              <div class="input-group-addon">
-                  <i class="fa fa-list-ol"></i>
-              </div>
-              <input type="text" class="form-control" value="Showing {{ (filterConfig.showingCount = (items | filter: filterConfig.search | mediaFilter: filterConfig.media | ratingFilter: filterConfig.ratingLevel | tagFilter: filterConfig.searchTags:filterConfig.taglessItem).length) }} items." disabled>
-            </div>
             <div class="input-group mt" ng-hide="$parent.isList === 'slider'">
               <div class="input-group-addon">
                   <i class="fa fa-sort"></i>
@@ -115,6 +121,7 @@
                 </span>
             </div>
             <input class="form-control" type="checkbox" data-ng-model="filterConfig.taglessItem">
+        </div>
         </div>
     </div>
     <div ng-if="page === 'task'">

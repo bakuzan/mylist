@@ -1,16 +1,22 @@
 .animate.ease-out {
   max-height: 0;
-  -webkit-transition: max-height 0.25s ease-out;
-  -o-transition: max-height 0.25s ease-out;
-  -moz-transition: max-height 0.25s ease-out;
-  transition: max-height 0.25s ease-out;
+  -webkit-transition: max-height 0.5s ease-out;
+  -o-transition: max-height 0.5s ease-out;
+  -moz-transition: max-height 0.5s ease-out;
+  transition: max-height 0.5s ease-out;
   overflow: hidden; }
 
 .animate.ease-in {
-  max-height: 1000px;
-  -webkit-transition: max-height 0.5s ease-in;
-  -o-transition: max-height 0.5s ease-in;
-  -moz-transition: max-height 0.5s ease-in;
-  transition: max-height 0.5s ease-in; }
+  max-height: 650px;
+  -webkit-transition: max-height 1s ease-in;
+  -o-transition: max-height 1s ease-in;
+  -moz-transition: max-height 1s ease-in;
+  transition: max-height 1s ease-in; }
+
+.animate-transition {
+  -webkit-transition: all linear 0.5s;
+  -o-transition: all linear 0.5s;
+  -moz-transition: all linear 0.5s;
+  transition: all linear 0.5s; }
 
 /*# sourceMappingURL=animation.css.map */

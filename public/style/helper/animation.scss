@@ -3,11 +3,15 @@
 
 .animate.ease-out {
     max-height: 0;
-    @include transition(max-height 0.25s ease-out);
+    @include transition(max-height 0.5s ease-out);
     overflow: hidden;
 }
 
 .animate.ease-in {
-    max-height: 1000px;
-    @include transition(max-height 0.5s ease-in);
+    max-height: 650px;
+    @include transition(max-height 1s ease-in);
+}
+
+.animate-transition {
+  @include transition(all linear 0.5s);
 }

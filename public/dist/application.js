@@ -137,6 +137,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.filterConfig = {
             ongoingList: true,
             showingCount: 0,
+            expandFilters: false,
             sortType: '',
             sortReverse: true,
             ratingLevel: undefined,

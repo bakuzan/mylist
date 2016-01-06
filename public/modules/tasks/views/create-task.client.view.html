@@ -39,7 +39,7 @@
                             <label for="category" class="col-lg-3 col-md-3 col-sm-3 control-label">Category</label>
                             <!--<i class="fa fa-caret-down selectArrow"></i>-->
                             <div class="col-lg-8 col-md-8 col-sm-8">
-                                <select required id="category" class="form-control" ng-model="newTask.category" ng-options="obj.name as obj.name for obj in $parent.commonArrays.categories">
+                                <select id="category" class="form-control" ng-model="newTask.category" ng-options="obj.name as obj.name for obj in $parent.commonArrays.categories">
                                     <option class="disabled" value="">Choose a category</option>
                                 </select>
                             </div>

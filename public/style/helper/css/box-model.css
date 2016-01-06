@@ -46,6 +46,12 @@
 .relative {
   position: relative; }
 
+.fixed {
+  position: fixed; }
+
+.static {
+  position: static; }
+
 .position-top {
   top: 0; }
 

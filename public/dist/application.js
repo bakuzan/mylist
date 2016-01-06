@@ -430,6 +430,29 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
             }
           });
           
+          window.addEventListener('scroll', function (evt) {
+              var scrollTop = document.body.scrollTop,
+                  div = document.getElementById('list-paging-controls'),
+                  innerDiv = document.getElementById('list-paging-controls-inner-container'),
+                  viewportOffset = div.getBoundingClientRect(),
+                  distance_from_top = viewportOffset.top; // This value is your scroll distance from the top
+
+              // The user has scrolled to the tippy top of the page. Set appropriate style.
+              if (distance_from_top < 56) {
+//                  console.log('top hit : ', distance_from_top);
+                  div.classList.add('paging-controls-scroll-top');
+                  innerDiv.classList.add('paging-controls-inner-container');
+              }
+
+              // The user has scrolled down the page.
+              if(distance_from_top > 55 || scrollTop < 10) {
+//                  console.log('we are at: ', distance_from_top);
+                  div.classList.remove('paging-controls-scroll-top');
+                  innerDiv.classList.remove('paging-controls-inner-container');
+              }
+
+          });
+          
       }
   };
     
@@ -461,6 +484,12 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
             scope.itemsAvailable = function() {
               scope.$parent.itemsAvailable();  
             };
+            
+            scope.$watch('$parent.isList', function(newValue) {
+                if (newValue !== undefined) {
+                    scope.isList = newValue;
+                }
+            });
           
         }
         
@@ -3722,6 +3751,9 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
+        var today = new Date(),
+            day = today.getDay();
+        
         $scope.whichController = 'task';
         $scope.isLoading = false;
         //paging variables.
@@ -3798,7 +3830,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                 updateCheck: new Date().getDay() === 1 ? true : false,
                 complete: false,
                 category: this.newTask.category === '' ? 'Other' : this.newTask.category,
-                daily: this.newTask.checklist === true ? false   : this.newTask.daily,
+                daily: this.newTask.daily,
                 checklist: this.newTask.checklist,
                 checklistItems: this.newTask.checklistItems
 			});
@@ -3866,10 +3898,12 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
         
         //Tick off a task.
         $scope.tickOff = function(task) {
+            var isLinked = false;
             //Is it linked?
             if (task.link.linked === false) {
                 task.completeTimes += 1;
             } else if (task.link.linked === true) {
+                isLinked = true;
                 /** Anime or manga?
                  *   Update the item value AND the complete/repeat values.
                  */
@@ -3885,7 +3919,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             }
             $scope.task = task;
             console.log($scope.task);
-            update(true);
+            update(isLinked);
         };
         
         //Tick of a checklist item.
@@ -3904,7 +3938,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                 task.complete = true;
             }
             $scope.task = task;
-            update(true);                                           
+            update();                                           
         };
         
         //Add new checklist item.
@@ -3926,7 +3960,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                 }
             }
             $scope.task = task;
-            update(true);
+            update();
         };
         
         //Defaults the tab filter to the current day of the week.
@@ -3935,12 +3969,10 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             $scope.filterConfig.search.day = $scope.commonArrays.days[index].name;
             console.log(day, $scope.filterConfig.search.day);
         }
+        setTabFilterDay(day);
          
          //check things
         function checkStatus() {
-            var today = new Date(),
-                day = today.getDay();
-            setTabFilterDay(day);
             if (day === 1) {
                 console.log('monday', day);
                 angular.forEach($scope.tasks, function (task) {
@@ -4012,13 +4044,13 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
         }
 
 		// Find a list of Tasks
-		function find() {
+		function find(check) {
 			Tasks.query(function(result) {
                 $scope.tasks = result;
+                if (check === true) checkStatus();
             });
 		}
-        find();
-        checkStatus();
+        find(true);
         
         $scope.$watchCollection('tasks', function(newValue) {
             if ($scope.tasks !== undefined) {

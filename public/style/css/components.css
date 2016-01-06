@@ -348,6 +348,18 @@
   border-bottom-color: #FFF;
   z-index: 2; }
 
+.task-tab-filter-scroll-top {
+  position: fixed;
+  top: 50px;
+  left: 0;
+  margin: 0;
+  z-index: 2; }
+
+.task-tab-filter-inner-container {
+  position: relative;
+  left: 30%;
+  width: 55%; }
+
 /** Step base styling **/
 .step {
   position: absolute;

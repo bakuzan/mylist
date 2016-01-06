@@ -321,6 +321,32 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
 				taskId: $stateParams.taskId
 			});
 		};
+        
+        window.addEventListener('scroll', function (evt) {
+              var scrollTop = document.body.scrollTop,
+                  div = document.getElementById('task-tab-filter-container'),
+                  innerDiv = document.getElementById('task-tab-filter-inner-container'),
+                  viewportOffset = div.getBoundingClientRect(),
+                  distance_from_top = viewportOffset.top; // This value is your scroll distance from the top
+
+              // The user has scrolled to the tippy top of the page. Set appropriate style.
+              if (distance_from_top < 56) {
+//                  console.log('top hit : ', distance_from_top);
+                  div.classList.add('task-tab-filter-scroll-top');
+                  div.classList.remove('margin-top-40');
+                  innerDiv.classList.add('task-tab-filter-inner-container');
+              }
+
+              // The user has scrolled down the page.
+              if(distance_from_top > 55 || scrollTop < 10) {
+//                  console.log('we are at: ', distance_from_top);
+                  div.classList.remove('task-tab-filter-scroll-top');
+                  div.classList.add('margin-top-40');
+                  innerDiv.classList.remove('task-tab-filter-inner-container');
+              }
+
+          });
+        
 
 	}
 ]);

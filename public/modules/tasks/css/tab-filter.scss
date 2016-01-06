@@ -71,3 +71,16 @@
 //        box-shadow: -2px 2px 0 #FFF;
 //    }
 }
+
+.task-tab-filter-scroll-top {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    margin: 0;
+    z-index: 2;
+}
+.task-tab-filter-inner-container {
+    position: relative;
+    left: 30%;
+    width: 55%;
+}

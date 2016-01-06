@@ -11,7 +11,8 @@
   -webkit-transition: max-height 1s ease-in;
   -o-transition: max-height 1s ease-in;
   -moz-transition: max-height 1s ease-in;
-  transition: max-height 1s ease-in; }
+  transition: max-height 1s ease-in;
+  overflow: hidden; }
 
 .animate-transition {
   -webkit-transition: all linear 0.5s;

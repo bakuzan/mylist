@@ -67,17 +67,17 @@
     margin: 10px 5px;
 }
 
-.stat-header-label.active,
-.stat-header-label.ng-valid.ng-dirty.active,
-.stat-header-label:focus {
-    color: $brand-accent;
-    background-color: $brand-primary;
-    border-color: $brand-primary;
-}
-
-.stat-header-label:hover {
-    color: $brand-accent-alter;
-}
+//.stat-header-label.active,
+//.stat-header-label.ng-valid.ng-dirty.active,
+//.stat-header-label:focus {
+//    color: $brand-accent;
+//    background-color: $brand-primary;
+//    border-color: $brand-primary;
+//}
+//
+//.stat-header-label:hover {
+//    color: $brand-accent-alter;
+//}
 
 
 .stat-month-header {
@@ -133,6 +133,7 @@
 }
 
 .stat-month-detail {
+    background-color: $brand-primary;
     margin-bottom: 10px;
 }
 

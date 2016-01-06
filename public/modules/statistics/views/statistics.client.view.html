@@ -16,8 +16,8 @@
             <div class="stat-header">
                 <div class="stat-header-label-container">
                     <h3 class="clickable" ng-click="showHistory = !showHistory"><i class="fa" ng-class="showHistory ? 'fa-minus-square' : 'fa-plus-square'"></i> History</h3>
-                    <h3 class="btn stat-header-label" ng-model="historicalView" btn-radio="'month'" ng-show="showHistory">by month</h3>
-                    <h3 class="btn stat-header-label" ng-model="historicalView" btn-radio="'season'" ng-show="showHistory && view === 'Anime'">by season</h3>
+                    <h3 class="btn btn-primary stat-header-label" ng-model="historicalView" btn-radio="'month'" ng-show="showHistory">by month</h3>
+                    <h3 class="btn btn-primary stat-header-label" ng-model="historicalView" btn-radio="'season'" ng-show="showHistory && view === 'Anime'">by season</h3>
                 </div>
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12 stat-history" ng-init="showHistory = true">

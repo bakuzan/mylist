@@ -10,6 +10,7 @@
 .animate.ease-in {
     max-height: 650px;
     @include transition(max-height 1s ease-in);
+    overflow: hidden;
 }
 
 .animate-transition {

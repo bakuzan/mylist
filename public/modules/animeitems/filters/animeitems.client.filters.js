@@ -76,8 +76,27 @@ angular.module('animeitems')
 .filter('season', function() {
     return function(array, year, month) {
         return array.filter(function(item) {
-            if (item.end!== undefined && item.end !== null && item.season.year === year && item.season.season === month) {
-                return item;
+            if (item.end!== undefined && item.end !== null && item.season !== undefined && item.season !== null) {
+                if (item.season.year === year && item.season.season === month) {
+                    return item;
+                }
+            }
+        });
+    };
+})
+.filter('summaryYear', function() {
+    return function(array, year, type) {
+        return array.filter(function(item) {
+            if (item.end !== undefined && item.end !== null) {
+                if (type === 'month') {
+                    if (item.end.substring(0,4) === year) {
+                        return item;
+                    }
+                } else if (type === 'season') {
+                    if (item.start.substring(0,4) === year) {
+                        return item;
+                    }
+                }
             }
         });
     };

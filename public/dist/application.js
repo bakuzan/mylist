@@ -579,8 +579,27 @@ angular.module('animeitems')
 .filter('season', function() {
     return function(array, year, month) {
         return array.filter(function(item) {
-            if (item.end!== undefined && item.end !== null && item.season.year === year && item.season.season === month) {
-                return item;
+            if (item.end!== undefined && item.end !== null && item.season !== undefined && item.season !== null) {
+                if (item.season.year === year && item.season.season === month) {
+                    return item;
+                }
+            }
+        });
+    };
+})
+.filter('summaryYear', function() {
+    return function(array, year, type) {
+        return array.filter(function(item) {
+            if (item.end !== undefined && item.end !== null) {
+                if (type === 'month') {
+                    if (item.end.substring(0,4) === year) {
+                        return item;
+                    }
+                } else if (type === 'season') {
+                    if (item.start.substring(0,4) === year) {
+                        return item;
+                    }
+                }
             }
         });
     };
@@ -3590,6 +3609,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 $scope.historicalView = 'month';
                 $scope.statSearch = '';
                 $scope.showDetail = false;
+                $scope.showYearDetail = false;
                 $scope.statTags = [];
                 $scope.ratingsDistribution = [];
             }
@@ -3618,16 +3638,16 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         //show season detail.
         $scope.seasonDetail = function(year, month, monthText) {
 //            console.log(year+'-'+month, monthText);
+            $scope.showDetail = false;
+            $scope.showYearDetail = false;
             //if the one already selected is clicked, hide the detail.
             if ($scope.detailSeasonYear===year && $scope.detailSeason===month) {
                 $scope.showSeasonDetail = !$scope.showSeasonDetail;
-                $scope.showDetail = false;
             } else {
                 $scope.detailSeasonYear = year;
                 $scope.detailSeason = month;
                 $scope.detailSeasonName = monthText;
                 $scope.showSeasonDetail = true;
-                $scope.showDetail = false;
             }
         };
         
@@ -3645,20 +3665,37 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 getSummaryFunctions(newValue);
             }
         });
+        $scope.$watchCollection('yearItems', function(newValue) {
+            if (newValue !== undefined) {
+                getSummaryFunctions(newValue);
+            }
+        });
         
         //show month detail.
         $scope.monthDetail = function(year, month, monthText) {
 //            console.log(year+'-'+month, monthText);
+            $scope.showSeasonDetail = false;
+            $scope.showYearDetail = false;
             //if the one already selected is clicked, hide the detail.
             if ($scope.detailYear===year && $scope.detailMonth===month) {
                 $scope.showDetail = !$scope.showDetail;
-                $scope.showSeasonDetail = false;
             } else {
                 $scope.detailYear = year;
                 $scope.detailMonth = month;
                 $scope.detailMonthName = monthText;
                 $scope.showDetail = true;
-                $scope.showSeasonDetail = false;
+            }
+        };
+        //show year detail.
+        $scope.yearDetail = function(year, type) {
+            $scope.showSeasonDetail = false;
+            $scope.showDetail = false;
+            if ($scope.summaryYear === year && $scope.summaryType === type) {
+                $scope.showYearDetail = !$scope.showYearDetail;
+            } else {
+                $scope.summaryYear = year;
+                $scope.summaryType = type;
+                $scope.showYearDetail = true;
             }
         };
         //show stat tag detail.

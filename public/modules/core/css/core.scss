@@ -460,14 +460,14 @@ nav {
   position: fixed;
   top: 10vh;
   left: 20vw;
-  width: 60vw;
-  height: 75vh;
+  width: 65vw;
+  height: 65vh;
   @extend .tile-style;
 //  border: 5px solid $blue;
   margin-top: 10px; 
   background-color: #FFF;
   align-content: center;
-  overflow-y: auto;
+//  overflow-y: auto;
   z-index: 1000;
 }
 
@@ -604,7 +604,6 @@ nav {
     padding: 10px 15px;
     border: $brand-border;
     border-radius: 2px;
-    margin: 0 5% -1px;
 }
 
 a.menu-header-bar,
@@ -624,7 +623,6 @@ a.menu-header-bar:hover {
 }
 
 .task-list-container {
-    @extend .tile-style;
     padding: 10px 5px;
     margin: 40px 10px;
 }
@@ -635,7 +633,6 @@ a.menu-header-bar:hover {
 }
 
 .filter-container {
-    @extend .tile-style;
     @extend .placeholder-container;
     padding: 20px 0;
     margin-left: -10px;
@@ -685,7 +682,7 @@ div.popover {
     list-style-type: decimal-leading-zero;
 }
 .options-list-container {
-    max-height: 235px;
+    max-height: 12vh;
     overflow-y: auto;
 }
 .options-list {

@@ -9,11 +9,11 @@
                 <label class="btn btn-primary" ng-model="isList" btn-radio="'list'">List</label>
                 <label class="btn btn-primary" ng-model="isList" btn-radio="'slider'">Slider</label>
             </div>
-            <div page-controls page-config="pageConfig" showing-count="filterConfig.showingCount" ng-hide="isList === 'slider'"></div>
             <div list-filters filter-config="filterConfig" items="characters" page="whichController"></div>
         </div>
         <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
         <div class="col-lg-8 col-md-6 col-sm-6 item-list-container">
+            <div page-controls page-config="pageConfig" showing-count="filterConfig.showingCount" ng-hide="isList === 'slider'"></div>
             <div class="list-group col-lg-12 col-md-12 col-sm-12" data-ng-show="isList==='list'">
                 <div data-ng-repeat="character in characters | orderBy: filterConfig.sortType:filterConfig.sortReverse | filter: filterConfig.search | mediaFilter: filterConfig.media | seriesFilter: filterConfig.seriesFilter | tagFilter: filterConfig.searchTags:filterConfig.taglessItem | startFrom: pageConfig.currentPage*pageConfig.pageSize | limitTo: pageConfig.pageSize" character_Back="{{trustAsResourceUrl(character.image)}}" class="list-group-item" ng-class="viewItem===character ? 'col-lg-12 col-md-12 col-sm-12 character-expanded' : ' col-lg-6 col-md-6 col-sm-6 character-default'" ng-hide="loading(character.name)">
             <div class="clickable view-item-top" ng-click="viewItem===character ? viewItem='' : viewItem=character">

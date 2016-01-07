@@ -1,3 +1,34 @@
+.paging-controls {
+  text-align: center;
+  margin-bottom: 10px;
+  z-index: 1; }
+
+.paging-controls-scroll-top {
+  position: fixed;
+  width: 100%;
+  top: 50px;
+  left: 0;
+  background-color: #FFF; }
+
+.paging-controls-inner-container {
+  position: relative;
+  width: 50%;
+  margin: auto; }
+  @media (max-width: 768px) {
+    .paging-controls-inner-container {
+      left: 0;
+      width: 100%;
+      margin: 0; } }
+  @media (min-width: 768px) and (max-width: 992px) {
+    .paging-controls-inner-container {
+      left: 15%; } }
+  @media (min-width: 992px) and (max-width: 1200px) {
+    .paging-controls-inner-container {
+      left: 17%; } }
+  @media (min-width: 1200px) {
+    .paging-controls-inner-container {
+      left: 10%; } }
+
 /**
  * hover-data Styles
  */
@@ -6,6 +37,9 @@
 .hover-data {
   position: relative;
   cursor: pointer; }
+
+[hover-data='']:before, [hover-data='']:after {
+  display: none; }
 
 /* Base styles for the entire hover-data */
 [hover-data]:before,
@@ -283,5 +317,96 @@
 .slide.ng-hide-add,
 .slide.ng-hide-remove.ng-hide-remove-active {
   opacity: 1; }
+
+/** Tab filter base styling **/
+.tab-filter-container {
+  position: relative;
+  text-align: center;
+  padding: 0;
+  margin: 0; }
+
+.tab-filter {
+  position: relative;
+  display: inline-block;
+  background: #ECECEC;
+  width: 13%;
+  height: 25px;
+  padding: 0 10px;
+  margin: 0 -5px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  z-index: 0; }
+  .tab-filter:first-child, .tab-filter:nth-child(2) {
+    width: 9%; }
+  .tab-filter label {
+    height: 25px;
+    margin: 0;
+    overflow: hidden; }
+
+.tab-filter.tab-in {
+  background: #FFF;
+  border-bottom-color: #FFF;
+  z-index: 2; }
+
+.task-tab-filter-scroll-top {
+  position: fixed;
+  top: 50px;
+  left: 0;
+  margin: 0;
+  z-index: 2; }
+
+.task-tab-filter-inner-container {
+  position: relative;
+  left: 30%;
+  width: 55%; }
+
+/** Step base styling **/
+.step {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-height: 250px;
+  height: inherit;
+  width: 100%;
+  opacity: 0;
+  z-index: 1; }
+
+.step-inner-container {
+  min-height: inherit;
+  height: inherit; }
+
+.step.ng-hide-add,
+.step.ng-hide-remove {
+  -webkit-transition: all linear 0.5s;
+  -o-transition: all linear 0.5s;
+  -moz-transition: all linear 0.5s;
+  transition: all linear 0.5s;
+  display: block !important; }
+
+.step-transition {
+  -webkit-transition: all linear 0.5s;
+  -o-transition: all linear 0.5s;
+  -moz-transition: all linear 0.5s;
+  transition: all linear 0.5s; }
+
+.step.ng-hide-add.ng-hide-add-active,
+.step.ng-hide-remove {
+  opacity: 0; }
+
+.step-out {
+  opacity: 0; }
+
+.step-in {
+  opacity: 1; }
+
+.step.ng-hide-add,
+.step.ng-hide-remove.ng-hide-remove-active {
+  opacity: 1; }
+
+.step-button-group {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  display: inline-flex; }
 
 /*# sourceMappingURL=components.css.map */

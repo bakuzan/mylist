@@ -46,6 +46,9 @@ $font-sizes: 10 12 14 15 20 22 25 30 35 40;
 $text-align: left right center;
 
 //BOX MODEL:
-$percentage-sizes: 25 30 33 50 60 66 75 100;
-$positions: absolute relative;
-$boxing: 0 5 10 15 20 25 30 55;
+$percentage-sizes: 10 20 25 30 33 40 50 60 66 70 75 80 90 100;
+$positions: absolute relative fixed static;
+$boxing: 0 5 10 15 20 25 30 35 40 45 50 55;
+
+//Display:
+$displays: inline inline-block inline-flex flex list-item block none;

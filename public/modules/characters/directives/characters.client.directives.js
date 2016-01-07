@@ -210,15 +210,7 @@ angular.module('characters').directive('characterBack', function(){
         element.bind('click', function(event) {    
             var text = attrs.dropTag;
              //are you sure option...
-            swal({
-                title: 'Are you sure?', 
-                text: 'Are you sure that you want to drop this tag?', 
-                type: 'warning',
-                showCancelButton: true,
-                closeOnConfirm: true,
-                confirmButtonText: 'Yes, delete it!',
-                confirmButtonColor: '#ec6c62'
-            }, function() {
+            NotificationFactory.confirmation(function() {
                 scope.$apply(function() {
                     var deletingItem = scope.tagArray;
                     scope.$parent.tagArray = [];
@@ -244,15 +236,7 @@ angular.module('characters').directive('characterBack', function(){
                     i,
                     entry_type = scope.whichController;
                 //are you sure option...
-                swal({
-                    title: 'Are you sure?', 
-                    text: 'Are you sure that you want to delete this tag?', 
-                    type: 'warning',
-                    showCancelButton: true,
-                    closeOnConfirm: true,
-                    confirmButtonText: 'Yes, delete it!',
-                    confirmButtonColor: '#ec6c62'
-                }, function() {
+              NotificationFactory.confirmation(function() {
                     scope.$apply(function () {
                         var index;
                         if (entry_type === 'character') {

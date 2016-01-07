@@ -6,6 +6,68 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
 		return $resource('animeitems/:animeitemId', { animeitemId: '@_id' }, { update: { method: 'PUT' } });
 	}
 ])
+.factory('AnimeFactory', ['Animeitems', 'ListService', 'ItemService', 'NotificationFactory', '$location', function(Animeitems, ListService, ItemService, NotificationFactory, $location) {
+    return {
+        update: function(item, tagArray, updateHistory, imgPath) {
+            var animeitem = item;
+            console.log(animeitem);
+            //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
+            if (item.manga!==null && item.manga!==undefined) {
+                animeitem.manga = item.manga._id;
+            }
+            
+            if (tagArray!==undefined) {
+                animeitem.tags = ListService.concatenateTagArrays(animeitem.tags, tagArray);
+            }
+            
+            //update the item history.
+            animeitem = ItemService.itemHistory(animeitem, updateHistory, 'anime');
+            
+            if (imgPath!==undefined && imgPath!==null && imgPath!=='') {
+                animeitem.image = imgPath;
+            }
+            //console.log($scope.imgPath);
+            //console.log(animeitem.image);
+            
+            //handle end date
+            if (animeitem.episodes === animeitem.finalEpisode && animeitem.finalEpisode!==0) {
+                if (animeitem.end===undefined || animeitem.end === null) {
+                    animeitem.end = animeitem.latest.substring(0,10);
+//                    console.log(animeitem.end);
+                }
+            } else if (animeitem.reWatching === false) {
+                //in the event the 'complete-ness' of an entry needs to be undone.
+                //this will undo the end date.
+                animeitem.end = null;
+//                console.log(animeitem.end);
+            }
+            
+            //handle status: completed.
+            if(animeitem.end!==undefined && animeitem.end!==null) {
+                animeitem.status = true;
+                animeitem.onHold = false;
+            } else {
+                //if no end date, not complete.
+                animeitem.status = false;
+            }
+            
+            //handle re-reading, re-read count.
+            if (animeitem.reWatching===true && animeitem.episodes===animeitem.finalEpisode) {
+                animeitem.reWatchCount += 1;
+                animeitem.reWatching = false;
+            }
+
+			animeitem.$update(function() {
+				if (window.location.href.indexOf('tasks') === -1) $location.path('animeitems');
+
+			    NotificationFactory.success('Saved!', 'Anime was saved successfully');
+			}, function(errorResponse) {
+				var error = errorResponse.data.message;
+                NotificationFactory.error('Error!', errorResponse.data.message);
+			});
+        }
+    };
+}])
 .service('fileUpload', ['$http', 'NotificationFactory', function ($http, NotificationFactory) {
     this.uploadFileToUrl = function(file, uploadUrl){
         var fd = new FormData();
@@ -18,11 +80,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             NotificationFactory.success('Uploaded!', 'Image was saved successfully');
         })
         .error(function(err){
-            swal({ 
-                title: 'Woops!',
-                text: 'Something went wrong! \n' + err,
-                type: 'error'
-            });
+            NotificationFactory.popup('Woops!', 'Something went wrong! \n' + err, 'error');
         });
     };
 }])
@@ -173,8 +231,24 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     { number: '10', text: 'October' },
                     { number: '11', text: 'November' },
                     { number: '12', text: 'December' }
+                ],
+                categories = [
+                    {name: 'Watch'},
+                    {name: 'Read'},
+                    {name: 'Play'},
+                    {name: 'Other'}
+                ],
+                days = [
+                    {name: 'Any'},
+                    {name: 'Monday'},
+                    {name: 'Tuesday'},
+                    {name: 'Wednesday'},
+                    {name: 'Thursday'},
+                    {name: 'Friday'},
+                    {name: 'Saturday'},
+                    {name: 'Sunday'}
                 ];
-            commonArrays = { months: months, seasons: seasons };
+            commonArrays = { months: months, seasons: seasons, categories: categories, days: days };
             return commonArrays;
         };
     
@@ -201,21 +275,31 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         
         //add history entry to item.
         this.itemHistory = function(item, updateHistory, type) {
+            console.log('item history: ', item, item.meta);
             //populate the history of when each part was 'checked' off.
             if (item.meta.history.length !== 0) {
-                var latestHistory = item.meta.history[item.meta.history.length - 1].value;
-                var length = type === 'anime' ? item.episodes - latestHistory : item.chapters - latestHistory;
+                var latestHistory = item.meta.history[item.meta.history.length - 1].value,
+                    length = type === 'anime' ? item.episodes - latestHistory : item.chapters - latestHistory;
                 if (length > 0 && (type === 'anime' ? item.reWatching === false : item.reReading === false)) {
                     for(var i = 1; i <= length; i++) {
-                        item.meta.history.push({ date: Date.now(), value: latestHistory + i, title: item.title, id: item._id });
+                        item.meta.history.push({ 
+                            date: Date.now(), 
+                            value: latestHistory + i, 
+                            title: item.title, 
+                            id: item._id 
+                        });
                     }
                 }
             } else {
                 if (updateHistory && (type === 'anime' ? item.reWatching === false : item.reReading === false)) {
-                    item.meta.history.push({ date: Date.now(), value: (type === 'anime' ? item.episodes : item.chapters), title: item.title, id: item._id });
+                    item.meta.history.push({ 
+                        date: Date.now(), 
+                        value: (type === 'anime' ? item.episodes : item.chapters), 
+                        title: item.title, 
+                        id: item._id 
+                    });
                 }
             }
-            
             return item;
         };
         

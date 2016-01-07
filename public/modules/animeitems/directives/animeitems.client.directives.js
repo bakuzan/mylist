@@ -103,6 +103,29 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
             }
           });
           
+          window.addEventListener('scroll', function (evt) {
+              var scrollTop = document.body.scrollTop,
+                  div = document.getElementById('list-paging-controls'),
+                  innerDiv = document.getElementById('list-paging-controls-inner-container'),
+                  viewportOffset = div.getBoundingClientRect(),
+                  distance_from_top = viewportOffset.top; // This value is your scroll distance from the top
+
+              // The user has scrolled to the tippy top of the page. Set appropriate style.
+              if (distance_from_top < 56) {
+//                  console.log('top hit : ', distance_from_top);
+                  div.classList.add('paging-controls-scroll-top');
+                  innerDiv.classList.add('paging-controls-inner-container');
+              }
+
+              // The user has scrolled down the page.
+              if(distance_from_top > 55 || scrollTop < 10) {
+//                  console.log('we are at: ', distance_from_top);
+                  div.classList.remove('paging-controls-scroll-top');
+                  innerDiv.classList.remove('paging-controls-inner-container');
+              }
+
+          });
+          
       }
   };
     
@@ -133,6 +156,17 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
             
             scope.itemsAvailable = function() {
               scope.$parent.itemsAvailable();  
+            };
+            
+            scope.$watch('$parent.isList', function(newValue) {
+                if (newValue !== undefined) {
+                    scope.isList = newValue;
+                }
+            });
+            
+            scope.collapseFilters = function() {
+                console.log('collapse filters');
+                scope.filterConfig.expandFilters = false;
             };
           
         }

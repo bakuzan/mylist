@@ -39,11 +39,7 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
 		};
         
         function favouriteLimitReached() {
-            swal({ 
-                title: 'Favourite limit reached!',
-                text: 'Only allowed 5 favourites. \nPlease remove one if you wish to add another.',
-                type: 'error'
-            });
+            NotificationFactory.popup('Favourite limit reached!', 'Only allowed 5 favourites. \nPlease remove one if you wish to add another.', 'error');
         }
         
         /**
@@ -71,15 +67,7 @@ angular.module('favourites').controller('FavouritesController', ['$scope', 'Auth
         
         $scope.removeFavourite = function(kill) {
             //are you sure option...
-            swal({
-                title: 'Are you sure?', 
-                text: 'Are you sure that you want to delete this favourite?', 
-                type: 'warning',
-                showCancelButton: true,
-                closeOnConfirm: true,
-                confirmButtonText: 'Yes, delete it!',
-                confirmButtonColor: '#ec6c62'
-            }, function() {
+            NotificationFactory.confirmation(function() {
                 var deletingItem;
                 if (kill.anime !== undefined) {
                     deletingItem = $scope.favouriteAnimeitem;

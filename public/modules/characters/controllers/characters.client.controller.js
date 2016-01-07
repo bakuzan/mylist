@@ -92,15 +92,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 		// Remove existing Character
 		$scope.remove = function(character) {
             //are you sure option...
-            swal({
-                title: 'Are you sure?', 
-                text: 'Are you sure that you want to delete this character?', 
-                type: 'warning',
-                showCancelButton: true,
-                closeOnConfirm: true,
-                confirmButtonText: 'Yes, delete it!',
-                confirmButtonColor: '#ec6c62'
-            }, function() {
+            NotificationFactory.confirmation(function() {
                 if ( character ) { 
                     character.$remove();
 

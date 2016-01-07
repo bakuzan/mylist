@@ -112,7 +112,10 @@ exports.delete = function(req, res) {
  * List of Mangaitems
  */
 exports.list = function(req, res) { 
-	Mangaitem.find().sort('-created').populate('user', 'displayName').populate('anime', 'title').exec(function(err, mangaitems) {
+     var current = [false], all = [true, false], 
+        status = (req.query.status === '0') ? current : all;
+
+	Mangaitem.find({ $or: [ { status: {$in: status } }, { reReading: true } ] }).sort('-created').populate('user', 'displayName').populate('anime', 'title').exec(function(err, mangaitems) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)

@@ -163,6 +163,11 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
                     scope.isList = newValue;
                 }
             });
+            
+            scope.collapseFilters = function() {
+                console.log('collapse filters');
+                scope.filterConfig.expandFilters = false;
+            };
           
         }
         

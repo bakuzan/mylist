@@ -490,6 +490,11 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
                     scope.isList = newValue;
                 }
             });
+            
+            scope.collapseFilters = function() {
+                console.log('collapse filters');
+                scope.filterConfig.expandFilters = false;
+            };
           
         }
         
@@ -3751,7 +3756,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
-        var today = new Date(),
+        var today = new Date('2016-01-11'),
             day = today.getDay();
         
         $scope.whichController = 'task';
@@ -4193,7 +4198,26 @@ angular.module('tasks')
             
         }
     };
-}]);
+}])
+.directive('loseInterest', function ($document, $window) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            element.data('interesting', true);
+            /** On click, check what you clicked and whether you can ignore it.
+             *    Based on checks false the ng-show of the anywhere-but-here element.
+             */
+            angular.element($document[0].body).on('click', function (e) {
+                var interesting = angular.element(e.target).inheritedData('interesting');
+                if (!interesting) {
+                    scope.$apply(function () {
+                        scope.collapseFilters();
+                    });
+                }
+            });
+        }
+    };
+});
 'use strict';
 
 //Tasks service used to communicate Tasks REST endpoints

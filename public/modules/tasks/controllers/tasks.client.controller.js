@@ -8,7 +8,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
-        var today = new Date(),
+        var today = new Date('2016-01-11'),
             day = today.getDay();
         
         $scope.whichController = 'task';

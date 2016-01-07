@@ -188,3 +188,12 @@
 .paging-controls-scroll-top {
     background-color: $brand-secondary;
 }
+
+/* LIST FILTERS CUSTOM */
+
+.popout-filters-container {
+    @extend .item-filter-container;
+    top: 60px;
+    left: 100px;
+    background-color: $brand-primary;
+}

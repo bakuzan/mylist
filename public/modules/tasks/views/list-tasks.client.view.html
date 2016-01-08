@@ -1,8 +1,11 @@
 <section data-ng-controller="TasksController">
     <div class="fixed-header">
         <h3>
-            &nbsp;
-            <i class="fa fa-repeat font-18 animate animate-rotate-hover" ng-click="refreshItems()"></i>
+            <span class="hover-data-right" hover-data="Refresh data" ng-click="refreshItems()">
+                <span class="clickable">
+                    <i class="fa fa-refresh animate-spin-hover font-20"></i>
+                </span>
+            </span>
             Week Beginning {{ weekBeginning() | dateSuffix }} 
             <button class="btn btn-primary show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</button>
         </h3>

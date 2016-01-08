@@ -17,10 +17,14 @@
 }
 
 .animate.animate-rotate-hover {
-    -webkit-transition: -webkit-transform .8s ease-in-out;
-    -ms-transition: -ms-transform .8s ease-in-out;
-    transition: transform .8s ease-in-out;
-    &:hover {
-        @include transform(rotate(360deg));
-    }
+    @include transition(transform 1.8s ease-in-out);
+}
+.animate-rotate-hover:hover {
+    @include transform(rotate(360deg));
+}
+
+//Hijacked fa-spin from font-awesome.
+.animate-spin-hover:hover {
+    -webkit-animation: fa-spin 2s 1 linear;
+            animation: fa-spin 2s 1 linear;
 }

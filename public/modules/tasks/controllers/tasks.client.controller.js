@@ -314,6 +314,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
         find(true);
         $scope.refreshItems = function() {
             find();
+            NotificationFactory.warning('Refreshed!', 'Task list refreshed!');
         };
         
         $scope.$watchCollection('tasks', function(newValue) {

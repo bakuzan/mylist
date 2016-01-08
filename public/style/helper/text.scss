@@ -23,3 +23,15 @@
 .no-wrap {
     white-space: nowrap;
 }
+
+@each $cursor in $cursors {
+    .cursor-#{$cursor} {
+        cursor: #{$cursor};
+    }
+}
+
+@each $transform in $transformations {
+    .transform-#{$transform} {
+        text-transform: #{$transform};
+    }
+}

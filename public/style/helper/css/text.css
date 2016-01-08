@@ -7,6 +7,12 @@
 .text-center {
   text-align: center; }
 
+.text-start {
+  text-align: start; }
+
+.text-end {
+  text-align: end; }
+
 .bold {
   font-weight: bold; }
 
@@ -25,25 +31,79 @@
 .font-15 {
   font-size: 15px; }
 
+.font-16 {
+  font-size: 16px; }
+
+.font-18 {
+  font-size: 18px; }
+
 .font-20 {
   font-size: 20px; }
 
 .font-22 {
   font-size: 22px; }
 
+.font-24 {
+  font-size: 24px; }
+
 .font-25 {
   font-size: 25px; }
+
+.font-28 {
+  font-size: 28px; }
 
 .font-30 {
   font-size: 30px; }
 
+.font-32 {
+  font-size: 32px; }
+
+.font-34 {
+  font-size: 34px; }
+
 .font-35 {
   font-size: 35px; }
+
+.font-36 {
+  font-size: 36px; }
+
+.font-38 {
+  font-size: 38px; }
 
 .font-40 {
   font-size: 40px; }
 
 .no-wrap {
   white-space: nowrap; }
+
+.cursor-default {
+  cursor: default; }
+
+.cursor-none {
+  cursor: none; }
+
+.cursor-pointer {
+  cursor: pointer; }
+
+.cursor-move {
+  cursor: move; }
+
+.cursor-help {
+  cursor: help; }
+
+.transform-uppercase {
+  text-transform: uppercase; }
+
+.transform-lowercase {
+  text-transform: lowercase; }
+
+.transform-none {
+  text-transform: none; }
+
+.transform-capitalize {
+  text-transform: capitalize; }
+
+.transform-full-width {
+  text-transform: full-width; }
 
 /*# sourceMappingURL=text.css.map */

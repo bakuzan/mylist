@@ -49,9 +49,6 @@
 .fixed {
   position: fixed; }
 
-.static {
-  position: static; }
-
 .position-top {
   top: 0; }
 
@@ -262,24 +259,6 @@
 .margin-bottom-50 {
   margin-bottom: 50px; }
 
-.padding-55 {
-  padding: 55px; }
-
-.padding-top-55 {
-  padding-top: 55px; }
-
-.padding-bottom-55 {
-  padding-bottom: 55px; }
-
-.margin-55 {
-  margin: 55px; }
-
-.margin-top-55 {
-  margin-top: 55px; }
-
-.margin-bottom-55 {
-  margin-bottom: 55px; }
-
 .display-inline {
   display: inline; }
 
@@ -300,5 +279,31 @@
 
 .display-none {
   display: none; }
+
+.margin-auto {
+  margin: auto; }
+
+.overflow-auto {
+  overflow: auto; }
+
+.overflow-hidden {
+  overflow: hidden; }
+
+.overflow-scroll {
+  overflow: scroll; }
+
+.overflow-auto-hover {
+  overflow: hidden; }
+  .overflow-auto-hover:hover {
+    overflow: auto; }
+
+.float-left {
+  float: left; }
+
+.float-right {
+  float: right; }
+
+.float-none {
+  float: none; }
 
 /*# sourceMappingURL=box-model.css.map */

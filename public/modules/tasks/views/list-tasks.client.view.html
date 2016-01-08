@@ -1,6 +1,8 @@
 <section data-ng-controller="TasksController">
     <div class="fixed-header">
         <h3>
+            &nbsp;
+            <i class="fa fa-repeat font-18 animate animate-rotate-hover" ng-click="refreshItems()"></i>
             Week Beginning {{ weekBeginning() | dateSuffix }} 
             <button class="btn btn-primary show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</button>
         </h3>
@@ -62,8 +64,12 @@
                 </a>
                 <strong class="taskDate complete-{{taskItem.complete}}" hover-data="{{taskItem.date | date: 'dd MMM yyyy' }}">
                     <i class="fa fa-calendar"></i>
+                    
                     <span ng-hide="taskItem.daily">
-                        {{taskItem.day}}
+                        <span ng-if="taskItem.complete">{{taskItem.day}}</span>
+                        <select ng-if="!taskItem.complete" class="phantom-control font-12" ng-model="taskItem.day"
+                                ng-options="obj.name as obj.name for obj in commonArrays.days" ng-change="changeTaskDay(taskItem)">
+                        </select>
                     </span>
                     <span ng-show="taskItem.daily">
                         DAILY

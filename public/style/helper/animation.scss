@@ -10,9 +10,17 @@
 .animate.ease-in {
     max-height: 650px;
     @include transition(max-height 1s ease-in);
-    overflow: hidden;
 }
 
 .animate-transition {
   @include transition(all linear 0.5s);
+}
+
+.animate.animate-rotate-hover {
+    -webkit-transition: -webkit-transform .8s ease-in-out;
+    -ms-transition: -ms-transform .8s ease-in-out;
+    transition: transform .8s ease-in-out;
+    &:hover {
+        @include transform(rotate(360deg));
+    }
 }

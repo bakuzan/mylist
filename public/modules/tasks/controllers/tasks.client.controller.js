@@ -178,6 +178,10 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             console.log($scope.task);
             update(isLinked);
         };
+        $scope.changeTaskDay = function(task) {
+            $scope.task = task;
+            update();
+        };
         
         //Tick of a checklist item.
         $scope.tickOffChecklist = function(task) {
@@ -308,6 +312,9 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             });
 		}
         find(true);
+        $scope.refreshItems = function() {
+            find();
+        };
         
         $scope.$watchCollection('tasks', function(newValue) {
             if ($scope.tasks !== undefined) {

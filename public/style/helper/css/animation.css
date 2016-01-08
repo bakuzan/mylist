@@ -11,13 +11,21 @@
   -webkit-transition: max-height 1s ease-in;
   -o-transition: max-height 1s ease-in;
   -moz-transition: max-height 1s ease-in;
-  transition: max-height 1s ease-in;
-  overflow: hidden; }
+  transition: max-height 1s ease-in; }
 
 .animate-transition {
   -webkit-transition: all linear 0.5s;
   -o-transition: all linear 0.5s;
   -moz-transition: all linear 0.5s;
   transition: all linear 0.5s; }
+
+.animate.animate-rotate-hover {
+  -webkit-transition: -webkit-transform .8s ease-in-out;
+  -ms-transition: -ms-transform .8s ease-in-out;
+  transition: transform .8s ease-in-out; }
+  .animate.animate-rotate-hover:hover {
+    -webkit-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg); }
 
 /*# sourceMappingURL=animation.css.map */

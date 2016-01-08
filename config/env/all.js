@@ -44,7 +44,8 @@ module.exports = {
             'public/style/css/components.css',
             'public/style/helper/css/box-model.css',
             'public/style/helper/css/text.css',
-            'public/style/helper/css/animation.css'
+            'public/style/helper/css/animation.css',
+            'public/style/helper/css/control-overrides.css'
 		],
 		js: [
 			'public/config.js',

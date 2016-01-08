@@ -108,8 +108,11 @@ angular.module('tasks')
              *    Based on checks false the ng-show of the anywhere-but-here element.
              */
             angular.element($document[0].body).on('click', function (e) {
-                var interesting = angular.element(e.target).inheritedData('interesting');
-                if (!interesting) {
+                var interesting = angular.element(e.target).inheritedData('interesting'),
+                    elm = angular.element(e.target)[0].tagName,
+                    alsoInteresting = (elm === 'A') || (elm === 'I');
+console.log(elm);
+                if (!interesting && !alsoInteresting) {
                     scope.$apply(function () {
                         scope.collapseFilters();
                     });

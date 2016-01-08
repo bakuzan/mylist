@@ -52,3 +52,26 @@
         display: #{$display};
     }
 }
+
+.margin-auto {
+    margin: auto;
+}
+
+@each $flow in $overflow {
+    .overflow-#{$flow} {
+        overflow: #{$flow}
+    }
+}
+
+.overflow-auto-hover {
+    overflow: hidden;
+    &:hover {
+        overflow: auto;
+    }
+}
+
+@each $float in $floats {
+    .float-#{$float} {
+        float: #{$float};
+    }
+}

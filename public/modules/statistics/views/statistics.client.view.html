@@ -59,22 +59,36 @@
                     <div class="stat-detail-header">
                         <h3>{{monthItems.length}} Completed {{detailMonthName}} {{detailYear}}</h3>
                     </div>
-                    <ul class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
-                        <li ng-repeat="item in (monthItems = (items | endedMonth: detailYear:detailMonth | orderBy: 'title'))">
-                            <a href="/#!/{{view.toLowerCase()}}items/{{item._id}}"><span>{{item.title}}</span></a> - <span>{{item.rating}}</span>
-                        </li>
-                    </ul>
+                    <table class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
+                        <tbody>
+                            <tr ng-repeat="item in (monthItems = (items | endedMonth: detailYear:detailMonth | orderBy: 'title'))">
+                                <td class="width-75 no-wrap overflow-hidden">
+                                    <a href="/#!/{{view.toLowerCase()}}items/{{item._id}}"><span>{{item.title}}</span></a>
+                                </td>
+                                <td>
+                                    <span>{{item.rating}}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <div class="col-lg-8 col-md-8 col-sm-8 stat-detail" ng-show="showSeasonDetail && view === 'Anime'">
                     <div class="stat-detail-header">
                         <h3>{{seasonItems.length}} Watched {{detailSeasonName}} {{detailSeasonYear}}</h3>
                     </div>
-                    <ul class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
-                        <li ng-repeat="item in (seasonItems = (items | season: detailSeasonYear:detailSeasonName | orderBy: 'title'))">
-                            <a href="/#!/animeitems/{{item._id}}"><span>{{item.title}}</span></a> - <span>{{item.rating}}</span>
-                            <p>{{item.start | date: 'MM/yyyy'}} - {{item.end | date: 'MM/yyyy'}}</p>
-                        </li>
-                    </ul>
+                    <table class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
+                        <tbody>
+                            <tr ng-repeat="item in (seasonItems = (items | season: detailSeasonYear:detailSeasonName | orderBy: 'title'))">
+                                <td class="width-75 no-wrap overflow-hidden">
+                                    <a href="/#!/animeitems/{{item._id}}"><span>{{item.title}}</span></a>
+                                    <p>{{item.start | date: 'MM/yyyy'}} - {{item.end | date: 'MM/yyyy'}}</p>
+                                </td>
+                                <td>
+                                    <span>{{item.rating}}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <table class="col-lg-4 col-md-4 col-sm-4 margin-top-55 margin-bottom-20" ng-show="(showDetail && monthItems.length > 0) || (showSeasonDetail && seasonItems.length > 0)">
                     <tbody>

@@ -35,13 +35,14 @@ angular.module('tasks').factory('Tasks', ['$resource',
             });
         };
     
-        obj.updateMangaitem = function(task) {
+        obj.updateMangaitem = function(task, chapters, volumes) {
             var query = Mangaitems.get({ 
 				mangaitemId: task.link.manga._id
 			});
             query.$promise.then(function(data) {
                 console.log(data);
-                data.chapters += 1;
+                data.chapters = chapters;
+                data.volumes = volumes;
                 data.latest = itemUpdate;
                 MangaFactory.update(data, undefined, true, undefined);
             });

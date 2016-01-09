@@ -99,6 +99,29 @@ angular.module('tasks')
         }
     };
 }])
+.directive('taskMangaUpdate', function() {
+    return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+            item: '=',
+            mangaUpdate: '='
+        },
+        templateUrl: '/modules/tasks/views/update-manga-task.client.view.html',
+        link: function (scope, element, attrs) {
+            scope.stepConfig = {
+                currentStep: 1,
+                stepCount: 1
+            };
+            
+            scope.cancel = function() {
+                scope.mangaForm.$setPristine();
+                scope.mangaUpdate.isPopup = false;
+            };
+            
+        }
+    };
+})
 .directive('loseInterest', function ($document, $window) {
     return {
         restrict: 'A',

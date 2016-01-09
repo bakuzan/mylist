@@ -28,6 +28,9 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             },
             datesSelected: false
         };
+        $scope.mangaUpdate = {
+            isPopup: false
+        };
         $scope.commonArrays = ListService.getCommonArrays();
         
         $scope.loading = function(value) {
@@ -169,9 +172,17 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                     task.repeat = task.link.anime.finalEpisode;
                     TaskFactory.updateAnimeitem(task);
                 } else if (task.link.type === 'manga') {
-                    task.completeTimes = task.link.manga.chapters + 1;
-                    task.repeat = task.link.manga.finalChapter;
-                    TaskFactory.updateMangaitem(task);
+                    if ($scope.mangaUpdate.isPopup === true) {
+                        $scope.mangaUpdate.isPopup = false;
+                        task.complete = true;
+                        task.completeTimes = task.link.manga.chapters;
+                        task.repeat = task.link.manga.finalChapter;
+                        TaskFactory.updateMangaitem(task, task.link.manga.chapters, task.link.manga.volumes);
+                    } else if ($scope.mangaUpdate.isPopup === false) {
+                        $scope.mangaUpdate.isPopup = true;
+                        task.complete = false;
+                        return;
+                    }
                 }
             }
             $scope.task = task;

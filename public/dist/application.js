@@ -3844,6 +3844,9 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             },
             datesSelected: false
         };
+        $scope.mangaUpdate = {
+            isPopup: false
+        };
         $scope.commonArrays = ListService.getCommonArrays();
         
         $scope.loading = function(value) {
@@ -3985,9 +3988,17 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                     task.repeat = task.link.anime.finalEpisode;
                     TaskFactory.updateAnimeitem(task);
                 } else if (task.link.type === 'manga') {
-                    task.completeTimes = task.link.manga.chapters + 1;
-                    task.repeat = task.link.manga.finalChapter;
-                    TaskFactory.updateMangaitem(task);
+                    if ($scope.mangaUpdate.isPopup === true) {
+                        $scope.mangaUpdate.isPopup = false;
+                        task.complete = true;
+                        task.completeTimes = task.link.manga.chapters;
+                        task.repeat = task.link.manga.finalChapter;
+                        TaskFactory.updateMangaitem(task, task.link.manga.chapters, task.link.manga.volumes);
+                    } else if ($scope.mangaUpdate.isPopup === false) {
+                        $scope.mangaUpdate.isPopup = true;
+                        task.complete = false;
+                        return;
+                    }
                 }
             }
             $scope.task = task;
@@ -4267,6 +4278,29 @@ angular.module('tasks')
         }
     };
 }])
+.directive('taskMangaUpdate', function() {
+    return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+            item: '=',
+            mangaUpdate: '='
+        },
+        templateUrl: '/modules/tasks/views/update-manga-task.client.view.html',
+        link: function (scope, element, attrs) {
+            scope.stepConfig = {
+                currentStep: 1,
+                stepCount: 1
+            };
+            
+            scope.cancel = function() {
+                scope.mangaForm.$setPristine();
+                scope.mangaUpdate.isPopup = false;
+            };
+            
+        }
+    };
+})
 .directive('loseInterest', function ($document, $window) {
     return {
         restrict: 'A',
@@ -4323,13 +4357,14 @@ angular.module('tasks').factory('Tasks', ['$resource',
             });
         };
     
-        obj.updateMangaitem = function(task) {
+        obj.updateMangaitem = function(task, chapters, volumes) {
             var query = Mangaitems.get({ 
 				mangaitemId: task.link.manga._id
 			});
             query.$promise.then(function(data) {
                 console.log(data);
-                data.chapters += 1;
+                data.chapters = chapters;
+                data.volumes = volumes;
                 data.latest = itemUpdate;
                 MangaFactory.update(data, undefined, true, undefined);
             });

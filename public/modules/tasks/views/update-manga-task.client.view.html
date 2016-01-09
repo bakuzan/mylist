@@ -1,0 +1,44 @@
+<div class="col-lg-12 col-md-12 col-sm-12 add-task-popout">
+    <a class="close-button mt" data-ng-click="cancel()"><i class="fa fa-times"></i></a>
+    <h4 class="popout-header">Update linked manga</h4>
+    <div class="col-lg-12 col-md-12 col-sm-12 relative mt" style="height: 80%;">
+        <form name="mangaForm" class="form-horizontal" novalidate>
+            <fieldset>
+                <div class="step" ng-style="{'z-index': stepConfig.currentStep === 1 ? 2 : 1 }" 
+                     ng-class="(stepConfig.currentStep === 1) ? 'step-transition step-in' : 'step-transition step-out'">
+                    <div class="step-inner-container">
+                        <div class="form-group">
+                            <label for="chapters" class="col-lg-3 col-md-3 col-sm-3 control-label">Chapters</label>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <input type="number" id="chapter" class="form-control" ng-model="item.link.manga.chapters">
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <input type="number" id="finalChapter" class="form-control" ng-model="item.link.manga.finalChapter" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="volumes" class="col-lg-3 col-md-3 col-sm-3 control-label">Volumes</label>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <input type="number" id="volume" class="form-control" ng-model="item.link.manga.volumes">
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <input type="number" id="finalVolume" class="form-control" ng-model="item.link.manga.finalVolume" disabled>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group step-button-group padding-5">
+                    <button class="btn btn-primary width-50" 
+                            ng-click="cancel()" ng-show="stepConfig.currentStep === 1">CANCEL</button>
+                    <button class="btn btn-primary width-50" 
+                            ng-click="backStep(stepConfig.currentStep)" ng-show="stepConfig.currentStep !== 1">BACK</button>
+                    <button class="btn btn-primary width-50" 
+                            ng-click="takeStep(stepConfig.currentStep)" ng-show="stepConfig.currentStep !== stepConfig.stepCount">NEXT</button>
+                    <button class="btn btn-primary width-50" 
+                            ng-click="$parent.tickOff(item); cancel();" ng-show="stepConfig.currentStep === stepConfig.stepCount"
+                            ng-disabled="mangaForm.$invalid">UPDATE</button>
+                </div>
+            </fieldset>
+        </form><!-- </form> -->
+    </div><!-- collapse FORM -->
+</div>

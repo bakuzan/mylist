@@ -579,8 +579,27 @@ angular.module('animeitems')
 .filter('season', function() {
     return function(array, year, month) {
         return array.filter(function(item) {
-            if (item.end!== undefined && item.end !== null && item.season.year === year && item.season.season === month) {
-                return item;
+            if (item.end!== undefined && item.end !== null && item.season !== undefined && item.season !== null) {
+                if (item.season.year === year && item.season.season === month) {
+                    return item;
+                }
+            }
+        });
+    };
+})
+.filter('summaryYear', function() {
+    return function(array, year, type) {
+        return array.filter(function(item) {
+            if (item.end !== undefined && item.end !== null) {
+                if (type === 'month') {
+                    if (item.end.substring(0,4) === year) {
+                        return item;
+                    }
+                } else if (type === 'season') {
+                    if (item.start.substring(0,4) === year) {
+                        return item;
+                    }
+                }
             }
         });
     };
@@ -3590,6 +3609,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 $scope.historicalView = 'month';
                 $scope.statSearch = '';
                 $scope.showDetail = false;
+                $scope.showYearDetail = false;
                 $scope.statTags = [];
                 $scope.ratingsDistribution = [];
             }
@@ -3618,16 +3638,16 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         //show season detail.
         $scope.seasonDetail = function(year, month, monthText) {
 //            console.log(year+'-'+month, monthText);
+            $scope.showDetail = false;
+            $scope.showYearDetail = false;
             //if the one already selected is clicked, hide the detail.
             if ($scope.detailSeasonYear===year && $scope.detailSeason===month) {
                 $scope.showSeasonDetail = !$scope.showSeasonDetail;
-                $scope.showDetail = false;
             } else {
                 $scope.detailSeasonYear = year;
                 $scope.detailSeason = month;
                 $scope.detailSeasonName = monthText;
                 $scope.showSeasonDetail = true;
-                $scope.showDetail = false;
             }
         };
         
@@ -3645,20 +3665,37 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 getSummaryFunctions(newValue);
             }
         });
+        $scope.$watchCollection('yearItems', function(newValue) {
+            if (newValue !== undefined) {
+                getSummaryFunctions(newValue);
+            }
+        });
         
         //show month detail.
         $scope.monthDetail = function(year, month, monthText) {
 //            console.log(year+'-'+month, monthText);
+            $scope.showSeasonDetail = false;
+            $scope.showYearDetail = false;
             //if the one already selected is clicked, hide the detail.
             if ($scope.detailYear===year && $scope.detailMonth===month) {
                 $scope.showDetail = !$scope.showDetail;
-                $scope.showSeasonDetail = false;
             } else {
                 $scope.detailYear = year;
                 $scope.detailMonth = month;
                 $scope.detailMonthName = monthText;
                 $scope.showDetail = true;
-                $scope.showSeasonDetail = false;
+            }
+        };
+        //show year detail.
+        $scope.yearDetail = function(year, type) {
+            $scope.showSeasonDetail = false;
+            $scope.showDetail = false;
+            if ($scope.summaryYear === year && $scope.summaryType === type) {
+                $scope.showYearDetail = !$scope.showYearDetail;
+            } else {
+                $scope.summaryYear = year;
+                $scope.summaryType = type;
+                $scope.showYearDetail = true;
             }
         };
         //show stat tag detail.
@@ -3807,6 +3844,9 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             },
             datesSelected: false
         };
+        $scope.mangaUpdate = {
+            isPopup: false
+        };
         $scope.commonArrays = ListService.getCommonArrays();
         
         $scope.loading = function(value) {
@@ -3948,9 +3988,17 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                     task.repeat = task.link.anime.finalEpisode;
                     TaskFactory.updateAnimeitem(task);
                 } else if (task.link.type === 'manga') {
-                    task.completeTimes = task.link.manga.chapters + 1;
-                    task.repeat = task.link.manga.finalChapter;
-                    TaskFactory.updateMangaitem(task);
+                    if ($scope.mangaUpdate.isPopup === true) {
+                        $scope.mangaUpdate.isPopup = false;
+                        task.complete = true;
+                        task.completeTimes = task.link.manga.chapters;
+                        task.repeat = task.link.manga.finalChapter;
+                        TaskFactory.updateMangaitem(task, task.link.manga.chapters, task.link.manga.volumes);
+                    } else if ($scope.mangaUpdate.isPopup === false) {
+                        $scope.mangaUpdate.isPopup = true;
+                        task.complete = false;
+                        return;
+                    }
                 }
             }
             $scope.task = task;
@@ -4238,6 +4286,29 @@ angular.module('tasks')
         }
     };
 }])
+.directive('taskMangaUpdate', function() {
+    return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+            item: '=',
+            mangaUpdate: '='
+        },
+        templateUrl: '/modules/tasks/views/update-manga-task.client.view.html',
+        link: function (scope, element, attrs) {
+            scope.stepConfig = {
+                currentStep: 1,
+                stepCount: 1
+            };
+            
+            scope.cancel = function() {
+                scope.mangaForm.$setPristine();
+                scope.mangaUpdate.isPopup = false;
+            };
+            
+        }
+    };
+})
 .directive('loseInterest', function ($document, $window) {
     return {
         restrict: 'A',
@@ -4297,13 +4368,14 @@ angular.module('tasks').factory('Tasks', ['$resource',
             });
         };
     
-        obj.updateMangaitem = function(task) {
+        obj.updateMangaitem = function(task, chapters, volumes) {
             var query = Mangaitems.get({ 
 				mangaitemId: task.link.manga._id
 			});
             query.$promise.then(function(data) {
                 console.log(data);
-                data.chapters += 1;
+                data.chapters = chapters;
+                data.volumes = volumes;
                 data.latest = itemUpdate;
                 MangaFactory.update(data, undefined, true, undefined);
             });

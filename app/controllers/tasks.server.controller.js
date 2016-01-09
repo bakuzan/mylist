@@ -77,7 +77,7 @@ exports.list = function(req, res) {
 	Task.find()
         .sort('-created')
         .populate('link.anime', 'title episodes finalEpisode')
-        .populate('link.manga', 'title chapters finalChapter')
+        .populate('link.manga', 'title chapters finalChapter volumes finalVolume')
         .populate('user', 'displayName').exec(function(err, tasks) {
         if (err) {
 			return res.status(400).send({

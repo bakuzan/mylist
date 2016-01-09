@@ -70,7 +70,7 @@
                     
                     <span ng-hide="taskItem.daily">
                         <span ng-if="taskItem.complete">{{taskItem.day}}</span>
-                        <select ng-if="!taskItem.complete" class="phantom-control font-12" ng-model="taskItem.day"
+                        <select ng-if="!taskItem.complete" class="phantom-control transform-uppercase" style="width: 75px" ng-model="taskItem.day"
                                 ng-options="obj.name as obj.name for obj in commonArrays.days" ng-change="changeTaskDay(taskItem)">
                         </select>
                     </span>

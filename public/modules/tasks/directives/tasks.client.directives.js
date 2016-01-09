@@ -78,6 +78,8 @@ angular.module('tasks')
                                     status: 0
                                 });
                                 scope.linkType = 'anime';
+                                scope.newTask.checklistItems = [];
+                                scope.newTask.checklist = false;
                             } else if (category === 'Read') {
                                 scope.linkItems = Mangaitems.query({
                                     status: 0

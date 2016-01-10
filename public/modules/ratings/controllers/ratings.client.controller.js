@@ -16,6 +16,10 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         };
         $scope.sortType = 'rating';
         $scope.sortReverse = true;
+        $scope.viewItem = undefined;
+        $scope.$watch('viewItem', function(newValue) {
+            console.log(newValue);
+        });
         $scope.ratingLevel = undefined; //default rating filter
         //rating 'tooltip' function
         $scope.maxRating = 10;
@@ -34,6 +38,7 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
             } else if (view === 'Manga') {
                 $scope.items = Mangaitems.query();
             }
+            $scope.viewItem = undefined;
 //            console.log(view, $scope.items);
         }
         $scope.find = function(view) {
@@ -50,6 +55,7 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
                 }
             }
         });
+        
         //get the item your changing the score for.
         $scope.startEdit = function(item) {
             $scope.editingItem = item;
@@ -72,5 +78,15 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
             }
             return false;
         };
+        
+        $scope.viewEpisodeRatings = function(item) {
+            $scope.viewItem = ($scope.viewItem !== item) ? item : undefined;
+        };
+        
+        $scope.episodeScore = function() {
+            console.log($scope.viewItem.meta.history);
+        };
+        
+        
     }
 ]);

@@ -285,6 +285,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                         item.meta.history.push({ 
                             date: Date.now(), 
                             value: latestHistory + i, 
+                            rating: 0,
                             title: item.title, 
                             id: item._id 
                         });
@@ -295,6 +296,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     item.meta.history.push({ 
                         date: Date.now(), 
                         value: (type === 'anime' ? item.episodes : item.chapters), 
+                        rating: 0,
                         title: item.title, 
                         id: item._id 
                     });

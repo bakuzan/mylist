@@ -165,7 +165,7 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
             });
             
             scope.collapseFilters = function() {
-                console.log('collapse filters');
+//                console.log('collapse filters');
                 scope.filterConfig.expandFilters = false;
             };
           

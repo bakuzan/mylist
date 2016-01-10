@@ -35,7 +35,7 @@
                     <button class="btn btn-primary width-50" 
                             ng-click="takeStep(stepConfig.currentStep)" ng-show="stepConfig.currentStep !== stepConfig.stepCount">NEXT</button>
                     <button class="btn btn-primary width-50" 
-                            ng-click="$parent.tickOff(item); cancel();" ng-show="stepConfig.currentStep === stepConfig.stepCount"
+                            ng-click="updateManga(item); cancel();" ng-show="stepConfig.currentStep === stepConfig.stepCount"
                             ng-disabled="mangaForm.$invalid">UPDATE</button>
                 </div>
             </fieldset>

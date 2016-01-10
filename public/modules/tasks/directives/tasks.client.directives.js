@@ -111,9 +111,18 @@ angular.module('tasks')
         },
         templateUrl: '/modules/tasks/views/update-manga-task.client.view.html',
         link: function (scope, element, attrs) {
+            var mangaUpdateFunction = (scope.item.link.linked);
             scope.stepConfig = {
                 currentStep: 1,
                 stepCount: 1
+            };
+            
+            scope.updateManga = function(item) {
+                if (mangaUpdateFunction) {
+                    scope.$parent.tickOffChecklist(item);
+                } else {
+                    scope.$parent.tickOff(item);
+                }
             };
             
             scope.cancel = function() {

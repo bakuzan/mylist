@@ -45,15 +45,13 @@
                 <span class="separator">
                     - 
                 </span>
-                <span class="task-times-text complete-{{taskItem.complete}}">
-                    <span ng-if="!taskItem.link.linked">{{taskItem.completeTimes}}/{{taskItem.repeat}}</span>
-                    <span ng-if="taskItem.link.linked">
-                        <span ng-if="taskItem.link.type==='anime'">
-                            {{taskItem.link.anime.episodes}}/{{taskItem.link.anime.finalEpisode}}
-                        </span>
-                        <span ng-if="taskItem.link.type==='manga'">
-                            {{taskItem.link.manga.chapters}}/{{taskItem.link.manga.finalChapter}}
-                        </span>
+                <span class="task-times-text complete-{{taskItem.complete}}"
+                      hover-data="{{ (taskItem.link.type==='manga') ? 'Ch ' + taskItem.link.manga.chapters + ', Vol ' +  taskItem.link.manga.volumes : '' }}">
+                    <span ng-if="taskItem.link.type!=='anime'">
+                        {{taskItem.completeTimes}}/{{taskItem.repeat}}
+                    </span>
+                    <span ng-if="taskItem.link.type==='anime'">
+                        {{taskItem.link.anime.episodes}}/{{taskItem.link.anime.finalEpisode}}
                     </span>
                 </span>
                 <span class="category-{{taskItem.category}}"
@@ -67,9 +65,8 @@
                 <a class="bin-style clickable" aria-hidden="true" ng-click="deleteTask(taskItem)">
                     <i class="fa fa-trash-o"></i>
                 </a>
-                <strong class="taskDate complete-{{taskItem.complete}}" hover-data="{{taskItem.date | date: 'dd MMM yyyy' }}">
-                    <i class="fa fa-calendar"></i>
-                    
+                <strong class="taskDate complete-{{taskItem.complete}}">
+                    <span hover-data="{{taskItem.date | date: 'dd MMM yyyy' }}"><i class="fa fa-calendar"></i></span>
                     <span ng-hide="taskItem.daily">
                         <span ng-if="taskItem.complete">{{taskItem.day}}</span>
                         <select ng-if="!taskItem.complete" class="phantom-control transform-uppercase" style="width: 75px" ng-model="taskItem.day"

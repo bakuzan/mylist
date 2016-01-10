@@ -93,7 +93,7 @@ angular.module('animeitems')
                         return item;
                     }
                 } else if (type === 'season') {
-                    if (item.start.substring(0,4) === year) {
+                    if (item.season.year === year) {
                         return item;
                     }
                 }

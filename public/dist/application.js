@@ -596,7 +596,7 @@ angular.module('animeitems')
                         return item;
                     }
                 } else if (type === 'season') {
-                    if (item.start.substring(0,4) === year) {
+                    if (item.season.year === year) {
                         return item;
                     }
                 }
@@ -3899,10 +3899,10 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                 date: this.newTask.date === '' ? new Date() : this.newTask.date,
                 repeat: (this.newTask.link.linked === false) ? this.newTask.repeat                     : 
                         (this.newTask.category === 'Watch')  ? this.newTask.link.anime.finalEpisode    :
-                                                               this.newTask.link.manga.finalChapter    ,
+                                                               1    ,
                 completeTimes: (this.newTask.link.linked === false) ? 0                                     :
                                (this.newTask.category === 'Watch')  ? this.newTask.link.anime.episodes      :
-                                                                      this.newTask.link.manga.chapters      ,
+                                                                      0      ,
                 updateCheck: new Date().getDay() === 1 ? true : false,
                 complete: false,
                 category: this.newTask.category === '' ? 'Other' : this.newTask.category,
@@ -3991,8 +3991,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                     if ($scope.mangaUpdate.isPopup === true) {
                         $scope.mangaUpdate.isPopup = false;
                         task.complete = true;
-                        task.completeTimes = task.link.manga.chapters;
-                        task.repeat = task.link.manga.finalChapter;
+                        task.completeTimes = 1;
                         TaskFactory.updateMangaitem(task, task.link.manga.chapters, task.link.manga.volumes);
                     } else if ($scope.mangaUpdate.isPopup === false) {
                         $scope.mangaUpdate.isPopup = true;

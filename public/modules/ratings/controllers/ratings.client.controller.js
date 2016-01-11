@@ -1,8 +1,8 @@
 'use strict';
 
 // History controller
-angular.module('ratings').controller('RatingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'ListService', 'NotificationFactory',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, ListService, NotificationFactory) {
+angular.module('ratings').controller('RatingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'ListService', 'NotificationFactory', 'StatisticsService',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, ListService, NotificationFactory, StatisticsService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -89,6 +89,9 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         $scope.viewEpisodeRatings = function(item) {
             $scope.viewItem = ($scope.viewItem !== item) ? item : undefined;
             $scope.search = ($scope.viewItem === item) ? item.title : '';
+            if ($scope.viewItem !== undefined) {
+                $scope.summaryFunctions = StatisticsService.buildSummaryFunctions($scope.viewItem.meta.history);
+            }
         };
         
         $scope.episodeScore = function(finished) {
@@ -98,6 +101,7 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
                 item.$update(function() {
                     $location.path('ratings');
                     NotificationFactory.success('Saved!', 'New episode rating was saved successfully');
+                    $scope.summaryFunctions = StatisticsService.buildSummaryFunctions($scope.viewItem.meta.history);
                 }, function(errorResponse) {
                     $scope.error = errorResponse.data.message;
                     NotificationFactory.error('Error!', 'Your change failed!');

@@ -98,6 +98,15 @@
                     </tbody>
                 </table>
             </div>
+            <div>
+                <table class="col-lg-2 col-md-2 col-sm-2  margin-left-50 margin-top-10 margin-bottom-10">
+                    <tbody>
+                        <tr ng-repeat="item in summaryFunctions">
+                            <th>{{item.metric}}</th><td>{{item.value}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <section class="loading-image" data-ng-if="isLoading"></section>

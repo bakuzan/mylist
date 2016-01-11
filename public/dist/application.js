@@ -891,6 +891,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                         item.meta.history.push({ 
                             date: Date.now(), 
                             value: latestHistory + i, 
+                            rating: 0,
                             title: item.title, 
                             id: item._id 
                         });
@@ -901,6 +902,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     item.meta.history.push({ 
                         date: Date.now(), 
                         value: (type === 'anime' ? item.episodes : item.chapters), 
+                        rating: 0,
                         title: item.title, 
                         id: item._id 
                     });
@@ -3442,8 +3444,8 @@ angular.module('ratings').config(['$stateProvider', '$urlRouterProvider',
 'use strict';
 
 // History controller
-angular.module('ratings').controller('RatingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'ListService', 'NotificationFactory',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, ListService, NotificationFactory) {
+angular.module('ratings').controller('RatingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'ListService', 'NotificationFactory', 'StatisticsService',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, ListService, NotificationFactory, StatisticsService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -3457,16 +3459,18 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         };
         $scope.sortType = 'rating';
         $scope.sortReverse = true;
+        $scope.viewItem = undefined;
         $scope.ratingLevel = undefined; //default rating filter
         //rating 'tooltip' function
         $scope.maxRating = 10;
-        $scope.hoveringOver = function(value) {
-            $scope.overStar = value;
-            $scope.percent = 100 * (value / $scope.maxRating);
-        };
         $scope.isLoading = true;
         $scope.loading = function(value) {
             $scope.isLoading = ListService.loader(value);
+        };
+        
+        $scope.hoveringOver = function(value) {
+            $scope.overStar = value;
+            $scope.percent = 100 * (value / $scope.maxRating);
         };
         
         function getItems(view) {
@@ -3475,11 +3479,14 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
             } else if (view === 'Manga') {
                 $scope.items = Mangaitems.query();
             }
+            $scope.viewItem = undefined;
 //            console.log(view, $scope.items);
         }
+        
         $scope.find = function(view) {
             getItems(view);
         };
+        
         //Needed to catch 'Character' setting and skip it.
         $scope.$watch('view', function(newValue) {
             if ($scope.view !== undefined) {
@@ -3491,6 +3498,7 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
                 }
             }
         });
+        
         //get the item your changing the score for.
         $scope.startEdit = function(item) {
             $scope.editingItem = item;
@@ -3513,6 +3521,38 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
             }
             return false;
         };
+        
+        /** Episode rating functions below here.
+         */
+        
+        $scope.$watch('viewItem', function(newValue) {
+            console.log(newValue);
+        });
+        
+        $scope.viewEpisodeRatings = function(item) {
+            $scope.viewItem = ($scope.viewItem !== item) ? item : undefined;
+            $scope.search = ($scope.viewItem === item) ? item.title : '';
+            if ($scope.viewItem !== undefined) {
+                $scope.summaryFunctions = StatisticsService.buildSummaryFunctions($scope.viewItem.meta.history);
+            }
+        };
+        
+        $scope.episodeScore = function(finished) {
+            console.log('finished: ', finished, $scope.viewItem.meta.history);
+            if (finished) {
+                var item = $scope.viewItem;
+                item.$update(function() {
+                    $location.path('ratings');
+                    NotificationFactory.success('Saved!', 'New episode rating was saved successfully');
+                    $scope.summaryFunctions = StatisticsService.buildSummaryFunctions($scope.viewItem.meta.history);
+                }, function(errorResponse) {
+                    $scope.error = errorResponse.data.message;
+                    NotificationFactory.error('Error!', 'Your change failed!');
+                }); 
+            }
+        };
+        
+        
     }
 ]);
 'use strict';
@@ -3899,10 +3939,10 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                 date: this.newTask.date === '' ? new Date() : this.newTask.date,
                 repeat: (this.newTask.link.linked === false) ? this.newTask.repeat                     : 
                         (this.newTask.category === 'Watch')  ? this.newTask.link.anime.finalEpisode    :
-                                                               this.newTask.link.manga.finalChapter    ,
+                                                               1    ,
                 completeTimes: (this.newTask.link.linked === false) ? 0                                     :
                                (this.newTask.category === 'Watch')  ? this.newTask.link.anime.episodes      :
-                                                                      this.newTask.link.manga.chapters      ,
+                                                                      0      ,
                 updateCheck: new Date().getDay() === 1 ? true : false,
                 complete: false,
                 category: this.newTask.category === '' ? 'Other' : this.newTask.category,
@@ -3991,8 +4031,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                     if ($scope.mangaUpdate.isPopup === true) {
                         $scope.mangaUpdate.isPopup = false;
                         task.complete = true;
-                        task.completeTimes = task.link.manga.chapters;
-                        task.repeat = task.link.manga.finalChapter;
+                        task.completeTimes += 1;
                         TaskFactory.updateMangaitem(task, task.link.manga.chapters, task.link.manga.volumes);
                     } else if ($scope.mangaUpdate.isPopup === false) {
                         $scope.mangaUpdate.isPopup = true;
@@ -4013,8 +4052,18 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
         //Tick of a checklist item.
         $scope.tickOffChecklist = function(task) {
             //update the option for the task.
-            var length = task.checklistItems.length,
+            var isLinked = task.link.linked,
+                length = task.checklistItems.length,
                 completeCount = 0;
+            if (task.link.linked === true && task.link.type === 'manga') {
+                if ($scope.mangaUpdate.isPopup === true) {
+                    $scope.mangaUpdate.isPopup = false;
+                    TaskFactory.updateMangaitem(task, task.link.manga.chapters, task.link.manga.volumes);
+                } else if ($scope.mangaUpdate.isPopup === false) {
+                    $scope.mangaUpdate.isPopup = true;
+                    return;
+                }
+            }
             angular.forEach(task.checklistItems, function (item) {
                 if (item.complete === true) {
                     completeCount += 1;
@@ -4026,7 +4075,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                 task.complete = true;
             }
             $scope.task = task;
-            update();                                           
+            update(isLinked);                                           
         };
         
         //Add new checklist item.
@@ -4265,6 +4314,8 @@ angular.module('tasks')
                                     status: 0
                                 });
                                 scope.linkType = 'anime';
+                                scope.newTask.checklistItems = [];
+                                scope.newTask.checklist = false;
                             } else if (category === 'Read') {
                                 scope.linkItems = Mangaitems.query({
                                     status: 0
@@ -4296,9 +4347,18 @@ angular.module('tasks')
         },
         templateUrl: '/modules/tasks/views/update-manga-task.client.view.html',
         link: function (scope, element, attrs) {
+            var mangaUpdateFunction = (scope.item.link.linked);
             scope.stepConfig = {
                 currentStep: 1,
                 stepCount: 1
+            };
+            
+            scope.updateManga = function(item) {
+                if (mangaUpdateFunction) {
+                    scope.$parent.tickOffChecklist(item);
+                } else {
+                    scope.$parent.tickOff(item);
+                }
             };
             
             scope.cancel = function() {

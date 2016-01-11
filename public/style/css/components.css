@@ -38,8 +38,10 @@
   position: relative;
   cursor: pointer; }
 
-[hover-data='']:before, [hover-data='']:after {
-  display: none; }
+[hover-data=''] {
+  cursor: default; }
+  [hover-data='']:before, [hover-data='']:after {
+    display: none; }
 
 /* Base styles for the entire hover-data */
 [hover-data]:before,
@@ -408,5 +410,24 @@
   width: 100%;
   bottom: 0;
   display: inline-flex; }
+
+.table-horizontal-container {
+  width: 93%;
+  margin: auto; }
+  .table-horizontal-container:hover {
+    overflow: auto; }
+  .table-horizontal-container .table-horizontal-scroll tbody {
+    height: auto;
+    width: 100%; }
+    .table-horizontal-container .table-horizontal-scroll tbody tr th {
+      position: absolute;
+      width: 65px; }
+    .table-horizontal-container .table-horizontal-scroll tbody tr td:nth-child(2) {
+      padding-left: 65px; }
+    .table-horizontal-container .table-horizontal-scroll tbody tr td span.display-block {
+      width: 30px;
+      margin-right: 10px; }
+    .table-horizontal-container .table-horizontal-scroll tbody tr td input {
+      width: 45px; }
 
 /*# sourceMappingURL=components.css.map */

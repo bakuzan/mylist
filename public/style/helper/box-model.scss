@@ -33,8 +33,14 @@
     .padding-top-#{$box} {
         padding-top: #{$box}#{$pixel};
     }
+    .padding-right-#{$box} {
+        padding-right: #{$box}#{$pixel};
+    }
     .padding-bottom-#{$box} {
         padding-bottom: #{$box}#{$pixel};
+    }
+    .padding-left-#{$box} {
+        padding-left: #{$box}#{$pixel};
     }
     .margin-#{$box} {
         margin: #{$box}#{$pixel};
@@ -42,8 +48,14 @@
     .margin-top-#{$box} {
         margin-top: #{$box}#{$pixel};
     }
+    .margin-right-#{$box} {
+        margin-right: #{$box}#{$pixel};
+    }
     .margin-bottom-#{$box} {
         margin-bottom: #{$box}#{$pixel};
+    }
+    .margin-left-#{$box} {
+        margin-left: #{$box}#{$pixel};
     }
 }
 

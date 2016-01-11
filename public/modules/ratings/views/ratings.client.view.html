@@ -13,7 +13,7 @@
                 <div class="input-group-addon">
                     <i class="fa fa-search"></i>
                 </div>
-               <input type="text" class="form-control" placeholder="search items" ng-model="search.title">
+               <input type="text" class="form-control" placeholder="search items" ng-model="search">
            </div>
             <div class="input-group mt">
               <div class="input-group-addon">
@@ -56,13 +56,13 @@
                     </th>
                 </thead>
                 <tbody ng-init="changeRating=false">
-                    <tr ng-repeat="item in items | filter: search | ratingFilter: ratingLevel | orderBy: sortType:sortReverse | startFrom: pageConfig.currentPage*pageConfig.pageSize | limitTo: pageConfig.pageSize" ng-hide="loading(item.title)">
+                    <tr ng-repeat="item in items | filter: { title: search } | ratingFilter: ratingLevel | orderBy: sortType:sortReverse | startFrom: pageConfig.currentPage*pageConfig.pageSize | limitTo: pageConfig.pageSize" ng-hide="loading(item.title)">
                         <td>
                             <i ng-if="item.status" class="fa fa-check green-text"></i>
                             <i ng-if="!item.status" class="fa fa-minus"></i>
                         </td>
                         <td class="left">
-                            <span ng-class="(view==='Anime') ? 'clickable' : ''" ng-click="viewEpisodeRatings(item)">
+                            <span ng-class="(view==='Anime') ? 'clickable' : ''" ng-click="(view==='Anime') ? viewEpisodeRatings(item) : ''">
                                 {{item.title}}
                             </span>
                         </td>
@@ -77,25 +77,27 @@
                 </tbody>
             </table>
         </div>
-        <div class="absolute width-100 margin-10 padding-10" style="top: 300px;" ng-show="viewItem !== undefined">
-            <h4>{{viewItem.title}} - {{viewItem.rating}}</h4>
-            <table class="width-100">
-                <thead>
-                    <th>Episodes</th>
-                    <th class="text-center" ng-repeat="episode in viewItem.meta.history">
-                        {{episode.value}}
-                    </th>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th>Ratings</th>
-                        <td ng-repeat="episode in viewItem.meta.history">
-                            <input type="number" class="phantom-control width-100 text-center" min="0" max="{{maxRating}}" 
-                                   ng-model="episode.rating" ng-change="episodeScore()" />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="fixed position-left margin-top-30" style="top: 320px; width: 100vw" ng-show="viewItem !== undefined && search === viewItem.title">
+            <h4 class="margin-left-50">{{viewItem.title}} {{viewItem.rating === 0 ? '' : '- ' + viewItem.rating}}</h4>
+            <div class="table-horizontal-container">
+                <table class="table-horizontal-scroll">
+                    <tbody>
+                        <tr>
+                            <th>Episode</th>
+                            <td class="text-center" ng-repeat="episode in viewItem.meta.history">
+                                <span class="display-block">{{episode.value}}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Ratings</th>
+                            <td ng-repeat="episode in viewItem.meta.history">
+                                <input type="number" class="phantom-control width-100 text-center" min="0" max="{{maxRating}}" 
+                                       ng-model="episode.rating" ng-change="episodeScore()" ng-blur="episodeScore(true)" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <section class="loading-image" data-ng-if="isLoading"></section>

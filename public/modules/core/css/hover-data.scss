@@ -10,6 +10,7 @@
 }
 
 [hover-data=''] {
+    cursor: default;
     &:before, &:after {
         display: none;
     }

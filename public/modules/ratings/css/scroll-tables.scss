@@ -1,0 +1,31 @@
+.table-horizontal-container {
+    width: 93%;
+    margin: auto;
+    &:hover {
+        overflow: auto;
+    }
+    .table-horizontal-scroll {
+        tbody {
+            height: auto;
+            width: 100%;
+            tr {
+                th {
+                    position: absolute;
+                    width: 65px;
+                }
+                td {
+                    &:nth-child(2) {
+                        padding-left: 65px;
+                    }
+                    span.display-block {
+                        width: 30px;
+                        margin-right: 10px;
+                    }
+                    input {
+                        width: 45px;
+                    }
+                }
+            }
+        }
+    }
+}

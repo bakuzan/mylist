@@ -17,19 +17,17 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         $scope.sortType = 'rating';
         $scope.sortReverse = true;
         $scope.viewItem = undefined;
-        $scope.$watch('viewItem', function(newValue) {
-            console.log(newValue);
-        });
         $scope.ratingLevel = undefined; //default rating filter
         //rating 'tooltip' function
         $scope.maxRating = 10;
-        $scope.hoveringOver = function(value) {
-            $scope.overStar = value;
-            $scope.percent = 100 * (value / $scope.maxRating);
-        };
         $scope.isLoading = true;
         $scope.loading = function(value) {
             $scope.isLoading = ListService.loader(value);
+        };
+        
+        $scope.hoveringOver = function(value) {
+            $scope.overStar = value;
+            $scope.percent = 100 * (value / $scope.maxRating);
         };
         
         function getItems(view) {
@@ -41,9 +39,11 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
             $scope.viewItem = undefined;
 //            console.log(view, $scope.items);
         }
+        
         $scope.find = function(view) {
             getItems(view);
         };
+        
         //Needed to catch 'Character' setting and skip it.
         $scope.$watch('view', function(newValue) {
             if ($scope.view !== undefined) {
@@ -79,12 +79,30 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
             return false;
         };
         
+        /** Episode rating functions below here.
+         */
+        
+        $scope.$watch('viewItem', function(newValue) {
+            console.log(newValue);
+        });
+        
         $scope.viewEpisodeRatings = function(item) {
             $scope.viewItem = ($scope.viewItem !== item) ? item : undefined;
+            $scope.search = ($scope.viewItem === item) ? item.title : '';
         };
         
-        $scope.episodeScore = function() {
-            console.log($scope.viewItem.meta.history);
+        $scope.episodeScore = function(finished) {
+            console.log('finished: ', finished, $scope.viewItem.meta.history);
+            if (finished) {
+                var item = $scope.viewItem;
+                item.$update(function() {
+                    $location.path('ratings');
+                    NotificationFactory.success('Saved!', 'New episode rating was saved successfully');
+                }, function(errorResponse) {
+                    $scope.error = errorResponse.data.message;
+                    NotificationFactory.error('Error!', 'Your change failed!');
+                }); 
+            }
         };
         
         

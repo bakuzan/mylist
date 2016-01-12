@@ -122,6 +122,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.$watchCollection('yearItems', function(newValue) {
             if (newValue !== undefined) {
                 getSummaryFunctions(newValue);
+                $scope.seasonDetails.yearSummary = StatisticsService.buildYearSummary(newValue, $scope.summaryYear, $scope.summaryType);
             }
         });
         

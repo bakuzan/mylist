@@ -1,7 +1,7 @@
 'use strict';
 
 //Statistics service 
-angular.module('statistics').service('StatisticsService', function() {
+angular.module('statistics').service('StatisticsService', ['$filter', 'ListService', function($filter, ListService) {
     var self = this;
     
     this.buildSummaryFunctions = function(array) {
@@ -19,10 +19,42 @@ angular.module('statistics').service('StatisticsService', function() {
             return [ 
                 { metric: 'Average rating', value: averageRating },
                 { metric: 'Highest rating', value: highestRating },
-                { metric: 'Lowest rating',  value: lowestRating  },
-                { metric: 'Mode rating',    value: modeRating.value }
+                { metric: 'Lowest rating',  value: (lowestRating === 10) ? 0 : lowestRating },
+                { metric: 'Mode rating',    value: (modeRating.value === undefined) ? 0 : modeRating.value }
             ];
         }
+    };
+    
+    function processYearSummary(summary, array) {
+        var i = array.length;
+        if (summary.length < 1) {
+            while(i--) {
+                summary.push({
+                    metric: array[i].metric,
+                    values: []
+                });
+            }
+            summary.reverse();
+        } 
+        i = array.length;
+        for(var j = 0; j < i; j++) {
+            summary[j].values.push({ value: array[j].value });
+        }
+        return summary;
+    }
+    
+    this.buildYearSummary = function(array, year, type) {
+        var filter = (type === 'months') ? 'endedMonth' : 'season',
+            attr   = (type === 'months') ? 'number'     : 'text'  ,
+            commonArrays = ListService.getCommonArrays(),
+            i = commonArrays[type].length, 
+            yearSummary = [];
+        for(var j = 0; j < i; j++) {
+            var filteredArray = $filter(filter)(array, year, commonArrays[type][j][attr]),
+                result = self.buildSummaryFunctions(filteredArray);
+            yearSummary = processYearSummary(yearSummary, result);
+        }
+        return yearSummary;
     };
     
     this.getModeMap = function(array, attr, ignore) {
@@ -46,8 +78,8 @@ angular.module('statistics').service('StatisticsService', function() {
                 }
             }
         }
-        console.log(max);
+//        console.log(max);
         return max;        
     };
     
-});
+}]);

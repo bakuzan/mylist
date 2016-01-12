@@ -88,12 +88,12 @@ angular.module('animeitems')
     return function(array, year, type) {
         return array.filter(function(item) {
             if (item.end !== undefined && item.end !== null) {
-                if (type === 'month') {
+                if (type === 'months') {
                     if (item.end.substring(0,4) === year) {
                         return item;
                     }
-                } else if (type === 'season') {
-                    if (item.start.substring(0,4) === year) {
+                } else if (type === 'seasons') {
+                    if (item.season.year === year) {
                         return item;
                     }
                 }

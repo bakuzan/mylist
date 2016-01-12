@@ -591,12 +591,12 @@ angular.module('animeitems')
     return function(array, year, type) {
         return array.filter(function(item) {
             if (item.end !== undefined && item.end !== null) {
-                if (type === 'month') {
+                if (type === 'months') {
                     if (item.end.substring(0,4) === year) {
                         return item;
                     }
-                } else if (type === 'season') {
-                    if (item.start.substring(0,4) === year) {
+                } else if (type === 'seasons') {
+                    if (item.season.year === year) {
                         return item;
                     }
                 }
@@ -3708,6 +3708,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.$watchCollection('yearItems', function(newValue) {
             if (newValue !== undefined) {
                 getSummaryFunctions(newValue);
+                $scope.seasonDetails.yearSummary = StatisticsService.buildYearSummary(newValue, $scope.summaryYear, $scope.summaryType);
             }
         });
         
@@ -3800,7 +3801,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
 'use strict';
 
 //Statistics service 
-angular.module('statistics').service('StatisticsService', function() {
+angular.module('statistics').service('StatisticsService', ['$filter', 'ListService', function($filter, ListService) {
     var self = this;
     
     this.buildSummaryFunctions = function(array) {
@@ -3818,10 +3819,42 @@ angular.module('statistics').service('StatisticsService', function() {
             return [ 
                 { metric: 'Average rating', value: averageRating },
                 { metric: 'Highest rating', value: highestRating },
-                { metric: 'Lowest rating',  value: lowestRating  },
-                { metric: 'Mode rating',    value: modeRating.value }
+                { metric: 'Lowest rating',  value: (lowestRating === 10) ? 0 : lowestRating },
+                { metric: 'Mode rating',    value: (modeRating.value === undefined) ? 0 : modeRating.value }
             ];
         }
+    };
+    
+    function processYearSummary(summary, array) {
+        var i = array.length;
+        if (summary.length < 1) {
+            while(i--) {
+                summary.push({
+                    metric: array[i].metric,
+                    values: []
+                });
+            }
+            summary.reverse();
+        } 
+        i = array.length;
+        for(var j = 0; j < i; j++) {
+            summary[j].values.push({ value: array[j].value });
+        }
+        return summary;
+    }
+    
+    this.buildYearSummary = function(array, year, type) {
+        var filter = (type === 'months') ? 'endedMonth' : 'season',
+            attr   = (type === 'months') ? 'number'     : 'text'  ,
+            commonArrays = ListService.getCommonArrays(),
+            i = commonArrays[type].length, 
+            yearSummary = [];
+        for(var j = 0; j < i; j++) {
+            var filteredArray = $filter(filter)(array, year, commonArrays[type][j][attr]),
+                result = self.buildSummaryFunctions(filteredArray);
+            yearSummary = processYearSummary(yearSummary, result);
+        }
+        return yearSummary;
     };
     
     this.getModeMap = function(array, attr, ignore) {
@@ -3845,11 +3878,11 @@ angular.module('statistics').service('StatisticsService', function() {
                 }
             }
         }
-        console.log(max);
+//        console.log(max);
         return max;        
     };
     
-});
+}]);
 'use strict';
 
 //// Configuring the Articles module

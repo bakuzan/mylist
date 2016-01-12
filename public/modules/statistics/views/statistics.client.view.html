@@ -30,7 +30,7 @@
                 </thead>
                     <tbody>
                     <tr ng-repeat="year in monthDetails.completeByMonth | orderBy: '-year'" ng-hide="loading(year.year)">
-                        <th class="clickable" ng-click="yearDetail(year.year,'month')"><span>{{year.year}}</span></th>
+                        <th class="clickable" ng-click="yearDetail(year.year,'months')"><span>{{year.year}}</span></th>
                         <td ng-repeat="month in year.months" ng-click="monthDetail(year.year, month.number, month.text);" hover-data="{{month.count}} completed {{month.text}} {{year.year}}.">
                             <span class="stat-month-box" ng-style="{'opacity': month.count / monthDetails.maxCompleteMonth }"></span>
                         </td>
@@ -46,7 +46,7 @@
                 </thead>
                     <tbody>
                     <tr ng-repeat="year in seasonDetails.completeBySeason | orderBy: '-year'">
-                        <th class="clickable" ng-click="yearDetail(year.year,'season')"><span>{{year.year}}</span></th>
+                        <th class="clickable" ng-click="yearDetail(year.year,'seasons')"><span>{{year.year}}</span></th>
                         <td ng-repeat="season in year.seasons" ng-click="seasonDetail(year.year, season.number, season.text)" hover-data="{{ season.count }} completed {{season.text}} {{year.year}}.">
                             <span class="stat-month-box" ng-style="{'opacity': season.count / seasonDetails.maxCompleteSeason }"></span>
                         </td>
@@ -55,6 +55,20 @@
                 </table><!-- SEASON HISTORY TABLE END -->
             </div><!-- HISTORY PANEL END -->
             <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="showHistory && (showDetail || showSeasonDetail || showYearDetail)">
+                <div class="col-lg-12 col-md-12 col-sm-12" ng-show="(showYearDetail && yearItems.length > 1)">
+                    <table class="col-lg-12 col-md-12 col-sm-12">
+                        <thead>
+                            <th>{{summaryYear}}</th>
+                            <th class="text-right" ng-repeat="item in commonArrays[summaryType]">{{ summaryType === 'months' ? item.text.substring(0,3) : item.text }}</th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in seasonDetails.yearSummary">
+                                <th>{{item.metric}}</th>
+                                <td class="text-right" ng-repeat="value in item.values">{{value.value}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
                 <div class="col-lg-8 col-md-8 col-sm-8 stat-detail" ng-show="showDetail">
                     <div class="stat-detail-header">
                         <h3>{{monthItems.length}} Completed {{detailMonthName}} {{detailYear}}</h3>
@@ -92,7 +106,7 @@
                 </div>
                 <div class="col-lg-8 col-md-8 col-sm-8 stat-detail" ng-show="showYearDetail">
                     <div class="stat-detail-header">
-                        <h3>{{yearItems.length}} {{summaryType === 'month' ? 'Completed' : 'Watched' }} in {{summaryYear}}</h3>
+                        <h3>{{yearItems.length}} {{summaryType === 'months' ? 'Completed' : 'Watched' }} in {{summaryYear}}</h3>
                     </div>
                     <table class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
                         <tbody>
@@ -107,14 +121,16 @@
                         </tbody>
                     </table>
                 </div>
-                <table class="col-lg-4 col-md-4 col-sm-4 margin-top-55 margin-bottom-20" 
-                       ng-show="(showDetail && monthItems.length > 0) || (showSeasonDetail && seasonItems.length > 0) || (showYearDetail && yearItems.length > 1)">
-                    <tbody>
-                        <tr ng-repeat="item in seasonDetails.summaryFunctions">
-                            <th>{{item.metric}}</th><td>{{item.value}}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="col-lg-4 col-md-4 col-sm-4 margin-top-55 margin-bottom-20" 
+                     ng-show="(showDetail && monthItems.length > 0) || (showSeasonDetail && seasonItems.length > 0) || (showYearDetail && yearItems.length > 1)">
+                    <table class="col-lg-12 col-md-12 col-sm-12">
+                        <tbody>
+                            <tr ng-repeat="item in seasonDetails.summaryFunctions">
+                                <th>{{item.metric}}</th><td>{{item.value}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div><!-- SEASON DETAIL PANEL END -->
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6 stat-rating-panel" ng-init="showRatings = true">

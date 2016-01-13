@@ -58,6 +58,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.ratingsDistribution = []; //counts for each rating.
         $scope.statSeries = []; //for series statistics;
         $scope.voiceActors = []; //for voice actor list;
+        $scope.historyDetails = {};
         $scope.areTagless = false; //are any items tagless
         $scope.taglessItem = false; //filter variable for showing tagless items.
         $scope.isLoading = true;
@@ -99,9 +100,9 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 $scope.statTags = []; //clear to stop multiple views tags appearing.
                 if ($scope.view !== 'Character') {
                     $scope.overview = ItemService.buildOverview($scope.items);
-                    $scope.monthDetails = ItemService.completeByMonth($scope.items);
+                    $scope.historyDetails.months = ItemService.completeByMonth($scope.items);
                     if ($scope.view === 'Anime') { 
-                        $scope.seasonDetails = ItemService.completeBySeason($scope.items);
+                        $scope.historyDetails.seasons = ItemService.completeBySeason($scope.items);
                     }
                     $scope.ratingValues = ItemService.getRatingValues($scope.items);
                     $scope.ratingsDistribution = ItemService.buildRatingsDistribution($scope.items);
@@ -117,13 +118,14 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         
         //Builds ratings aggregates.
         function getSummaryFunctions(array) {
-            $scope.seasonDetails.summaryFunctions = StatisticsService.buildSummaryFunctions(array);
-            if ($scope.detail.summary.isVisible === true) $scope.seasonDetails.yearSummary = StatisticsService.buildYearSummary(array, $scope.detail.year, $scope.detail.summary.type);
+            $scope.historyDetails.summaryFunctions = StatisticsService.buildSummaryFunctions(array);
+            if ($scope.detail.summary.isVisible === true) $scope.historyDetails.yearSummary = StatisticsService.buildYearSummary(array, $scope.detail.year, $scope.detail.summary.type);
         }
         $scope.$watchCollection('detailItems', function(newValue) {
             if (newValue !== undefined) {
                 console.log(newValue);
                 getSummaryFunctions(newValue);
+                console.log($scope.historyDetails)
             }
         });
         

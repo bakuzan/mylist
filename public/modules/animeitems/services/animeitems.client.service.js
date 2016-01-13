@@ -539,7 +539,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 }
             }
             maxCompleteMonth = self.maxCompleteMonth(items);
-            monthDetails = { completeByMonth: completeByMonth, maxCompleteMonth: maxCompleteMonth };
+            monthDetails = { months: completeByMonth, max: maxCompleteMonth };
 
 //            console.log('completeByMonth', completeByMonth);
             return monthDetails;
@@ -571,7 +571,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     }
                 }
             });
-            seasonDetails = { completeBySeason: completeBySeason, maxCompleteSeason: maxCompleteSeason };
+            seasonDetails = { seasons: completeBySeason, max: maxCompleteSeason };
 //            console.log('completeBySeason', seasonDetails);
             return seasonDetails;
         };

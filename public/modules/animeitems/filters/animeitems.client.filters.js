@@ -100,4 +100,13 @@ angular.module('animeitems')
             }
         });
     };
-});
+})
+.filter('statisticsDetailFilter', ['$filter', function($filter) {
+    return function(array, type, year, division) {
+        var filter = (division === '')   ? 'summaryYear' :
+                     (type === 'months') ? 'endedMonth'  :
+                                           'season'      ,
+            filterPart = (division === '') ? type : division;
+        return $filter(filter)(array, year, filterPart);
+    };
+}]);

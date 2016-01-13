@@ -9,29 +9,55 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
 		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.view = 'Anime';
-        $scope.historicalView = 'month'; //default historical view in stats.
+        $scope.detail = {
+            isVisible: false,
+            year: '',
+            division: '',
+            divisionText: '',
+            history: 'months',
+            summary: {
+                type: '',
+                isVisible: false
+            }
+        };
         $scope.commonArrays = ListService.getCommonArrays('statistics');
-        $scope.showDetail = false; //show month detail.
-        $scope.showSeasonDetail = false;
-        $scope.statTagSortType = 'ratingWeighted'; //stat tag sort
-        $scope.statTagSortReverse = true; //stat tag sort direction.
-        $scope.statTagDetailSortType = 'count'; //stat tag detail sort
-        $scope.statTagDetailSortReverse = true; //stat tag detail sort direction.
-        $scope.statSeriesSortType = 'count'; //stat series sort
-        $scope.statSeriesSortReverse = true; //stat series sort direction.
-        $scope.statVoiceSortType = 'count'; //stat voice sort
-        $scope.statVoiceSortReverse = true; //stat voice sort direction.
+        $scope.filterConfig = {
+            show: {
+                tag: false,
+                series: false,
+                voice: false
+            },
+            sort: {
+                tag: {
+                    type: 'ratingWeighted',
+                    reverse: true
+                },
+                tagDetail: {
+                    type: 'count',
+                    reverse: true
+                },
+                series: {
+                    type: 'count',
+                    reverse: true
+                },
+                voice: {
+                    type: 'count',
+                    reverse: true
+                },
+            },
+            search: {
+                tag: '',
+                tagDetail: '',
+                series: '',
+                voice: ''
+            }
+        };
         $scope.overview = {}; //holds summary/overview details.
         $scope.gender = {}; //holds gender summary details.
         $scope.statTags = []; //for tag statistics;
-        $scope.showTagDetail = false; //visibility of detail for tags.
         $scope.ratingsDistribution = []; //counts for each rating.
-        $scope.statSearch = ''; //filter value for tag detail.
         $scope.statSeries = []; //for series statistics;
         $scope.voiceActors = []; //for voice actor list;
-        $scope.showSeriesDetail = false; //visibility of series drilldown.
-        $scope.seriesSearch = ''; //for filtering series values.
-        $scope.voiceSearch = ''; //for filtering voice values.
         $scope.areTagless = false; //are any items tagless
         $scope.taglessItem = false; //filter variable for showing tagless items.
         $scope.isLoading = true;
@@ -41,13 +67,13 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         //handle getting view items and setting view specific defaults.
         function getItems(view) {
             if (view === 'Anime') {
-                $scope.statTagSortType = 'ratingWeighted'; //stat tag sort
+                $scope.filterConfig.sort.tag.type = 'ratingWeighted'; //stat tag sort
                 $scope.items = Animeitems.query();
             } else if (view === 'Manga') {
-                $scope.statTagSortType = 'ratingWeighted'; //stat tag sort
+                $scope.filterConfig.sort.tag.type = 'ratingWeighted'; //stat tag sort
                 $scope.items = Mangaitems.query();
             } else if (view === 'Character') {
-                $scope.statTagSortType = 'count'; //stat tag sort
+                $scope.filterConfig.sort.tag.type = 'count'; //stat tag sort
                 $scope.items = Characters.query();
             }
         }
@@ -60,10 +86,9 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 $scope.isLoading = true;
                 getItems(newValue);
                 //reset defaults that are shared between views.
-                $scope.historicalView = 'month';
-                $scope.statSearch = '';
-                $scope.showDetail = false;
-                $scope.showYearDetail = false;
+                $scope.detail.history = 'months';
+                $scope.filterConfig.search.tag = '';
+                $scope.detail.isVisible = false;
                 $scope.statTags = [];
                 $scope.ratingsDistribution = [];
             }
@@ -89,107 +114,47 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 }
             }
         });
-        //show season detail.
-        $scope.seasonDetail = function(year, month, monthText) {
-//            console.log(year+'-'+month, monthText);
-            $scope.showDetail = false;
-            $scope.showYearDetail = false;
-            //if the one already selected is clicked, hide the detail.
-            if ($scope.detailSeasonYear===year && $scope.detailSeason===month) {
-                $scope.showSeasonDetail = !$scope.showSeasonDetail;
-            } else {
-                $scope.detailSeasonYear = year;
-                $scope.detailSeason = month;
-                $scope.detailSeasonName = monthText;
-                $scope.showSeasonDetail = true;
-            }
-        };
         
         //Builds ratings aggregates.
         function getSummaryFunctions(array) {
             $scope.seasonDetails.summaryFunctions = StatisticsService.buildSummaryFunctions(array);
+            if ($scope.detail.summary.isVisible === true) $scope.seasonDetails.yearSummary = StatisticsService.buildYearSummary(array, $scope.detail.year, $scope.detail.summary.type);
         }
-        $scope.$watchCollection('monthItems', function(newValue) {
+        $scope.$watchCollection('detailItems', function(newValue) {
             if (newValue !== undefined) {
+                console.log(newValue);
                 getSummaryFunctions(newValue);
-            }
-        });
-        $scope.$watchCollection('seasonItems', function(newValue) {
-            if (newValue !== undefined) {
-                getSummaryFunctions(newValue);
-            }
-        });
-        $scope.$watchCollection('yearItems', function(newValue) {
-            if (newValue !== undefined) {
-                getSummaryFunctions(newValue);
-                $scope.seasonDetails.yearSummary = StatisticsService.buildYearSummary(newValue, $scope.summaryYear, $scope.summaryType);
             }
         });
         
-        //show month detail.
-        $scope.monthDetail = function(year, month, monthText) {
-//            console.log(year+'-'+month, monthText);
-            $scope.showSeasonDetail = false;
-            $scope.showYearDetail = false;
-            //if the one already selected is clicked, hide the detail.
-            if ($scope.detailYear===year && $scope.detailMonth===month) {
-                $scope.showDetail = !$scope.showDetail;
+        $scope.historyDetail = function(year, division, divisionText, summaryType) {
+            if ($scope.detail.year === year && $scope.detail.divisionText === divisionText) {
+                $scope.detail.isVisible = !$scope.detail.isVisible;
             } else {
-                $scope.detailYear = year;
-                $scope.detailMonth = month;
-                $scope.detailMonthName = monthText;
-                $scope.showDetail = true;
+                $scope.detail.isVisible = true;
+                $scope.detail.year = year;
+                $scope.detail.division = division;
+                $scope.detail.divisionText = divisionText;
+                $scope.detail.summary.type = summaryType;
+                $scope.detail.summary.isVisible = (summaryType === undefined) ? false : true;
             }
+            console.log($scope.detail);
         };
-        //show year detail.
-        $scope.yearDetail = function(year, type) {
-            $scope.showSeasonDetail = false;
-            $scope.showDetail = false;
-            if ($scope.summaryYear === year && $scope.summaryType === type) {
-                $scope.showYearDetail = !$scope.showYearDetail;
+        
+        $scope.tableDetail = function(type, name) {
+            if ($scope.tableDetail[type] === name) {
+                $scope.filterConfig.search[type] = '';
+                $scope.filterConfig.show[type] = false;
+                $scope.tableDetail[type] = '';
+                if (type === 'tag') $scope.tableDetail.isEqual = false;
             } else {
-                $scope.summaryYear = year;
-                $scope.summaryType = type;
-                $scope.showYearDetail = true;
-            }
-        };
-        //show stat tag detail.
-        $scope.tagDetail = function(name) {
-            if ($scope.detailTagName===name) {
-                $scope.statSearch = '';
-                $scope.showTagDetail = false;
-                $scope.detailTagName = '';
-                $scope.isEqual = false;
-            } else {
-                $scope.statSearch = name;
-                $scope.detailTagName = name;
-                $scope.isEqual = true;
-                $scope.showTagDetail = true;
-                $scope.tagDetailResult = CharacterService.buildRelatedCharacterTags($scope.items, name);
-            }
-        };
-        //show stat series detail.
-        $scope.seriesDetail = function(name) {
-            if ($scope.detailSeriesName===name) {
-                $scope.seriesSearch = '';
-                $scope.showSeriesDetail = false;
-                $scope.detailSeriesName = '';
-            } else {
-                $scope.seriesSearch = name;
-                $scope.detailSeriesName = name;
-                $scope.showSeriesDetail = true;
-            }
-        };
-        //show voice actor detail
-        $scope.voiceDetail = function(name) {
-            if ($scope.detailVoiceName === name) {
-                $scope.voiceSearch = '';
-                $scope.showVoiceDetail = false;
-                $scope.detailVoiceName = '';
-            } else {
-                $scope.voiceSearch = name;
-                $scope.detailVoiceName = name;
-                $scope.showVoiceDetail = true;
+                $scope.filterConfig.search[type] = name;
+                $scope.tableDetail[type] = name;
+                $scope.filterConfig.show[type] = true;
+                if (type === 'tag') {
+                    $scope.tagDetailResult = CharacterService.buildRelatedCharacterTags($scope.items, name);
+                    $scope.tableDetail.isEqual = true;
+                }
             }
         };
         

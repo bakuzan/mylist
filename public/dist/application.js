@@ -3719,9 +3719,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         }
         $scope.$watchCollection('detailItems', function(newValue) {
             if (newValue !== undefined) {
-                console.log(newValue);
                 getSummaryFunctions(newValue);
-                console.log($scope.historyDetails)
             }
         });
         
@@ -3736,7 +3734,6 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 $scope.detail.summary.type = summaryType;
                 $scope.detail.summary.isVisible = (summaryType === undefined) ? false : true;
             }
-            console.log($scope.detail);
         };
         
         $scope.tableDetail = function(type, name) {

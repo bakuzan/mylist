@@ -493,7 +493,7 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
             });
             
             scope.collapseFilters = function() {
-                console.log('collapse filters');
+//                console.log('collapse filters');
                 scope.filterConfig.expandFilters = false;
             };
           
@@ -613,6 +613,7 @@ angular.module('animeitems')
         return $filter(filter)(array, year, filterPart);
     };
 }]);
+
 'use strict';
 
 //Animeitems service used to communicate Animeitems REST endpoints
@@ -4422,7 +4423,7 @@ angular.module('tasks')
                 var interesting = angular.element(e.target).inheritedData('interesting'),
                     elm = angular.element(e.target)[0].tagName,
                     alsoInteresting = (elm === 'A') || (elm === 'I');
-console.log(elm);
+//console.log(elm);
                 if (!interesting && !alsoInteresting) {
                     scope.$apply(function () {
                         scope.collapseFilters();

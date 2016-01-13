@@ -1,4 +1,5 @@
 .table-horizontal-container {
+    height: 60px;
     width: 93%;
     margin: auto;
     &:hover {
@@ -10,7 +11,7 @@
             width: 100%;
             tr {
                 th {
-                    position: absolute;
+                    position: fixed;
                     width: 65px;
                 }
                 td {

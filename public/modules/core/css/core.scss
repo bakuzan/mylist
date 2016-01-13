@@ -462,13 +462,11 @@ nav {
   left: 20vw;
   width: 65vw;
   height: 65vh;
-  @extend .tile-style;
-//  border: 5px solid $blue;
   margin-top: 10px; 
-  background-color: #FFF;
+  background-color: $brand-primary;
   align-content: center;
-//  overflow-y: auto;
   z-index: 1000;
+  @include popout-shadow();
 }
 
 .toggle-add-task {
@@ -616,12 +614,6 @@ a.menu-header-bar:hover {
     color: $brand-accent-alter;
 }
 
-.tile-style {
-    background-color: $brand-primary;
-    border: 2px outset $brand-tertiary;
-    @include box-shadow(1px, 1px, 5px, $brand-secondary);
-}
-
 .task-list-container {
     padding: 10px 5px;
     margin: 40px 10px;
@@ -642,9 +634,6 @@ a.menu-header-bar:hover {
     left: 50px;
     max-width: 350px;
     min-width: 200px;
-//    margin-left: -250px;
-//    overflow-y: auto;
-//    padding: 20px 0;
 }
 
 .fixed-header {

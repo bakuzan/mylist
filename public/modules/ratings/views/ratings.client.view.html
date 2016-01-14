@@ -72,8 +72,9 @@
                             <span class="clickable" ng-if="item.rating === 0">-</span>
                         </td>
 -->
-                        <td>
-                            <input type="number" class="small-input phantom-control" min="0" max="{{maxRating}}" ng-model="item.rating" ng-change="checkScore({{newRating}})" ng-blur="changeRating=endEdit(newRating);" enter-tag="changeRating=endEdit(newRating);" focus-on-show="changeRating" />
+                        <td ng-init="newRating = item.rating">
+                            <input type="number" class="small-input phantom-control" min="0" max="{{maxRating}}" ng-model="newRating" 
+                                   ng-blur="itemScore(item, newRating)" enter-tag="itemScore(item, newRating)" />
                         </td>
                     </tr>
                 </tbody>
@@ -94,7 +95,7 @@
                             <th>Ratings</th>
                             <td ng-repeat="episode in viewItem.meta.history">
                                 <input type="number" class="phantom-control width-100 text-center" min="0" max="{{maxRating}}" 
-                                       ng-model="episode.rating" ng-change="episodeScore()" ng-blur="episodeScore(true)" />
+                                       ng-model="episode.rating" ng-change="episodeScore()" ng-blur="episodeScore(true)" enter-tag="episodeScore(true)" />
                             </td>
                         </tr>
                     </tbody>

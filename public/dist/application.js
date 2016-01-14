@@ -3509,14 +3509,8 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
             }
         });
         
-        //get the item your changing the score for.
-        $scope.startEdit = function(item) {
-            $scope.editingItem = item;
-            $scope.newRating = $scope.editingItem.rating; //default to current rating.
-        };
         //apply new score.
-        $scope.endEdit = function(score) {
-            var item = $scope.editingItem;
+        $scope.itemScore = function(item, score) {
             if (item.rating !== score) {
                 item.rating = score;
 

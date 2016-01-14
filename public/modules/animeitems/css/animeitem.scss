@@ -66,12 +66,14 @@
   z-index: 750;
   @include popout-shadow($brand-primary);
     .item-history-container {
-        height: 40vh;
+        height: 45vh;
+        .item-history-list {
+            height: 35vh;
+        }
     }
 }
 .item-history-list {
     position: relative;
-    height: inherit;
     padding: 0 5px 5px;
     margin-bottom: 5px;
     overflow-y: auto;

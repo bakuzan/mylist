@@ -66,12 +66,14 @@
                                 {{item.title}}
                             </span>
                         </td>
+<!--
                         <td ng-click="changeRating = !changeRating; startEdit(item)" ng-show="!changeRating || editingItem !== item">
                             <a class="clickable" ng-show="item.rating !== 0">{{item.rating}}</a>
                             <span class="clickable" ng-if="item.rating === 0">-</span>
                         </td>
-                        <td ng-show="changeRating && editingItem === item">
-                            <input type="number" class="small-input form-control" min="0" max="{{maxRating}}" ng-model="newRating" ng-change="checkScore({{newRating}})" ng-blur="changeRating=endEdit(newRating);" enter-tag="changeRating=endEdit(newRating);" focus-on-show="changeRating" />
+-->
+                        <td>
+                            <input type="number" class="small-input phantom-control" min="0" max="{{maxRating}}" ng-model="item.rating" ng-change="checkScore({{newRating}})" ng-blur="changeRating=endEdit(newRating);" enter-tag="changeRating=endEdit(newRating);" focus-on-show="changeRating" />
                         </td>
                     </tr>
                 </tbody>

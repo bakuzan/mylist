@@ -64,9 +64,9 @@
   margin-top: 10px;
   overflow-y: hidden;
   z-index: 750;
-  @include popout-shadow();
+  @include popout-shadow($brand-primary);
     .item-history-container {
-        height: inherit;
+        height: 40vh;
     }
 }
 .item-history-list {

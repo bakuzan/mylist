@@ -11,10 +11,10 @@
         </h3>
     </div>
     <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }">
-        <a class="menu-header-bar clickable margin-bottom-10" ng-click="newTask.isAddTask = !newTask.isAddTask;" ignore-here="true">
+        <a class="menu-header-bar clickable margin-bottom-10" ng-click="newTask.isAddTask = !newTask.isAddTask;">
             <i class="fa" ng-class="(newTask.isAddTask === false) ? 'fa-plus-square' : 'fa-minus-square'"></i> Add task
         </a>
-        <div task-create create="newTask" ng-show="newTask.isAddTask"></div>
+        <div task-create create="newTask" ng-show="newTask.isAddTask" ng-class="(newTask.isAddTask) ? 'active' : ''"></div>
         <div list-filters filter-config="filterConfig" items="tasks" page="whichController"></div>
     </div>
     <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
@@ -36,8 +36,7 @@
             </div>
             <li class="taskItem" ng-repeat="taskItem in tasks | filter: filterConfig.search | calendarFilter:filterConfig.datesSelected">
                 <input type="checkbox" class="taskCheckbox" ng-model="taskItem.complete" ng-change="tickOff(taskItem)" ng-disabled="taskItem.complete || taskItem.checklist">
-                <div task-manga-update item="taskItem" manga-update="mangaUpdate"
-                     ng-if="taskItem.link.type==='manga'" ng-show="mangaUpdate.isPopup"></div>
+                <div task-manga-update item="taskItem" manga-update="mangaUpdate" ng-if="taskItem.link.type==='manga'" ng-show="mangaUpdate.isPopup" ng-class="(mangaUpdate.isPopup) ? 'active' : ''"></div>
                 <span class="task-description-text complete-{{taskItem.complete}}" ng-class="taskItem.checklist === true ? 'clickable' : ''"
                       ng-click="taskItem.checklist === true ? viewTask = !viewTask : ''">
                     {{taskItem.description}}

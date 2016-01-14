@@ -466,7 +466,11 @@ nav {
   background-color: $brand-primary;
   align-content: center;
   z-index: 1000;
-  @include popout-shadow();
+  opacity: 0;
+  &.active {
+     @include popout-shadow($brand-primary);
+      opacity: 1;
+  }
 }
 
 .toggle-add-task {

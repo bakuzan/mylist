@@ -41,14 +41,12 @@
         -ms-transform: $transform;
             transform: $transform;
 }
-@mixin popout-shadow() {
-    @include box-shadow(0, 2px, 100px, rgba(0, 0, 0, 0.2));
+@mixin popout-shadow($colour) {
+    @if lightness($colour) < 50% {
+        @include box-shadow(0, 2px, 100px, rgba(255, 255, 255, 0.5));
+    } @else {
+        @include box-shadow(0, 2px, 100px, rgba(0, 0, 0, 0.2));
+    }
     @include transition(all 250ms);
     @include backface(hidden);
-//    -webkit-transition: all;
-//    -o-transition: all;
-//    transition: all;
-//    -webkit-transition-duration: 250ms;
-//    transition-duration: 250ms;
-    
 }

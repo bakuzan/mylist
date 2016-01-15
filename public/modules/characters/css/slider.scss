@@ -10,6 +10,13 @@
     padding: 5px;
     margin: auto;
     list-style-type: none;
+    a.full-screen-control {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 18px;
+        padding: 2px 5px;
+    }
 }
 .slide {
   position: absolute;
@@ -111,4 +118,39 @@
 .slide.ng-hide-add,
 .slide.ng-hide-remove.ng-hide-remove-active {
   opacity: 1;
+}
+
+//For fullscreen mode:
+
+div.slider-full-screen {
+    $slider-full-screen-height: 80vh;
+    position: fixed;
+    top: 50px;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #555555;
+    z-index: 900;
+    .slider {
+        position: fixed;
+        top: 50px;
+        left: 0;
+        width: 100vw;
+        height: $slider-full-screen-height;
+        z-index: 1000;
+        .slide {
+            .slide-image {
+                height: $slider-full-screen-height;
+            }
+        }
+        .slider-control {
+            height: $slider-full-screen-height;
+        }
+    }
+    .slider-indicators {
+        position: fixed;
+        @include calc('top', '#{$slider-full-screen-height} + 50px');
+        left: 0;
+        padding-top: 15px;
+    }
 }

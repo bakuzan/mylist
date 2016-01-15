@@ -226,6 +226,12 @@
   padding: 5px;
   margin: auto;
   list-style-type: none; }
+  .slider a.full-screen-control {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 18px;
+    padding: 2px 5px; }
 
 .slide {
   position: absolute;
@@ -319,6 +325,33 @@
 .slide.ng-hide-add,
 .slide.ng-hide-remove.ng-hide-remove-active {
   opacity: 1; }
+
+div.slider-full-screen {
+  position: fixed;
+  top: 50px;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #555555;
+  z-index: 900; }
+  div.slider-full-screen .slider {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    width: 100vw;
+    height: 80vh;
+    z-index: 1000; }
+    div.slider-full-screen .slider .slide .slide-image {
+      height: 80vh; }
+    div.slider-full-screen .slider .slider-control {
+      height: 80vh; }
+  div.slider-full-screen .slider-indicators {
+    position: fixed;
+    top: -webkit-calc(80vh + 50px);
+    top: -moz-calc(80vh + 50px);
+    top: calc(80vh + 50px);
+    left: 0;
+    padding-top: 15px; }
 
 /** Tab filter base styling **/
 .tab-filter-container {

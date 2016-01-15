@@ -247,8 +247,14 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     {name: 'Friday'},
                     {name: 'Saturday'},
                     {name: 'Sunday'}
+                ],
+                summaryFunctions = [
+                    { name: 'Average' },
+                    { name: 'Highest' },
+                    { name: 'Lowest' },
+                    { name: 'Mode' }
                 ];
-            commonArrays = { months: months, seasons: seasons, categories: categories, days: days };
+            commonArrays = { months: months, seasons: seasons, categories: categories, days: days, summaryFunctions: summaryFunctions };
             return commonArrays;
         };
     

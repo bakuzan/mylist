@@ -863,8 +863,14 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     {name: 'Friday'},
                     {name: 'Saturday'},
                     {name: 'Sunday'}
+                ],
+                summaryFunctions = [
+                    { name: 'Average' },
+                    { name: 'Highest' },
+                    { name: 'Lowest' },
+                    { name: 'Mode' }
                 ];
-            commonArrays = { months: months, seasons: seasons, categories: categories, days: days };
+            commonArrays = { months: months, seasons: seasons, categories: categories, days: days, summaryFunctions: summaryFunctions };
             return commonArrays;
         };
     
@@ -1465,6 +1471,7 @@ angular.module('characters').directive('characterBack', function(){
           scope.currentIndex = -1; //pre-first slide to stop 'cannot assign to undefined' error.
           scope.repeater = scope.slides === undefined ? false : true; //is there a collection to iterate through?
           scope.interval = scope.interval === undefined ? 3000 : scope.interval; //is there a custom interval?
+          scope.isFullscreen = false;
           
           //allow retreival of local resource
           scope.trustAsResourceUrl = function(url) {
@@ -1550,6 +1557,11 @@ angular.module('characters').directive('characterBack', function(){
                 timer = $timeout(autoSlide, scope.interval);
 //                  console.log('restarted');
               }
+          };
+          
+          //Fullscreen capability
+          scope.toggleFullscreen = function() {
+              scope.isFullscreen = !scope.isFullscreen;
           };
           
           /** FILTERS
@@ -3708,14 +3720,27 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         
         //Builds ratings aggregates.
         function getSummaryFunctions(array) {
-            $scope.historyDetails.summaryFunctions = StatisticsService.buildSummaryFunctions(array);
-            if ($scope.detail.summary.isVisible === true) $scope.historyDetails.yearSummary = StatisticsService.buildYearSummary(array, $scope.detail.year, $scope.detail.summary.type);
+            //Check whether to do ratings or episode ratings.
+            if (!$scope.detail.isEpisodeRatings) {
+                $scope.historyDetails.summaryFunctions = StatisticsService.buildSummaryFunctions(array);
+                if ($scope.detail.summary.isVisible === true) $scope.historyDetails.yearSummary = StatisticsService.buildYearSummary(array, $scope.detail.year, $scope.detail.summary.type);
+            } else {
+                angular.forEach(array, function(item) {
+                    var episodeSummaryFunctions = StatisticsService.buildSummaryFunctions(item.meta.history);
+                    item.meta.episodeSummaryFunctions = episodeSummaryFunctions;
+                });
+            }
+            console.log(array, $scope.historyDetails);
         }
         $scope.$watchCollection('detailItems', function(newValue) {
             if (newValue !== undefined) {
                 getSummaryFunctions(newValue);
             }
         });
+        
+        $scope.toggleEpisodeRatings = function(items) {
+            getSummaryFunctions(items);
+        };
         
         $scope.historyDetail = function(year, division, divisionText, summaryType) {
             if ($scope.detail.year === year && $scope.detail.divisionText === divisionText) {

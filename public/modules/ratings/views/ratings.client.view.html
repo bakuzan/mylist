@@ -62,16 +62,10 @@
                             <i ng-if="!item.status" class="fa fa-minus"></i>
                         </td>
                         <td class="left">
-                            <span ng-class="(view==='Anime') ? 'clickable' : ''" ng-click="(view==='Anime') ? viewEpisodeRatings(item) : ''">
+                            <span ng-class="clickable" ng-click="(view==='Anime') ? viewEpisodeRatings(item) : go(item._id)">
                                 {{item.title}}
                             </span>
                         </td>
-<!--
-                        <td ng-click="changeRating = !changeRating; startEdit(item)" ng-show="!changeRating || editingItem !== item">
-                            <a class="clickable" ng-show="item.rating !== 0">{{item.rating}}</a>
-                            <span class="clickable" ng-if="item.rating === 0">-</span>
-                        </td>
--->
                         <td ng-init="newRating = item.rating">
                             <input type="number" class="small-input phantom-control" min="0" max="{{maxRating}}" ng-model="newRating" 
                                    ng-blur="itemScore(item, newRating)" enter-tag="itemScore(item, newRating)" />

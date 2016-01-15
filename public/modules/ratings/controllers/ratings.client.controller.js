@@ -8,6 +8,10 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
+        $scope.go = function(id) {
+            $location.path('/mangaitems/' + id);
+        }
+        
         $scope.view = 'Anime';
         //paging variables.
         $scope.pageConfig = {

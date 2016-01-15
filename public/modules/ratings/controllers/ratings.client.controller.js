@@ -10,7 +10,7 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         
         $scope.go = function(id) {
             $location.path('/mangaitems/' + id);
-        }
+        };
         
         $scope.view = 'Anime';
         //paging variables.

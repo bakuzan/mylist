@@ -111,7 +111,6 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
     
         //find index of object with given attr.
         this.findWithAttr = function(array, attr, value) {
-            console.log(array, attr, value);
             if (array !== undefined) {
                 for(var i = 0; i < array.length; i += 1) {
                     if(array[i][attr] === value) {
@@ -134,7 +133,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     break;
                 default:
                     return string.toLowerCase();
-            };
+            }
         };
         
         //returns the options for the various filters in list pages.

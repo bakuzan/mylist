@@ -3,6 +3,8 @@
 //Service to provide common access to features.
 angular.module('core').factory('NotificationFactory', function() {
     var self = this;
+    /*global toastr */
+    /*global swal */
         toastr.options = {
                 'closeButton': false,
                 'debug': false,
@@ -17,8 +19,8 @@ angular.module('core').factory('NotificationFactory', function() {
                 'extendedTimeOut': '1000',
                 'showEasing': 'swing',
                 'hideEasing': 'linear',
-                'showMethod': 'fadeIn',
-                'hideMethod': 'fadeOut'
+                'showMethod': 'showDuration',
+                'hideMethod': 'hideDuration'
             };
     return {
         success: function (title, text) {

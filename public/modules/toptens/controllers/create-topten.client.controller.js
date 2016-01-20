@@ -75,7 +75,7 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
                             $scope.stepConfig.listGen.items = Characters.query();
                             $scope.stepConfig.listGen.typeDisplay = 'name';
                             break;
-                    };
+                    }
                     break;
             }
         }

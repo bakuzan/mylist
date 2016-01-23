@@ -3918,7 +3918,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             datesSelected: false
         };
         $scope.mangaUpdate = {
-            isPopup: false
+            isPopup: ''
         };
         $scope.commonArrays = ListService.getCommonArrays();
         
@@ -4061,13 +4061,13 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                     task.repeat = task.link.anime.finalEpisode;
                     TaskFactory.updateAnimeitem(task);
                 } else if (task.link.type === 'manga') {
-                    if ($scope.mangaUpdate.isPopup === true) {
-                        $scope.mangaUpdate.isPopup = false;
+                    if ($scope.mangaUpdate.isPopup === task) {
+                        $scope.mangaUpdate.isPopup = '';
                         task.complete = true;
                         task.completeTimes += 1;
                         TaskFactory.updateMangaitem(task, task.link.manga.chapters, task.link.manga.volumes);
-                    } else if ($scope.mangaUpdate.isPopup === false) {
-                        $scope.mangaUpdate.isPopup = true;
+                    } else if ($scope.mangaUpdate.isPopup === '') {
+                        $scope.mangaUpdate.isPopup = task;
                         task.complete = false;
                         return;
                     }
@@ -4089,11 +4089,11 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                 length = task.checklistItems.length,
                 completeCount = 0;
             if (task.link.linked === true && task.link.type === 'manga') {
-                if ($scope.mangaUpdate.isPopup === true) {
-                    $scope.mangaUpdate.isPopup = false;
+                if ($scope.mangaUpdate.isPopup === task) {
+                    $scope.mangaUpdate.isPopup = '';
                     TaskFactory.updateMangaitem(task, task.link.manga.chapters, task.link.manga.volumes);
-                } else if ($scope.mangaUpdate.isPopup === false) {
-                    $scope.mangaUpdate.isPopup = true;
+                } else if ($scope.mangaUpdate.isPopup === '') {
+                    $scope.mangaUpdate.isPopup = task;
                     return;
                 }
             }
@@ -4396,7 +4396,7 @@ angular.module('tasks')
             
             scope.cancel = function() {
                 scope.mangaForm.$setPristine();
-                scope.mangaUpdate.isPopup = false;
+                scope.mangaUpdate.isPopup = '';
             };
             
         }

@@ -127,7 +127,7 @@ angular.module('tasks')
             
             scope.cancel = function() {
                 scope.mangaForm.$setPristine();
-                scope.mangaUpdate.isPopup = false;
+                scope.mangaUpdate.isPopup = '';
             };
             
         }

@@ -464,4 +464,33 @@ div.slider-full-screen {
     .table-horizontal-container .table-horizontal-scroll tbody tr td input {
       width: 45px; }
 
+.sticky-scroll-top {
+  position: fixed;
+  width: 100%;
+  top: 50px;
+  left: 0;
+  background-color: #FFF;
+  padding: 0 !important;
+  margin: 0 !important;
+  z-index: 5; }
+
+.sticky-inner-container {
+  position: relative;
+  width: 50%;
+  margin: auto; }
+  @media (max-width: 768px) {
+    .sticky-inner-container {
+      left: 0;
+      width: 100%;
+      margin: 0; } }
+  @media (min-width: 768px) and (max-width: 992px) {
+    .sticky-inner-container {
+      left: 15%; } }
+  @media (min-width: 992px) and (max-width: 1200px) {
+    .sticky-inner-container {
+      left: 17%; } }
+  @media (min-width: 1200px) {
+    .sticky-inner-container {
+      left: 10%; } }
+
 /*# sourceMappingURL=components.css.map */

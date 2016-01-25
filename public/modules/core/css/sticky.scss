@@ -1,0 +1,30 @@
+.sticky-scroll-top {
+    position: fixed;
+    width: 100%;
+    top: 50px;
+    left: 0;
+    background-color: #FFF;
+    padding: 0 !important;
+    margin: 0 !important;
+    z-index: 5;
+}
+
+.sticky-inner-container {
+    position: relative;
+    width: 50%;
+    margin: auto;
+    @media (max-width: $break-small) {
+        left: 0;
+        width: 100%;
+        margin: 0;
+    }
+    @media (min-width: $break-small) and (max-width: $break-medium) {
+        left: 15%;
+    }
+    @media (min-width: $break-medium) and (max-width: $break-large) {
+        left: 17%;
+    }
+    @media (min-width: $break-large) {
+        left: 10%;
+    }
+}

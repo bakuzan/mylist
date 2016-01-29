@@ -15,6 +15,7 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
             stepCount: 2,
             listGen: {
                 items: [],
+                displayList: [],
                 typeDisplay: '',
                 toptenItem: ''
             }
@@ -36,24 +37,27 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
 		$scope.create = function() {
             console.log($scope.topten, this.topten);
 			// Create new Topten object
-			var topten = new Toptens ({
-				name: $scope.topten.name,
-                description: $scope.topten.description,
-                type: $scope.topten.type,
-                isFavourite: $scope.topten.isFavourite,
-                animeList: $scope.topten.animeList,
-                characterList: $scope.topten.characterList,
-                mangaList: $scope.topten.mangaList
+            var topten = new Toptens();
+			topten = new Toptens ({
+				name: this.topten.name,
+                description: this.topten.description,
+                type: this.topten.type,
+                isFavourite: this.topten.isFavourite,
+                animeList: this.topten.animeList.length > 0 ? this.topten.animeList : null,
+                characterList: this.topten.characterList.length > 0 ? this.topten.characterList : null,
+                mangaList: this.topten.mangaList.length > 0 ? this.topten.mangaList : null
 			});
+//            topten = $scope.topten;
 
 			// Redirect after save
 			topten.$save(function(response) {
 				$location.path('toptens/');
-
+                NotificationFactory.success('Saved!', 'New List was successfully saved!');
 				// Clear form fields
-				$scope.name = '';
+				angular.copy(toptenCopy, $scope.topten);
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
+                NotificationFactory.error('Error!', 'Something went wrong!');
 			});
 		};
         
@@ -82,9 +86,11 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
         
         $scope.pushItem = function(item) {
             console.log(item, $scope.topten);
-            var index = ListService.findWithAttr($scope.topten[$scope.topten.type + 'List'], $scope.stepConfig.listGen.typeDisplay, item[$scope.stepConfig.listGen.typeDisplay]);
+//            var index = ListService.findWithAttr($scope.topten[$scope.topten.type + 'List'], $scope.stepConfig.listGen.typeDisplay, item[$scope.stepConfig.listGen.typeDisplay]);
+            var index = $scope.topten[$scope.topten.type+'List'].indexOf(item._id);
             if (index === -1) {
-                $scope.topten[$scope.topten.type + 'List'].push(item);
+                $scope.topten[$scope.topten.type + 'List'].push(item._id);
+                $scope.stepConfig.listGen.displayList.push(item);
             } else {
                 NotificationFactory.warning('Duplicate!', 'Item has already been added to list.');
             }

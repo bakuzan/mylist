@@ -22,8 +22,7 @@ angular.module('toptens')
       link: function(scope, elm, attrs) {
           scope.stepNumber = elm.index() + 1;
           var element = elm[0],
-              classList = element.classList,
-              zIndex = element.style.zIndex;
+              classList = element.classList;
           
           function classRemove(array) {
               angular.forEach(array, function(item) {
@@ -35,16 +34,19 @@ angular.module('toptens')
                   classList.add(item);
               });
           }
+          function setZIndex(number) {
+              element.style.zIndex = number;
+          }
           
           scope.$watch('stepConfig.currentStep', function(newValue) {
               if (newValue !== undefined) {
                   if (scope.stepNumber === scope.stepConfig.currentStep) {
                       classRemove(['step-transition', 'step-out']);
-                      zIndex = 2;
+                      setZIndex(2);
                       classAdd(['step-transition', 'step-in']);
                   } else {
                       classRemove(['step-transition', 'step-in']);
-                      zIndex = 1;
+                      setZIndex(1);
                       classAdd(['step-transition', 'step-out']);
                   }
               }

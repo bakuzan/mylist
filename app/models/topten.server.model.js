@@ -21,7 +21,8 @@ var ToptenSchema = new Schema({
         default: ''
     },
     type: {
-        type: String
+        type: String,
+        default: ''
     },
     animeList: [
         { type: Schema.ObjectId, ref: 'Animeitem' }

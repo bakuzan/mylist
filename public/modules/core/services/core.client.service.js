@@ -3,8 +3,6 @@
 //Service to provide common access to features.
 angular.module('core').factory('NotificationFactory', function() {
     var self = this;
-    /*global toastr */
-    /*global swal */
         toastr.options = {
                 'closeButton': false,
                 'debug': false,

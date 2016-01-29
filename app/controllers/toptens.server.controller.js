@@ -73,8 +73,13 @@ exports.delete = function(req, res) {
  * List of Toptens
  */
 exports.list = function(req, res) { 
-	Topten.find().sort('-created').populate('user', 'displayName').exec(function(err, toptens) {
-		if (err) {
+	Topten.find().sort('-created')
+        .populate('user', 'displayName')
+        .populate('animeList', 'title')
+        .populate('mangaList', 'title')
+        .populate('characterList', 'name')
+        .exec(function(err, toptens) {
+        if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});

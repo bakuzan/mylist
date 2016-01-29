@@ -36,6 +36,7 @@ angular.module('toptens').controller('ToptensController', ['$scope', '$statePara
 		// Find a list of Toptens
 		$scope.find = function() {
 			$scope.toptens = Toptens.query();
+            console.log($scope.toptens);
 		};
 
 		// Find existing Topten

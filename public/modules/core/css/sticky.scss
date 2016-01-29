@@ -12,6 +12,7 @@
 .sticky-inner-container {
     position: relative;
     width: 50%;
+    padding: 5px;
     margin: auto;
     @media (max-width: $break-small) {
         left: 0;

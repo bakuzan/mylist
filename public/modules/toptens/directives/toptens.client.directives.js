@@ -21,22 +21,31 @@ angular.module('toptens')
       templateUrl: '/modules/toptens/templates/step.html',
       link: function(scope, elm, attrs) {
           scope.stepNumber = elm.index() + 1;
-          var element = document.getElementById('step-'+scope.stepNumber);
+          var element = elm[0],
+              classList = element.classList,
+              zIndex = element.style.zIndex;
+          
+          function classRemove(array) {
+              angular.forEach(array, function(item) {
+                  classList.remove(item);
+              });
+          }
+          function classAdd(array) {
+              angular.forEach(array, function(item) {
+                  classList.add(item);
+              });
+          }
           
           scope.$watch('stepConfig.currentStep', function(newValue) {
               if (newValue !== undefined) {
                   if (scope.stepNumber === scope.stepConfig.currentStep) {
-                      element.classList.remove('step-transition');
-                      element.classList.remove('step-out');
-                      element.style.zIndex = 2;
-                      element.classList.add('step-transition');
-                      element.classList.add('step-in');
+                      classRemove(['step-transition', 'step-out']);
+                      zIndex = 2;
+                      classAdd(['step-transition', 'step-in']);
                   } else {
-                      element.classList.remove('step-transition');
-                      element.classList.remove('step-in');
-                      element.style.zIndex = 1;
-                      element.classList.add('step-transition');
-                      element.classList.add('step-out');
+                      classRemove(['step-transition', 'step-in']);
+                      zIndex = 1;
+                      classAdd(['step-transition', 'step-out']);
                   }
               }
           });

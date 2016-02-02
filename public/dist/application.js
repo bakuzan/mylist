@@ -4149,7 +4149,8 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                     //has it been updated today?
                     if(task.updateCheck === false) {
                         console.log('updating - ', task.description);
-                        if (task.link.linked === false) {
+                        var type = task.link.type;
+                        if ((task.link.linked === false) || (type === 'manga')) {
                             //has it reached the necessary number of repeats?
                             if(task.completeTimes !== task.repeat) {
                                 console.log('not complete', task.description);
@@ -4161,11 +4162,9 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                                 console.log('complete - delete', task.description);
                                 remove(task);
                             }
-                        } else if (task.link.linked === true) {
+                        } else if (task.link.type === 'anime') {
                             console.log('linked');
-                            var type = task.link.type,
-                                parts = (type === 'anime') ? { single: 'episodes', all: 'finalEpisode' } :
-                                                             { single: 'chapters', all: 'finalChapter' } ; 
+                                var parts = { single: 'episodes', all: 'finalEpisode' }; 
                             if (task.link[type][parts.single] !== task.link[type][parts.all]) {
                                 console.log('linked not complete', task.description);
                                 task.complete = false;

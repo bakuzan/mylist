@@ -60,7 +60,7 @@
   height: 50vh;
   background-color: $brand-primary;
   align-content: center;
-  border: 5px solid $brand-secondary;
+//  border: 5px solid $brand-secondary;
   margin-top: 10px;
   overflow-y: hidden;
   z-index: 750;
@@ -76,7 +76,10 @@
     position: relative;
     padding: 0 5px 5px;
     margin-bottom: 5px;
-    overflow-y: auto;
+    overflow-y: hidden;
+    &:hover {
+        overflow-y: auto;
+    }
     .item-history {
         position: relative;
         width: 95%;

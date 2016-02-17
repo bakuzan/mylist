@@ -1,36 +1,28 @@
 'use strict';
 
 // Toptens controller
-angular.module('toptens').controller('ToptensController', ['$scope', '$stateParams', '$location', 'Authentication', 'Toptens',
-	function($scope, $stateParams, $location, Authentication, Toptens) {
+angular.module('toptens').controller('ToptensController', ['$scope', '$stateParams', '$location', 'Authentication', 'Toptens', 'NotificationFactory',
+	function($scope, $stateParams, $location, Authentication, Toptens, NotificationFactory) {
 		$scope.authentication = Authentication;
 
 		// Remove existing Topten
 		$scope.remove = function(topten) {
-			if ( topten ) { 
-				topten.$remove();
+            NotificationFactory.confirmation(function() {
+                if ( topten ) { 
+                    topten.$remove();
 
-				for (var i in $scope.toptens) {
-					if ($scope.toptens [i] === topten) {
-						$scope.toptens.splice(i, 1);
-					}
-				}
-			} else {
-				$scope.topten.$remove(function() {
-					$location.path('toptens');
-				});
-			}
-		};
-
-		// Update existing Topten
-		$scope.update = function() {
-			var topten = $scope.topten;
-
-			topten.$update(function() {
-				$location.path('toptens/' + topten._id);
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-			});
+                    for (var i in $scope.toptens) {
+                        if ($scope.toptens [i] === topten) {
+                            $scope.toptens.splice(i, 1);
+                        }
+                    }
+                } else {
+                    $scope.topten.$remove(function() {
+                        $location.path('toptens');
+                    });
+                }
+                NotificationFactory.warning('Deleted!', 'Anime was successfully deleted.');
+            });
 		};
 
 		// Find a list of Toptens
@@ -44,6 +36,7 @@ angular.module('toptens').controller('ToptensController', ['$scope', '$statePara
 			$scope.topten = Toptens.get({ 
 				toptenId: $stateParams.toptenId
 			});
+            console.log($scope.topten);
 		};
 	}
 ]);

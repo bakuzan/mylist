@@ -93,8 +93,13 @@ exports.list = function(req, res) {
  * Topten middleware
  */
 exports.toptenByID = function(req, res, next, id) { 
-	Topten.findById(id).populate('user', 'displayName').exec(function(err, topten) {
-		if (err) return next(err);
+	Topten.findById(id)
+        .populate('user', 'displayName')
+        .populate('animeList', 'title')
+        .populate('mangaList', 'title')
+        .populate('characterList', 'name')
+        .exec(function(err, topten) {
+        if (err) return next(err);
 		if (! topten) return next(new Error('Failed to load Topten ' + id));
 		req.topten = topten ;
 		next();

@@ -19,7 +19,7 @@ angular.module('toptens').config(['$stateProvider',
 		}).
 		state('editTopten', {
 			url: '/toptens/:toptenId/edit',
-			templateUrl: 'modules/toptens/views/edit-topten.client.view.html'
+			templateUrl: 'modules/toptens/views/create-topten.client.view.html'
 		});
 	}
 ]);

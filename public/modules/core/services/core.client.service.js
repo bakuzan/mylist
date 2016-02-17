@@ -17,8 +17,8 @@ angular.module('core').factory('NotificationFactory', function() {
                 'extendedTimeOut': '1000',
                 'showEasing': 'swing',
                 'hideEasing': 'linear',
-                'showMethod': 'showDuration',
-                'hideMethod': 'hideDuration'
+                'showMethod': 'fadeIn',
+                'hideMethod': 'fadeOut'
             };
     return {
         success: function (title, text) {

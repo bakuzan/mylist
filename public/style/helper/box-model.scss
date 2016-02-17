@@ -5,6 +5,9 @@
     .width-#{$size} {
         width: #{$size}#{$percent};
     }
+    .height-#{$size} {
+        height: #{$size}#{$percent};
+    }
 }
 
 @each $place in $positions {

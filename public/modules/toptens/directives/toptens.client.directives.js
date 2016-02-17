@@ -59,7 +59,7 @@ angular.module('toptens')
        restrict: 'A',
        replace: true,
        transclude: true,
-       template: '<div class="step-controls form-group step-button-group padding-5" ng-transclude>' +
+       template: '<div class="step-controls step-button-group padding-5" ng-transclude>' +
                   '</div>'
    };
 })

@@ -1,18 +1,23 @@
+//variables.
+$height: 500px;
+
 /** Step base styling **/
 
+.steps {
+    height: $height;
+    overflow: hidden;
+}
 .step {
     position: absolute;
     top: 0;
     left: 0;
-    min-height: 250px;
-    height: inherit;
+    height: $height;
     width: 100%;
     opacity: 0;
     z-index: 1;
 }
 .step-inner-container {
-    min-height: inherit;
-    height: inherit;
+    height: $height;
 }
 
 .step.ng-hide-add,
@@ -41,6 +46,9 @@
 .step-button-group {
     position: absolute;
     width: 100%;
-    bottom: 0;
+    bottom: -8%;
     display: inline-flex;
+    button {
+        z-index: 1;
+    }
 }

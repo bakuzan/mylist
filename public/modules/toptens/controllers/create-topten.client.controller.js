@@ -37,14 +37,9 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
             height: '50px',
             width: '100px'
         };
-        
-        $scope.saveChanges = function() {
-            if ($scope.isCreate) create();
-            if (!$scope.isCreate) update();
-        };
 
 		// Create new Topten
-		function create() {
+		$scope.create = function() {
             console.log($scope.topten, this.topten);
 			// Create new Topten object
             var topten = new Toptens();
@@ -57,7 +52,6 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
                 characterList: this.topten.characterList.length > 0 ? this.topten.characterList : null,
                 mangaList: this.topten.mangaList.length > 0 ? this.topten.mangaList : null
 			});
-//            topten = $scope.topten;
 
 			// Redirect after save
 			topten.$save(function(response) {
@@ -72,7 +66,7 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
 		};
         
 		// Update existing Topten
-		function update() {
+		$scope.update = function() {
 			var topten = $scope.topten;
 
 			topten.$update(function() {
@@ -111,12 +105,12 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
                         typeSetItemPopulate();
                         callback();
                     } else if ($scope.topten.type !== '' && !$scope.isCreate) {
-                        angular.forEach($scope.topten[$scope.topten.type + 'List'], function(item) {
-                            item = item._id;
-                            console.log(item);
-                            var index = ListService.findWithAttr($scope.stepConfig.listGen.items, '_id', item);
-                            $scope.stepConfig.listGen.displayList.push($scope.stepConfig.listGen.items[index]);
-                        });
+                        if ($scope.stepConfig.listGen.displayList.length < 1) {
+                            angular.forEach($scope.topten[$scope.topten.type + 'List'], function(item) {
+                                var index = ListService.findWithAttr($scope.stepConfig.listGen.items, '_id', item._id);
+                                $scope.stepConfig.listGen.displayList.push($scope.stepConfig.listGen.items[index]);
+                            });
+                        }
                         callback();
                     } else if ($scope.topten.type === '') {
                         NotificationFactory.popup('Invalid form', 'You MUST select a type to continue.', 'error');
@@ -130,9 +124,10 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
         }
         
         $scope.pushItem = function(item) {
-            console.log('push: ', item, $scope.topten);
             var index = $scope.topten[$scope.topten.type+'List'].indexOf(item._id);
-            console.log('push index? ', index);
+            if (!$scope.isCreate && index === -1) {
+                index = ListService.findWithAttr($scope.topten[$scope.topten.type+'List'], '_id', item._id);    
+            }
             if (index === -1) {
                 $scope.topten[$scope.topten.type + 'List'].push(item._id);
                 $scope.stepConfig.listGen.displayList.push(item);
@@ -140,6 +135,21 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
                 NotificationFactory.warning('Duplicate!', 'Item has already been added to list.');
             }
             $scope.stepConfig.listGen.toptenItem = '';
+        };
+        
+        $scope.removeItem = function(item) {
+            //For display array.
+            var index = $scope.stepConfig.listGen.displayList.indexOf(item);
+            $scope.stepConfig.listGen.displayList.splice(index, 1);
+            
+            //For topten list.
+            index = $scope.topten[$scope.topten.type + 'List'].indexOf(item._id);
+            if (!$scope.isCreate && index === -1) {
+                index = ListService.findWithAttr($scope.topten[$scope.topten.type+'List'], '_id', item._id);    
+                console.log('is item');
+            }
+            $scope.topten[$scope.topten.type + 'List'].splice(index, 1);
+            NotificationFactory.warning('Removed!', 'Item has been removed from list.');
         };
         
         //Step related functions:

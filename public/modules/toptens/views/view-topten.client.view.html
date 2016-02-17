@@ -1,21 +1,25 @@
 <section data-ng-controller="ToptensController" data-ng-init="findOne()">
 	<div class="page-header">
-		<h1 data-ng-bind="topten.name"></h1>
+		<h1 class="display-inline-block" data-ng-bind="topten.name"></h1><span class="item-icons padding-10" ng-if="topten.isFavourite"><i class="fa fa-star" style="color: gold"></i></span>
+        <h4 ng-bind="topten.description"></h4>
 	</div>
 	<div class="pull-right" data-ng-show="((authentication.user) && (authentication.user._id == topten.user._id))">
-		<a class="btn btn-primary" href="/#!/toptens/{{topten._id}}/edit">
+		<a class="btn btn-accent" href="/#!/toptens">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+        </a>
+        <a class="btn btn-primary" href="/#!/toptens/{{topten._id}}/edit">
 			<i class="glyphicon glyphicon-edit"></i>
 		</a>
-		<a class="btn btn-primary" data-ng-click="remove();">
+		<a class="btn btn-danger" data-ng-click="remove();">
 			<i class="glyphicon glyphicon-trash"></i>
 		</a>
 	</div>
 	<small>
 		<em class="text-muted">
-			Posted on
-			<span data-ng-bind="topten.created | date:'mediumDate'"></span>
-			by
-			<span data-ng-bind="topten.user.displayName"></span>
+            Created
+			<span data-ng-bind="topten.meta.created | date: 'dd MMM yyyy HH:mm'"></span><br/>
+            Updated
+			<span data-ng-bind="topten.meta.updated | date: 'dd MMM yyyy HH:mm'"></span>
 		</em>
 	</small>
 </section>

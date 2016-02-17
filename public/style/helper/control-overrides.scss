@@ -34,3 +34,15 @@ input[type="checkbox"].phantom-control {
         color: $brand-success;
     }
 }
+
+.input-group {
+    input[type="checkbox"].phantom-control {
+        height: 34px;
+        width: 34px;
+        margin: 2px 10px 0;
+        &:before, &:checked:before {
+            font-size: 34px;
+            @include transition(all 0.3s);
+        }
+    }
+}

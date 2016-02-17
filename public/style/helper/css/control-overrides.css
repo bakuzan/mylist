@@ -32,4 +32,15 @@ input[type="checkbox"].phantom-control {
     content: '\f14a';
     color: #47a447; }
 
+.input-group input[type="checkbox"].phantom-control {
+  height: 34px;
+  width: 34px;
+  margin: 2px 10px 0; }
+  .input-group input[type="checkbox"].phantom-control:before, .input-group input[type="checkbox"].phantom-control:checked:before {
+    font-size: 34px;
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    transition: all 0.3s; }
+
 /*# sourceMappingURL=control-overrides.css.map */

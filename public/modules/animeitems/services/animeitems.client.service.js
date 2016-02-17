@@ -139,7 +139,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         //returns the options for the various filters in list pages.
         this.getSelectListOptions = function(controller) {
             var self = this, selectListOptions = [];
-            if (controller !== 'character') {
+            if (controller !== 'character' && controller !== 'topten') {
                 selectListOptions.status = [ { v: '', n: 'All' }, { v: false, n: 'Ongoing' }, { v: true, n: 'Completed' } ];
                 selectListOptions.searchName = 'title';
                 if (controller === 'animeitem') {
@@ -162,13 +162,21 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     selectListOptions.repeating = [ { v: '', n: 'All' }, { v: false, n: 'Not Re-reading' }, { v: true, n: 'Re-reading' } ];
                     selectListOptions.repeatType = 'reReading';
                 }
-            } else if (controller === 'character') {
+            } else {
+                if (controller === 'character') {
+                    selectListOptions.sortOptions = [ { v: 'name', n: 'Name' }, { v: 'anime.title', n: 'Anime' }, { v: 'manga.title', n: 'Manga' }, { v: 'voice', n: 'Voice' }  ];
+                    selectListOptions.media = [ 
+                        { v: '', n: '-- choose media type --' }, { v: 'none', n: 'None' }, { v: 'anime', n: 'Anime-only' }, { v: 'manga', n: 'Manga-only' }, { v: 'both', n: 'Both' } 
+                    ];
+                } else if (controller === 'topten') {
+                    selectListOptions.sortOptions = [ { v: 'name', n: 'Name' } ];
+                    selectListOptions.media = [ { v: '', n: 'All' }, { v: 'anime', n: 'Anime' }, { v: 'manga', n: 'Manga' }, { v: 'character', n: 'Character' } ];
+                    selectListOptions.mediaType = 'type';
+                }
                 selectListOptions.searchName = 'name';
-                selectListOptions.sortOptions = [ { v: 'name', n: 'Name' }, { v: 'anime.title', n: 'Anime' }, { v: 'manga.title', n: 'Manga' }, { v: 'voice', n: 'Voice' }  ];
                 selectListOptions.sortOption = self.findWithAttr(selectListOptions.sortOptions, 'n', 'Name');
-                selectListOptions.media = [ { v: '', n: '-- choose media type --' }, { v: 'none', n: 'None' }, { v: 'anime', n: 'Anime-only' }, { v: 'manga', n: 'Manga-only' }, { v: 'both', n: 'Both' } ];
             }
-//            console.log(selectListOptions);
+//            console.log(selectListOptions); 
             return selectListOptions;
         };
     

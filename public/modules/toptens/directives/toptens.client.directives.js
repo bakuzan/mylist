@@ -94,4 +94,40 @@ angular.module('toptens')
             
         }
     };
+})
+.directive('horizontalList', function() {
+    return {
+        restrict: 'A',
+        replace: true,
+        transclude: true,
+        templateUrl: '/modules/toptens/templates/horizontal-list.html',
+        link: function(scope, element, attr) {
+            var el = element[0],
+                width = el.offsetWidth,
+                child = el.children[0],
+                left = child.style.left,
+                value = 0;
+            console.log(el, width, child, left);
+            
+            function move() {
+                left = value + 'px';
+                console.log('move');
+            }
+            
+            scope.moveItems = function(direction) {
+                if(direction === 'left') {
+                    if(value !== 0) {
+                        value += width;
+                        move();
+                    }
+                    console.log('left: ', value);
+                } else if (direction === 'right') {
+                    value -= width;
+                    move();
+                    console.log('right: ', value);
+                }
+            };
+            
+        }
+    };
 });

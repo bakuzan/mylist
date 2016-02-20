@@ -397,20 +397,23 @@ div.slider-full-screen {
 
 /** Step base styling **/
 .steps {
-  height: 500px;
+  min-height: 300px;
+  height: 300px;
   overflow: hidden; }
 
 .step {
   position: absolute;
   top: 0;
   left: 0;
-  height: 500px;
+  min-height: 300px;
+  height: 300px;
   width: 100%;
   opacity: 0;
   z-index: 1; }
 
 .step-inner-container {
-  height: 500px; }
+  min-height: 300px;
+  height: 300px; }
 
 .step.ng-hide-add,
 .step.ng-hide-remove {
@@ -443,8 +446,9 @@ div.slider-full-screen {
 .step-button-group {
   position: absolute;
   width: 100%;
-  bottom: -8%;
-  display: inline-flex; }
+  bottom: -20%;
+  display: inline-flex;
+  z-index: 5; }
   .step-button-group button {
     z-index: 1; }
 
@@ -497,5 +501,50 @@ div.slider-full-screen {
   @media (min-width: 1200px) {
     .sticky-inner-container {
       left: 10%; } }
+
+/* Variables */
+/* Horizontal list styling base */
+.horizontal-list {
+  position: relative;
+  min-height: 200px;
+  width: 100%;
+  white-space: nowrap; }
+  .horizontal-list .horizontal-list-item {
+    display: inline-block;
+    width: 33%;
+    padding: 0 20px; }
+
+.horizontal-list-scroller {
+  position: absolute;
+  left: 0;
+  min-height: 200px; }
+
+.horizontal-list-control {
+  position: absolute;
+  top: 0;
+  width: 10%;
+  height: 100%;
+  cursor: pointer; }
+  .horizontal-list-control.left {
+    left: -10%;
+    background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.0001) 100%);
+    background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.0001) 100%);
+    background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0.5)), to(rgba(0, 0, 0, 0.0001)));
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.0001) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#80000000', endColorstr='#00000000', GradientType=1);
+    background-repeat: repeat-x; }
+  .horizontal-list-control.right {
+    right: -10%;
+    left: auto;
+    background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0.0001) 0%, rgba(0, 0, 0, 0.5) 100%);
+    background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0.0001) 0%, rgba(0, 0, 0, 0.5) 100%);
+    background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0.0001)), to(rgba(0, 0, 0, 0.5)));
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.0001) 0%, rgba(0, 0, 0, 0.5) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#80000000', GradientType=1);
+    background-repeat: repeat-x; }
+  .horizontal-list-control i.fa {
+    position: absolute;
+    top: 50%;
+    left: 50%; }
 
 /*# sourceMappingURL=components.css.map */

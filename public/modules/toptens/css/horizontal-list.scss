@@ -1,0 +1,54 @@
+/* Variables */
+$height: 200px;
+
+/* Horizontal list styling base */
+
+.horizontal-list {
+    position: relative;
+    min-height: $height;
+    width: 100%;
+    white-space: nowrap;    
+    .horizontal-list-item {
+        display: inline-block;
+        width: 33%;
+        padding: 0 20px;
+    }
+}
+
+.horizontal-list-scroller {
+    position: absolute;
+    left: 0;
+    min-height: $height;
+}
+
+.horizontal-list-control {
+    position: absolute;
+    top: 0;
+    width: 10%;
+    height: 100%;
+    cursor: pointer;
+    &.left {
+        left: -10%;
+        background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, .5) 0%, rgba(0, 0, 0, .0001) 100%);
+        background-image: -o-linear-gradient(left, rgba(0, 0, 0, .5) 0%, rgba(0, 0, 0, .0001) 100%);
+        background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, .5)), to(rgba(0, 0, 0, .0001)));
+        background-image: linear-gradient(to right, rgba(0, 0, 0, .5) 0%, rgba(0, 0, 0, .0001) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#80000000', endColorstr='#00000000', GradientType=1);
+        background-repeat: repeat-x;
+    }
+    &.right {
+        right: -10%;
+        left: auto;
+        background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, .0001) 0%, rgba(0, 0, 0, .5) 100%);
+        background-image: -o-linear-gradient(left, rgba(0, 0, 0, .0001) 0%, rgba(0, 0, 0, .5) 100%);
+        background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, .0001)), to(rgba(0, 0, 0, .5)));
+        background-image: linear-gradient(to right, rgba(0, 0, 0, .0001) 0%, rgba(0, 0, 0, .5) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#80000000', GradientType=1);
+        background-repeat: repeat-x;
+    }
+    i.fa {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+    }
+}

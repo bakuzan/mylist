@@ -29,6 +29,10 @@ angular.module('toptens').controller('ToptensController', ['$scope', '$statePara
             selectListOptions: ListService.getSelectListOptions($scope.whichController),
             commonArrays: ListService.getCommonArrays()
         };
+        $scope.viewConfig = {
+            displayType: '',
+            linkSuffix: ''
+        };
     
         $scope.loading = function(value) {
             $scope.isLoading = ListService.loader(value);
@@ -61,10 +65,13 @@ angular.module('toptens').controller('ToptensController', ['$scope', '$statePara
 
 		// Find existing Topten
 		$scope.findOne = function() {
-			$scope.topten = Toptens.get({ 
-				toptenId: $stateParams.toptenId
-			});
-            console.log($scope.topten);
+            Toptens.get({ toptenId: $stateParams.toptenId }).$promise.then(function(result) {
+                $scope.topten = result;
+                $scope.viewConfig.displayType = ($scope.topten.type === 'character') ? 'name' : 'title';
+                $scope.viewConfig.linkSuffix = ($scope.topten.type === 'character') ? 's' : 'items';
+//                console.log($scope.topten, $scope.viewConfig);
+            });
 		};
+        
 	}
 ]);

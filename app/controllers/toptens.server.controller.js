@@ -95,9 +95,9 @@ exports.list = function(req, res) {
 exports.toptenByID = function(req, res, next, id) { 
 	Topten.findById(id)
         .populate('user', 'displayName')
-        .populate('animeList', 'title')
-        .populate('mangaList', 'title')
-        .populate('characterList', 'name')
+        .populate('animeList', 'title image')
+        .populate('mangaList', 'title image')
+        .populate('characterList', 'name image')
         .exec(function(err, topten) {
         if (err) return next(err);
 		if (! topten) return next(new Error('Failed to load Topten ' + id));

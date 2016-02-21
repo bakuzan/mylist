@@ -22,13 +22,13 @@
             </em>
         </small>
 	</div>
-    <div class="relative">
+    <div class="relative col-lg-12 col-md-12 col-sm-12">
         <div horizontal-list>
-            <div class="horizontal-list-item" ng-repeat="item in topten[topten.type + 'List'] track by item._id">
+            <div horizontal-list-item class="horizontal-list-item" ng-repeat="item in topten[topten.type + 'List'] track by item._id">
                 <a href="/#!/{{item.type}}{{viewConfig.linkSuffix}}/{{item._id}}">
-                    <h4 ng-bind="item[viewConfig.displayType]"></h4>
+                    <h4 class="margin-0" ng-bind="item[viewConfig.displayType]"></h4>
                 </a>
-                <div style="height: 100px">
+                <div class="height-90">
                     <img ng-src="{{item.image}}" class="height-100">
                 </div>
             </div>

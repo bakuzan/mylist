@@ -102,31 +102,62 @@ angular.module('toptens')
         transclude: true,
         templateUrl: '/modules/toptens/templates/horizontal-list.html',
         link: function(scope, element, attr) {
+            scope.horizontalList = {
+                itemWidth: ''
+            };
             var el = element[0],
                 width = el.offsetWidth,
+                shift = width / 3,
                 child = el.children[0],
-                left = child.style.left,
+                cWidth = child.offsetWidth,
+                style = child.style,
                 value = 0;
-            console.log(el, width, child, left);
+            scope.horizontalList.itemWidth = shift;
             
-            function move() {
-                left = value + 'px';
-                console.log('move');
+            function move(value) {
+                style.left = value + 'px';
+                console.log('move: ', style.left);
             }
             
             scope.moveItems = function(direction) {
                 if(direction === 'left') {
                     if(value !== 0) {
-                        value += width;
-                        move();
+                        value += shift;
+                        move(value);
                     }
-                    console.log('left: ', value);
                 } else if (direction === 'right') {
-                    value -= width;
-                    move();
-                    console.log('right: ', value);
+                    value -= shift;
+                    move(value);
                 }
             };
+            
+            window.addEventListener('resize', function(e) {
+                console.log(el.offsetWidth, width);
+                if(el.offsetWidth !== width) {
+                    console.log('not equal');
+                    width = el.offsetWidth;
+                    shift = width / 3;
+                    scope.horizontalList.itemWidth = shift;
+                }
+            });
+            
+        }
+    };
+})
+.directive('horizontalListItem', function() {
+    return {
+        restrict: 'A',
+        replace: true,
+        transclude: true,
+        templateUrl: '/modules/toptens/templates/horizontal-list-item.html',
+        link: function(scope, element, attr) {
+            var el = element[0];
+            
+            scope.$watch('horizontalList.itemWidth', function(newValue) {
+                if (newValue !== undefined) {
+                    console.log(newValue);
+                }
+            });
             
         }
     };

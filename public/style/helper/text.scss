@@ -35,3 +35,9 @@
         text-transform: #{$transform};
     }
 }
+
+@each $deco in $text-decorations {
+    .decoration-#{$deco} {
+        text-decoration: #{$deco};
+    }
+}

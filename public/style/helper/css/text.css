@@ -106,4 +106,16 @@
 .transform-full-width {
   text-transform: full-width; }
 
+.decoration-underline {
+  text-decoration: underline; }
+
+.decoration-overline {
+  text-decoration: overline; }
+
+.decoration-none {
+  text-decoration: none; }
+
+.decoration-line-through {
+  text-decoration: line-through; }
+
 /*# sourceMappingURL=text.css.map */

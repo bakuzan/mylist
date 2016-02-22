@@ -13,7 +13,8 @@
                 <div class="input-group-addon">
                     <i class="fa fa-search"></i>
                 </div>
-               <input type="text" class="form-control" placeholder="search items" ng-model="search">
+               <input type="text" class="form-control" placeholder="search items" ng-model="search" 
+                      ng-model-options="{ debounce: 500 }">
            </div>
             <div class="input-group mt">
               <div class="input-group-addon">

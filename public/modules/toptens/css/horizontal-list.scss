@@ -8,11 +8,22 @@ $height: 200px;
     min-height: $height;
     width: 100%;
     white-space: nowrap;    
-    .horizontal-list-item {
-        display: inline-block;
-        width: 33%;
-        height: 100%;
-        padding: 5px;
+}
+
+.horizontal-list-item {
+    display: inline-block;
+    width: 33%;
+    height: 100%;
+    padding: 5px;
+    &.in-display {
+        visibility: visible;
+        opacity: 1;
+        @include transition(all linear .5s);
+    }
+    &.out-display {
+        visibility: hidden;
+        opacity: 0;
+        @include transition(all linear .5s);
     }
 }
 

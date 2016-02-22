@@ -509,11 +509,26 @@ div.slider-full-screen {
   min-height: 200px;
   width: 100%;
   white-space: nowrap; }
-  .horizontal-list .horizontal-list-item {
-    display: inline-block;
-    width: 33%;
-    height: 100%;
-    padding: 5px; }
+
+.horizontal-list-item {
+  display: inline-block;
+  width: 33%;
+  height: 100%;
+  padding: 5px; }
+  .horizontal-list-item.in-display {
+    visibility: visible;
+    opacity: 1;
+    -webkit-transition: all linear 0.5s;
+    -o-transition: all linear 0.5s;
+    -moz-transition: all linear 0.5s;
+    transition: all linear 0.5s; }
+  .horizontal-list-item.out-display {
+    visibility: hidden;
+    opacity: 0;
+    -webkit-transition: all linear 0.5s;
+    -o-transition: all linear 0.5s;
+    -moz-transition: all linear 0.5s;
+    transition: all linear 0.5s; }
 
 .horizontal-list-scroller {
   position: absolute;

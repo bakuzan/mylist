@@ -103,7 +103,8 @@ angular.module('toptens')
         templateUrl: '/modules/toptens/templates/horizontal-list.html',
         link: function(scope, element, attr) {
             scope.horizontalList = {
-                itemWidth: ''
+                itemWidth: '',
+                offset: 0
             };
             var el = element[0],
                 width = el.offsetWidth,
@@ -116,7 +117,7 @@ angular.module('toptens')
             
             function move(value) {
                 style.left = value + 'px';
-                console.log('move: ', style.left);
+                scope.horizontalList.offset = value;
             }
             
             scope.moveItems = function(direction) {
@@ -138,7 +139,6 @@ angular.module('toptens')
                     shift = width;
                     scope.horizontalList.itemWidth = shift / 3;
                     scope.$apply();
-                    console.log('not equal: ', width, shift);
                 }
             });
             
@@ -152,7 +152,28 @@ angular.module('toptens')
         transclude: true,
         templateUrl: '/modules/toptens/templates/horizontal-list-item.html',
         link: function(scope, element, attr) {
-            var el = element[0];
+            var position = element.index();
+            
+            function setVisibility() {
+                var values = [],
+                    check = Math.abs(scope.$parent.horizontalList.offset / scope.$parent.horizontalList.itemWidth);
+                for(var i = 0; i < 3; i++) {
+                    values.push(check + i);
+                }
+                scope.isVisible = (values.indexOf(position) > -1);
+            }
+            
+            scope.$watch('horizontalList.offset', function(newValue) {
+                if(newValue !== undefined) {
+                    setVisibility();
+                }
+            });
+            
+            scope.$watch('horizontalList.itemWidth', function(newValue) {
+                if(newValue !== undefined) {
+                    setVisibility();
+                }
+            });
             
         }
     };

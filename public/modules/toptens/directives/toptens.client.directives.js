@@ -107,12 +107,12 @@ angular.module('toptens')
             };
             var el = element[0],
                 width = el.offsetWidth,
-                shift = width / 3,
+                shift = width,
                 child = el.children[0],
                 cWidth = child.offsetWidth,
                 style = child.style,
                 value = 0;
-            scope.horizontalList.itemWidth = shift;
+            scope.horizontalList.itemWidth = shift / 3;
             
             function move(value) {
                 style.left = value + 'px';
@@ -134,10 +134,11 @@ angular.module('toptens')
             window.addEventListener('resize', function(e) {
                 console.log(el.offsetWidth, width);
                 if(el.offsetWidth !== width) {
-                    console.log('not equal');
                     width = el.offsetWidth;
-                    shift = width / 3;
-                    scope.horizontalList.itemWidth = shift;
+                    shift = width;
+                    scope.horizontalList.itemWidth = shift / 3;
+                    scope.$apply();
+                    console.log('not equal: ', width, shift);
                 }
             });
             
@@ -152,12 +153,6 @@ angular.module('toptens')
         templateUrl: '/modules/toptens/templates/horizontal-list-item.html',
         link: function(scope, element, attr) {
             var el = element[0];
-            
-            scope.$watch('horizontalList.itemWidth', function(newValue) {
-                if (newValue !== undefined) {
-                    console.log(newValue);
-                }
-            });
             
         }
     };

@@ -79,6 +79,10 @@ ApplicationConfiguration.registerModule('statistics');
 ApplicationConfiguration.registerModule('tasks');
 'use strict';
 
+// Use applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('toptens');
+'use strict';
+
 // Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('users');
 'use strict';
@@ -431,29 +435,6 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
             }
           });
           
-          window.addEventListener('scroll', function (evt) {
-              var scrollTop = document.body.scrollTop,
-                  div = document.getElementById('list-paging-controls'),
-                  innerDiv = document.getElementById('list-paging-controls-inner-container'),
-                  viewportOffset = div.getBoundingClientRect(),
-                  distance_from_top = viewportOffset.top; // This value is your scroll distance from the top
-
-              // The user has scrolled to the tippy top of the page. Set appropriate style.
-              if (distance_from_top < 56) {
-//                  console.log('top hit : ', distance_from_top);
-                  div.classList.add('paging-controls-scroll-top');
-                  innerDiv.classList.add('paging-controls-inner-container');
-              }
-
-              // The user has scrolled down the page.
-              if(distance_from_top > 55 || scrollTop < 10) {
-//                  console.log('we are at: ', distance_from_top);
-                  div.classList.remove('paging-controls-scroll-top');
-                  innerDiv.classList.remove('paging-controls-inner-container');
-              }
-
-          });
-          
       }
   };
     
@@ -727,17 +708,35 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
     
         //find index of object with given attr.
         this.findWithAttr = function(array, attr, value) {
-            for(var i = 0; i < array.length; i += 1) {
-                if(array[i][attr] === value) {
-                    return i;
-                }
-            }   
+            if (array !== undefined) {
+                for(var i = 0; i < array.length; i += 1) {
+                    if(array[i][attr] === value) {
+                        return i;
+                    }
+                }   
+            }
+            return -1;
+        };
+    
+        this.manipulateString = function(string, transform, onlyFirst) {
+            switch(transform.toLowerCase()) {
+                case 'lower':
+                    if (onlyFirst)  return string.charAt(0).toLowerCase() + string.slice(1);
+                    if (!onlyFirst) return string.toLowerCase();
+                    break;
+                case 'upper':
+                    if (onlyFirst) return string.charAt(0).toUpperCase() + string.slice(1);
+                    if (!onlyFirst) return string.toUpperCase();
+                    break;
+                default:
+                    return string.toLowerCase();
+            }
         };
         
         //returns the options for the various filters in list pages.
         this.getSelectListOptions = function(controller) {
             var self = this, selectListOptions = [];
-            if (controller !== 'character') {
+            if (controller !== 'character' && controller !== 'topten') {
                 selectListOptions.status = [ { v: '', n: 'All' }, { v: false, n: 'Ongoing' }, { v: true, n: 'Completed' } ];
                 selectListOptions.searchName = 'title';
                 if (controller === 'animeitem') {
@@ -760,13 +759,21 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     selectListOptions.repeating = [ { v: '', n: 'All' }, { v: false, n: 'Not Re-reading' }, { v: true, n: 'Re-reading' } ];
                     selectListOptions.repeatType = 'reReading';
                 }
-            } else if (controller === 'character') {
+            } else {
+                if (controller === 'character') {
+                    selectListOptions.sortOptions = [ { v: 'name', n: 'Name' }, { v: 'anime.title', n: 'Anime' }, { v: 'manga.title', n: 'Manga' }, { v: 'voice', n: 'Voice' }  ];
+                    selectListOptions.media = [ 
+                        { v: '', n: '-- choose media type --' }, { v: 'none', n: 'None' }, { v: 'anime', n: 'Anime-only' }, { v: 'manga', n: 'Manga-only' }, { v: 'both', n: 'Both' } 
+                    ];
+                } else if (controller === 'topten') {
+                    selectListOptions.sortOptions = [ { v: 'name', n: 'Name' } ];
+                    selectListOptions.media = [ { v: '', n: 'All' }, { v: 'anime', n: 'Anime' }, { v: 'manga', n: 'Manga' }, { v: 'character', n: 'Character' } ];
+                    selectListOptions.mediaType = 'type';
+                }
                 selectListOptions.searchName = 'name';
-                selectListOptions.sortOptions = [ { v: 'name', n: 'Name' }, { v: 'anime.title', n: 'Anime' }, { v: 'manga.title', n: 'Manga' }, { v: 'voice', n: 'Voice' }  ];
                 selectListOptions.sortOption = self.findWithAttr(selectListOptions.sortOptions, 'n', 'Name');
-                selectListOptions.media = [ { v: '', n: '-- choose media type --' }, { v: 'none', n: 'None' }, { v: 'anime', n: 'Anime-only' }, { v: 'manga', n: 'Manga-only' }, { v: 'both', n: 'Both' } ];
             }
-//            console.log(selectListOptions);
+//            console.log(selectListOptions); 
             return selectListOptions;
         };
     
@@ -828,6 +835,11 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
     
         this.getCommonArrays = function(controller) {
             var commonArrays = {},
+                itemTypes = [
+                    { name: 'anime' },
+                    { name: 'manga' },
+                    { name: 'character' }
+                ],
                 seasons = [ 
                     { number: '03', text: 'Winter' },
                     { number: '06', text: 'Spring' },
@@ -863,8 +875,14 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     {name: 'Friday'},
                     {name: 'Saturday'},
                     {name: 'Sunday'}
+                ],
+                summaryFunctions = [
+                    { name: 'Average' },
+                    { name: 'Highest' },
+                    { name: 'Lowest' },
+                    { name: 'Mode' }
                 ];
-            commonArrays = { months: months, seasons: seasons, categories: categories, days: days };
+            commonArrays = { months: months, seasons: seasons, categories: categories, days: days, summaryFunctions: summaryFunctions, itemTypes: itemTypes };
             return commonArrays;
         };
     
@@ -1465,6 +1483,7 @@ angular.module('characters').directive('characterBack', function(){
           scope.currentIndex = -1; //pre-first slide to stop 'cannot assign to undefined' error.
           scope.repeater = scope.slides === undefined ? false : true; //is there a collection to iterate through?
           scope.interval = scope.interval === undefined ? 3000 : scope.interval; //is there a custom interval?
+          scope.isFullscreen = false;
           
           //allow retreival of local resource
           scope.trustAsResourceUrl = function(url) {
@@ -1550,6 +1569,11 @@ angular.module('characters').directive('characterBack', function(){
                 timer = $timeout(autoSlide, scope.interval);
 //                  console.log('restarted');
               }
+          };
+          
+          //Fullscreen capability
+          scope.toggleFullscreen = function() {
+              scope.isFullscreen = !scope.isFullscreen;
           };
           
           /** FILTERS
@@ -2447,6 +2471,8 @@ angular.module('core').filter('dayFilter', function() {
 //Service to provide common access to features.
 angular.module('core').factory('NotificationFactory', function() {
     var self = this;
+    /*global swal */
+    /*global toastr */
         toastr.options = {
                 'closeButton': false,
                 'debug': false,
@@ -3461,6 +3487,10 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
+        $scope.go = function(id) {
+            $location.path('/mangaitems/' + id);
+        };
+        
         $scope.view = 'Anime';
         //paging variables.
         $scope.pageConfig = {
@@ -3708,14 +3738,27 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         
         //Builds ratings aggregates.
         function getSummaryFunctions(array) {
-            $scope.historyDetails.summaryFunctions = StatisticsService.buildSummaryFunctions(array);
-            if ($scope.detail.summary.isVisible === true) $scope.historyDetails.yearSummary = StatisticsService.buildYearSummary(array, $scope.detail.year, $scope.detail.summary.type);
+            //Check whether to do ratings or episode ratings.
+            if (!$scope.detail.isEpisodeRatings) {
+                $scope.historyDetails.summaryFunctions = StatisticsService.buildSummaryFunctions(array);
+                if ($scope.detail.summary.isVisible === true) $scope.historyDetails.yearSummary = StatisticsService.buildYearSummary(array, $scope.detail.year, $scope.detail.summary.type);
+            } else {
+                angular.forEach(array, function(item) {
+                    var episodeSummaryFunctions = StatisticsService.buildSummaryFunctions(item.meta.history);
+                    item.meta.episodeSummaryFunctions = episodeSummaryFunctions;
+                });
+            }
+            console.log(array, $scope.historyDetails);
         }
         $scope.$watchCollection('detailItems', function(newValue) {
             if (newValue !== undefined) {
                 getSummaryFunctions(newValue);
             }
         });
+        
+        $scope.toggleEpisodeRatings = function(items) {
+            getSummaryFunctions(items);
+        };
         
         $scope.historyDetail = function(year, division, divisionText, summaryType) {
             if ($scope.detail.year === year && $scope.detail.divisionText === divisionText) {
@@ -4237,32 +4280,6 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
 				taskId: $stateParams.taskId
 			});
 		};
-        
-        window.addEventListener('scroll', function (evt) {
-              var scrollTop = document.body.scrollTop,
-                  div = document.getElementById('task-tab-filter-container'),
-                  innerDiv = document.getElementById('task-tab-filter-inner-container'),
-                  viewportOffset = div.getBoundingClientRect(),
-                  distance_from_top = viewportOffset.top; // This value is your scroll distance from the top
-
-              // The user has scrolled to the tippy top of the page. Set appropriate style.
-              if (distance_from_top < 56) {
-//                  console.log('top hit : ', distance_from_top);
-                  div.classList.add('task-tab-filter-scroll-top');
-                  div.classList.remove('margin-top-40');
-                  innerDiv.classList.add('task-tab-filter-inner-container');
-              }
-
-              // The user has scrolled down the page.
-              if(distance_from_top > 55 || scrollTop < 10) {
-//                  console.log('we are at: ', distance_from_top);
-                  div.classList.remove('task-tab-filter-scroll-top');
-                  div.classList.add('margin-top-40');
-                  innerDiv.classList.remove('task-tab-filter-inner-container');
-              }
-
-          });
-        
 
 	}
 ]);
@@ -4475,6 +4492,491 @@ angular.module('tasks').factory('Tasks', ['$resource',
     
     return obj;
 }]);
+'use strict';
+
+// Configuring the Articles module
+angular.module('toptens').run(['Menus',
+	function(Menus) {
+		// Set top bar menu items
+		Menus.addMenuItem('topbar', 'Toptens', 'toptens', 'dropdown', '/toptens(/create)?');
+		Menus.addSubMenuItem('topbar', 'toptens', 'List Toptens', 'toptens');
+		Menus.addSubMenuItem('topbar', 'toptens', 'New Topten', 'toptens/create');
+	}
+]);
+'use strict';
+
+//Setting up route
+angular.module('toptens').config(['$stateProvider',
+	function($stateProvider) {
+		// Toptens state routing
+		$stateProvider.
+		state('listToptens', {
+			url: '/toptens',
+			templateUrl: 'modules/toptens/views/list-toptens.client.view.html'
+		}).
+		state('createTopten', {
+			url: '/toptens/create',
+			templateUrl: 'modules/toptens/views/create-topten.client.view.html'
+		}).
+		state('viewTopten', {
+			url: '/toptens/:toptenId',
+			templateUrl: 'modules/toptens/views/view-topten.client.view.html'
+		}).
+		state('editTopten', {
+			url: '/toptens/:toptenId/edit',
+			templateUrl: 'modules/toptens/views/create-topten.client.view.html'
+		});
+	}
+]);
+'use strict';
+
+// Toptens controller
+angular.module('toptens').controller('CreateToptenController', ['$scope', '$stateParams', '$location', 'Authentication', 'Toptens', 'ListService', 'Animeitems', 'Mangaitems', 'Characters', 'NotificationFactory',
+	function($scope, $stateParams, $location, Authentication, Toptens, ListService, Animeitems, Mangaitems, Characters, NotificationFactory) {
+		$scope.authentication = Authentication;
+        
+        $scope.stepConfig = {
+            steps: [1,2,3,4,5,6,7,8,9,10],
+            stepHeaders: [
+                { text: 'Select attributes' },
+                { text: 'Populate list' }
+            ],
+            currentStep: 1,
+            stepCount: 2,
+            listGen: {
+                items: [],
+                displayList: [],
+                typeDisplay: '',
+                toptenItem: ''
+            }
+        };
+        var toptenCopy = {
+            name: '',
+            description: '',
+            type: '',
+            isFavourite: false,
+            animeList: [],
+            mangaList: [],
+            characterList: []
+        };
+        $scope.topten = {};
+        angular.copy(toptenCopy, $scope.topten);
+        $scope.commonArrays = ListService.getCommonArrays();
+        $scope.isCreate = true;
+        $scope.imgSize = {
+            height: '50px',
+            width: '100px'
+        };
+
+		// Create new Topten
+		$scope.create = function() {
+            console.log($scope.topten, this.topten);
+			// Create new Topten object
+            var topten = new Toptens();
+			topten = new Toptens ({
+				name: this.topten.name,
+                description: this.topten.description,
+                type: this.topten.type,
+                isFavourite: this.topten.isFavourite,
+                animeList: this.topten.animeList.length > 0 ? this.topten.animeList : null,
+                characterList: this.topten.characterList.length > 0 ? this.topten.characterList : null,
+                mangaList: this.topten.mangaList.length > 0 ? this.topten.mangaList : null
+			});
+
+			// Redirect after save
+			topten.$save(function(response) {
+				$location.path('toptens/' + response._id);
+                NotificationFactory.success('Saved!', 'New List was successfully saved!');
+				// Clear form fields
+				angular.copy(toptenCopy, $scope.topten);
+			}, function(errorResponse) {
+				$scope.error = errorResponse.data.message;
+                NotificationFactory.error('Error!', 'Something went wrong!');
+			});
+		};
+        
+		// Update existing Topten
+		$scope.update = function() {
+			var topten = $scope.topten;
+
+			topten.$update(function() {
+				$location.path('toptens/' + topten._id);
+                NotificationFactory.success('Updated!', 'List update was successful!');
+			}, function(errorResponse) {
+				$scope.error = errorResponse.data.message;
+                NotificationFactory.error('Error!', 'Something went wrong!');
+			});
+		};
+        
+        function typeSetItemPopulate() {
+            var type = ListService.manipulateString($scope.topten.type, 'upper', true);
+            switch(type) {
+                case 'Anime':
+                    $scope.stepConfig.listGen.items = Animeitems.query();
+                    $scope.stepConfig.listGen.typeDisplay = 'title';
+                    break;
+                case 'Manga':
+                    $scope.stepConfig.listGen.items = Mangaitems.query();
+                    $scope.stepConfig.listGen.typeDisplay = 'title';
+                    break;
+                case 'Character':
+                    $scope.stepConfig.listGen.items = Characters.query();
+                    $scope.stepConfig.listGen.typeDisplay = 'name';
+                    break;
+            }
+            console.log('type set: ', $scope.stepConfig.listGen.items, $scope.stepConfig.listGen.typeDisplay);
+        }
+        
+        //Processing on step submits.
+        function process(number, direction, callback) {
+            switch(number) {
+                case 1: 
+                    if ($scope.topten.type !== '' && $scope.isCreate) {
+                        typeSetItemPopulate();
+                        callback();
+                    } else if ($scope.topten.type !== '' && !$scope.isCreate) {
+                        if ($scope.stepConfig.listGen.displayList.length < 1) {
+                            angular.forEach($scope.topten[$scope.topten.type + 'List'], function(item) {
+                                var index = ListService.findWithAttr($scope.stepConfig.listGen.items, '_id', item._id);
+                                $scope.stepConfig.listGen.displayList.push($scope.stepConfig.listGen.items[index]);
+                            });
+                        }
+                        callback();
+                    } else if ($scope.topten.type === '') {
+                        NotificationFactory.popup('Invalid form', 'You MUST select a type to continue.', 'error');
+                    }
+                    break;
+                    
+                case 2:
+                    callback();
+                    break;
+            }
+        }
+        
+        $scope.pushItem = function(item) {
+            var index = $scope.topten[$scope.topten.type+'List'].indexOf(item._id);
+            if (!$scope.isCreate && index === -1) {
+                index = ListService.findWithAttr($scope.topten[$scope.topten.type+'List'], '_id', item._id);    
+            }
+            if (index === -1) {
+                $scope.topten[$scope.topten.type + 'List'].push(item._id);
+                $scope.stepConfig.listGen.displayList.push(item);
+            } else {
+                NotificationFactory.warning('Duplicate!', 'Item has already been added to list.');
+            }
+            $scope.stepConfig.listGen.toptenItem = '';
+        };
+        
+        $scope.removeItem = function(item) {
+            //For display array.
+            var index = $scope.stepConfig.listGen.displayList.indexOf(item);
+            $scope.stepConfig.listGen.displayList.splice(index, 1);
+            
+            //For topten list.
+            index = $scope.topten[$scope.topten.type + 'List'].indexOf(item._id);
+            if (!$scope.isCreate && index === -1) {
+                index = ListService.findWithAttr($scope.topten[$scope.topten.type+'List'], '_id', item._id);    
+                console.log('is item');
+            }
+            $scope.topten[$scope.topten.type + 'List'].splice(index, 1);
+            NotificationFactory.warning('Removed!', 'Item has been removed from list.');
+        };
+        
+        //Step related functions:
+        $scope.takeStep = function(number, direction) {
+            process(number, direction, function() {
+                $scope.stepConfig.currentStep = (direction) ? number + 1 : number - 1;
+            });
+            console.log('step: ', $scope.stepConfig, $scope.topten);
+        };
+        $scope.cancel = function() {
+            $location.path('toptens');
+        };
+        
+        function inital() {
+            console.log('state params: ', $stateParams);
+            if ($stateParams.toptenId !== undefined) {
+                $scope.isCreate = false;
+                Toptens.get({ toptenId: $stateParams.toptenId }).$promise.then(function(result) {
+                    $scope.topten = result;
+                    typeSetItemPopulate();
+                });
+                console.log('topten: ', $scope.topten);
+            }
+        }
+        inital();
+	}
+]);
+'use strict';
+
+// Toptens controller
+angular.module('toptens').controller('ToptensController', ['$scope', '$stateParams', '$location', 'Authentication', 'Toptens', 'NotificationFactory', 'ListService',
+	function($scope, $stateParams, $location, Authentication, Toptens, NotificationFactory, ListService) {
+		$scope.authentication = Authentication;
+        
+        // If user is not signed in then redirect back to signin.
+		if (!$scope.authentication.user) $location.path('/signin');
+        
+        $scope.whichController = 'topten';
+        $scope.isLoading = true;
+        //paging variables.
+        $scope.pageConfig = {
+            currentPage: 0,
+            pageSize: 10
+        };
+        $scope.filterConfig = {
+            showingCount: 0,
+            expandFilters: false,
+            sortType: '',
+            sortReverse: false,
+            ratingLevel: undefined,
+            search: {},
+            searchTags: '',
+            tagsForFilter: [],
+            taglessItem: false,
+            areTagless: false,
+            selectListOptions: ListService.getSelectListOptions($scope.whichController),
+            commonArrays: ListService.getCommonArrays()
+        };
+        $scope.viewConfig = {
+            displayType: '',
+            linkSuffix: ''
+        };
+    
+        $scope.loading = function(value) {
+            $scope.isLoading = ListService.loader(value);
+        };
+
+		// Remove existing Topten
+		$scope.remove = function(topten) {
+            NotificationFactory.confirmation(function() {
+                if ( topten ) { 
+                    topten.$remove();
+                    for (var i in $scope.toptens) {
+                        if ($scope.toptens [i] === topten) {
+                            $scope.toptens.splice(i, 1);
+                        }
+                    }
+                } else {
+                    $scope.topten.$remove(function() {
+                        $location.path('toptens');
+                    });
+                }
+                NotificationFactory.warning('Deleted!', 'Anime was successfully deleted.');
+            });
+		};
+
+		// Find a list of Toptens
+		$scope.find = function() {
+			$scope.toptens = Toptens.query();
+            console.log($scope.toptens);
+		};
+
+		// Find existing Topten
+		$scope.findOne = function() {
+            Toptens.get({ toptenId: $stateParams.toptenId }).$promise.then(function(result) {
+                $scope.topten = result;
+                $scope.viewConfig.displayType = ($scope.topten.type === 'character') ? 'name' : 'title';
+                $scope.viewConfig.linkSuffix = ($scope.topten.type === 'character') ? 's' : 'items';
+//                console.log($scope.topten, $scope.viewConfig);
+            });
+		};
+        
+	}
+]);
+'use strict';
+
+angular.module('toptens')
+.directive('steps', function() {
+    return {
+        restrict: 'A',
+        replace: true,
+        transclude: true,
+        template: '<div class="steps" ng-transclude>' +
+                  '</div>'
+    };
+})
+.directive('step', function() {
+  return {
+      restrict: 'A',
+      replace: true,
+      transclude: true,
+      scope: {
+          stepConfig: '='
+      },
+      templateUrl: '/modules/toptens/templates/step.html',
+      link: function(scope, elm, attrs) {
+          scope.stepNumber = elm.index() + 1;
+          var element = elm[0],
+              classList = element.classList;
+          
+          function classRemove(array) {
+              angular.forEach(array, function(item) {
+                  classList.remove(item);
+              });
+          }
+          function classAdd(array) {
+              angular.forEach(array, function(item) {
+                  classList.add(item);
+              });
+          }
+          function setZIndex(number) {
+              element.style.zIndex = number;
+          }
+          
+          scope.$watch('stepConfig.currentStep', function(newValue) {
+              if (newValue !== undefined) {
+                  if (scope.stepNumber === scope.stepConfig.currentStep) {
+                      classRemove(['step-transition', 'step-out']);
+                      setZIndex(2);
+                      classAdd(['step-transition', 'step-in']);
+                  } else {
+                      classRemove(['step-transition', 'step-in']);
+                      setZIndex(1);
+                      classAdd(['step-transition', 'step-out']);
+                  }
+              }
+          });
+      }
+  };  
+})
+.directive('stepControls', function() {
+   return {
+       restrict: 'A',
+       replace: true,
+       transclude: true,
+       template: '<div class="step-controls step-button-group padding-5" ng-transclude>' +
+                  '</div>'
+   };
+})
+.directive('sticky', function() {
+    return {
+        restrict: 'A',
+        scope: {},
+        link: function(scope, element, attrs) {
+            
+            window.addEventListener('scroll', function (evt) {
+                var stickyClass = 'sticky-scroll-top', stickyInnerClass = 'sticky-inner-container',
+                    scrollTop = document.body.scrollTop,
+                    elm = element[0],
+                    inner = elm.children[0],
+                    viewportOffset = elm.getBoundingClientRect(),
+                    distance_from_top = viewportOffset.top; // This value is your scroll distance from the top
+
+                // The element has scrolled to the top of the page. Set appropriate style.
+                if (distance_from_top < 56) {
+//                    console.log('top hit : ', distance_from_top);
+                    elm.classList.add(stickyClass);
+                    inner.classList.add(stickyInnerClass);
+                }
+
+                // The element has not reached the top.
+                if(distance_from_top > 55 || scrollTop < 10) {
+//                    console.log('we are at: ', distance_from_top);
+                    elm.classList.remove(stickyClass);
+                    inner.classList.remove(stickyInnerClass);
+                }
+          });
+            
+        }
+    };
+})
+.directive('horizontalList', function() {
+    return {
+        restrict: 'A',
+        replace: true,
+        transclude: true,
+        templateUrl: '/modules/toptens/templates/horizontal-list.html',
+        link: function(scope, element, attr) {
+            scope.horizontalList = {
+                itemWidth: '',
+                offset: 0
+            };
+            var el = element[0],
+                width = el.offsetWidth,
+                shift = width,
+                child = el.children[0],
+                cWidth = child.offsetWidth,
+                style = child.style,
+                value = 0;
+            scope.horizontalList.itemWidth = shift / 3;
+            
+            function move(value) {
+                style.left = value + 'px';
+                scope.horizontalList.offset = value;
+            }
+            
+            scope.moveItems = function(direction) {
+                if(direction === 'left') {
+                    if(value !== 0) {
+                        value += shift;
+                        move(value);
+                    }
+                } else if (direction === 'right') {
+                    value -= shift;
+                    move(value);
+                }
+            };
+            
+            window.addEventListener('resize', function(e) {
+                console.log(el.offsetWidth, width);
+                if(el.offsetWidth !== width) {
+                    width = el.offsetWidth;
+                    shift = width;
+                    scope.horizontalList.itemWidth = shift / 3;
+                    scope.$apply();
+                }
+            });
+            
+        }
+    };
+})
+.directive('horizontalListItem', function() {
+    return {
+        restrict: 'A',
+        replace: true,
+        transclude: true,
+        templateUrl: '/modules/toptens/templates/horizontal-list-item.html',
+        link: function(scope, element, attr) {
+            var position = element.index();
+            
+            function setVisibility() {
+                var values = [],
+                    check = Math.abs(scope.$parent.horizontalList.offset / scope.$parent.horizontalList.itemWidth);
+                for(var i = 0; i < 3; i++) {
+                    values.push(check + i);
+                }
+                scope.isVisible = (values.indexOf(position) > -1);
+            }
+            
+            scope.$watch('horizontalList.offset', function(newValue) {
+                if(newValue !== undefined) {
+                    setVisibility();
+                }
+            });
+            
+            scope.$watch('horizontalList.itemWidth', function(newValue) {
+                if(newValue !== undefined) {
+                    setVisibility();
+                }
+            });
+            
+        }
+    };
+});
+'use strict';
+
+//Toptens service used to communicate Toptens REST endpoints
+angular.module('toptens').factory('Toptens', ['$resource',
+	function($resource) {
+		return $resource('toptens/:toptenId', { toptenId: '@_id'
+		}, {
+			update: {
+				method: 'PUT'
+			}
+		});
+	}
+]);
 'use strict';
 
 // Config HTTP Error Handling

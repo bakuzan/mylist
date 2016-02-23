@@ -118,14 +118,27 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         
         //Builds ratings aggregates.
         function getSummaryFunctions(array) {
-            $scope.historyDetails.summaryFunctions = StatisticsService.buildSummaryFunctions(array);
-            if ($scope.detail.summary.isVisible === true) $scope.historyDetails.yearSummary = StatisticsService.buildYearSummary(array, $scope.detail.year, $scope.detail.summary.type);
+            //Check whether to do ratings or episode ratings.
+            if (!$scope.detail.isEpisodeRatings) {
+                $scope.historyDetails.summaryFunctions = StatisticsService.buildSummaryFunctions(array);
+                if ($scope.detail.summary.isVisible === true) $scope.historyDetails.yearSummary = StatisticsService.buildYearSummary(array, $scope.detail.year, $scope.detail.summary.type);
+            } else {
+                angular.forEach(array, function(item) {
+                    var episodeSummaryFunctions = StatisticsService.buildSummaryFunctions(item.meta.history);
+                    item.meta.episodeSummaryFunctions = episodeSummaryFunctions;
+                });
+            }
+            console.log(array, $scope.historyDetails);
         }
         $scope.$watchCollection('detailItems', function(newValue) {
             if (newValue !== undefined) {
                 getSummaryFunctions(newValue);
             }
         });
+        
+        $scope.toggleEpisodeRatings = function(items) {
+            getSummaryFunctions(items);
+        };
         
         $scope.historyDetail = function(year, division, divisionText, summaryType) {
             if ($scope.detail.year === year && $scope.detail.divisionText === divisionText) {

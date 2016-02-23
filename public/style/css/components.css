@@ -226,6 +226,12 @@
   padding: 5px;
   margin: auto;
   list-style-type: none; }
+  .slider a.full-screen-control {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 18px;
+    padding: 2px 5px; }
 
 .slide {
   position: absolute;
@@ -320,6 +326,33 @@
 .slide.ng-hide-remove.ng-hide-remove-active {
   opacity: 1; }
 
+div.slider-full-screen {
+  position: fixed;
+  top: 50px;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #555555;
+  z-index: 900; }
+  div.slider-full-screen .slider {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    width: 100vw;
+    height: 80vh;
+    z-index: 1000; }
+    div.slider-full-screen .slider .slide .slide-image {
+      height: 80vh; }
+    div.slider-full-screen .slider .slider-control {
+      height: 80vh; }
+  div.slider-full-screen .slider-indicators {
+    position: fixed;
+    top: -webkit-calc(80vh + 50px);
+    top: -moz-calc(80vh + 50px);
+    top: calc(80vh + 50px);
+    left: 0;
+    padding-top: 15px; }
+
 /** Tab filter base styling **/
 .tab-filter-container {
   position: relative;
@@ -363,19 +396,24 @@
   width: 55%; }
 
 /** Step base styling **/
+.steps {
+  min-height: 300px;
+  height: 300px;
+  overflow: hidden; }
+
 .step {
   position: absolute;
   top: 0;
   left: 0;
-  min-height: 250px;
-  height: inherit;
+  min-height: 300px;
+  height: 300px;
   width: 100%;
   opacity: 0;
   z-index: 1; }
 
 .step-inner-container {
-  min-height: inherit;
-  height: inherit; }
+  min-height: 300px;
+  height: 300px; }
 
 .step.ng-hide-add,
 .step.ng-hide-remove {
@@ -408,8 +446,11 @@
 .step-button-group {
   position: absolute;
   width: 100%;
-  bottom: 0;
-  display: inline-flex; }
+  bottom: -20%;
+  display: inline-flex;
+  z-index: 5; }
+  .step-button-group button {
+    z-index: 1; }
 
 .table-horizontal-container {
   height: 60px;
@@ -430,5 +471,97 @@
       margin-right: 10px; }
     .table-horizontal-container .table-horizontal-scroll tbody tr td input {
       width: 45px; }
+
+.sticky-scroll-top {
+  position: fixed;
+  width: 100%;
+  top: 50px;
+  left: 0;
+  background-color: #FFF;
+  padding: 0 !important;
+  margin: 0 !important;
+  z-index: 5; }
+
+.sticky-inner-container {
+  position: relative;
+  width: 50%;
+  padding: 5px;
+  margin: auto; }
+  @media (max-width: 768px) {
+    .sticky-inner-container {
+      left: 0;
+      width: 100%;
+      margin: 0; } }
+  @media (min-width: 768px) and (max-width: 992px) {
+    .sticky-inner-container {
+      left: 15%; } }
+  @media (min-width: 992px) and (max-width: 1200px) {
+    .sticky-inner-container {
+      left: 17%; } }
+  @media (min-width: 1200px) {
+    .sticky-inner-container {
+      left: 10%; } }
+
+/* Variables */
+/* Horizontal list styling base */
+.horizontal-list {
+  position: relative;
+  min-height: 200px;
+  width: 100%;
+  white-space: nowrap; }
+
+.horizontal-list-item {
+  display: inline-block;
+  width: 33%;
+  height: 100%;
+  padding: 5px; }
+  .horizontal-list-item.in-display {
+    visibility: visible;
+    opacity: 1;
+    -webkit-transition: all linear 0.5s;
+    -o-transition: all linear 0.5s;
+    -moz-transition: all linear 0.5s;
+    transition: all linear 0.5s; }
+  .horizontal-list-item.out-display {
+    visibility: hidden;
+    opacity: 0;
+    -webkit-transition: all linear 0.5s;
+    -o-transition: all linear 0.5s;
+    -moz-transition: all linear 0.5s;
+    transition: all linear 0.5s; }
+
+.horizontal-list-scroller {
+  position: absolute;
+  left: 0;
+  min-height: 200px;
+  height: 200px; }
+
+.horizontal-list-control {
+  position: absolute;
+  top: 0;
+  width: 10%;
+  height: 100%;
+  cursor: pointer; }
+  .horizontal-list-control.left {
+    left: -10%;
+    background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.0001) 100%);
+    background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.0001) 100%);
+    background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0.5)), to(rgba(0, 0, 0, 0.0001)));
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.0001) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#80000000', endColorstr='#00000000', GradientType=1);
+    background-repeat: repeat-x; }
+  .horizontal-list-control.right {
+    right: -10%;
+    left: auto;
+    background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0.0001) 0%, rgba(0, 0, 0, 0.5) 100%);
+    background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0.0001) 0%, rgba(0, 0, 0, 0.5) 100%);
+    background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0.0001)), to(rgba(0, 0, 0, 0.5)));
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.0001) 0%, rgba(0, 0, 0, 0.5) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#80000000', GradientType=1);
+    background-repeat: repeat-x; }
+  .horizontal-list-control i.fa {
+    position: absolute;
+    top: 50%;
+    left: 50%; }
 
 /*# sourceMappingURL=components.css.map */

@@ -2,4 +2,45 @@
   background: none;
   border: none; }
 
+input[type="checkbox"].phantom-control {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  transition: all 0.3s;
+  display: inline-block;
+  height: 19px;
+  width: 19px;
+  margin: 0;
+  cursor: pointer;
+  vertical-align: middle; }
+  input[type="checkbox"].phantom-control:before, input[type="checkbox"].phantom-control:checked:before {
+    font-family: 'FontAwesome';
+    font-size: 19px;
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    transition: all 0.3s; }
+  input[type="checkbox"].phantom-control:before {
+    content: '\f096'; }
+  input[type="checkbox"].phantom-control:disabled:before {
+    content: '\f03a';
+    color: #d41f1a; }
+  input[type="checkbox"].phantom-control:checked:before {
+    content: '\f14a';
+    color: #47a447; }
+
+.input-group input[type="checkbox"].phantom-control {
+  height: 34px;
+  width: 34px;
+  margin: 2px 10px 0; }
+  .input-group input[type="checkbox"].phantom-control:before, .input-group input[type="checkbox"].phantom-control:checked:before {
+    font-size: 34px;
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    transition: all 0.3s; }
+
 /*# sourceMappingURL=control-overrides.css.map */

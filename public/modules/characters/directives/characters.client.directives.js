@@ -33,6 +33,7 @@ angular.module('characters').directive('characterBack', function(){
           scope.currentIndex = -1; //pre-first slide to stop 'cannot assign to undefined' error.
           scope.repeater = scope.slides === undefined ? false : true; //is there a collection to iterate through?
           scope.interval = scope.interval === undefined ? 3000 : scope.interval; //is there a custom interval?
+          scope.isFullscreen = false;
           
           //allow retreival of local resource
           scope.trustAsResourceUrl = function(url) {
@@ -118,6 +119,11 @@ angular.module('characters').directive('characterBack', function(){
                 timer = $timeout(autoSlide, scope.interval);
 //                  console.log('restarted');
               }
+          };
+          
+          //Fullscreen capability
+          scope.toggleFullscreen = function() {
+              scope.isFullscreen = !scope.isFullscreen;
           };
           
           /** FILTERS

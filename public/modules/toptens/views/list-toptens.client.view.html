@@ -1,0 +1,36 @@
+<section data-ng-controller="ToptensController" data-ng-init="find()" data-ng-show="authentication.user">
+    <div class="fixed-header">
+        <h1>Topten lists <button class="btn btn-primary show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</button></h1>
+    </div>
+    <div class="container">
+        <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }">
+            <div list-filters filter-config="filterConfig" items="toptens" page="whichController"></div>
+        </div>
+        <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
+        <div class="col-lg-8 col-md-6 col-sm-6 item-list-container">
+            <div page-controls page-config="pageConfig" showing-count="filterConfig.showingCount"></div>
+            <div class="list-group col-lg-12 col-md-12 col-sm-12">
+                <div data-ng-repeat="item in toptens | orderBy: filterConfig.sortType:filterConfig.sortReverse | filter: filterConfig.search | startFrom: pageConfig.currentPage*pageConfig.pageSize | limitTo: pageConfig.pageSize" class="list-group-item col-lg-12 col-md-12 col-sm-12" ng-hide="loading(item.name)">
+                    <div class="view-item-top">
+                        <h4 class="list-group-item-heading clickable" ng-click="(viewItem === item) ? viewItem='' : viewItem=item" data-ng-bind="item.name"></h4>
+                        <p class="list-group-item-text">
+                            <span class="item-icons" ng-if="item.isFavourite"><i class="fa fa-star" style="color: gold"></i></span>
+                            <span ng-bind="item.description"></span>
+                        </p>
+                    </div>
+                    <div class="view-item-detail" ng-show="viewItem === item">
+                        <div class="item-actions" data-ng-show="((authentication.user) && (authentication.user._id == item.user._id))">
+                            <a class="btn btn-accent" href="/#!/toptens/{{item._id}}">
+                                <i class="fa fa-eye"></i>
+                            </a>
+                            <a class="btn btn-primary" href="/#!/toptens/{{item._id}}/edit">
+                                <i class="glyphicon glyphicon-edit"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="loading-image" data-ng-if="isLoading"></section>
+</section>

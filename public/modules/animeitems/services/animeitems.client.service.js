@@ -111,17 +111,35 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
     
         //find index of object with given attr.
         this.findWithAttr = function(array, attr, value) {
-            for(var i = 0; i < array.length; i += 1) {
-                if(array[i][attr] === value) {
-                    return i;
-                }
-            }   
+            if (array !== undefined) {
+                for(var i = 0; i < array.length; i += 1) {
+                    if(array[i][attr] === value) {
+                        return i;
+                    }
+                }   
+            }
+            return -1;
+        };
+    
+        this.manipulateString = function(string, transform, onlyFirst) {
+            switch(transform.toLowerCase()) {
+                case 'lower':
+                    if (onlyFirst)  return string.charAt(0).toLowerCase() + string.slice(1);
+                    if (!onlyFirst) return string.toLowerCase();
+                    break;
+                case 'upper':
+                    if (onlyFirst) return string.charAt(0).toUpperCase() + string.slice(1);
+                    if (!onlyFirst) return string.toUpperCase();
+                    break;
+                default:
+                    return string.toLowerCase();
+            }
         };
         
         //returns the options for the various filters in list pages.
         this.getSelectListOptions = function(controller) {
             var self = this, selectListOptions = [];
-            if (controller !== 'character') {
+            if (controller !== 'character' && controller !== 'topten') {
                 selectListOptions.status = [ { v: '', n: 'All' }, { v: false, n: 'Ongoing' }, { v: true, n: 'Completed' } ];
                 selectListOptions.searchName = 'title';
                 if (controller === 'animeitem') {
@@ -144,13 +162,21 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     selectListOptions.repeating = [ { v: '', n: 'All' }, { v: false, n: 'Not Re-reading' }, { v: true, n: 'Re-reading' } ];
                     selectListOptions.repeatType = 'reReading';
                 }
-            } else if (controller === 'character') {
+            } else {
+                if (controller === 'character') {
+                    selectListOptions.sortOptions = [ { v: 'name', n: 'Name' }, { v: 'anime.title', n: 'Anime' }, { v: 'manga.title', n: 'Manga' }, { v: 'voice', n: 'Voice' }  ];
+                    selectListOptions.media = [ 
+                        { v: '', n: '-- choose media type --' }, { v: 'none', n: 'None' }, { v: 'anime', n: 'Anime-only' }, { v: 'manga', n: 'Manga-only' }, { v: 'both', n: 'Both' } 
+                    ];
+                } else if (controller === 'topten') {
+                    selectListOptions.sortOptions = [ { v: 'name', n: 'Name' } ];
+                    selectListOptions.media = [ { v: '', n: 'All' }, { v: 'anime', n: 'Anime' }, { v: 'manga', n: 'Manga' }, { v: 'character', n: 'Character' } ];
+                    selectListOptions.mediaType = 'type';
+                }
                 selectListOptions.searchName = 'name';
-                selectListOptions.sortOptions = [ { v: 'name', n: 'Name' }, { v: 'anime.title', n: 'Anime' }, { v: 'manga.title', n: 'Manga' }, { v: 'voice', n: 'Voice' }  ];
                 selectListOptions.sortOption = self.findWithAttr(selectListOptions.sortOptions, 'n', 'Name');
-                selectListOptions.media = [ { v: '', n: '-- choose media type --' }, { v: 'none', n: 'None' }, { v: 'anime', n: 'Anime-only' }, { v: 'manga', n: 'Manga-only' }, { v: 'both', n: 'Both' } ];
             }
-//            console.log(selectListOptions);
+//            console.log(selectListOptions); 
             return selectListOptions;
         };
     
@@ -212,6 +238,11 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
     
         this.getCommonArrays = function(controller) {
             var commonArrays = {},
+                itemTypes = [
+                    { name: 'anime' },
+                    { name: 'manga' },
+                    { name: 'character' }
+                ],
                 seasons = [ 
                     { number: '03', text: 'Winter' },
                     { number: '06', text: 'Spring' },
@@ -247,8 +278,14 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     {name: 'Friday'},
                     {name: 'Saturday'},
                     {name: 'Sunday'}
+                ],
+                summaryFunctions = [
+                    { name: 'Average' },
+                    { name: 'Highest' },
+                    { name: 'Lowest' },
+                    { name: 'Mode' }
                 ];
-            commonArrays = { months: months, seasons: seasons, categories: categories, days: days };
+            commonArrays = { months: months, seasons: seasons, categories: categories, days: days, summaryFunctions: summaryFunctions, itemTypes: itemTypes };
             return commonArrays;
         };
     

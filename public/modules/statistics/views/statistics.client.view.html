@@ -186,9 +186,9 @@
         <div class="col-lg-12 col-md-12 col-sm-12 stat-gender-panel">
             <div class="stat-gender-progress-container">
                 <progress>
-                    <bar type="danger" value="gender.female.percentage">{{gender.female.percentage}}{{gender.female.text}}</bar>
-                    <bar type="primary" value="gender.male.percentage">{{gender.male.percentage}}{{gender.male.text}}</bar>
-                    <bar type="success" value="gender.nosex.percentage">{{gender.nosex.percentage}}{{gender.nosex.text}}</bar>
+                    <bar type="danger" value="gender.female.percentage">{{gender.female.percentage}}{{::gender.female.text}}</bar>
+                    <bar type="primary" value="gender.male.percentage">{{gender.male.percentage}}{{::gender.male.text}}</bar>
+                    <bar type="success" value="gender.nosex.percentage">{{gender.nosex.percentage}}{{::gender.nosex.text}}</bar>
                 </progress>
             </div>
         </div><!-- GENDER PERCENTAGE BAR END -->
@@ -235,7 +235,7 @@
             <div class="col-lg-12 col-md-12 col-sm-12 stat-tag-detail" ng-show="filterConfig.show.tag && showStatTags">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="stat-detail-header">
-                    <h3>Tags appearing with {{detailTagName}}</h3>
+                    <h3>Tags appearing with {{tableDetail.tag}}</h3>
                 </div>
                 <div class="input-group">
                     <div class="input-group-addon">
@@ -315,7 +315,7 @@
             <div class="col-lg-12 col-md-12 col-sm-12 stat-media-detail" ng-show="filterConfig.show.series && showStatSeries">
             <div class="col-lg-12 col-md-12 col-sm-12 stat-detail">
                 <div class="stat-detail-header">
-                    <h3>Characters in {{detailSeriesName}}</h3>
+                    <h3>Characters in {{tableDetail.series}}</h3>
                 </div>
                 <ul class="col-lg-12 col-md-12 col-sm-12 statMediaDetailList">
                     <li ng-repeat="item in items | orderBy: 'name' | seriesDetailFilter: tableDetail.series">
@@ -368,7 +368,7 @@
             <div class="col-lg-12 col-md-12 col-sm-12 stat-voice-detail" ng-show="filterConfig.show.voice && showVoiceActors">
             <div class="col-lg-12 col-md-12 col-sm-12 stat-detail">
                 <div class="stat-detail-header">
-                    <h3>Characters voiced by {{detailVoiceName}}</h3>
+                    <h3>Characters voiced by {{tableDetail.voice}}</h3>
                 </div>
                 <ul class="col-lg-12 col-md-12 col-sm-12 stat-voice-detail-list">
                     <li ng-repeat="item in items | orderBy: 'name' | filter: {voice: tableDetail.voice}">

@@ -13,8 +13,7 @@
                 <div class="input-group-addon">
                     <i class="fa fa-search"></i>
                 </div>
-               <input type="text" class="form-control" placeholder="search items" ng-model="search" 
-                      ng-model-options="{ debounce: 500 }">
+               <input type="text" class="form-control" placeholder="search items" ng-model="search" ng-model-options="{ debounce: 700 }">
            </div>
             <div class="input-group mt">
               <div class="input-group-addon">
@@ -63,7 +62,7 @@
                             <i ng-if="!item.status" class="fa fa-minus"></i>
                         </td>
                         <td class="left">
-                            <span ng-class="clickable" ng-click="(view==='Anime') ? viewEpisodeRatings(item) : go(item._id)">
+                            <span class="clickable" ng-click="(view==='Anime') ? viewEpisodeRatings(item) : go(item._id)">
                                 {{item.title}}
                             </span>
                         </td>
@@ -90,7 +89,7 @@
                             <th>Ratings</th>
                             <td ng-repeat="episode in viewItem.meta.history">
                                 <input type="number" class="phantom-control width-100 text-center" min="0" max="{{maxRating}}" 
-                                       ng-model="episode.rating" ng-change="episodeScore()" ng-blur="episodeScore(true)" enter-tag="episodeScore(true)" />
+                                       ng-model="episode.rating" ng-blur="episodeScore(true)" enter-tag="episodeScore(true)" />
                             </td>
                         </tr>
                     </tbody>

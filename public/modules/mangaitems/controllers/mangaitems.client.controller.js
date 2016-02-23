@@ -36,7 +36,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         /** today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
          *      AND chapter/volume/start/latest auto-pop in create.
          */
-        $scope.itemUpdate = new Date().toISOString().substring(0,10);
+        $scope.itemUpdate = new Date();
         $scope.start = $scope.itemUpdate;
         $scope.latest = $scope.itemUpdate;
         $scope.chapters = 0;
@@ -146,10 +146,11 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 
 		// Find existing Mangaitem
 		$scope.findOne = function() {
-			$scope.mangaitem = Mangaitems.get({ 
-				mangaitemId: $stateParams.mangaitemId
-			});
-//            console.log($scope.mangaitem);
+            Mangaitems.get({ mangaitemId: $stateParams.mangaitemId }).$promise.then(function(result) {
+                $scope.mangaitem = result;
+                $scope.mangaitem.latest = new Date(result.latest);
+                //            console.log($scope.mangaitem);
+            });
 		};
         
         // Find a list of Animeitems for dropdowns.
@@ -167,7 +168,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         $scope.latestDate = function(latest, updated) {
             return ItemService.latestDate(latest, updated);
         };
-        
+                
         $scope.loading = function(value) {
             $scope.isLoading = ListService.loader(value);
         };

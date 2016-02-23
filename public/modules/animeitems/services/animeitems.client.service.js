@@ -93,6 +93,10 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             }
             return true;
         };
+    
+        this.stringReverse = function(string) {
+            return string.split('').reverse().join('');
+        };
         
         //get number of pages for list.
         this.numberOfPages = function(showingCount, pageSize, currentPage) {

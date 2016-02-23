@@ -38,7 +38,8 @@
                 <div class="form-group" ng-class="{ 'has-error' : mangaForm.latest.$invalid }">
                     <label for="latest" class="col-md-2 control-label">Latest</label>
                     <div class="col-md-6">
-                        <input type="date" class="form-control" data-ng-model="mangaitem.latest" id="latest" name="latest" placeholder="" required>
+                        <input type="date" class="form-control" ng-model="mangaitem.latest"
+                               id="latest" name="latest" placeholder="" required>
                     </div>
                     <div class="col-md-4">
 						<p ng-show="mangaForm.latest.$invalid && !mangaForm.latest.$pristine" class="help-block" >Latest date must be 'dd/mm/yyyy' and is required.</p>

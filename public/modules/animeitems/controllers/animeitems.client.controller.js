@@ -40,7 +40,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         /** today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
          *      AND episode/start/latest auto-pop in create.
          */
-        $scope.itemUpdate = new Date().toISOString().substring(0,10);
+        $scope.itemUpdate = new Date();
         $scope.start = $scope.itemUpdate;
         $scope.latest = $scope.itemUpdate;
         $scope.episodes = 0;
@@ -147,10 +147,11 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 
 		// Find existing Animeitem
 		$scope.findOne = function() {
-			$scope.animeitem = Animeitems.get({ 
-				animeitemId: $stateParams.animeitemId
-			});
+            Animeitems.get({ animeitemId: $stateParams.animeitemId }).$promise.then(function(result) {
+                $scope.animeitem = result;
+                $scope.animeitem.latest = new Date(result.latest);
 //            console.log($scope.animeitem);
+            });
 		};
         
         // Find list of mangaitems for dropdown.

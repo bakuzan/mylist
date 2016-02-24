@@ -961,10 +961,11 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             //latest date display format.
 //          console.log(latest, updated);
             var today = moment(new Date()), latestDate, diff;
-            if (latest.substring(0,10)===updated.substring(0,10)) {
+
+            if (moment(latest).toISOString().substring(0,10)===moment(updated).toISOString().substring(0,10)) {
                  latestDate = moment(updated);
                  diff = latestDate.fromNow();
-                
+
                 if (diff==='a day ago') {
                     return 'Yesterday at ' + latestDate.format('HH:mm');
                 } else if (diff.indexOf('days') > -1) {

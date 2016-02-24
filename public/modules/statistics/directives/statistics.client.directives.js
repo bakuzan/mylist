@@ -1,14 +1,15 @@
 'use strict';
 
 angular.module('statistics')
-.directive('tabCollection', ['ListService', 'NotificationFactory', function (ListService, NotificationFactory) {
+.directive('tabContainer', function () {
     return {
         restrict: 'A',
         transclude: true,
+        replace: true,
         scope: {},
-        templateUrl: '/modules/statistics/templates/tab-collection.html',
+        templateUrl: '/modules/statistics/templates/tab-container.html',
         bindToController: true,
-        controllerAs: 'tabcollection',
+        controllerAs: 'tabcontainer',
         controller: function() {
             var self = this;
             self.tabs = [];
@@ -30,22 +31,23 @@ angular.module('statistics')
 
                 selectedTab.active = true;
             };
-          
         }
     };
-}])
-.directive('tabView', ['ListService', 'NotificationFactory', function (ListService, NotificationFactory) {
+})
+.directive('tabView', function () {
     return {
         restrict: 'A',
         transclude: true,
+        replace: true,
         template: '<div role="tabpanel" ng-show="active" ng-transclude></div>',
-        require: '^tabcollection',
+        require: '^tabcontainer',
         scope: {
             heading: '@'
         },
-        link: function (scope, element, attrs, tabCollectionCtrl) {
+        link: function (scope, element, attrs, tabcontainerCtrl) {
+            console.log(tabcontainerCtrl);
             scope.active = false;
-            tabCollectionCtrl.addTab(scope);
+            tabcontainerCtrl.addTab(scope);
         }
     };
-}]);
+});

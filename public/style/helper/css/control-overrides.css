@@ -43,4 +43,7 @@ input[type="checkbox"].phantom-control {
     -moz-transition: all 0.3s;
     transition: all 0.3s; }
 
+ul.dropdown-menu {
+  padding: 0; }
+
 /*# sourceMappingURL=control-overrides.css.map */

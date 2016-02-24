@@ -28,7 +28,6 @@ angular.module('statistics')
                       tab.active = false;
                     }
                 });
-
                 selectedTab.active = true;
             };
         }
@@ -39,13 +38,12 @@ angular.module('statistics')
         restrict: 'A',
         transclude: true,
         replace: true,
-        template: '<div role="tabpanel" ng-show="active" ng-transclude></div>',
+        template: '<div class="tab-view" role="tabpanel" ng-show="active" ng-transclude></div>',
         require: '^tabContainer',
         scope: {
             heading: '@'
         },
         link: function (scope, element, attrs, tabContainerCtrl) {
-            console.log(tabContainerCtrl);
             scope.active = false;
             tabContainerCtrl.addTab(scope);
         }

@@ -564,4 +564,21 @@ div.slider-full-screen {
     top: 50%;
     left: 50%; }
 
+/* Tab styling */
+.tab-controls {
+  list-style-type: none; }
+
+.tab-control-option {
+  display: inline-block;
+  padding: 15px;
+  cursor: pointer; }
+  .tab-control-option.active {
+    border-bottom: 3px solid #000; }
+    .tab-control-option.active a {
+      color: #000; }
+  .tab-control-option a {
+    color: #e9e9e9;
+    text-decoration: none;
+    text-transform: uppercase; }
+
 /*# sourceMappingURL=components.css.map */

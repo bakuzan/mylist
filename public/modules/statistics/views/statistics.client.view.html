@@ -15,107 +15,106 @@
         <div tab-container>
             <div tab-view heading="history">
                 <div class="col-lg-12 col-md-12 col-sm-12 stat-history-panel">
-                <div class="stat-header">
-                    <div class="stat-header-label-container">
-                        <h3 class="clickable" ng-click="showHistory = !showHistory">
-                            <i class="fa" ng-class="showHistory ? 'fa-minus-square' : 'fa-plus-square'"></i> 
-                            History
-                        </h3>
-                        <h3 class="btn btn-primary stat-header-label" ng-model="detail.history" btn-radio="'months'" ng-click="detail.isVisible=false; detail.isEpisodeRatings=false" ng-show="showHistory">
-                            by month
-                        </h3>
-                        <h3 class="btn btn-primary stat-header-label" ng-model="detail.history" btn-radio="'seasons'" ng-click="detail.isVisible=false" ng-show="showHistory && view === 'Anime'">
-                            by season
-                        </h3>
-                        <div class="margin-auto padding-left-15" ng-show="detail.history === 'seasons'">
-                            <input type="checkbox" class="phantom-control" ng-model="detail.isEpisodeRatings" ng-change="toggleEpisodeRatings(detailItems)" />
-                            <span class="display-inline-block font-18 padding-left-5"> 
-                                use episode ratings
-                            </span>
+                    <div class="stat-header">
+                        <div class="stat-header-label-container">
+                            <h3>
+                                History
+                            </h3>
+                            <h3 class="btn btn-primary stat-header-label" ng-model="detail.history" btn-radio="'months'" ng-click="detail.isVisible=false; detail.isEpisodeRatings=false" ng-show="showHistory">
+                                by month
+                            </h3>
+                            <h3 class="btn btn-primary stat-header-label" ng-model="detail.history" btn-radio="'seasons'" ng-click="detail.isVisible=false" ng-show="showHistory && view === 'Anime'">
+                                by season
+                            </h3>
+                            <div class="margin-auto padding-left-15" ng-show="detail.history === 'seasons'">
+                                <input type="checkbox" class="phantom-control" ng-model="detail.isEpisodeRatings" ng-change="toggleEpisodeRatings(detailItems)" />
+                                <span class="display-inline-block font-18 padding-left-5"> 
+                                    use episode ratings
+                                </span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-12 col-md-12 col-sm-12 stat-history" ng-init="showHistory = true">
-                    <table class="col-lg-12 col-md-12 col-sm-12" ng-show="showHistory">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th class="text-center" ng-class="(detail.history === 'months') ? 'stat-month-header' : 'stat-season-header'" ng-repeat="header in commonArrays[detail.history]">
-                                    {{detail.history === 'months' ? header.text.substring(0,3) : header.text }}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="year in historyDetails[detail.history][detail.history] | orderBy: '-year'" ng-hide="loading(year.year)">
-                                <th ng-class="(detail.isEpisodeRatings) ? '' : 'clickable'" ng-click="(detail.isEpisodeRatings) ? '' : historyDetail(year.year, '', '', detail.history)">
-                                    <span>{{year.year}}</span>
-                                </th>
-                                <td ng-repeat="part in year[detail.history]" ng-click="historyDetail(year.year, part[detail.history==='months' ? 'number' : 'text'], part.text);" 
-                                    hover-data="{{part.count}} {{detail.history === 'months' ? 'completed' : 'watched' }} {{part.text}} {{year.year}}.">
-                                    <span class="stat-month-box" ng-style="{'opacity': part.count / historyDetails[detail.history].max }"></span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div><!-- HISTORY PANEL END -->
-                <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="showHistory && detail.isVisible">
-                    <div class="col-lg-12 col-md-12 col-sm-12 margin-top-10" ng-show="(detail.summary.isVisible && detailItems.length > 1) && !detail.isEpisodeRatings">
+                    <div class="col-lg-12 col-md-12 col-sm-12 stat-history">
                         <table class="col-lg-12 col-md-12 col-sm-12">
                             <thead>
-                                <th>{{detail.year}}</th>
-                                <th class="text-right" ng-repeat="item in commonArrays[detail.summary.type]">{{ detail.summary.type === 'months' ? item.text.substring(0,3) : item.text }}</th>
+                                <tr>
+                                    <th></th>
+                                    <th class="text-center" ng-class="(detail.history === 'months') ? 'stat-month-header' : 'stat-season-header'" ng-repeat="header in commonArrays[detail.history]">
+                                        {{detail.history === 'months' ? header.text.substring(0,3) : header.text }}
+                                    </th>
+                                </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="item in historyDetails.yearSummary">
-                                    <th>{{item.metric}}</th>
-                                    <td class="text-right" ng-repeat="value in item.values">{{value.value}}</td>
+                                <tr ng-repeat="year in historyDetails[detail.history][detail.history] | orderBy: '-year'" ng-hide="loading(year.year)">
+                                    <th ng-class="(detail.isEpisodeRatings) ? '' : 'clickable'" ng-click="(detail.isEpisodeRatings) ? '' : historyDetail(year.year, '', '', detail.history)">
+                                        <span>{{year.year}}</span>
+                                    </th>
+                                    <td ng-repeat="part in year[detail.history]" ng-click="historyDetail(year.year, part[detail.history==='months' ? 'number' : 'text'], part.text);" 
+                                        hover-data="{{part.count}} {{detail.history === 'months' ? 'completed' : 'watched' }} {{part.text}} {{year.year}}.">
+                                        <span class="stat-month-box" ng-style="{'opacity': part.count / historyDetails[detail.history].max }"></span>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
-                    <div class="stat-detail padding-bottom-15" ng-class="(detail.isEpisodeRatings) ? 'col-lg-12 col-md-12 col-sm-12' : 'col-lg-8 col-md-8 col-sm-8'">
-                        <div class="stat-detail-header">
-                            <h3>{{detailItems.length}} {{detail.history === 'months' ? 'Completed' : 'Watched' }} {{detail.divisionText}} {{detail.year}}</h3>
+                    </div><!-- HISTORY PANEL END -->
+                    <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="detail.isVisible">
+                        <div class="col-lg-12 col-md-12 col-sm-12 margin-top-10" ng-show="(detail.summary.isVisible && detailItems.length > 1) && !detail.isEpisodeRatings">
+                            <table class="col-lg-12 col-md-12 col-sm-12">
+                                <thead>
+                                    <th>{{detail.year}}</th>
+                                    <th class="text-right" ng-repeat="item in commonArrays[detail.summary.type]">{{ detail.summary.type === 'months' ? item.text.substring(0,3) : item.text }}</th>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in historyDetails.yearSummary">
+                                        <th>{{item.metric}}</th>
+                                        <td class="text-right" ng-repeat="value in item.values">{{value.value}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <table class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
-                            <thead ng-if="detail.isEpisodeRatings">
-                                <th></th>
-                                <th ng-repeat="metric in commonArrays.summaryFunctions">{{metric.name}}</th>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="item in (detailItems = (items | statisticsDetailFilter: detail.history:detail.year:detail.division | orderBy: 'title'))">
-                                    <td class="no-wrap overflow-hidden" ng-class="(detail.isEpisodeRatings) ? '' : 'width-75'">
-                                        <a href="/#!/{{view.toLowerCase()}}items/{{item._id}}"><span>{{item.title}}</span></a>
-                                        <p ng-if="detail.summary.type === 'seasons'">{{item.start | date: 'MM/yyyy'}} - {{item.end | date: 'MM/yyyy'}}</p>
-                                    </td>
-                                    <td ng-if="!detail.isEpisodeRatings">
-                                        <span>{{item.rating}}</span>
-                                    </td>
-                                    <td ng-repeat="episode in item.meta.episodeSummaryFunctions" ng-if="detail.isEpisodeRatings">
-                                        <span>{{episode.value}}</span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4 margin-top-55 margin-bottom-20" ng-show="detailItems.length > 0 && !detail.isEpisodeRatings">
-                        <table class="col-lg-12 col-md-12 col-sm-12">
-                            <tbody>
-                                <tr ng-repeat="item in historyDetails.summaryFunctions">
-                                    <th>{{item.metric}}</th><td>{{item.value}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div><!-- HISTORY DETAIL PANEL END -->
-            </div>
+                        <div class="stat-detail padding-bottom-15" ng-class="(detail.isEpisodeRatings) ? 'col-lg-12 col-md-12 col-sm-12' : 'col-lg-8 col-md-8 col-sm-8'">
+                            <div class="stat-detail-header">
+                                <h3>{{detailItems.length}} {{detail.history === 'months' ? 'Completed' : 'Watched' }} {{detail.divisionText}} {{detail.year}}</h3>
+                            </div>
+                            <table class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
+                                <thead ng-if="detail.isEpisodeRatings">
+                                    <th></th>
+                                    <th ng-repeat="metric in commonArrays.summaryFunctions">{{metric.name}}</th>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in (detailItems = (items | statisticsDetailFilter: detail.history:detail.year:detail.division | orderBy: 'title'))">
+                                        <td class="no-wrap overflow-hidden" ng-class="(detail.isEpisodeRatings) ? '' : 'width-75'">
+                                            <a href="/#!/{{view.toLowerCase()}}items/{{item._id}}"><span>{{item.title}}</span></a>
+                                            <p ng-if="detail.summary.type === 'seasons'">{{item.start | date: 'MM/yyyy'}} - {{item.end | date: 'MM/yyyy'}}</p>
+                                        </td>
+                                        <td ng-if="!detail.isEpisodeRatings">
+                                            <span>{{item.rating}}</span>
+                                        </td>
+                                        <td ng-repeat="episode in item.meta.episodeSummaryFunctions" ng-if="detail.isEpisodeRatings">
+                                            <span>{{episode.value}}</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 margin-top-55 margin-bottom-20" ng-show="detailItems.length > 0 && !detail.isEpisodeRatings">
+                            <table class="col-lg-12 col-md-12 col-sm-12">
+                                <tbody>
+                                    <tr ng-repeat="item in historyDetails.summaryFunctions">
+                                        <th>{{item.metric}}</th><td>{{item.value}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- HISTORY DETAIL PANEL END -->
+                </div>
             </div>
             <div tab-view heading="ratings">
-                <div class="col-lg-6 col-md-6 col-sm-6 stat-rating-panel" ng-init="showRatings = true">
+                <div class="col-lg-12 col-md-12 col-sm-12 stat-rating-panel">
                 <div class="stat-header">
-                    <h3 class="clickable" ng-click="showRatings = !showRatings"><i class="fa" ng-class="showRatings ? 'fa-minus-square' : 'fa-plus-square'"></i> Ratings</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{ratingValues.averageRating | number: 2}} average rating.</small></span>
+                    <h3> Ratings</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{ratingValues.averageRating | number: 2}} average rating.</small></span>
                 </div>
-                <div class="col-lg-12 col-md-12 col-sm-12" ng-show="showRatings">
+                <div class="col-lg-12 col-md-12 col-sm-12">
                     <table class="col-lg-12 col-md-12 col-sm-12 stat-rating-table">
                         <tbody>
                             <tr ng-repeat="rating in ratingsDistribution">
@@ -134,11 +133,11 @@
             </div><!-- RATING PANEL END -->
             </div>
             <div tab-view heading="tags">
-                <div class="col-lg-6 col-md-6 col-sm-6 stat-tag-panel" ng-init="showStatTags = true">
+                <div class="col-lg-12 col-md-12 col-sm-12 stat-tag-panel">
                 <div class="stat-header">
-                    <h3 class="clickable" ng-click="showStatTags = !showStatTags"><i class="fa" ng-class="showStatTags ? 'fa-minus-square' : 'fa-plus-square'"></i> Tags</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{statTags.length}} unique tags.</small></span>
+                    <h3> Tags</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{statTags.length}} unique tags.</small></span>
                 </div>
-                <div class="col-lg-12 col-md-12 col-sm-12" ng-show="showStatTags">
+                <div class="col-lg-12 col-md-12 col-sm-12">
                     <div class="input-group">
                         <div class="input-group-addon">
                             <i class="fa fa-search"></i>
@@ -190,180 +189,6 @@
             </div>
         </div>
     </div>
-    <!--<div class="col-lg-12 col-md-12 col-sm-12" ng-hide="view === 'Character'">
-        <div class="col-lg-12 col-md-12 col-sm-12 stat-overview">
-            <span class="accent-text">{{overview.ongoing}} in progress</span> - <span class="green-text">{{overview.completed}}  completed</span>
-        </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 stat-history-panel">
-            <div class="stat-header">
-                <div class="stat-header-label-container">
-                    <h3 class="clickable" ng-click="showHistory = !showHistory">
-                        <i class="fa" ng-class="showHistory ? 'fa-minus-square' : 'fa-plus-square'"></i> 
-                        History
-                    </h3>
-                    <h3 class="btn btn-primary stat-header-label" ng-model="detail.history" btn-radio="'months'" ng-click="detail.isVisible=false; detail.isEpisodeRatings=false" ng-show="showHistory">
-                        by month
-                    </h3>
-                    <h3 class="btn btn-primary stat-header-label" ng-model="detail.history" btn-radio="'seasons'" ng-click="detail.isVisible=false" ng-show="showHistory && view === 'Anime'">
-                        by season
-                    </h3>
-                    <div class="margin-auto padding-left-15" ng-show="detail.history === 'seasons'">
-                        <input type="checkbox" class="phantom-control" ng-model="detail.isEpisodeRatings" ng-change="toggleEpisodeRatings(detailItems)" />
-                        <span class="display-inline-block font-18 padding-left-5"> 
-                            use episode ratings
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-12 stat-history" ng-init="showHistory = true">
-                <table class="col-lg-12 col-md-12 col-sm-12" ng-show="showHistory">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th class="text-center" ng-class="(detail.history === 'months') ? 'stat-month-header' : 'stat-season-header'" ng-repeat="header in commonArrays[detail.history]">
-                                {{detail.history === 'months' ? header.text.substring(0,3) : header.text }}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="year in historyDetails[detail.history][detail.history] | orderBy: '-year'" ng-hide="loading(year.year)">
-                            <th ng-class="(detail.isEpisodeRatings) ? '' : 'clickable'" ng-click="(detail.isEpisodeRatings) ? '' : historyDetail(year.year, '', '', detail.history)">
-                                <span>{{year.year}}</span>
-                            </th>
-                            <td ng-repeat="part in year[detail.history]" ng-click="historyDetail(year.year, part[detail.history==='months' ? 'number' : 'text'], part.text);" 
-                                hover-data="{{part.count}} {{detail.history === 'months' ? 'completed' : 'watched' }} {{part.text}} {{year.year}}.">
-                                <span class="stat-month-box" ng-style="{'opacity': part.count / historyDetails[detail.history].max }"></span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="showHistory && detail.isVisible">
-                <div class="col-lg-12 col-md-12 col-sm-12 margin-top-10" ng-show="(detail.summary.isVisible && detailItems.length > 1) && !detail.isEpisodeRatings">
-                    <table class="col-lg-12 col-md-12 col-sm-12">
-                        <thead>
-                            <th>{{detail.year}}</th>
-                            <th class="text-right" ng-repeat="item in commonArrays[detail.summary.type]">{{ detail.summary.type === 'months' ? item.text.substring(0,3) : item.text }}</th>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="item in historyDetails.yearSummary">
-                                <th>{{item.metric}}</th>
-                                <td class="text-right" ng-repeat="value in item.values">{{value.value}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="stat-detail padding-bottom-15" ng-class="(detail.isEpisodeRatings) ? 'col-lg-12 col-md-12 col-sm-12' : 'col-lg-8 col-md-8 col-sm-8'">
-                    <div class="stat-detail-header">
-                        <h3>{{detailItems.length}} {{detail.history === 'months' ? 'Completed' : 'Watched' }} {{detail.divisionText}} {{detail.year}}</h3>
-                    </div>
-                    <table class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
-                        <thead ng-if="detail.isEpisodeRatings">
-                            <th></th>
-                            <th ng-repeat="metric in commonArrays.summaryFunctions">{{metric.name}}</th>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="item in (detailItems = (items | statisticsDetailFilter: detail.history:detail.year:detail.division | orderBy: 'title'))">
-                                <td class="no-wrap overflow-hidden" ng-class="(detail.isEpisodeRatings) ? '' : 'width-75'">
-                                    <a href="/#!/{{view.toLowerCase()}}items/{{item._id}}"><span>{{item.title}}</span></a>
-                                    <p ng-if="detail.summary.type === 'seasons'">{{item.start | date: 'MM/yyyy'}} - {{item.end | date: 'MM/yyyy'}}</p>
-                                </td>
-                                <td ng-if="!detail.isEpisodeRatings">
-                                    <span>{{item.rating}}</span>
-                                </td>
-                                <td ng-repeat="episode in item.meta.episodeSummaryFunctions" ng-if="detail.isEpisodeRatings">
-                                    <span>{{episode.value}}</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-4 margin-top-55 margin-bottom-20" ng-show="detailItems.length > 0 && !detail.isEpisodeRatings">
-                    <table class="col-lg-12 col-md-12 col-sm-12">
-                        <tbody>
-                            <tr ng-repeat="item in historyDetails.summaryFunctions">
-                                <th>{{item.metric}}</th><td>{{item.value}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6 col-sm-6 stat-rating-panel" ng-init="showRatings = true">
-            <div class="stat-header">
-                <h3 class="clickable" ng-click="showRatings = !showRatings"><i class="fa" ng-class="showRatings ? 'fa-minus-square' : 'fa-plus-square'"></i> Ratings</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{ratingValues.averageRating | number: 2}} average rating.</small></span>
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-12" ng-show="showRatings">
-                <table class="col-lg-12 col-md-12 col-sm-12 stat-rating-table">
-                    <tbody>
-                        <tr ng-repeat="rating in ratingsDistribution">
-                            <th class="col-lg-1 col-md-1 col-sm-1 text-right mb"><span>{{rating.number}}</span></th>
-                            <td class="col-lg-11 col-md-11 col-sm-11 col-xs-11 stat-rating-box">
-                                <div class="progress-container"  hover-data="{{rating.text}}.">
-                                    <div class="progress progress-bar-placement" max="100" value="{{rating.percentage}}">
-                                        <div class="bar current-progress" style="width: {{rating.percentage}}%">{{rating.percentage}}%</div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6 col-sm-6 stat-tag-panel" ng-init="showStatTags = true">
-            <div class="stat-header">
-                <h3 class="clickable" ng-click="showStatTags = !showStatTags"><i class="fa" ng-class="showStatTags ? 'fa-minus-square' : 'fa-plus-square'"></i> Tags</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{statTags.length}} unique tags.</small></span>
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-12" ng-show="showStatTags">
-                <div class="input-group">
-                    <div class="input-group-addon">
-                        <i class="fa fa-search"></i>
-                    </div>
-                    <input type="text" ng-model="filterConfig.search.tag" placeholder="search tags" class="form-control">
-                </div>
-                <table class="col-lg-12 col-md-12 col-sm-12 stat-tag-table table table-bordered">
-                    <thead>
-                        <tr>
-                            <td class="text-right">#</td>
-                            <td>
-                                <a href="" ng-click="filterConfig.sort.tag.type = 'tag'; filterConfig.sort.tag.reverse = !filterConfig.sort.tag.reverse ">
-					               Tag
-					            </a>
-                                <i ng-show="filterConfig.sort.tag.type == 'tag'" class="fa" ng-class="filterConfig.sort.tag.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
-                            </td>
-                            <td class="text-right">
-                                <a href="" ng-click="filterConfig.sort.tag.type = 'count'; filterConfig.sort.tag.reverse = !filterConfig.sort.tag.reverse ">
-					               Count
-					            </a>
-                                <i ng-show="filterConfig.sort.tag.type == 'count'" class="fa" ng-class="filterConfig.sort.tag.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
-                            </td>
-                            <td class="text-right">
-                                <a href="" ng-click="filterConfig.sort.tag.type = 'ratingAvg'; filterConfig.sort.tag.reverse = !filterConfig.sort.tag.reverse ">
-					               Rating (Avg.)
-					            </a>
-                                <i ng-show="filterConfig.sort.tag.type == 'ratingAvg'" class="fa" ng-class="filterConfig.sort.tag.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
-                            </td>
-                            <td class="text-right">
-                                <a href="" ng-click="filterConfig.sort.tag.type = 'ratingWeighted'; filterConfig.sort.tag.reverse = !filterConfig.sort.tag.reverse ">
-					               Rating (WAvg.)
-					            </a>
-                                <i ng-show="filterConfig.sort.tag.type == 'ratingWeighted'" class="fa" ng-class="filterConfig.sort.tag.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="stat in statTags | orderBy: filterConfig.sort.tag.type:filterConfig.sort.tag.reverse | filter: { tag: filterConfig.search.tag }">
-                            <td class="text-right">{{$index+1}}</td>
-                            <td>{{stat.tag}}</td>
-                            <td class="text-right">{{stat.count}}</td>
-                            <td class="text-right">{{stat.ratingAvg | number: 2}}</td>
-                            <td class="text-right">{{stat.ratingWeighted | number: 2}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>-->
     <div class="col-lg-12 col-md-12 col-sm-12 stat-view" ng-show="view === 'Character'">
         <div class="col-lg-12 col-md-12 col-sm-12 stat-gender-panel">
             <div class="stat-gender-progress-container">
@@ -374,12 +199,14 @@
                 </progress>
             </div>
         </div><!-- GENDER PERCENTAGE BAR END -->
-        <div class="col-lg-6 col-md-6 col-sm-6 stat-tag-panel" ng-init="showStatTags = true">
-            <div class="stat-header">
-                <h3 class="clickable" ng-click="showStatTags = !showStatTags"><i class="fa" ng-class="showStatTags ? 'fa-minus-square' : 'fa-plus-square'"></i> Tags</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{statTags.length}} unique tags.</small></span>
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-12 stat-tag-main">
-                <div class="col-lg-12 col-md-12 col-sm-12" ng-show="showStatTags">
+        <div tab-container>
+            <div tab-view heading="tags">
+                <div class="col-lg-12 col-md-12 col-sm-12 stat-tag-panel">
+                    <div class="col-lg-6 col-md-6 col-sm-6 stat-tag-main">
+                        <div class="stat-header">
+                            <h3> Tags</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{statTags.length}} unique tags.</small></span>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="input-group">
                     <div class="input-group-addon">
                         <i class="fa fa-search"></i>
@@ -413,53 +240,55 @@
                     </tbody>
                 </table>
             </div>
-            </div><!-- TAG PANEL END -->
-            <div class="col-lg-12 col-md-12 col-sm-12 stat-tag-detail" ng-show="filterConfig.show.tag && showStatTags">
-            <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="stat-detail-header">
-                    <h3>Tags appearing with {{tableDetail.tag}}</h3>
-                </div>
-                <div class="input-group">
-                    <div class="input-group-addon">
-                        <i class="fa fa-search"></i>
+                    </div><!-- TAG PANEL END -->
+                    <div class="col-lg-6 col-md-6 col-sm-6 stat-tag-detail" ng-show="filterConfig.show.tag">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="stat-header">
+                            <h3>Tags appearing with {{tableDetail.tag}}</h3>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="fa fa-search"></i>
+                            </div>
+                            <input type="text" ng-model="filterConfig.search.tagDetail" placeholder="search related tags" class="form-control">
+                        </div>
+                        <table class="col-lg-12 col-md-12 col-sm-12 stat-tag-detail-table table table-bordered">
+                            <thead>
+                                <tr>
+                                    <td class="text-right">#</td>
+                                    <td>
+                                        <a href="" ng-click="filterConfig.sort.tagDetail.type = 'name'; filterConfig.sort.tagDetail.reverse = !filterConfig.sort.tagDetail.reverse ">
+                                           Tag
+                                        </a>
+                                        <i ng-show="filterConfig.sort.tagDetail.type == 'name'" class="fa" ng-class="filterConfig.sort.tagDetail.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                                    </td>
+                                    <td class="text-right">
+                                        <a href="" ng-click="filterConfig.sort.tagDetail.type = 'count'; filterConfig.sort.tagDetail.reverse = !filterConfig.sort.tagDetail.reverse ">
+                                           Count
+                                        </a>
+                                        <i ng-show="filterConfig.sort.tagDetail.type == 'count'" class="fa" ng-class="filterConfig.sort.tagDetail.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="stat in tagDetailResult | orderBy: filterConfig.sort.tagDetail.type:filterConfig.sort.tagDetail.reverse | filter: {name: filterConfig.search.tagDetail }">
+                                    <td class="text-right">{{$index+1}}</td>
+                                    <td>{{stat.name}}</td>
+                                    <td class="text-right">{{stat.count}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <input type="text" ng-model="filterConfig.search.tagDetail" placeholder="search related tags" class="form-control">
+                    </div><!-- TAG DETAIL PANEL END -->
                 </div>
-                <table class="col-lg-12 col-md-12 col-sm-12 stat-tag-detail-table table table-bordered">
-                    <thead>
-                        <tr>
-                            <td class="text-right">#</td>
-                            <td>
-                                <a href="" ng-click="filterConfig.sort.tagDetail.type = 'name'; filterConfig.sort.tagDetail.reverse = !filterConfig.sort.tagDetail.reverse ">
-					               Tag
-					            </a>
-                                <i ng-show="filterConfig.sort.tagDetail.type == 'name'" class="fa" ng-class="filterConfig.sort.tagDetail.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
-                            </td>
-                            <td class="text-right">
-                                <a href="" ng-click="filterConfig.sort.tagDetail.type = 'count'; filterConfig.sort.tagDetail.reverse = !filterConfig.sort.tagDetail.reverse ">
-					               Count
-					            </a>
-                                <i ng-show="filterConfig.sort.tagDetail.type == 'count'" class="fa" ng-class="filterConfig.sort.tagDetail.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="stat in tagDetailResult | orderBy: filterConfig.sort.tagDetail.type:filterConfig.sort.tagDetail.reverse | filter: {name: filterConfig.search.tagDetail }">
-                            <td class="text-right">{{$index+1}}</td>
-                            <td>{{stat.name}}</td>
-                            <td class="text-right">{{stat.count}}</td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
-        </div><!-- TAG DETAIL PANEL END -->
-        </div><!-- TAG CONTAINER END -->
-        <div class="col-lg-6 col-md-6 col-sm-6 stat-media-panel" ng-init="showStatSeries = true">
+            <div tab-view heading="series">
+                <div class="col-lg-6 col-md-6 col-sm-6 stat-media-panel">
             <div class="stat-header">
-                <h3 class="clickable" ng-click="showStatSeries = !showStatSeries"><i class="fa" ng-class="showStatSeries ? 'fa-minus-square' : 'fa-plus-square'"></i> Series</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{statSeries.length}} unique series.</small></span>
+                <h3> Series</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{statSeries.length}} unique series.</small></span>
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12 stat-media-main">
-                <div class="col-lg-12 col-md-12 col-sm-12" ng-show="showStatSeries">
+                <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="input-group">
                     <div class="input-group-addon">
                         <i class="fa fa-search"></i>
@@ -494,7 +323,7 @@
                 </table>
             </div>
             </div><!-- SERIES PANEL END -->
-            <div class="col-lg-12 col-md-12 col-sm-12 stat-media-detail" ng-show="filterConfig.show.series && showStatSeries">
+            <div class="col-lg-12 col-md-12 col-sm-12 stat-media-detail" ng-show="filterConfig.show.series">
             <div class="col-lg-12 col-md-12 col-sm-12 stat-detail">
                 <div class="stat-detail-header">
                     <h3>Characters in {{tableDetail.series}}</h3>
@@ -507,12 +336,14 @@
             </div>
         </div><!-- SERIES DETAIL PANEL END -->
         </div><!-- MEDIA CONTAINER END -->
-        <div class="col-lg-6 col-md-6 col-sm-6 stat-voice-panel" ng-init="showVoiceActors = true">
+            </div>
+            <div tab-view heading="voice">
+                <div class="col-lg-6 col-md-6 col-sm-6 stat-voice-panel">
             <div class="stat-header">
-                    <h3 class="clickable" ng-click="showVoiceActors = !showVoiceActors"><i class="fa" ng-class="showVoiceActors ? 'fa-minus-square' : 'fa-plus-square'"></i> Voice Actors</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{voiceActors.length}} voices.</small></span>
+                    <h3> Voice Actors</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{voiceActors.length}} voices.</small></span>
                 </div>
             <div class="col-lg-12 col-md-12 col-sm-12 stat-voice-main">
-                <div class="col-lg-12 col-md-12 col-sm-12" ng-show="showVoiceActors">
+                <div class="col-lg-12 col-md-12 col-sm-12">
                     <div class="input-group">
                         <div class="input-group-addon">
                             <i class="fa fa-search"></i>
@@ -547,7 +378,7 @@
                     </table>
                 </div>
             </div>
-            <div class="col-lg-12 col-md-12 col-sm-12 stat-voice-detail" ng-show="filterConfig.show.voice && showVoiceActors">
+            <div class="col-lg-12 col-md-12 col-sm-12 stat-voice-detail" ng-show="filterConfig.show.voice">
             <div class="col-lg-12 col-md-12 col-sm-12 stat-detail">
                 <div class="stat-detail-header">
                     <h3>Characters voiced by {{tableDetail.voice}}</h3>
@@ -560,6 +391,10 @@
             </div>
         </div><!-- SERIES DETAIL PANEL END -->
         </div><!-- VOICE CONTAINER END -->
+            </div>
+            
+        </div>
+        
     </div><!-- CHARACTER STAT VIEW END -->
     <section class="loading-image" data-ng-if="isLoading"></section>
 </section>

@@ -9,7 +9,7 @@ angular.module('statistics')
         scope: {},
         templateUrl: '/modules/statistics/templates/tab-container.html',
         bindToController: true,
-        controllerAs: 'tabcontainer',
+        controllerAs: 'tabContainer',
         controller: function() {
             var self = this;
             self.tabs = [];
@@ -40,14 +40,14 @@ angular.module('statistics')
         transclude: true,
         replace: true,
         template: '<div role="tabpanel" ng-show="active" ng-transclude></div>',
-        require: '^tabcontainer',
+        require: '^tabContainer',
         scope: {
             heading: '@'
         },
-        link: function (scope, element, attrs, tabcontainerCtrl) {
-            console.log(tabcontainerCtrl);
+        link: function (scope, element, attrs, tabContainerCtrl) {
+            console.log(tabContainerCtrl);
             scope.active = false;
-            tabcontainerCtrl.addTab(scope);
+            tabContainerCtrl.addTab(scope);
         }
     };
 });

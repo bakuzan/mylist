@@ -1,14 +1,18 @@
 <section data-ng-controller="RatingsController" data-ng-init="findItems()" data-ng-show="authentication.user">
     <span keycuts></span>
-    <div class="fixed-header">
+    <div class="fixed-header width-95 secondary-background">
+        <div class="view-controls float-right">
+            <li class="tab-control-option" ng-class="(view === 'Anime') ? 'active' : ''" ng-model="view" btn-radio="'Anime'">
+                <a>Anime</a>
+            </li>
+            <li class="tab-control-option" ng-class="(view === 'Manga') ? 'active' : ''" ng-model="view" btn-radio="'Manga'">
+                <a>Manga</a>
+            </li>
+        </div>
         <h1>{{view}} ratings <button class="btn btn-primary show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</button></h1>
     </div>
-    <div class="container">
+    <div class="container relative" style="top: 40px">
         <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }" ng-hide="viewItem !== undefined">
-            <div class="view-controls">
-                <label class="btn btn-primary" ng-model="view" btn-radio="'Anime'">Anime</label>
-                <label class="btn btn-primary" ng-model="view" btn-radio="'Manga'">Manga</label>
-            </div>
             <div class="input-group">
                 <div class="input-group-addon">
                     <i class="fa fa-search"></i>

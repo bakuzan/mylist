@@ -1,7 +1,7 @@
 <section data-ng-controller="StatisticsController" data-ng-init="find(view)" data-ng-show="authentication.user">
     <span keycuts></span>
-    <div class="page-header">
-        <div class="view-buttons text-right pull-right">
+    <div class="fixed-header width-100 secondary-background padding-10" style="top: 50px; left: 0">
+        <div class="text-right pull-right">
             <li class="tab-control-option" ng-class="(view === 'Anime') ? 'active' : ''" ng-model="view" btn-radio="'Anime'">
                 <a>Anime</a>
             </li>
@@ -14,7 +14,7 @@
         </div>
         <h1>{{view}} statistics</h1>
     </div>
-    <div class="col-lg-12 col-md-12 col-sm-12" ng-hide="view === 'Character'">
+    <div class="col-lg-12 col-md-12 col-sm-12 relative" style="top: 100px" ng-hide="view === 'Character'">
         <div class="col-lg-12 col-md-12 col-sm-12 stat-overview">
                 <span class="accent-text">{{overview.ongoing}} in progress</span> - <span class="green-text">{{overview.completed}}  completed</span>
         </div><!-- OVERVIEW STATS END -->
@@ -195,8 +195,8 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-12 col-md-12 col-sm-12 stat-view" ng-show="view === 'Character'">
-        <div class="col-lg-12 col-md-12 col-sm-12 stat-gender-panel">
+    <div class="col-lg-12 col-md-12 col-sm-12 relative stat-view" style="top: 100px" ng-show="view === 'Character'">
+        <div class="col-lg-12 col-md-12 col-sm-12 stat-gender-panel primary-background">
             <div class="stat-gender-progress-container">
                 <progress>
                     <bar type="danger" value="gender.female.percentage">{{gender.female.percentage}}{{::gender.female.text}}</bar>

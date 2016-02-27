@@ -1,7 +1,18 @@
 'use strict';
 
 //History service used to communicate Animeitems REST endpoints
-angular.module('history').service('HistoryService', ['moment', function(moment) {
+angular.module('history')
+.factory('AnimeHistory', ['$resource',
+        function($resource) {
+            return $resource('history/anime/:latest', { latest: '@_latest' }, { update: { method: 'PUT' } });
+        }
+    ])
+.factory('MangaHistory', ['$resource',
+        function($resource) {
+            return $resource('history/manga/:latest', { latest: '@_latest' }, { update: { method: 'PUT' } });
+        }
+    ])
+.service('HistoryService', ['moment', function(moment) {
 
     this.buildHistoryList = function(items) {
         var itemHistory = [], today = moment(new Date()).startOf('day');
@@ -138,7 +149,7 @@ angular.module('history').service('HistoryService', ['moment', function(moment) 
                     }
                 }
             });
-//        console.log(groupBuilder);
+        console.log('group builder: ', groupBuilder);
         return groupBuilder;
     };
     

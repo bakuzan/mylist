@@ -127,6 +127,26 @@ exports.list = function(req, res) {
 };
 
 /**
+ * History list of manga
+ */
+exports.history = function(req, res) {
+    var latest = req.params.latest;
+
+	Mangaitem.find({ latest: { $gte: latest }}).sort('-created')
+        .populate('user', 'displayName')
+        .populate('anime', 'title')
+        .exec(function(err, mangaitems) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(mangaitems);
+		}
+	});
+};
+
+/**
  * Mangaitem middleware
  */
 exports.mangaitemByID = function(req, res, next, id) { 

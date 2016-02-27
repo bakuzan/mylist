@@ -1,8 +1,8 @@
 'use strict';
 
 // History controller
-angular.module('history').controller('HistoryController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'HistoryService', 'ListService',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, HistoryService, ListService) {
+angular.module('history').controller('HistoryController', ['$scope', '$stateParams', '$location', 'Authentication', 'AnimeHistory', 'MangaHistory', 'HistoryService', 'ListService',
+	function($scope, $stateParams, $location, Authentication, AnimeHistory, MangaHistory, HistoryService, ListService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -10,15 +10,20 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
         
         $scope.view = 'Anime';
         $scope.isLoading = true;
+        var latestDate = new Date().setDate(new Date().getDate() - 29);
         
         function getAnimeitems() {
              // Find list of mangaitems.
-            $scope.animeitems = Animeitems.query();
+            $scope.animeitems = AnimeHistory.query({
+                latest: latestDate
+            });
         }
         
         function getMangaitems() {
              // Find list of mangaitems.
-            $scope.mangaitems = Mangaitems.query();
+            $scope.mangaitems = MangaHistory.query({
+                latest: latestDate
+            });
         }
         
         $scope.buildHistory = function() {
@@ -37,12 +42,14 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
         $scope.$watchCollection('animeitems', function() {
             if ($scope.animeitems!==undefined) {
                 $scope.animeHistory = HistoryService.buildHistoryList($scope.animeitems);
+                console.log('anime: ', $scope.animeitems);
             }
         });
         
         $scope.$watchCollection('mangaitems', function() {
             if ($scope.mangaitems!==undefined) {
                 $scope.mangaHistory = HistoryService.buildHistoryList($scope.mangaitems);
+                console.log('manga: ', $scope.mangaitems);
             }
         });
         

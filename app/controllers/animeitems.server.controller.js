@@ -127,6 +127,26 @@ exports.list = function(req, res) {
 };
 
 /**
+ * History list of anime
+ */
+exports.history = function(req, res) {
+    var latest = req.params.latest;
+
+    Animeitem.find({ latest: { $gte: latest }}).sort('-created')
+        .populate('user', 'displayName')
+        .populate('manga', 'title')
+        .exec(function(err, animeitems) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(animeitems);
+		}
+	});
+};
+
+/**
  * Animeitem middleware
  */
 exports.animeitemByID = function(req, res, next, id) { 

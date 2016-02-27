@@ -13,7 +13,7 @@ angular.module('tasks').factory('Tasks', ['$resource',
 ])
 .factory('TaskFactory', ['Animeitems', 'Mangaitems', 'AnimeFactory', 'MangaFactory', function(Animeitems, Mangaitems, AnimeFactory, MangaFactory) {
     var obj = {},
-        itemUpdate = new Date().toISOString().substring(0,10);
+        itemUpdate = new Date();
     
         obj.getWeekBeginning = function() {
             var newDate = new Date(),

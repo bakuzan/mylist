@@ -10,6 +10,15 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
         
         $scope.view = 'Anime';
         $scope.isLoading = true;
+        $scope.historyGroups = [
+            { name: 'Today' },
+            { name: 'Yesterday' },
+            { name: 'This week' },
+            { name: 'Last week' },
+            { name: 'Two weeks ago' },
+            { name: 'Three weeks ago' },
+            { name: 'Four weeks ago' },
+        ];
         var latestDate = new Date().setDate(new Date().getDate() - 29);
         
         function getAnimeitems() {

@@ -12,7 +12,7 @@ angular.module('history')
             return $resource('history/manga/:latest', { latest: '@_latest' }, { update: { method: 'PUT' } });
         }
     ])
-.service('HistoryService', ['moment', function(moment) {
+.service('HistoryService', ['moment', '$q', function(moment, $q) {
 
     this.buildHistoryList = function(items) {
         var itemHistory = [], today = moment(new Date()).startOf('day');
@@ -81,17 +81,13 @@ angular.module('history')
             wkEnd = new Date(temp.setDate(diff));
         return moment(wkEnd.toISOString()).endOf('day');
     };
+    
     this.buildGroups = function(items) {
-        var groupBuilder = {
-                    today: [],
-                    yesterday: [],
-                    thisWeek: [],
-                    lastWeek: [],
-                    twoWeek: [],
-                    threeWeek: [],
-                    fourWeek: []
-                },
-            groupCheck = [], self = this, endsOfWeek = self.getEndsOfWeek(), mondays = endsOfWeek.mondays, sundays = endsOfWeek.sundays;
+            var self = this,
+                groupInner = { titles:[], items:[], count: 0 },
+                groupBuilder = { today: groupInner, yesterday: groupInner, thisWeek: groupInner,
+                                lastWeek: groupInner, twoWeek: groupInner, threeWeek: groupInner, fourWeek: groupInner },
+                groupCheck = [], endsOfWeek = self.getEndsOfWeek(), mondays = endsOfWeek.mondays, sundays = endsOfWeek.sundays;
 //            console.log(mondays, sundays);
             angular.forEach(items, function(item) {
                 var today = moment(new Date()).startOf('day'),
@@ -99,58 +95,59 @@ angular.module('history')
                     diff = today.diff(itemDate, 'days');
                     
                 if (diff === 0) {
-                    if (groupBuilder.today.length === 0) {
-                        groupBuilder.today.push(item);
-                        groupBuilder.today.count = 1;
-                    } else {
-                        groupBuilder.today.count++;
-                    }
+                    groupBuilder.today.items.push(item);
+                    groupBuilder.today.count = groupBuilder.today.items.length;
                 } else if (diff === 1) {
-                    if (groupBuilder.yesterday.length === 0) {
-                        groupBuilder.yesterday.push(item);
-                        groupBuilder.yesterday.count = 1;
-                    } else {
-                        groupBuilder.yesterday.count++;
-                    }
+                    groupBuilder.yesterday.items.push(item);
+                    groupBuilder.yesterday.count = groupBuilder.yesterday.items.length;
                 } else if (mondays[0] <= itemDate && itemDate <= sundays[0]) {
-                    if (groupBuilder.thisWeek.length === 0) {
-                        groupBuilder.thisWeek.push(item);
-                        groupBuilder.thisWeek.count = 1;
-                    } else {
-                        groupBuilder.thisWeek.count++;
-                    }
+                    groupBuilder.thisWeek.items.push(item);
+                    groupBuilder.thisWeek.count = groupBuilder.thisWeek.items.length;
                 } else if (mondays[1] <= itemDate && itemDate <= sundays[1]) {
-                    if (groupBuilder.lastWeek.length === 0) {
-                        groupBuilder.lastWeek.push(item);
-                        groupBuilder.lastWeek.count = 1;
-                    } else {
-                        groupBuilder.lastWeek.count++;
-                    }
+                    groupBuilder.lastWeek.items.push(item);
+                    groupBuilder.lastWeek.count = groupBuilder.lastWeek.items.length;
                 } else if (mondays[2] <= itemDate && itemDate <= sundays[2]) {
-                    if (groupBuilder.twoWeek.length === 0) {
-                        groupBuilder.twoWeek.push(item);
-                        groupBuilder.twoWeek.count = 1;
-                    } else {
-                        groupBuilder.twoWeek.count++;
-                    }
+                    groupBuilder.twoWeek.items.push(item);
+                    groupBuilder.twoWeek.count = groupBuilder.twoWeek.items.length;
                 } else if (mondays[3] <= itemDate && itemDate <= sundays[3]) {
-                    if (groupBuilder.threeWeek.length === 0) {
-                        groupBuilder.threeWeek.push(item);
-                        groupBuilder.threeWeek.count = 1;
-                    } else {
-                        groupBuilder.threeWeek.count++;
-                    }
+                    groupBuilder.threeWeek.items.push(item);
+                    groupBuilder.threeWeek.count = groupBuilder.threeWeek.items.length;
                 } else if (mondays[4] <= itemDate && itemDate <= sundays[4]) {
-                    if (groupBuilder.fourWeek.length === 0) {
-                        groupBuilder.fourWeek.push(item);
-                        groupBuilder.fourWeek.count = 1;
-                    } else {
-                        groupBuilder.fourWeek.count++;
-                    }
+                    groupBuilder.fourWeek.items.push(item);
+                    groupBuilder.fourWeek.count = groupBuilder.fourWeek.items.length;
                 }
             });
         console.log('group builder: ', groupBuilder);
-        return groupBuilder;
+        var promise = self.groupedTitles(groupBuilder);
+        console.log('promise: ', promise);
+        promise.then(function(result) {
+            console.log('promise result: ', result);
+            return result;
+        }, function(reason) {
+            console.log('group title error: ', reason);
+        });
+    };
+    
+    this.groupedTitles = function(groupBuilder) {
+        return $q(function(resolve, reject) {
+            angular.forEach(groupBuilder, function(timeGroup) {
+                var titleItem,
+                    length = timeGroup.items.length;
+                for(var i = 0; i < length; i++) {
+                    if (i === 0) {
+                        titleItem = { name: timeGroup.items[i].name, count: 1 };
+                    } else if (timeGroup.items[i - 1].name !== timeGroup.items[i].name) {
+                        if (titleItem !== undefined) {
+                            timeGroup.titles.push(titleItem);
+                        }
+                        titleItem = { name: timeGroup.items[i].name, count: 1 };
+                    } else if (timeGroup.items[i - 1].name === timeGroup.items[i].name) {
+                        titleItem.count++;
+                    }
+                }
+            });
+            resolve(groupBuilder);
+        });
     };
     
     this.getGroupHeaders = function(groupBuilder, item) {

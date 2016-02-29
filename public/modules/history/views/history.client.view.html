@@ -12,6 +12,7 @@
         <h1>{{view}} history</h1>
     </div>
     <div class="col-lg-12 col-md-12 col-sm-12 history-list-container relative" style="top: 90px">
+        <pre>{{historyFilter}}</pre>
         <div tab-container>
             <div tab-view ng-repeat="item in historyGroups" heading="{{item.name}}"></div>
         </div>
@@ -34,9 +35,9 @@
             <div class="col-lg-12 col-md-12 col-sm-12 history-list-item" 
                  ng-repeat="item in mangaHistory | orderBy: ['-latest','-oldest']">
                 <h4 class="history-group-header clickable" ng-click="viewItem = (viewItem === item.title) ? '' : item.title">
-                    {{item.title}}
+                    {{item.title}} - ({{item.items.length}})
                 </h4>
-                <div ng-show="viewItem === item">
+                <div ng-show="viewItem === item.title">
                     <div ng-repeat="chapter in item.items | orderBy: ['-date','-value']">
                         <time class="float-right" title="{{chapter.date | date: 'dd MMMM HH:mm'}}" ng-bind="happenedWhen(chapter.date)">
                         </time>

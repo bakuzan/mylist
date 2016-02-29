@@ -55,7 +55,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                     manga: undefined
                 },
                 day: '',
-                date: '',
+                date: new Date(),
                 repeat: 0,
                 category: '',
                 daily: false,

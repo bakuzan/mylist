@@ -32,7 +32,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             //handle end date
             if (animeitem.episodes === animeitem.finalEpisode && animeitem.finalEpisode!==0) {
                 if (animeitem.end===undefined || animeitem.end === null) {
-                    animeitem.end = animeitem.latest.substring(0,10);
+                    animeitem.end = animeitem.latest;
 //                    console.log(animeitem.end);
                 }
             } else if (animeitem.reWatching === false) {
@@ -316,7 +316,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         
         //add history entry to item.
         this.itemHistory = function(item, updateHistory, type) {
-            console.log('item history: ', item, item.meta);
+//            console.log('item history: ', item, item.meta);
             //populate the history of when each part was 'checked' off.
             if (item.meta.history.length !== 0) {
                 var latestHistory = item.meta.history[item.meta.history.length - 1].value,

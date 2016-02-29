@@ -253,6 +253,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		// Update existing Animeitem
 		$scope.update = function() {
 			var animeitem = $scope.animeitem;
+            $scope.animeitem = undefined;
             AnimeFactory.update(animeitem, $scope.tagArray, $scope.updateHistory, $scope.imgPath);
 		};
         $scope.tickOff = function(item) {
@@ -630,7 +631,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             //handle end date
             if (animeitem.episodes === animeitem.finalEpisode && animeitem.finalEpisode!==0) {
                 if (animeitem.end===undefined || animeitem.end === null) {
-                    animeitem.end = animeitem.latest.substring(0,10);
+                    animeitem.end = animeitem.latest;
 //                    console.log(animeitem.end);
                 }
             } else if (animeitem.reWatching === false) {
@@ -914,7 +915,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         
         //add history entry to item.
         this.itemHistory = function(item, updateHistory, type) {
-            console.log('item history: ', item, item.meta);
+//            console.log('item history: ', item, item.meta);
             //populate the history of when each part was 'checked' off.
             if (item.meta.history.length !== 0) {
                 var latestHistory = item.meta.history[item.meta.history.length - 1].value,
@@ -3302,6 +3303,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		// Update existing Mangaitem
 		$scope.update = function() {
 			var mangaitem = $scope.mangaitem;
+            $scope.mangaitem = undefined;
             MangaFactory.update(mangaitem, $scope.tagArray, $scope.updateHistory, $scope.imgPath);
 		};
         $scope.tickOff = function(item) {
@@ -3434,7 +3436,7 @@ angular.module('mangaitems').factory('Mangaitems', ['$resource',
             if (mangaitem.chapters===mangaitem.finalChapter && mangaitem.finalChapter!==0) {
                 if (mangaitem.end===undefined || mangaitem.end===null) {
                     mangaitem.volumes = mangaitem.finalVolume;
-                    mangaitem.end = mangaitem.latest.substring(0,10);
+                    mangaitem.end = mangaitem.latest;
                     //console.log(animeitem.end);
                 }
             } else if (mangaitem.reReading === false) {

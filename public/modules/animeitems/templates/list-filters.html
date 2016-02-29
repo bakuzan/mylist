@@ -56,7 +56,7 @@
                 <div class="input-group-addon">
                     <i class="fa" ng-class="(filterConfig.ongoingList) ? 'fa-compress' : 'fa-expand'"></i>
                 </div>
-                <input class="form-control" type="checkbox" data-ng-model="filterConfig.ongoingList" ng-change="itemsAvailable()">
+                <input class="phantom-control" type="checkbox" data-ng-model="filterConfig.ongoingList" ng-change="itemsAvailable()">
             </div>
             <div class="input-group mt" ng-if="page !== 'character' && page !== 'topten'" ng-hide="filterConfig.ongoingList === true">
               <div class="input-group-addon">
@@ -138,7 +138,7 @@
                     <i class="fa fa-ban fa-stack-2x text-danger"></i>
                 </span>
             </div>
-            <input class="form-control" type="checkbox" data-ng-model="filterConfig.taglessItem">
+            <input class="phantom-control" type="checkbox" data-ng-model="filterConfig.taglessItem">
         </div>
         </div>
     </div>
@@ -167,7 +167,7 @@
             <div class="input-group-addon">
                 <i class="fa fa-calendar-o"></i>
             </div>
-            <input class="form-control" type="checkbox" data-ng-model="filterConfig.datesSelected">
+            <input class="phantom-control" type="checkbox" data-ng-model="filterConfig.datesSelected">
         </div>
     </div>
 </div>

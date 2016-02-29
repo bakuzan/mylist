@@ -38,7 +38,7 @@ angular.module('mangaitems').factory('Mangaitems', ['$resource',
             if (mangaitem.chapters===mangaitem.finalChapter && mangaitem.finalChapter!==0) {
                 if (mangaitem.end===undefined || mangaitem.end===null) {
                     mangaitem.volumes = mangaitem.finalVolume;
-                    mangaitem.end = mangaitem.latest.substring(0,10);
+                    mangaitem.end = mangaitem.latest;
                     //console.log(animeitem.end);
                 }
             } else if (mangaitem.reReading === false) {

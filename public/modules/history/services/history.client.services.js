@@ -15,7 +15,21 @@ angular.module('history')
 .service('HistoryService', ['moment', '$q', function(moment, $q) {
 
     this.buildHistoryList = function(items) {
-        var itemHistory = [], today = moment(new Date()).startOf('day');
+        var deferred = $q.defer(),
+            self = this,
+            promise = self.extractHistory(items).then(function(result) {
+                console.log('extract history: ', result);
+                return self.groupItemHistory(result);
+            }).then(function(result) {
+                console.log('grouped', result);
+                deferred.resolve(result);
+            });
+        return deferred.promise;
+    };
+    
+    this.extractHistory = function(items) {
+        var deferred = $q.defer(),
+            itemHistory = [], today = moment(new Date()).startOf('day');
         angular.forEach(items, function(item) {
             angular.forEach(item.meta.history, function(history) {
                 var cutoff = moment(history.date).startOf('day'),
@@ -26,8 +40,47 @@ angular.module('history')
                 }
             });
         });
-//        console.log(itemHistory);
-        return itemHistory;
+        deferred.resolve(itemHistory);
+        return deferred.promise;
+    };
+    
+    this.groupItemHistory = function(itemHistory) {
+        var deferred = $q.defer(),
+            index, prevItem, item, 
+            length = itemHistory.length,
+            groupedHistory = [];
+        for(var i = 0; i < length; i++) {
+            item = itemHistory[i];
+            if (i === 0) {
+                groupedHistory.push({
+                    title: item.title,
+                    items: [],
+                    count: 1,
+                    latest: item.date,
+                    oldest: item.date
+                });
+                groupedHistory[0].items.push(item);
+            } else if (i !== 0) {
+                prevItem = itemHistory[i - 1];
+                index = groupedHistory.length - 1;
+                if (prevItem.title === item.title) {
+                    groupedHistory[index].items.push(item);
+                    groupedHistory[index].count++;
+                    groupedHistory[index].oldest = item.date;
+                } else if (prevItem.title !== item.title) {
+                    groupedHistory.push({
+                        title: item.title,
+                        items: [],
+                        count: 1,
+                        latest: item.date,
+                        oldest: item.date
+                    });
+                    groupedHistory[index].items.push(item);
+                }
+            }
+        }
+        deferred.resolve(groupedHistory);
+        return deferred.promise;
     };
     
     /** function to display relative time.
@@ -125,28 +178,6 @@ angular.module('history')
             return result;
         }, function(reason) {
             console.log('group title error: ', reason);
-        });
-    };
-    
-    this.groupedTitles = function(groupBuilder) {
-        return $q(function(resolve, reject) {
-            angular.forEach(groupBuilder, function(timeGroup) {
-                var titleItem,
-                    length = timeGroup.items.length;
-                for(var i = 0; i < length; i++) {
-                    if (i === 0) {
-                        titleItem = { name: timeGroup.items[i].name, count: 1 };
-                    } else if (timeGroup.items[i - 1].name !== timeGroup.items[i].name) {
-                        if (titleItem !== undefined) {
-                            timeGroup.titles.push(titleItem);
-                        }
-                        titleItem = { name: timeGroup.items[i].name, count: 1 };
-                    } else if (timeGroup.items[i - 1].name === timeGroup.items[i].name) {
-                        titleItem.count++;
-                    }
-                }
-            });
-            resolve(groupBuilder);
         });
     };
     

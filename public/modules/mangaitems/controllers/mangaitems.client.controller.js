@@ -149,7 +149,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		$scope.findOne = function() {
             Mangaitems.get({ mangaitemId: $stateParams.mangaitemId }).$promise.then(function(result) {
                 $scope.mangaitem = result;
-                $scope.mangaitem.latest = new Date(result.latest);
                 //            console.log($scope.mangaitem);
             });
 		};

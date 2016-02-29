@@ -150,7 +150,6 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		$scope.findOne = function() {
             Animeitems.get({ animeitemId: $stateParams.animeitemId }).$promise.then(function(result) {
                 $scope.animeitem = result;
-                $scope.animeitem.latest = new Date(result.latest);
 //            console.log($scope.animeitem);
             });
 		};

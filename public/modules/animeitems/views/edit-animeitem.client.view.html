@@ -29,7 +29,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : animeForm.latest.$invalid }">
                     <label for="latest" class="col-md-2 control-label">Latest</label>
                     <div class="col-md-6">
-                        <input type="date" class="form-control" data-ng-model="animeitem.latest" id="latest" name="latest" placeholder="" required>
+                        <input type="date" class="form-control" data-ng-model="animeitem.latest" id="latest" name="latest" format-date required>
                     </div>
                     <div class="col-md-4">
 						<p ng-show="animeForm.latest.$invalid && !animeForm.latest.$pristine" class="help-block" >Latest date must be 'dd/mm/yyyy' and is required.</p>
@@ -102,7 +102,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : animeForm.end.$invalid }">
                     <label for="end" class="col-md-2 control-label">End</label>
                     <div class="col-md-6">
-                        <input type="date" class="form-control" data-ng-model="animeitem.end" id="end" name="end" placeholder="">
+                        <input type="date" class="form-control" data-ng-model="animeitem.end" id="end" name="end" format-date>
                     </div>
                     <div class="col-md-4">
 						<span ng-show="animeForm.end.$valid && !animeForm.end.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>

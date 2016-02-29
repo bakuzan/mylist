@@ -273,7 +273,6 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		$scope.findOne = function() {
             Animeitems.get({ animeitemId: $stateParams.animeitemId }).$promise.then(function(result) {
                 $scope.animeitem = result;
-                $scope.animeitem.latest = new Date(result.latest);
 //            console.log($scope.animeitem);
             });
 		};
@@ -2377,6 +2376,16 @@ angular.module('core').directive('myProgress', function() {
             });
         }
     };
+})
+.directive('formatDate', function(){
+  return {
+   require: 'ngModel',
+    link: function(scope, elem, attr, modelCtrl) {
+      modelCtrl.$formatters.push(function(modelValue){
+        return new Date(modelValue);
+      });
+    }
+  };
 });
 'use strict';
 
@@ -3323,7 +3332,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		$scope.findOne = function() {
             Mangaitems.get({ mangaitemId: $stateParams.mangaitemId }).$promise.then(function(result) {
                 $scope.mangaitem = result;
-                $scope.mangaitem.latest = new Date(result.latest);
                 //            console.log($scope.mangaitem);
             });
 		};

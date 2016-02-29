@@ -34,7 +34,7 @@ angular.module('core').directive('myProgress', function() {
    require: 'ngModel',
     link: function(scope, elem, attr, modelCtrl) {
       modelCtrl.$formatters.push(function(modelValue){
-        return new Date(modelValue);
+        return (modelValue === null) ? null : new Date(modelValue);
       });
     }
   };

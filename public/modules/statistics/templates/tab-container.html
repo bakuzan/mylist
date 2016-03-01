@@ -1,0 +1,15 @@
+<div role="tabcontainer">
+  <ul class="tab-controls" role="tablist">
+    <li class="tab-control-option"
+        role="taboptions"
+        ng-repeat="tab in tabContainer.tabs"
+        ng-class="{'active': tab.active}">
+      <a href=""
+         role="tab"
+         ng-click="tabContainer.select(tab)">{{tab.heading}}</a>
+    </li>
+  </ul>
+  <ng-transclude>
+      
+  </ng-transclude>
+</div>

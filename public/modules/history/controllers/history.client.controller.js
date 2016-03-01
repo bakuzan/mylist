@@ -1,24 +1,41 @@
 'use strict';
 
 // History controller
-angular.module('history').controller('HistoryController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'HistoryService', 'ListService',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, HistoryService, ListService) {
+angular.module('history').controller('HistoryController', ['$scope', '$stateParams', '$location', 'Authentication', 'AnimeHistory', 'MangaHistory', 'HistoryService', 'ListService',
+	function($scope, $stateParams, $location, Authentication, AnimeHistory, MangaHistory, HistoryService, ListService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.view = 'Anime';
+        $scope.filterConfig = {
+            historyFilter: 'Today'
+        };
         $scope.isLoading = true;
+        $scope.historyGroups = [
+            { name: 'Today' },
+            { name: 'Yesterday' },
+            { name: 'This week' },
+            { name: 'Last week' },
+            { name: 'Two weeks ago' },
+            { name: 'Three weeks ago' },
+            { name: 'Four weeks ago' },
+        ];
+        var latestDate = new Date().setDate(new Date().getDate() - 29);
         
         function getAnimeitems() {
              // Find list of mangaitems.
-            $scope.animeitems = Animeitems.query();
+            $scope.animeitems = AnimeHistory.query({
+                latest: latestDate
+            });
         }
         
         function getMangaitems() {
              // Find list of mangaitems.
-            $scope.mangaitems = Mangaitems.query();
+            $scope.mangaitems = MangaHistory.query({
+                latest: latestDate
+            });
         }
         
         $scope.buildHistory = function() {
@@ -36,13 +53,19 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
         
         $scope.$watchCollection('animeitems', function() {
             if ($scope.animeitems!==undefined) {
-                $scope.animeHistory = HistoryService.buildHistoryList($scope.animeitems);
+                HistoryService.buildHistoryList($scope.animeitems).then(function(result) {
+//                    console.log('build anime history: ', result);
+                    $scope.animeHistory = result;
+                });
             }
         });
         
         $scope.$watchCollection('mangaitems', function() {
             if ($scope.mangaitems!==undefined) {
-                $scope.mangaHistory = HistoryService.buildHistoryList($scope.mangaitems);
+                HistoryService.buildHistoryList($scope.mangaitems).then(function(result) {
+//                    console.log('build manga history: ', result);
+                    $scope.mangaHistory = result;
+                });
             }
         });
         
@@ -54,21 +77,5 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
             return HistoryService.happenedWhen(when);
         };
         
-        $scope.isGroupHeader = function(groupBuilder, item) {
-            return HistoryService.getGroupHeaders(groupBuilder, item);
-        };
-        
-        $scope.$watchCollection('orderedAnimeHistory', function(newValue) {
-            if (newValue!== undefined) {
-                $scope.groupAnimeBuilder = HistoryService.buildGroups(newValue);
-            }
-        });
-        $scope.$watchCollection('orderedMangaHistory', function(newValue) {
-            if (newValue!== undefined) {
-                $scope.groupMangaBuilder = HistoryService.buildGroups(newValue);
-            }
-        });
-        
     }
-
-                                                          ]);
+]);

@@ -2905,24 +2905,41 @@ angular.module('history').config(['$stateProvider', '$urlRouterProvider',
 'use strict';
 
 // History controller
-angular.module('history').controller('HistoryController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'HistoryService', 'ListService',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, HistoryService, ListService) {
+angular.module('history').controller('HistoryController', ['$scope', '$stateParams', '$location', 'Authentication', 'AnimeHistory', 'MangaHistory', 'HistoryService', 'ListService',
+	function($scope, $stateParams, $location, Authentication, AnimeHistory, MangaHistory, HistoryService, ListService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.view = 'Anime';
+        $scope.filterConfig = {
+            historyFilter: 'Today'
+        };
         $scope.isLoading = true;
+        $scope.historyGroups = [
+            { name: 'Today' },
+            { name: 'Yesterday' },
+            { name: 'This week' },
+            { name: 'Last week' },
+            { name: 'Two weeks ago' },
+            { name: 'Three weeks ago' },
+            { name: 'Four weeks ago' },
+        ];
+        var latestDate = new Date().setDate(new Date().getDate() - 29);
         
         function getAnimeitems() {
              // Find list of mangaitems.
-            $scope.animeitems = Animeitems.query();
+            $scope.animeitems = AnimeHistory.query({
+                latest: latestDate
+            });
         }
         
         function getMangaitems() {
              // Find list of mangaitems.
-            $scope.mangaitems = Mangaitems.query();
+            $scope.mangaitems = MangaHistory.query({
+                latest: latestDate
+            });
         }
         
         $scope.buildHistory = function() {
@@ -2940,13 +2957,19 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
         
         $scope.$watchCollection('animeitems', function() {
             if ($scope.animeitems!==undefined) {
-                $scope.animeHistory = HistoryService.buildHistoryList($scope.animeitems);
+                HistoryService.buildHistoryList($scope.animeitems).then(function(result) {
+//                    console.log('build anime history: ', result);
+                    $scope.animeHistory = result;
+                });
             }
         });
         
         $scope.$watchCollection('mangaitems', function() {
             if ($scope.mangaitems!==undefined) {
-                $scope.mangaHistory = HistoryService.buildHistoryList($scope.mangaitems);
+                HistoryService.buildHistoryList($scope.mangaitems).then(function(result) {
+//                    console.log('build manga history: ', result);
+                    $scope.mangaHistory = result;
+                });
             }
         });
         
@@ -2958,64 +2981,39 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
             return HistoryService.happenedWhen(when);
         };
         
-        $scope.isGroupHeader = function(groupBuilder, item) {
-            return HistoryService.getGroupHeaders(groupBuilder, item);
-        };
-        
-        $scope.$watchCollection('orderedAnimeHistory', function(newValue) {
-            if (newValue!== undefined) {
-                $scope.groupAnimeBuilder = HistoryService.buildGroups(newValue);
-            }
-        });
-        $scope.$watchCollection('orderedMangaHistory', function(newValue) {
-            if (newValue!== undefined) {
-                $scope.groupMangaBuilder = HistoryService.buildGroups(newValue);
-            }
-        });
-        
     }
+]);
+'use strict';
 
-                                                          ]);
+angular.module('history')
+.filter('historySeparator', ['HistoryService', 'moment', function(HistoryService, moment) {
+    return function(array, level, timeframe) {
+        var itemDate,
+            attr = (level === 'group') ? 'latest' : 'date';
+        if (array !== undefined) {
+            return array.filter(function(item) {
+                itemDate = moment(item[attr]).startOf('day');
+                return HistoryService.filterItemHistory(timeframe.toLowerCase(), itemDate) ? item : false;
+            });
+        }
+    };
+}]);
 'use strict';
 
 //History service used to communicate Animeitems REST endpoints
-angular.module('history').service('HistoryService', ['moment', function(moment) {
-
-    this.buildHistoryList = function(items) {
-        var itemHistory = [], today = moment(new Date()).startOf('day');
-        angular.forEach(items, function(item) {
-            angular.forEach(item.meta.history, function(history) {
-                var cutoff = moment(history.date).startOf('day'),
-                    diff = today.diff(cutoff, 'days');
-//                console.log(diff);
-                if (diff < 29) {
-                    itemHistory.push({ date: history.date, value: history.value, title: item.title, id: item._id });
-                }
-            });
-        });
-//        console.log(itemHistory);
-        return itemHistory;
-    };
-    
-    /** function to display relative time.
-     *  Using diff because fromNow will create conflicts between
-     *  the item date and the 'group date'.
-     */
-    this.happenedWhen = function(when) {
-//          console.log(latest, updated);
-        var today = moment(new Date()).startOf('day'), thisDate = moment(when).startOf('day'),
-            diff = today.diff(thisDate, 'days');
-                
-        //for 0 and 1 day(s) ago use the special term.
-        if (diff === 0) {
-            return 'Today at ' + moment(when).format('HH:mm');
-        } else if (diff === 1) {
-            return 'Yesterday at ' + moment(when).format('HH:mm');
-        } else {
-            return diff + ' days ago at ' + moment(when).format('HH:mm');
+angular.module('history')
+.factory('AnimeHistory', ['$resource',
+        function($resource) {
+            return $resource('history/anime/:latest', { latest: '@_latest' }, { update: { method: 'PUT' } });
         }
-    };
-    
+    ])
+.factory('MangaHistory', ['$resource',
+        function($resource) {
+            return $resource('history/manga/:latest', { latest: '@_latest' }, { update: { method: 'PUT' } });
+        }
+    ])
+.service('HistoryService', ['moment', '$q', function(moment, $q) {
+      
     // getting mondays and sundays for this, last, two and three weeks ago.
     this.getEndsOfWeek = function() {
         var self = this, endsOfWeek = [], thisMonday = self.weekBeginning(), thisSunday = self.weekEnding();
@@ -3048,99 +3046,133 @@ angular.module('history').service('HistoryService', ['moment', function(moment) 
             wkEnd = new Date(temp.setDate(diff));
         return moment(wkEnd.toISOString()).endOf('day');
     };
-    this.buildGroups = function(items) {
-        var groupBuilder = {
-                    today: [],
-                    yesterday: [],
-                    thisWeek: [],
-                    lastWeek: [],
-                    twoWeek: [],
-                    threeWeek: [],
-                    fourWeek: []
-                },
-            groupCheck = [], self = this, endsOfWeek = self.getEndsOfWeek(), mondays = endsOfWeek.mondays, sundays = endsOfWeek.sundays;
-//            console.log(mondays, sundays);
-            angular.forEach(items, function(item) {
-                var today = moment(new Date()).startOf('day'),
-                    itemDate = moment(item.date).startOf('day'),
-                    diff = today.diff(itemDate, 'days');
-                    
-                if (diff === 0) {
-                    if (groupBuilder.today.length === 0) {
-                        groupBuilder.today.push(item);
-                        groupBuilder.today.count = 1;
-                    } else {
-                        groupBuilder.today.count++;
-                    }
-                } else if (diff === 1) {
-                    if (groupBuilder.yesterday.length === 0) {
-                        groupBuilder.yesterday.push(item);
-                        groupBuilder.yesterday.count = 1;
-                    } else {
-                        groupBuilder.yesterday.count++;
-                    }
-                } else if (mondays[0] <= itemDate && itemDate <= sundays[0]) {
-                    if (groupBuilder.thisWeek.length === 0) {
-                        groupBuilder.thisWeek.push(item);
-                        groupBuilder.thisWeek.count = 1;
-                    } else {
-                        groupBuilder.thisWeek.count++;
-                    }
-                } else if (mondays[1] <= itemDate && itemDate <= sundays[1]) {
-                    if (groupBuilder.lastWeek.length === 0) {
-                        groupBuilder.lastWeek.push(item);
-                        groupBuilder.lastWeek.count = 1;
-                    } else {
-                        groupBuilder.lastWeek.count++;
-                    }
-                } else if (mondays[2] <= itemDate && itemDate <= sundays[2]) {
-                    if (groupBuilder.twoWeek.length === 0) {
-                        groupBuilder.twoWeek.push(item);
-                        groupBuilder.twoWeek.count = 1;
-                    } else {
-                        groupBuilder.twoWeek.count++;
-                    }
-                } else if (mondays[3] <= itemDate && itemDate <= sundays[3]) {
-                    if (groupBuilder.threeWeek.length === 0) {
-                        groupBuilder.threeWeek.push(item);
-                        groupBuilder.threeWeek.count = 1;
-                    } else {
-                        groupBuilder.threeWeek.count++;
-                    }
-                } else if (mondays[4] <= itemDate && itemDate <= sundays[4]) {
-                    if (groupBuilder.fourWeek.length === 0) {
-                        groupBuilder.fourWeek.push(item);
-                        groupBuilder.fourWeek.count = 1;
-                    } else {
-                        groupBuilder.fourWeek.count++;
-                    }
-                }
+    
+    //Variables that require the above functions;
+    this.today = moment(new Date()).startOf('day');
+    this.endsOfWeek = this.getEndsOfWeek();
+    this.mondays = this.endsOfWeek.mondays;
+    this.sundays = this.endsOfWeek.sundays;
+
+    this.buildHistoryList = function(items) {
+        var deferred = $q.defer(),
+            self = this,
+            promise = self.extractHistory(items).then(function(result) {
+//                console.log('extract history: ', result);
+                result.sort(function (a, b) {
+                    var dateA = a.date,
+                        dateB = b.date;
+                    if(dateA > dateB) return -1;
+                    if(dateA < dateB) return 1;
+                    if(dateA === dateB) return 0;
+                });
+                return self.groupItemHistory(result);
+            }).then(function(result) {
+//                console.log('grouped', result);
+                deferred.resolve(result);
             });
-//        console.log(groupBuilder);
-        return groupBuilder;
+        return deferred.promise;
     };
     
-    this.getGroupHeaders = function(groupBuilder, item) {
-        if (groupBuilder!==undefined) {
-            if (groupBuilder.today.indexOf(item) > -1) {
-                return 'Today (' + groupBuilder.today.count + ')';
-            } else if (groupBuilder.yesterday.indexOf(item) > -1) {
-                return 'Yesterday (' + groupBuilder.yesterday.count + ')';
-            } else if (groupBuilder.thisWeek.indexOf(item) > -1) {
-                return 'This week (' + groupBuilder.thisWeek.count + ')';
-            } else if (groupBuilder.lastWeek.indexOf(item) > -1) {
-                return 'Last week (' + groupBuilder.lastWeek.count + ')';
-            } else if (groupBuilder.twoWeek.indexOf(item) > -1) {
-                return 'Two weeks ago (' + groupBuilder.twoWeek.count + ')';
-            } else if (groupBuilder.threeWeek.indexOf(item) > -1) {
-                return 'Three weeks ago (' + groupBuilder.threeWeek.count + ')';
-            } else if (groupBuilder.fourWeek.indexOf(item) > -1) {
-                return 'Four weeks ago (' + groupBuilder.fourWeek.count + ')';
-            } else {
-                return null;
+    this.extractHistory = function(items) {
+        var deferred = $q.defer(),
+            itemHistory = [], today = moment(new Date()).startOf('day');
+        angular.forEach(items, function(item) {
+            angular.forEach(item.meta.history, function(history) {
+                var cutoff = moment(history.date).startOf('day'),
+                    diff = today.diff(cutoff, 'days');
+//                console.log(diff);
+                if (diff < 29) {
+                    itemHistory.push({ date: history.date, value: history.value, title: item.title, id: item._id });
+                }
+            });
+        });
+        deferred.resolve(itemHistory);
+        return deferred.promise;
+    };
+    
+    this.groupItemHistory = function(itemHistory) {
+        var deferred = $q.defer(),
+            index, prevItem, item, group,
+            length = itemHistory.length,
+            groupedHistory = [];
+        for(var i = 0; i < length; i++) {
+            item = itemHistory[i];
+            if (i === 0) {
+                groupedHistory.push({
+                    title: item.title,
+                    items: [],
+                    count: 1,
+                    latest: item.date,
+                    oldest: item.date
+                });
+                groupedHistory[0].items.push(item);
+            } else if (i !== 0) {
+                prevItem = itemHistory[i - 1];
+                index = groupedHistory.length - 1;
+                if (prevItem.title === item.title) {
+                    groupedHistory[index].items.push(item);
+                    groupedHistory[index].count++;
+                    groupedHistory[index].oldest = item.date;
+                } else if (prevItem.title !== item.title) {
+                    group = {
+                        title: item.title,
+                        items: [],
+                        count: 1,
+                        latest: item.date,
+                        oldest: item.date
+                    };
+                    group.items.push(item);
+                    groupedHistory.push(group);
+                }
             }
+        }
+        deferred.resolve(groupedHistory);
+        return deferred.promise;
+    };
+    
+    this.filterItemHistory = function(timeframe, itemDate) {
+        var self = this,
+            diff = self.today.diff(itemDate, 'days');
+        switch(timeframe) {
+            case 'today':
+                return diff === 0;
+                
+            case 'yesterday':
+                return diff === 1;
+                
+            case 'this week':
+                return self.mondays[0] <= itemDate && itemDate <= self.sundays[0];
+                
+            case 'last week':
+                return self.mondays[1] <= itemDate && itemDate <= self.sundays[1];
+                
+            case 'two weeks ago':
+                return self.mondays[2] <= itemDate && itemDate <= self.sundays[2];
+            
+            case 'three weeks ago':
+                return self.mondays[3] <= itemDate && itemDate <= self.sundays[3];
+                
+            case 'four weeks ago':
+                return self.mondays[4] <= itemDate && itemDate <= self.sundays[4];
+        }
+    };
+    
+    /** function to display relative time.
+     *  Using diff because fromNow will create conflicts between
+     *  the item date and the 'group date'.
+     */
+    this.happenedWhen = function(when) {
+//          console.log(latest, updated);
+        var today = moment(new Date()).startOf('day'), thisDate = moment(when).startOf('day'),
+            diff = today.diff(thisDate, 'days');
+                
+        //for 0 and 1 day(s) ago use the special term.
+        if (diff === 0) {
+            return 'Today at ' + moment(when).format('HH:mm');
+        } else if (diff === 1) {
+            return 'Yesterday at ' + moment(when).format('HH:mm');
         } else {
-            return null;
+            return diff + ' days ago at ' + moment(when).format('HH:mm');
         }
     };
 
@@ -3826,6 +3858,70 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         
     }
 ]);
+'use strict';
+
+angular.module('statistics')
+.directive('tabContainer', function () {
+    return {
+        restrict: 'A',
+        transclude: true,
+        replace: true,
+        scope: {
+            model: '=ngModel'
+        },
+        templateUrl: '/modules/statistics/templates/tab-container.html',
+        require: '?ngModel',
+        bindToController: true,
+        controllerAs: 'tabContainer',
+        controller: function($scope) {
+            console.log($scope);
+            var self = this;
+            self.tabs = [];
+            self.currentTab = undefined;
+            
+            self.addTab = function addTab(tab) {
+                self.tabs.push(tab);
+
+                if(self.tabs.length === 1) {
+                    tab.active = true;
+                }
+            };
+            
+            self.select = function(selectedTab) {
+                angular.forEach(self.tabs, function(tab) {
+                    if(tab.active && tab !== selectedTab) {
+                      tab.active = false;
+                    }
+                });
+                selectedTab.active = true;
+                self.currentTab = ($scope.tabContainer.model === undefined) ? undefined : selectedTab.heading;
+            };
+        },
+        link: function(scope, element, attrs, model) {
+            scope.$watchCollection('tabContainer.currentTab', function(newValue) {
+                if (newValue !== undefined && model.$viewValue !== undefined) {
+                    model.$setViewValue(newValue);
+                }
+            });
+        }
+    };
+})
+.directive('tabView', function () {
+    return {
+        restrict: 'A',
+        transclude: true,
+        replace: true,
+        template: '<div class="tab-view" role="tabpanel" ng-show="active" ng-transclude></div>',
+        require: '^tabContainer',
+        scope: {
+            heading: '@'
+        },
+        link: function (scope, element, attrs, tabContainerCtrl) {
+            scope.active = false;
+            tabContainerCtrl.addTab(scope);
+        }
+    };
+});
 'use strict';
 
 //Statistics service 

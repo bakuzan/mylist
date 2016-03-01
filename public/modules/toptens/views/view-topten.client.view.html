@@ -25,7 +25,7 @@
     <div class="relative col-lg-12 col-md-12 col-sm-12">
         <div horizontal-list>
             <div horizontal-list-item ng-repeat="item in topten[topten.type + 'List'] track by item._id">
-                <a href="/#!/{{item.type}}{{viewConfig.linkSuffix}}/{{item._id}}">
+                <a href="/#!/{{topten.type}}{{viewConfig.linkSuffix}}/{{item._id}}">
                     <h4 class="margin-0" ng-bind="item[viewConfig.displayType]"></h4>
                 </a>
                 <div class="height-90">

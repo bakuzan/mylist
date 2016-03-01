@@ -12,18 +12,17 @@
         <h1>{{view}} history</h1>
     </div>
     <div class="col-lg-12 col-md-12 col-sm-12 history-list-container relative" style="top: 90px">
-        <pre>{{filterConfig.historyFilter}}</pre>
         <div tab-container ng-model="filterConfig.historyFilter">
             <div tab-view ng-repeat="item in historyGroups" heading="{{item.name}}"></div>
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12 history-list" ng-show="view === 'Anime'">
             <div class="col-lg-12 col-md-12 col-sm-12 history-list-item" 
-                 ng-repeat="item in animeHistory | orderBy: ['-latest','-oldest']" ng-hide="loading(item.title)">
+                 ng-repeat="item in animeHistory | historySeparator:'group':filterConfig.historyFilter | orderBy: ['-latest','-oldest']">
                 <h4 class="history-group-header clickable" ng-click="viewItem = (viewItem === item.title) ? '' : item.title">
-                    {{item.title}} - ({{item.items.length}})
+                    {{item.title}} - ({{animeHistoryItems.length}})
                 </h4>
                 <div ng-show="viewItem === item.title">
-                    <div ng-repeat="episode in item.items | orderBy: ['-date','-value']">
+                    <div ng-repeat="episode in (animeHistoryItems = (item.items | historySeparator:'item':filterConfig.historyFilter | orderBy: ['-date','-value']))">
                         <time class="float-right" title="{{episode.date | date: 'dd MMMM HH:mm'}}" ng-bind="happenedWhen(episode.date)">
                         </time>
                         <p><a href="/#!/animeitems/{{episode.id}}">{{episode.title}}</a> - Episode {{episode.value}}</p>
@@ -33,12 +32,12 @@
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12 history-list" ng-show="view === 'Manga'">
             <div class="col-lg-12 col-md-12 col-sm-12 history-list-item" 
-                 ng-repeat="item in mangaHistory | orderBy: ['-latest','-oldest']">
+                 ng-repeat="item in mangaHistory | historySeparator:'group':filterConfig.historyFilter | orderBy: ['-latest','-oldest']">
                 <h4 class="history-group-header clickable" ng-click="viewItem = (viewItem === item.title) ? '' : item.title">
-                    {{item.title}} - ({{item.items.length}})
+                    {{item.title}} - ({{mangaHistoryItems.length}})
                 </h4>
                 <div ng-show="viewItem === item.title">
-                    <div ng-repeat="chapter in item.items | orderBy: ['-date','-value']">
+                    <div ng-repeat="chapter in (mangaHistoryItems = (item.items | historySeparator:'item':filterConfig.historyFilter | orderBy: ['-date','-value']))">
                         <time class="float-right" title="{{chapter.date | date: 'dd MMMM HH:mm'}}" ng-bind="happenedWhen(chapter.date)">
                         </time>
                         <p><a href="/#!/mangaitems/{{chapter.id}}">{{chapter.title}}</a> - Chapter {{chapter.value}}</p>
@@ -47,5 +46,5 @@
             </div>
         </div>
     </div>
-    <section class="loading-image" ng-if="isLoading"></section>
+<!--    <section class="loading-image" ng-if="isLoading"></section>-->
 </section>

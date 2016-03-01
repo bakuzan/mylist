@@ -54,7 +54,7 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
         $scope.$watchCollection('animeitems', function() {
             if ($scope.animeitems!==undefined) {
                 HistoryService.buildHistoryList($scope.animeitems).then(function(result) {
-                    console.log('build anime history: ', result);
+//                    console.log('build anime history: ', result);
                     $scope.animeHistory = result;
                 });
             }
@@ -63,7 +63,7 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
         $scope.$watchCollection('mangaitems', function() {
             if ($scope.mangaitems!==undefined) {
                 HistoryService.buildHistoryList($scope.mangaitems).then(function(result) {
-                    console.log('build manga history: ', result);
+//                    console.log('build manga history: ', result);
                     $scope.mangaHistory = result;
                 });
             }
@@ -77,21 +77,5 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
             return HistoryService.happenedWhen(when);
         };
         
-//        $scope.isGroupHeader = function(groupBuilder, item) {
-//            return HistoryService.getGroupHeaders(groupBuilder, item);
-//        };
-        
-//        $scope.$watchCollection('orderedAnimeHistory', function(newValue) {
-//            if (newValue!== undefined) {
-//                $scope.groupAnimeBuilder = HistoryService.buildGroups(newValue);
-//            }
-//        });
-//        $scope.$watchCollection('orderedMangaHistory', function(newValue) {
-//            if (newValue!== undefined) {
-//                $scope.groupMangaBuilder = HistoryService.buildGroups(newValue);
-//            }
-//        });
-        
     }
-
-                                                          ]);
+]);

@@ -17,7 +17,7 @@ angular.module('statistics')
             console.log($scope);
             var self = this;
             self.tabs = [];
-            self.currentTab;
+            self.currentTab = undefined;
             
             self.addTab = function addTab(tab) {
                 self.tabs.push(tab);

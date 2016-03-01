@@ -14,7 +14,6 @@ angular.module('statistics')
         bindToController: true,
         controllerAs: 'tabContainer',
         controller: function($scope) {
-            console.log($scope);
             var self = this;
             self.tabs = [];
             self.currentTab = undefined;

@@ -18,7 +18,8 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             summary: {
                 type: '',
                 isVisible: false
-            }
+            },
+            isEpisodeRatings: false
         };
         $scope.commonArrays = ListService.getCommonArrays('statistics');
         $scope.filterConfig = {
@@ -121,7 +122,9 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             //Check whether to do ratings or episode ratings.
             if (!$scope.detail.isEpisodeRatings) {
                 $scope.historyDetails.summaryFunctions = StatisticsService.buildSummaryFunctions(array);
-                if ($scope.detail.summary.isVisible === true) $scope.historyDetails.yearSummary = StatisticsService.buildYearSummary(array, $scope.detail.year, $scope.detail.summary.type);
+                if ($scope.detail.summary.isVisible === true) {
+                    $scope.historyDetails.yearSummary = StatisticsService.buildYearSummary(array, $scope.detail.year, $scope.detail.summary.type);
+                }
             } else {
                 angular.forEach(array, function(item) {
                     var episodeSummaryFunctions = StatisticsService.buildSummaryFunctions(item.meta.history);
@@ -130,9 +133,11 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             }
             console.log(array, $scope.historyDetails);
         }
-        $scope.$watchCollection('detailItems', function(newValue) {
-            if (newValue !== undefined) {
-                getSummaryFunctions(newValue);
+        $scope.$watchCollection('detail.divisionText', function(newValue, oldValue) {
+            console.log('detail items: ', newValue, oldValue);
+            if (newValue !== undefined && newValue !== oldValue) {
+                var filteredItems = $filter('statisticsDetailFilter')($scope.items, detail.history, detail.year, detail.division);
+                getSummaryFunctions(filteredItems);
             }
         });
         
@@ -141,6 +146,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         };
         
         $scope.historyDetail = function(year, division, divisionText, summaryType) {
+            console.log(year, division, divisionText, summaryType);
             if ($scope.detail.year === year && $scope.detail.divisionText === divisionText) {
                 $scope.detail.isVisible = !$scope.detail.isVisible;
             } else {
@@ -149,7 +155,10 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 $scope.detail.division = division;
                 $scope.detail.divisionText = divisionText;
                 $scope.detail.summary.type = summaryType;
-                $scope.detail.summary.isVisible = (summaryType === undefined) ? false : true;
+                $scope.detail.summary.isVisible = (summaryType === '') ? false : true;
+                if($scope.detail.summary.isVisible) {
+                    getSummaryFunctions(items);
+                }
             }
         };
         

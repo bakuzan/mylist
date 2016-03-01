@@ -26,10 +26,12 @@
                             <h3>
                                 History
                             </h3>
-                            <h3 class="btn btn-primary stat-header-label" ng-model="detail.history" btn-radio="'months'" ng-click="detail.isVisible=false; detail.isEpisodeRatings=false">
+                            <h3 class="btn btn-primary stat-header-label" ng-model="detail.history" btn-radio="'months'"
+                                ng-click="detail.isVisible=false; detail.isEpisodeRatings=false">
                                 by month
                             </h3>
-                            <h3 class="btn btn-primary stat-header-label" ng-model="detail.history" btn-radio="'seasons'" ng-click="detail.isVisible=false" ng-show="view === 'Anime'">
+                            <h3 class="btn btn-primary stat-header-label" ng-model="detail.history" btn-radio="'seasons'" 
+                                ng-click="detail.isVisible=false" ng-show="view === 'Anime'">
                                 by season
                             </h3>
                             <div class="margin-auto padding-left-15" ng-show="detail.history === 'seasons'">
@@ -52,10 +54,12 @@
                             </thead>
                             <tbody>
                                 <tr ng-repeat="year in historyDetails[detail.history][detail.history] | orderBy: '-year'" ng-hide="loading(year.year)">
-                                    <th ng-class="(detail.isEpisodeRatings) ? '' : 'clickable'" ng-click="(detail.isEpisodeRatings) ? '' : historyDetail(year.year, '', '', detail.history)">
+                                    <th ng-class="(detail.isEpisodeRatings) ? '' : 'clickable'" 
+                                        ng-click="(detail.isEpisodeRatings) ? '' : historyDetail(year.year, '', '', detail.history,  detailItems)">
                                         <span>{{year.year}}</span>
                                     </th>
-                                    <td ng-repeat="part in year[detail.history]" ng-click="historyDetail(year.year, part[detail.history==='months' ? 'number' : 'text'], part.text);" 
+                                    <td ng-repeat="part in year[detail.history]" 
+                                        ng-click="historyDetail(year.year, part[detail.history==='months' ? 'number' : 'text'], part.text, '', detailItems)" 
                                         hover-data="{{part.count}} {{detail.history === 'months' ? 'completed' : 'watched' }} {{part.text}} {{year.year}}.">
                                         <span class="stat-month-box" ng-style="{'opacity': part.count / historyDetails[detail.history].max }"></span>
                                     </td>
@@ -64,7 +68,8 @@
                         </table>
                     </div><!-- HISTORY PANEL END -->
                     <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="detail.isVisible">
-                        <div class="col-lg-12 col-md-12 col-sm-12 margin-top-10" ng-show="(detail.summary.isVisible && detailItems.length > 1) && !detail.isEpisodeRatings">
+                        <div class="col-lg-12 col-md-12 col-sm-12 margin-top-10" 
+                             ng-show="(detail.summary.isVisible && detailItems.length > 1) && detail.isEpisodeRatings === false">
                             <table class="col-lg-12 col-md-12 col-sm-12">
                                 <thead>
                                     <th>{{detail.year}}</th>
@@ -78,7 +83,8 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="stat-detail padding-bottom-15" ng-class="(detail.isEpisodeRatings) ? 'col-lg-12 col-md-12 col-sm-12' : 'col-lg-8 col-md-8 col-sm-8'">
+                        <div class="stat-detail padding-bottom-15" 
+                             ng-class="(detail.isEpisodeRatings) ? 'col-lg-12 col-md-12 col-sm-12' : 'col-lg-8 col-md-8 col-sm-8'">
                             <div class="stat-detail-header">
                                 <h3>{{detailItems.length}} {{detail.history === 'months' ? 'Completed' : 'Watched' }} {{detail.divisionText}} {{detail.year}}</h3>
                             </div>
@@ -103,7 +109,8 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="col-lg-4 col-md-4 col-sm-4 margin-top-55 margin-bottom-20" ng-show="detailItems.length > 0 && !detail.isEpisodeRatings">
+                        <div class="col-lg-4 col-md-4 col-sm-4 margin-top-55 margin-bottom-20" 
+                             ng-show="detailItems.length > 0 && detail.isEpisodeRatings === false">
                             <table class="col-lg-12 col-md-12 col-sm-12">
                                 <tbody>
                                     <tr ng-repeat="item in historyDetails.summaryFunctions">

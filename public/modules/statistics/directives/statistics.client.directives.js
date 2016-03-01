@@ -6,13 +6,18 @@ angular.module('statistics')
         restrict: 'A',
         transclude: true,
         replace: true,
-        scope: {},
+        scope: {
+            model: '=ngModel'
+        },
         templateUrl: '/modules/statistics/templates/tab-container.html',
+        require: '?ngModel',
         bindToController: true,
         controllerAs: 'tabContainer',
-        controller: function() {
+        controller: function($scope) {
+            console.log($scope);
             var self = this;
             self.tabs = [];
+            self.currentTab;
             
             self.addTab = function addTab(tab) {
                 self.tabs.push(tab);
@@ -29,7 +34,15 @@ angular.module('statistics')
                     }
                 });
                 selectedTab.active = true;
+                self.currentTab = ($scope.tabContainer.model === undefined) ? undefined : selectedTab.heading;
             };
+        },
+        link: function(scope, element, attrs, model) {
+            scope.$watchCollection('tabContainer.currentTab', function(newValue) {
+                if (newValue !== undefined && model.$viewValue !== undefined) {
+                    model.$setViewValue(newValue);
+                }
+            });
         }
     };
 })

@@ -9,6 +9,9 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
 		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.view = 'Anime';
+        $scope.filterConfig = {
+            historyFilter: 'Today'
+        };
         $scope.isLoading = true;
         $scope.historyGroups = [
             { name: 'Today' },

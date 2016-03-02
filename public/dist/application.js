@@ -1516,6 +1516,7 @@ angular.module('characters').directive('characterBack', function(){
                   if (scope.filteredSlides[scope.currentIndex].locked) {
                     //unlock, i.e start timer.
                     scope.filteredSlides[scope.currentIndex].locked = false;
+                      autoSlide();
                   } else {
                     //lock, i.e. cancel timer.
                     scope.filteredSlides[scope.currentIndex].locked = true;
@@ -4049,8 +4050,8 @@ angular.module('tasks').config(['$stateProvider',
 'use strict';
 
 // Tasks controller
-angular.module('tasks').controller('TasksController', ['$scope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory',
-	function($scope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory) {
+angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory',
+	function($scope, $rootScope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -4059,6 +4060,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
         var today = new Date(),
             day = today.getDay();
         
+        $rootScope.commonArrays = ListService.getCommonArrays();
         $scope.whichController = 'task';
         $scope.isLoading = false;
         //paging variables.
@@ -4079,7 +4081,6 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
         $scope.mangaUpdate = {
             isPopup: ''
         };
-        $scope.commonArrays = ListService.getCommonArrays();
         
         $scope.loading = function(value) {
             $scope.isLoading = ListService.loader(value);
@@ -4093,56 +4094,35 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             return TaskFactory.getWeekBeginning();
         };
         
-        function setNewTask() {
-            $scope.newTask = {
-                description: '',
-                link: {
-                    linked: false,
-                    type: '',
-                    anime: undefined,
-                    manga: undefined
-                },
-                day: '',
-                date: new Date(),
-                repeat: 0,
-                category: '',
-                daily: false,
-                checklist: false,
-                checklistItems: [],
-                isAddTask: false
-            };
-        }
-        setNewTask();
-        
 		// Create new Task
 		$scope.create = function() {
-			// Create new Task object
-			var task = new Tasks ({
-				description: this.newTask.description,
-                link: {
-                    linked: this.newTask.link.linked,
-                    type: (this.newTask.link.linked === false) ? ''      : 
-                          (this.newTask.category === 'Watch')  ? 'anime' : 
-                                                                 'manga' ,
-                    anime: (this.newTask.link.anime === undefined) ? undefined : this.newTask.link.anime._id ,
-                    manga: (this.newTask.link.manga === undefined) ? undefined : this.newTask.link.manga._id 
-                },
-                day: this.newTask.daily === true ? 'Any' : this.newTask.day,
-                date: this.newTask.date === '' ? new Date() : this.newTask.date,
-                repeat: (this.newTask.link.linked === false) ? this.newTask.repeat                     : 
-                        (this.newTask.category === 'Watch')  ? this.newTask.link.anime.finalEpisode    :
-                                                               1    ,
-                completeTimes: (this.newTask.link.linked === false) ? 0                                     :
-                               (this.newTask.category === 'Watch')  ? this.newTask.link.anime.episodes      :
-                                                                      0      ,
-                updateCheck: new Date().getDay() === 1 ? true : false,
-                complete: false,
-                category: this.newTask.category === '' ? 'Other' : this.newTask.category,
-                daily: this.newTask.daily,
-                checklist: this.newTask.checklist,
-                checklistItems: this.newTask.checklistItems
-			});
-//            console.log(task, this.newTask);
+            console.log(this.newTask);
+                // Create new Task object
+                var task = new Tasks ({
+                    description: this.newTask.description,
+                    link: {
+                        linked: this.newTask.link.linked,
+                        type: (this.newTask.link.linked === false) ? ''      : 
+                              (this.newTask.category === 'Watch')  ? 'anime' : 
+                                                                     'manga' ,
+                        anime: (this.newTask.link.anime === undefined) ? undefined : this.newTask.link.anime._id ,
+                        manga: (this.newTask.link.manga === undefined) ? undefined : this.newTask.link.manga._id 
+                    },
+                    day: this.newTask.daily === true ? 'Any' : this.newTask.day,
+                    date: this.newTask.date === '' ? new Date() : this.newTask.date,
+                    repeat: (this.newTask.link.linked === false) ? this.newTask.repeat                     : 
+                            (this.newTask.category === 'Watch')  ? this.newTask.link.anime.finalEpisode    :
+                                                                   1    ,
+                    completeTimes: (this.newTask.link.linked === false) ? 0                                     :
+                                   (this.newTask.category === 'Watch')  ? this.newTask.link.anime.episodes      :
+                                                                          0      ,
+                    updateCheck: new Date().getDay() === 1 ? true : false,
+                    complete: false,
+                    category: this.newTask.category === '' ? 'Other' : this.newTask.category,
+                    daily: this.newTask.daily,
+                    checklist: this.newTask.checklist,
+                    checklistItems: this.newTask.checklistItems
+                });
 //			// Redirect after save
 			task.$save(function(response) {
 				$location.path('tasks');
@@ -4406,13 +4386,29 @@ angular.module('tasks')
     return {
         restrict: 'A',
         replace: true,
-        scope: {
-            create: '='
-        },
         templateUrl: '/modules/tasks/views/create-task.client.view.html',
         link: function (scope, element, attrs) {
             var newTaskModel = {};
-            scope.newTask = scope.create;
+            function setNewTask() {
+                scope.newTask = {
+                    description: '',
+                    link: {
+                        linked: false,
+                        type: '',
+                        anime: undefined,
+                        manga: undefined
+                    },
+                    day: '',
+                    date: new Date(),
+                    repeat: 0,
+                    category: '',
+                    daily: false,
+                    checklist: false,
+                    checklistItems: [],
+                    isAddTask: false
+                };
+            }
+            setNewTask();
             angular.copy(scope.newTask, newTaskModel);
             scope.stepConfig = {
                 currentStep: 1,
@@ -4908,8 +4904,37 @@ angular.module('toptens')
         restrict: 'A',
         replace: true,
         transclude: true,
+        scope: {
+            stepConfig: '='
+        },
         template: '<div class="steps" ng-transclude>' +
-                  '</div>'
+                  '</div>',
+        bindToController: 'steps',
+        controller: function($scope) {
+            console.log($scope);
+            var self = this;
+            self.steps = [];
+            
+            self.register = function(step) {
+                self.steps.push(step);
+                if(step.stepNumber === 1) {
+                    step.active = true;
+                }
+            };
+            
+            $scope.$watch('stepConfig.currentStep', function(newValue) {
+                if (newValue !== undefined) {
+                    angular.forEach(self.steps, function(step) {
+                        if(step.stepNumber !== newValue) {
+                            step.active = false;
+                        } else {
+                            step.active = true;
+                        }
+                    });
+                }
+            });
+            
+        }
     };
 })
 .directive('step', function() {
@@ -4917,44 +4942,15 @@ angular.module('toptens')
       restrict: 'A',
       replace: true,
       transclude: true,
-      scope: {
-          stepConfig: '='
-      },
+      scope: {},
+      require: '^steps',
       templateUrl: '/modules/toptens/templates/step.html',
-      link: function(scope, elm, attrs) {
+      link: function(scope, elm, attrs, stepsController) {
+          scope.active = false;
           scope.stepNumber = elm.index() + 1;
-          var element = elm[0],
-              classList = element.classList;
-          
-          function classRemove(array) {
-              angular.forEach(array, function(item) {
-                  classList.remove(item);
-              });
-          }
-          function classAdd(array) {
-              angular.forEach(array, function(item) {
-                  classList.add(item);
-              });
-          }
-          function setZIndex(number) {
-              element.style.zIndex = number;
-          }
-          
-          scope.$watch('stepConfig.currentStep', function(newValue) {
-              if (newValue !== undefined) {
-                  if (scope.stepNumber === scope.stepConfig.currentStep) {
-                      classRemove(['step-transition', 'step-out']);
-                      setZIndex(2);
-                      classAdd(['step-transition', 'step-in']);
-                  } else {
-                      classRemove(['step-transition', 'step-in']);
-                      setZIndex(1);
-                      classAdd(['step-transition', 'step-out']);
-                  }
-              }
-          });
-      }
-  };  
+          stepsController.register(scope);
+      }  
+  };
 })
 .directive('stepControls', function() {
    return {

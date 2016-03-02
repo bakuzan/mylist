@@ -46,8 +46,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
         };
         
 		// Create new Task
-		$scope.create = function(task) {
-            console.log(task);
+		$scope.create = function() {
             console.log(this.newTask);
                 // Create new Task object
                 var task = new Tasks ({

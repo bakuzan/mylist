@@ -444,7 +444,8 @@ div.slider-full-screen {
   opacity: 1; }
 
 .step-button-group {
-  position: absolute;
+  position: relative;
+  left: 0;
   width: 100%;
   bottom: -10px;
   display: inline-flex;

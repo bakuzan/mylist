@@ -60,6 +60,7 @@ angular.module('characters').directive('characterBack', function(){
                   if (scope.filteredSlides[scope.currentIndex].locked) {
                     //unlock, i.e start timer.
                     scope.filteredSlides[scope.currentIndex].locked = false;
+                      autoSlide();
                   } else {
                     //lock, i.e. cancel timer.
                     scope.filteredSlides[scope.currentIndex].locked = true;

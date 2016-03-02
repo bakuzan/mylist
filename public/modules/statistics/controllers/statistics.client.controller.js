@@ -1,8 +1,8 @@
 'use strict';
 
 // Statistics controller
-angular.module('statistics').controller('StatisticsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'Characters', 'ListService', 'ItemService', 'CharacterService', 'StatisticsService',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, Characters, ListService, ItemService, CharacterService, StatisticsService) {
+angular.module('statistics').controller('StatisticsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'Characters', 'ListService', 'ItemService', 'CharacterService', 'StatisticsService', '$filter',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, Characters, ListService, ItemService, CharacterService, StatisticsService, $filter) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -131,13 +131,12 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                     item.meta.episodeSummaryFunctions = episodeSummaryFunctions;
                 });
             }
-            console.log(array, $scope.historyDetails);
+//            console.log(array, $scope.historyDetails);
         }
-        $scope.$watchCollection('detail.divisionText', function(newValue, oldValue) {
-            console.log('detail items: ', newValue, oldValue);
-            if (newValue !== undefined && newValue !== oldValue) {
-                var filteredItems = $filter('statisticsDetailFilter')($scope.items, detail.history, detail.year, detail.division);
-                getSummaryFunctions(filteredItems);
+        $scope.$watchGroup(['detail.history', 'detail.year', 'detail.division'], function(newValues) {
+            if (newValues !== undefined) {
+                var filtered = $filter('statisticsDetailFilter')($scope.items, newValues[0], newValues[1], newValues[2]);
+                getSummaryFunctions(filtered);
             }
         });
         
@@ -146,7 +145,6 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         };
         
         $scope.historyDetail = function(year, division, divisionText, summaryType) {
-            console.log(year, division, divisionText, summaryType);
             if ($scope.detail.year === year && $scope.detail.divisionText === divisionText) {
                 $scope.detail.isVisible = !$scope.detail.isVisible;
             } else {
@@ -155,10 +153,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 $scope.detail.division = division;
                 $scope.detail.divisionText = divisionText;
                 $scope.detail.summary.type = summaryType;
-                $scope.detail.summary.isVisible = (summaryType === '') ? false : true;
-                if($scope.detail.summary.isVisible) {
-                    getSummaryFunctions(items);
-                }
+                $scope.detail.summary.isVisible = (summaryType === undefined) ? false : true;
             }
         };
         

@@ -446,7 +446,7 @@ div.slider-full-screen {
 .step-button-group {
   position: absolute;
   width: 100%;
-  bottom: -20%;
+  bottom: -10px;
   display: inline-flex;
   z-index: 5; }
   .step-button-group button {

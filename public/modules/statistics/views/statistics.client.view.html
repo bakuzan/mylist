@@ -55,11 +55,11 @@
                             <tbody>
                                 <tr ng-repeat="year in historyDetails[detail.history][detail.history] | orderBy: '-year'" ng-hide="loading(year.year)">
                                     <th ng-class="(detail.isEpisodeRatings) ? '' : 'clickable'" 
-                                        ng-click="(detail.isEpisodeRatings) ? '' : historyDetail(year.year, '', '', detail.history,  detailItems)">
+                                        ng-click="(detail.isEpisodeRatings) ? '' : historyDetail(year.year, '', '', detail.history)">
                                         <span>{{year.year}}</span>
                                     </th>
                                     <td ng-repeat="part in year[detail.history]" 
-                                        ng-click="historyDetail(year.year, part[detail.history==='months' ? 'number' : 'text'], part.text, '', detailItems)" 
+                                        ng-click="historyDetail(year.year, part[detail.history==='months' ? 'number' : 'text'], part.text)" 
                                         hover-data="{{part.count}} {{detail.history === 'months' ? 'completed' : 'watched' }} {{part.text}} {{year.year}}.">
                                         <span class="stat-month-box" ng-style="{'opacity': part.count / historyDetails[detail.history].max }"></span>
                                     </td>

@@ -3670,8 +3670,8 @@ angular.module('statistics').config(['$stateProvider', '$urlRouterProvider',
 'use strict';
 
 // Statistics controller
-angular.module('statistics').controller('StatisticsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'Characters', 'ListService', 'ItemService', 'CharacterService', 'StatisticsService',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, Characters, ListService, ItemService, CharacterService, StatisticsService) {
+angular.module('statistics').controller('StatisticsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'Characters', 'ListService', 'ItemService', 'CharacterService', 'StatisticsService', '$filter',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, Characters, ListService, ItemService, CharacterService, StatisticsService, $filter) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -3687,7 +3687,8 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             summary: {
                 type: '',
                 isVisible: false
-            }
+            },
+            isEpisodeRatings: false
         };
         $scope.commonArrays = ListService.getCommonArrays('statistics');
         $scope.filterConfig = {
@@ -3790,18 +3791,21 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             //Check whether to do ratings or episode ratings.
             if (!$scope.detail.isEpisodeRatings) {
                 $scope.historyDetails.summaryFunctions = StatisticsService.buildSummaryFunctions(array);
-                if ($scope.detail.summary.isVisible === true) $scope.historyDetails.yearSummary = StatisticsService.buildYearSummary(array, $scope.detail.year, $scope.detail.summary.type);
+                if ($scope.detail.summary.isVisible === true) {
+                    $scope.historyDetails.yearSummary = StatisticsService.buildYearSummary(array, $scope.detail.year, $scope.detail.summary.type);
+                }
             } else {
                 angular.forEach(array, function(item) {
                     var episodeSummaryFunctions = StatisticsService.buildSummaryFunctions(item.meta.history);
                     item.meta.episodeSummaryFunctions = episodeSummaryFunctions;
                 });
             }
-            console.log(array, $scope.historyDetails);
+//            console.log(array, $scope.historyDetails);
         }
-        $scope.$watchCollection('detailItems', function(newValue) {
-            if (newValue !== undefined) {
-                getSummaryFunctions(newValue);
+        $scope.$watchGroup(['detail.history', 'detail.year', 'detail.division'], function(newValues) {
+            if (newValues !== undefined) {
+                var filtered = $filter('statisticsDetailFilter')($scope.items, newValues[0], newValues[1], newValues[2]);
+                getSummaryFunctions(filtered);
             }
         });
         
@@ -3874,7 +3878,6 @@ angular.module('statistics')
         bindToController: true,
         controllerAs: 'tabContainer',
         controller: function($scope) {
-            console.log($scope);
             var self = this;
             self.tabs = [];
             self.currentTab = undefined;

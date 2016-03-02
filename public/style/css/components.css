@@ -444,7 +444,7 @@ div.slider-full-screen {
   opacity: 1; }
 
 .step-button-group {
-  position: absolute;
+  position: relative;
   width: 100%;
   bottom: -10px;
   display: inline-flex;
@@ -566,7 +566,23 @@ div.slider-full-screen {
 
 /* Tab styling */
 .tab-controls {
+  position: relative;
+  padding: 0 5px;
+  white-space: nowrap;
   list-style-type: none; }
+
+.flooded .tab-control {
+  display: inline-block; }
+
+.tab-control {
+  display: none;
+  position: absolute;
+  top: 25px;
+  cursor: pointer; }
+  .tab-control.slide-right {
+    right: -5px; }
+  .tab-control.slide-left {
+    left: -5px; }
 
 .tab-control-option {
   display: inline-block;

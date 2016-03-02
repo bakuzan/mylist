@@ -17,6 +17,7 @@ angular.module('statistics')
             var self = this;
             self.tabs = [];
             self.currentTab = undefined;
+            self.listShift = 0;
             
             self.addTab = function addTab(tab) {
                 self.tabs.push(tab);
@@ -35,13 +36,38 @@ angular.module('statistics')
                 selectedTab.active = true;
                 self.currentTab = ($scope.tabContainer.model === undefined) ? undefined : selectedTab.heading;
             };
+            
+            self.shiftTabs = function(direction) {
+                switch(direction) {
+                    case 'origin':
+                        self.listShift += 100;
+                        break;
+                        
+                    case 'offset':
+                        self.listShift -= 100;
+                        break;
+                }
+            };
+            
         },
         link: function(scope, element, attrs, model) {
-            scope.$watchCollection('tabContainer.currentTab', function(newValue) {
+            var el = element[0],
+                ul = el.children[0];
+            
+            scope.$watch('tabContainer.currentTab', function(newValue) {
                 if (newValue !== undefined && model.$viewValue !== undefined) {
                     model.$setViewValue(newValue);
                 }
             });
+            
+            scope.$watch('tabContainer.listShift', function(newValue) {
+                if(newValue !== undefined) {
+                    var shift = (newValue === 0) ? '' : 'px';
+                    ul.style.left = newValue + shift;
+                    console.log('list shift: ', ul, newValue, shift);
+                }
+            });
+            
         }
     };
 })
@@ -58,6 +84,23 @@ angular.module('statistics')
         link: function (scope, element, attrs, tabContainerCtrl) {
             scope.active = false;
             tabContainerCtrl.addTab(scope);
+        }
+    };
+})
+.directive('detectFlood', function() {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            var el = element[0];
+            
+            function overflowCheck() {
+                if (el.scrollWidth > el.offsetWidth) {
+                    el.classList.add('flooded');
+                } else {
+                    el.classList.remove('flooded');
+                }
+            }
+            overflowCheck();
         }
     };
 });

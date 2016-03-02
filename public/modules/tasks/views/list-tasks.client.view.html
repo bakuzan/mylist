@@ -36,7 +36,9 @@
             </div>
             <li class="taskItem" ng-repeat="taskItem in tasks | filter: filterConfig.search | calendarFilter:filterConfig.datesSelected">
                 <input type="checkbox" class="taskCheckbox" ng-model="taskItem.complete" ng-change="tickOff(taskItem)" ng-disabled="taskItem.complete || taskItem.checklist">
-                <div task-manga-update item="taskItem" manga-update="mangaUpdate" ng-if="taskItem.link.type==='manga'" ng-show="mangaUpdate.isPopup === taskItem" ng-class="(mangaUpdate.isPopup === taskItem) ? 'active' : ''"></div>
+                <div task-manga-update item="taskItem" manga-update="mangaUpdate" 
+                     ng-if="taskItem.link.type==='manga'" ng-show="mangaUpdate.isPopup === taskItem" 
+                     ng-class="(mangaUpdate.isPopup === taskItem) ? 'active' : 'display-inline-block'"></div>
                 <span class="task-description-text complete-{{taskItem.complete}} display-inline-block" ng-class="taskItem.checklist === true ? 'clickable' : ''"
                       ng-click="taskItem.checklist === true ? viewTask = !viewTask : ''">
                     {{taskItem.description}}

@@ -1,7 +1,29 @@
 /* Tab styling */
 
 .tab-controls {
+    position: relative;
+    padding: 0 5px;
+    white-space: nowrap;
     list-style-type: none;
+}
+
+.flooded {
+    .tab-control {
+        display: inline-block;
+    }
+}
+
+.tab-control {
+    display: none;
+    position: absolute;
+    top: 25px;
+    cursor: pointer;
+    &.slide-right {
+        right: -5px;
+    }
+    &.slide-left {
+        left: -5px;
+    }
 }
 
 .tab-control-option {

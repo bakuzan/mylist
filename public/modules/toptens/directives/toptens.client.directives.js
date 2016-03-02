@@ -6,8 +6,37 @@ angular.module('toptens')
         restrict: 'A',
         replace: true,
         transclude: true,
+        scope: {
+            stepConfig: '='
+        },
         template: '<div class="steps" ng-transclude>' +
-                  '</div>'
+                  '</div>',
+        bindToController: 'steps',
+        controller: function($scope) {
+            console.log($scope);
+            var self = this;
+            self.steps = [];
+            
+            self.register = function(step) {
+                self.steps.push(step);
+                if(step.stepNumber === 1) {
+                    step.active = true;
+                }
+            };
+            
+            $scope.$watch('stepConfig.currentStep', function(newValue) {
+                if (newValue !== undefined) {
+                    angular.forEach(self.steps, function(step) {
+                        if(step.stepNumber !== newValue) {
+                            step.active = false;
+                        } else {
+                            step.active = true;
+                        }
+                    });
+                }
+            });
+            
+        }
     };
 })
 .directive('step', function() {
@@ -15,44 +44,15 @@ angular.module('toptens')
       restrict: 'A',
       replace: true,
       transclude: true,
-      scope: {
-          stepConfig: '='
-      },
+      scope: {},
+      require: '^steps',
       templateUrl: '/modules/toptens/templates/step.html',
-      link: function(scope, elm, attrs) {
+      link: function(scope, elm, attrs, stepsController) {
+          scope.active = false;
           scope.stepNumber = elm.index() + 1;
-          var element = elm[0],
-              classList = element.classList;
-          
-          function classRemove(array) {
-              angular.forEach(array, function(item) {
-                  classList.remove(item);
-              });
-          }
-          function classAdd(array) {
-              angular.forEach(array, function(item) {
-                  classList.add(item);
-              });
-          }
-          function setZIndex(number) {
-              element.style.zIndex = number;
-          }
-          
-          scope.$watch('stepConfig.currentStep', function(newValue) {
-              if (newValue !== undefined) {
-                  if (scope.stepNumber === scope.stepConfig.currentStep) {
-                      classRemove(['step-transition', 'step-out']);
-                      setZIndex(2);
-                      classAdd(['step-transition', 'step-in']);
-                  } else {
-                      classRemove(['step-transition', 'step-in']);
-                      setZIndex(1);
-                      classAdd(['step-transition', 'step-out']);
-                  }
-              }
-          });
-      }
-  };  
+          stepsController.register(scope);
+      }  
+  };
 })
 .directive('stepControls', function() {
    return {

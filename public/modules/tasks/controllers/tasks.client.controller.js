@@ -1,8 +1,8 @@
 'use strict';
 
 // Tasks controller
-angular.module('tasks').controller('TasksController', ['$scope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory',
-	function($scope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory) {
+angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory',
+	function($scope, $rootScope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -11,6 +11,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
         var today = new Date(),
             day = today.getDay();
         
+        $rootScope.commonArrays = ListService.getCommonArrays();
         $scope.whichController = 'task';
         $scope.isLoading = false;
         //paging variables.
@@ -31,7 +32,6 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
         $scope.mangaUpdate = {
             isPopup: ''
         };
-        $scope.commonArrays = ListService.getCommonArrays();
         
         $scope.loading = function(value) {
             $scope.isLoading = ListService.loader(value);
@@ -45,56 +45,36 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             return TaskFactory.getWeekBeginning();
         };
         
-        function setNewTask() {
-            $scope.newTask = {
-                description: '',
-                link: {
-                    linked: false,
-                    type: '',
-                    anime: undefined,
-                    manga: undefined
-                },
-                day: '',
-                date: new Date(),
-                repeat: 0,
-                category: '',
-                daily: false,
-                checklist: false,
-                checklistItems: [],
-                isAddTask: false
-            };
-        }
-        setNewTask();
-        
 		// Create new Task
-		$scope.create = function() {
-			// Create new Task object
-			var task = new Tasks ({
-				description: this.newTask.description,
-                link: {
-                    linked: this.newTask.link.linked,
-                    type: (this.newTask.link.linked === false) ? ''      : 
-                          (this.newTask.category === 'Watch')  ? 'anime' : 
-                                                                 'manga' ,
-                    anime: (this.newTask.link.anime === undefined) ? undefined : this.newTask.link.anime._id ,
-                    manga: (this.newTask.link.manga === undefined) ? undefined : this.newTask.link.manga._id 
-                },
-                day: this.newTask.daily === true ? 'Any' : this.newTask.day,
-                date: this.newTask.date === '' ? new Date() : this.newTask.date,
-                repeat: (this.newTask.link.linked === false) ? this.newTask.repeat                     : 
-                        (this.newTask.category === 'Watch')  ? this.newTask.link.anime.finalEpisode    :
-                                                               1    ,
-                completeTimes: (this.newTask.link.linked === false) ? 0                                     :
-                               (this.newTask.category === 'Watch')  ? this.newTask.link.anime.episodes      :
-                                                                      0      ,
-                updateCheck: new Date().getDay() === 1 ? true : false,
-                complete: false,
-                category: this.newTask.category === '' ? 'Other' : this.newTask.category,
-                daily: this.newTask.daily,
-                checklist: this.newTask.checklist,
-                checklistItems: this.newTask.checklistItems
-			});
-//            console.log(task, this.newTask);
+		$scope.create = function(task) {
+            console.log(task);
+            console.log(this.newTask);
+                // Create new Task object
+                var task = new Tasks ({
+                    description: this.newTask.description,
+                    link: {
+                        linked: this.newTask.link.linked,
+                        type: (this.newTask.link.linked === false) ? ''      : 
+                              (this.newTask.category === 'Watch')  ? 'anime' : 
+                                                                     'manga' ,
+                        anime: (this.newTask.link.anime === undefined) ? undefined : this.newTask.link.anime._id ,
+                        manga: (this.newTask.link.manga === undefined) ? undefined : this.newTask.link.manga._id 
+                    },
+                    day: this.newTask.daily === true ? 'Any' : this.newTask.day,
+                    date: this.newTask.date === '' ? new Date() : this.newTask.date,
+                    repeat: (this.newTask.link.linked === false) ? this.newTask.repeat                     : 
+                            (this.newTask.category === 'Watch')  ? this.newTask.link.anime.finalEpisode    :
+                                                                   1    ,
+                    completeTimes: (this.newTask.link.linked === false) ? 0                                     :
+                                   (this.newTask.category === 'Watch')  ? this.newTask.link.anime.episodes      :
+                                                                          0      ,
+                    updateCheck: new Date().getDay() === 1 ? true : false,
+                    complete: false,
+                    category: this.newTask.category === '' ? 'Other' : this.newTask.category,
+                    daily: this.newTask.daily,
+                    checklist: this.newTask.checklist,
+                    checklistItems: this.newTask.checklistItems
+                });
 //			// Redirect after save
 			task.$save(function(response) {
 				$location.path('tasks');

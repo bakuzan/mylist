@@ -5,13 +5,29 @@ angular.module('tasks')
     return {
         restrict: 'A',
         replace: true,
-        scope: {
-            create: '='
-        },
         templateUrl: '/modules/tasks/views/create-task.client.view.html',
         link: function (scope, element, attrs) {
             var newTaskModel = {};
-            scope.newTask = scope.create;
+            function setNewTask() {
+                scope.newTask = {
+                    description: '',
+                    link: {
+                        linked: false,
+                        type: '',
+                        anime: undefined,
+                        manga: undefined
+                    },
+                    day: '',
+                    date: new Date(),
+                    repeat: 0,
+                    category: '',
+                    daily: false,
+                    checklist: false,
+                    checklistItems: [],
+                    isAddTask: false
+                };
+            }
+            setNewTask();
             angular.copy(scope.newTask, newTaskModel);
             scope.stepConfig = {
                 currentStep: 1,

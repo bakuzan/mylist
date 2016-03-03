@@ -40,7 +40,8 @@ angular.module('statistics')
             self.shiftTabs = function(direction) {
                 switch(direction) {
                     case 'origin':
-                        self.listShift += 100;
+                        console.log(self.listShift, (self.listShift - 100));
+                        self.listShift += ((self.listShift + 100) > 0) ? 0 : 100;
                         break;
                         
                     case 'offset':
@@ -64,7 +65,6 @@ angular.module('statistics')
                 if(newValue !== undefined) {
                     var shift = (newValue === 0) ? '' : 'px';
                     ul.style.left = newValue + shift;
-                    console.log('list shift: ', ul, newValue, shift);
                 }
             });
             
@@ -87,7 +87,7 @@ angular.module('statistics')
         }
     };
 })
-.directive('detectFlood', function() {
+.directive('detectFlood', ['$timeout', function($timeout) {
     return {
         restrict: 'A',
         link: function(scope, element, attrs) {
@@ -101,6 +101,19 @@ angular.module('statistics')
                 }
             }
             overflowCheck();
+            
+            scope.$watch(
+                function () {
+                    return {
+                        width: element.width(),
+                    };
+                }, function () {
+                    $timeout(function () {
+                        overflowCheck();
+                    }, 250);
+                }, true
+            );
+            
         }
     };
-});
+}]);

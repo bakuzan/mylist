@@ -9,11 +9,12 @@
              ng-click="tabContainer.select(tab)">{{tab.heading}}</a>
         </li>
     </ul>
-    <a class="tab-control slide-left" ng-click="tabContainer.shiftTabs('origin')">
-        <i class="fa fa-backward"></i>
+    <a class="tab-control slide-left" ng-click="tabContainer.shiftTabs('origin')"
+       ng-style="{display: (tabContainer.listShift === 0) ? 'none' : ''}">
+        <i class="fa fa-chevron-left"></i>
     </a>
     <a class="tab-control slide-right" ng-click="tabContainer.shiftTabs('offset')">
-        <i class="fa fa-forward"></i>
+        <i class="fa fa-chevron-right"></i>
     </a>
     <ng-transclude>
 

@@ -41,11 +41,19 @@ angular.module('statistics')
                 switch(direction) {
                     case 'origin':
                         console.log(self.listShift, (self.listShift - 100));
-                        self.listShift += ((self.listShift + 100) > 0) ? 0 : 100;
+                        if ((self.listShift + 100) > 0) {
+                            self.listShift = 0;
+                        } else {
+                            self.listShift += 100;
+                        }
                         break;
                         
                     case 'offset':
-                        self.listShift -= 100;
+                        if ((self.listShift - 100) < ($scope.elWidth - $scope.ulWidth)) {
+                            self.listShift = $scope.elWidth - $scope.ulWidth;
+                        } else {
+                            self.listShift -= 100;
+                        }
                         break;
                 }
             };
@@ -53,13 +61,35 @@ angular.module('statistics')
         },
         link: function(scope, element, attrs, model) {
             var el = element[0],
-                ul = el.children[0];
+                ul = el.children[0].children[0];
+            scope.elWidth = el.offsetWidth;
+            scope.ulWidth = ul.offsetWidth;
             
             scope.$watch('tabContainer.currentTab', function(newValue) {
                 if (newValue !== undefined && model.$viewValue !== undefined) {
                     model.$setViewValue(newValue);
                 }
             });
+            
+            scope.$watch(
+                function () {
+                    return {
+                        width: el.offsetWidth,
+                    };
+                }, function () {
+                    scope.elWidth = el.offsetWidth;
+                }, true
+            );
+            
+            scope.$watch(
+                function () {
+                    return {
+                        width: ul.offsetWidth,
+                    };
+                }, function () {
+                    scope.ulWidth = ul.offsetWidth;
+                }, true
+            );
             
             scope.$watch('tabContainer.listShift', function(newValue) {
                 if(newValue !== undefined) {
@@ -105,12 +135,11 @@ angular.module('statistics')
             scope.$watch(
                 function () {
                     return {
-                        width: element.width(),
+                        width: el.offsetWidth,
                     };
                 }, function () {
-                    $timeout(function () {
+                    console.log('detect flood?');
                         overflowCheck();
-                    }, 250);
                 }, true
             );
             

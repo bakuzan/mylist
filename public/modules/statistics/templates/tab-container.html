@@ -1,19 +1,22 @@
-<div class="overflow-hidden" role="tabcontainer" detect-flood>
-    <ul class="tab-controls" role="tablist">
-        <li class="tab-control-option"
-            role="taboptions"
-            ng-repeat="tab in tabContainer.tabs"
-            ng-class="{'active': tab.active}">
-          <a href=""
-             role="tab"
-             ng-click="tabContainer.select(tab)">{{tab.heading}}</a>
-        </li>
-    </ul>
+<div class="tab-container overflow-hidden" role="tabcontainer" detect-flood>
+    <div class="tab-controls-container">
+        <ul class="tab-controls" role="tablist">
+            <li class="tab-control-option"
+                role="taboptions"
+                ng-repeat="tab in tabContainer.tabs"
+                ng-class="{'active': tab.active}">
+              <a href=""
+                 role="tab"
+                 ng-click="tabContainer.select(tab)">{{tab.heading}}</a>
+            </li>
+        </ul>
+    </div>
     <a class="tab-control slide-left" ng-click="tabContainer.shiftTabs('origin')"
        ng-style="{display: (tabContainer.listShift === 0) ? 'none' : ''}">
         <i class="fa fa-chevron-left"></i>
     </a>
-    <a class="tab-control slide-right" ng-click="tabContainer.shiftTabs('offset')">
+    <a class="tab-control slide-right" ng-click="tabContainer.shiftTabs('offset')"
+       ng-style="{display: (tabContainer.listShift <= (elWidth - ulWidth)) ? 'none' : ''}">
         <i class="fa fa-chevron-right"></i>
     </a>
     <ng-transclude>

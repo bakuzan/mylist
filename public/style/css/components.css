@@ -565,8 +565,15 @@ div.slider-full-screen {
     left: 50%; }
 
 /* Tab styling */
-.tab-controls {
+.tab-container {
+  height: 54px; }
+
+.tab-controls-container {
   position: relative;
+  height: 100%; }
+
+.tab-controls {
+  position: absolute;
   padding: 0 5px;
   white-space: nowrap;
   list-style-type: none; }

@@ -134,7 +134,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		};
         $scope.tickOff = function(item) {
             item.chapters += 1;
-            item.latest = $scope.itemUpdate; //update latest.
+            item.latest = new Date(); //update latest.
             $scope.updateHistory = true; //add to history.
             $scope.mangaitem = item;
             $scope.update();

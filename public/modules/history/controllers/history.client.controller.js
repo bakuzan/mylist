@@ -1,8 +1,8 @@
 'use strict';
 
 // History controller
-angular.module('history').controller('HistoryController', ['$scope', '$stateParams', '$location', 'Authentication', 'AnimeHistory', 'MangaHistory', 'HistoryService', 'ListService',
-	function($scope, $stateParams, $location, Authentication, AnimeHistory, MangaHistory, HistoryService, ListService) {
+angular.module('history').controller('HistoryController', ['$scope', '$stateParams', '$location', 'Authentication', 'AnimeHistory', 'MangaHistory', 'HistoryService', 'ListService', 'LoaderControl',
+	function($scope, $stateParams, $location, Authentication, AnimeHistory, MangaHistory, HistoryService, ListService, LoaderControl) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -39,8 +39,10 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
         }
         
         $scope.buildHistory = function() {
-            getAnimeitems();
-            getMangaitems();
+            LoaderControl.pageLoading(function() {
+                getAnimeitems();
+                getMangaitems();
+            });
         };
         //Needed to catch 'Character' setting and skip it.
         $scope.$watch('view', function(newValue) {

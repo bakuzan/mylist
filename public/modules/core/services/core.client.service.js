@@ -1,7 +1,8 @@
 'use strict';
 
 //Service to provide common access to features.
-angular.module('core').factory('NotificationFactory', function() {
+angular.module('core')
+.factory('NotificationFactory', function() {
     var self = this;
     /*global swal */
     /*global toastr */
@@ -52,4 +53,26 @@ angular.module('core').factory('NotificationFactory', function() {
             }, thenDo);
         }
     };
-});
+})
+.service('LoaderControl', ['$q', function($q) {
+    var service = {};
+    
+    service.loading = false;
+    
+    service.pageLoading = function(func) {
+        service.loading = true;
+        console.log('loading: ', func, service.loading);
+        process(func).then(function(result) {
+            service.loading = false;
+            console.log('finsihed: ', result, service.loading);
+        });
+    };
+    
+    function process(func) {
+        return $q(function(resolve, reject) {
+            resolve(func());
+        });
+    }
+    
+    return service;
+}]);

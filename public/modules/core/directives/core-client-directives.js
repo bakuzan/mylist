@@ -38,4 +38,27 @@ angular.module('core').directive('myProgress', function() {
       });
     }
   };
-});
+})
+.directive('pageLoading', ['LoaderControl', function(LoaderControl) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            var el = element[0];
+            
+            scope.$watch(
+                function() {
+                    return {
+                        loading: LoaderControl.loading
+                    };
+                }, function(loader) {
+                    if(loader.loading) {
+                        el.classList.add('page-loading');
+                    } else {
+                        el.classList.remove('page-loading');
+                    }
+                }, true
+            );
+            
+        }
+    };
+}]);

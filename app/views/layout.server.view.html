@@ -74,7 +74,7 @@
 <body data-ng-controller="HeaderController" class="ng-cloak" ng-class="{ 'loginBG' : authentication.user }" ng-keydown="$broadcast('my:keydown', $event)">
 	<header data-ng-include="'/modules/core/views/header.client.view.html'" class="navbar navbar-fixed-top navbar-inverse" data-ng-show="authentication.user"></header>
 	<section class="content wrapper">
-		<section class="container" style="padding-bottom: 100px" page-loading>
+		<section class="container" style="padding-bottom: 100px">
 			{% block content %}{% endblock %}
 		</section>
 	</section>

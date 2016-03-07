@@ -1,8 +1,8 @@
 'use strict';
 
 // Toptens controller
-angular.module('toptens').controller('ToptensController', ['$scope', '$stateParams', '$location', 'Authentication', 'Toptens', 'NotificationFactory', 'ListService',
-	function($scope, $stateParams, $location, Authentication, Toptens, NotificationFactory, ListService) {
+angular.module('toptens').controller('ToptensController', ['$scope', '$stateParams', '$location', 'Authentication', 'Toptens', 'NotificationFactory', 'ListService', 'spinnerService',
+	function($scope, $stateParams, $location, Authentication, Toptens, NotificationFactory, ListService, spinnerService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -59,8 +59,10 @@ angular.module('toptens').controller('ToptensController', ['$scope', '$statePara
 
 		// Find a list of Toptens
 		$scope.find = function() {
-			$scope.toptens = Toptens.query();
-            console.log($scope.toptens);
+            spinnerService.loading('topten', function() {
+                $scope.toptens = Toptens.query();
+                console.log($scope.toptens);
+            });
 		};
 
 		// Find existing Topten

@@ -1,8 +1,8 @@
 'use strict';
 
 // Animeitems controller
-angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, AnimeFactory) {
+angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory', 'spinnerService',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, AnimeFactory, spinnerService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -186,9 +186,10 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
          *  (0) returns only ongoing series. (1) returns all series.
          */
 		function getAnime(value) {
-            console.log('getting', $scope.filterConfig.ongoingList);
-			$scope.animeitems = Animeitems.query({
-                status: value
+            spinnerService.loading('anime', function() {
+                $scope.animeitems = Animeitems.query({
+                    status: value
+                });
             });
 		}
         

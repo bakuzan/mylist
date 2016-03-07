@@ -36,7 +36,7 @@
             </div>
         </div>
         <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
-        <div class="col-lg-8 col-md-6 col-sm-6 item-list-container">
+        <div class="col-lg-8 col-md-6 col-sm-6 item-list-container" loading-spinner name="rating">
             <div page-controls page-config="pageConfig" showing-count="showingCount"></div>
             <table class="ratings-table">
                 <thead>
@@ -60,7 +60,7 @@
                     </th>
                 </thead>
                 <tbody ng-init="changeRating=false">
-                    <tr ng-repeat="item in items | filter: { title: search } | ratingFilter: ratingLevel | orderBy: sortType:sortReverse | startFrom: pageConfig.currentPage*pageConfig.pageSize | limitTo: pageConfig.pageSize" ng-hide="loading(item.title)">
+                    <tr ng-repeat="item in items | filter: { title: search } | ratingFilter: ratingLevel | orderBy: sortType:sortReverse | startFrom: pageConfig.currentPage*pageConfig.pageSize | limitTo: pageConfig.pageSize">
                         <td>
                             <i ng-if="item.status" class="fa fa-check green-text"></i>
                             <i ng-if="!item.status" class="fa fa-minus"></i>
@@ -110,5 +110,5 @@
             </div>
         </div>
     </div>
-    <section class="loading-image" data-ng-if="isLoading"></section>
+<!--    <section class="loading-image" data-ng-if="isLoading"></section>-->
 </section>

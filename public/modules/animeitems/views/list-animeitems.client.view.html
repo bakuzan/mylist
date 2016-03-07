@@ -7,10 +7,10 @@
             <div list-filters filter-config="filterConfig" items="animeitems" page="whichController"></div>
         </div>
         <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
-        <div class="col-lg-8 col-md-6 col-sm-6 item-list-container">
+        <div class="col-lg-8 col-md-6 col-sm-6 item-list-container" loading-spinner name="anime" size="fullscreen">
             <div page-controls page-config="pageConfig" showing-count="filterConfig.showingCount"></div>
             <div class="list-group col-lg-12 col-md-12 col-sm-12">
-                <div data-ng-repeat="animeitem in animeitems | orderBy: filterConfig.sortType:filterConfig.sortReverse | filter: filterConfig.search | ratingFilter: filterConfig.ratingLevel | tagFilter: filterConfig.searchTags:filterConfig.taglessItem | startFrom: pageConfig.currentPage*pageConfig.pageSize | limitTo: pageConfig.pageSize" list_Back="{{trustAsResourceUrl(animeitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12" ng-hide="loading(animeitem.title)">
+                <div data-ng-repeat="animeitem in animeitems | orderBy: filterConfig.sortType:filterConfig.sortReverse | filter: filterConfig.search | ratingFilter: filterConfig.ratingLevel | tagFilter: filterConfig.searchTags:filterConfig.taglessItem | startFrom: pageConfig.currentPage*pageConfig.pageSize | limitTo: pageConfig.pageSize" list_Back="{{trustAsResourceUrl(animeitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12">
 			<div class="view-item-top">
             <small class="list-group-item-text">
                 <time ng-if="animeitem.latest.substring(0,10)===animeitem.meta.updated.substring(0,10)" title="{{animeitem.meta.updated | date: 'yyyy-MMM-dd HH:mm'}}" ng-bind="latestDate(animeitem.latest, animeitem.meta.updated)"></time>
@@ -66,5 +66,5 @@
             </div><!-- LIST -->
         </div>
     </div>
-    <section class="loading-image" data-ng-if="isLoading"></section>
+<!--    <section class="loading-image" data-ng-if="isLoading"></section>-->
 </section>

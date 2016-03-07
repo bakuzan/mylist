@@ -1,8 +1,8 @@
 'use strict';
 
 // History controller
-angular.module('ratings').controller('RatingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'ListService', 'NotificationFactory', 'StatisticsService',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, ListService, NotificationFactory, StatisticsService) {
+angular.module('ratings').controller('RatingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'ListService', 'NotificationFactory', 'StatisticsService', 'spinnerService',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, ListService, NotificationFactory, StatisticsService, spinnerService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -35,13 +35,15 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         };
         
         function getItems(view) {
-            if (view === 'Anime') {
-                $scope.items = Animeitems.query();
-            } else if (view === 'Manga') {
-                $scope.items = Mangaitems.query();
-            }
-            $scope.viewItem = undefined;
-//            console.log(view, $scope.items);
+            spinnerService.loading('rating', function() {
+                if (view === 'Anime') {
+                    $scope.items = Animeitems.query();
+                } else if (view === 'Manga') {
+                    $scope.items = Mangaitems.query();
+                }
+                $scope.viewItem = undefined;
+    //            console.log(view, $scope.items);
+            });
         }
         
         $scope.find = function(view) {

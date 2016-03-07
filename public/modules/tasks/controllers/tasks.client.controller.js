@@ -1,8 +1,8 @@
 'use strict';
 
 // Tasks controller
-angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory',
-	function($scope, $rootScope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory) {
+angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory', 'spinnerService',
+	function($scope, $rootScope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory, spinnerService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -305,9 +305,11 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
 
 		// Find a list of Tasks
 		function find(check) {
-			Tasks.query(function(result) {
-                $scope.tasks = result;
-                if (check === true) checkStatus();
+            spinnerService.loading('tasks', function() {
+                Tasks.query(function(result) {
+                    $scope.tasks = result;
+                    if (check === true) checkStatus();
+                });
             });
 		}
         find(true);

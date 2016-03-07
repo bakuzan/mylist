@@ -110,7 +110,7 @@ var spinners = {},
         }
         var spinner = spinners[name];
         console.log(name, func, spinners);
-        spinner.show();
+        spinner.show(name);
         console.log('loading: ', func, name);
         process(func).then(function(result) {
             spinner.hide(name);

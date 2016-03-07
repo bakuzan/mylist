@@ -1,8 +1,8 @@
 'use strict';
 
 // Mangaitems controller
-angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'MangaFactory',
-	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, MangaFactory) {
+angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'MangaFactory', 'spinnerService',
+	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, MangaFactory, spinnerService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -61,9 +61,11 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         
         $scope.$watchCollection('mangaitems', function() {
             if ($scope.mangaitems!==undefined) {
-//                console.log($scope.mangaitems);
-                $scope.filterConfig.areTagless = ListService.checkForTagless($scope.mangaitems);
-                $scope.filterConfig.statTags = ItemService.buildStatTags($scope.mangaitems, 0);
+                spinnerService.loading('manga', function() {
+    //                console.log($scope.mangaitems);
+                    $scope.filterConfig.areTagless = ListService.checkForTagless($scope.mangaitems);
+                    $scope.filterConfig.statTags = ItemService.buildStatTags($scope.mangaitems, 0);
+                });
             }
         });
         

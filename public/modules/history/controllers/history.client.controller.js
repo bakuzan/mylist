@@ -24,24 +24,14 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
         ];
         var latestDate = new Date().setDate(new Date().getDate() - 29);
         
-        function getAnimeitems() {
-             // Find list of mangaitems.
-            $scope.animeitems = AnimeHistory.query({
-                latest: latestDate
-            });
-        }
-        
-        function getMangaitems() {
-             // Find list of mangaitems.
-            $scope.mangaitems = MangaHistory.query({
-                latest: latestDate
-            });
-        }
-        
         $scope.buildHistory = function() {
             spinnerService.loading('history', function() {
-                getAnimeitems();
-                getMangaitems();
+                $scope.animeitems = AnimeHistory.query({
+                    latest: latestDate
+                });
+                $scope.mangaitems = MangaHistory.query({
+                    latest: latestDate
+                });
             });
         };
         //Needed to catch 'Character' setting and skip it.

@@ -1,8 +1,8 @@
 'use strict';
 
 // Characters controller
-angular.module('characters').controller('CharactersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Characters', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ListService', 'CharacterService', 'NotificationFactory',
-	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window, ListService, CharacterService, NotificationFactory) {
+angular.module('characters').controller('CharactersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Characters', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ListService', 'CharacterService', 'NotificationFactory', 'spinnerService',
+	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window, ListService, CharacterService, NotificationFactory, spinnerService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -44,11 +44,13 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         
         $scope.$watchCollection('characters', function() {
             if ($scope.characters!==undefined) {
-//                console.log($scope.characters);
-                $scope.filterConfig.areTagless = ListService.checkForTagless($scope.characters);
-                $scope.filterConfig.statTags = CharacterService.buildCharacterTags($scope.characters);
-                $scope.filterConfig.voiceActors = CharacterService.buildVoiceActors($scope.characters);
-                $scope.filterConfig.series = CharacterService.buildSeriesList($scope.characters);
+                spinnerService.loading('characters', function() {
+    //                console.log($scope.characters);
+                    $scope.filterConfig.areTagless = ListService.checkForTagless($scope.characters);
+                    $scope.filterConfig.statTags = CharacterService.buildCharacterTags($scope.characters);
+                    $scope.filterConfig.voiceActors = CharacterService.buildVoiceActors($scope.characters);
+                    $scope.filterConfig.series = CharacterService.buildSeriesList($scope.characters);
+                });
             }
         });
 

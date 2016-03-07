@@ -39,9 +39,10 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
         }
         
         $scope.buildHistory = function() {
-            spinnerService.show('history');
-            getAnimeitems();
-            getMangaitems();
+            spinnerService.loading('history', function() {
+                getAnimeitems();
+                getMangaitems();
+            });
         };
         //Needed to catch 'Character' setting and skip it.
         $scope.$watch('view', function(newValue) {

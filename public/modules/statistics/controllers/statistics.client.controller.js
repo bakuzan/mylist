@@ -1,8 +1,8 @@
 'use strict';
 
 // Statistics controller
-angular.module('statistics').controller('StatisticsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'Characters', 'ListService', 'ItemService', 'CharacterService', 'StatisticsService', '$filter',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, Characters, ListService, ItemService, CharacterService, StatisticsService, $filter) {
+angular.module('statistics').controller('StatisticsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'Characters', 'ListService', 'ItemService', 'CharacterService', 'StatisticsService', '$filter', 'spinnerService',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, Characters, ListService, ItemService, CharacterService, StatisticsService, $filter, spinnerService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -98,22 +98,25 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         //watch for items changes...occurs on view change.
         $scope.$watchCollection('items', function() {
             if ($scope.items !== undefined) {
-                $scope.statTags = []; //clear to stop multiple views tags appearing.
-                if ($scope.view !== 'Character') {
-                    $scope.overview = ItemService.buildOverview($scope.items);
-                    $scope.historyDetails.months = ItemService.completeByMonth($scope.items);
-                    if ($scope.view === 'Anime') { 
-                        $scope.historyDetails.seasons = ItemService.completeBySeason($scope.items);
+                var loader = ($scope.view === 'character') ? 'character' : 'items';
+                spinnerService.loading(loader, function() {
+                    $scope.statTags = []; //clear to stop multiple views tags appearing.
+                    if ($scope.view !== 'Character') {
+                        $scope.overview = ItemService.buildOverview($scope.items);
+                        $scope.historyDetails.months = ItemService.completeByMonth($scope.items);
+                        if ($scope.view === 'Anime') { 
+                            $scope.historyDetails.seasons = ItemService.completeBySeason($scope.items);
+                        }
+                        $scope.ratingValues = ItemService.getRatingValues($scope.items);
+                        $scope.ratingsDistribution = ItemService.buildRatingsDistribution($scope.items);
+                        $scope.statTags = ItemService.buildStatTags($scope.items, $scope.ratingValues.averageRating);
+                    } else if ($scope.view === 'Character') {
+                        $scope.statTags = CharacterService.buildCharacterTags($scope.items);
+                        $scope.statSeries = CharacterService.buildSeriesList($scope.items);
+                        $scope.voiceActors = CharacterService.buildVoiceActors($scope.items);
+                        $scope.gender = CharacterService.buildGenderDistribution($scope.statTags, $scope.items.length);
                     }
-                    $scope.ratingValues = ItemService.getRatingValues($scope.items);
-                    $scope.ratingsDistribution = ItemService.buildRatingsDistribution($scope.items);
-                    $scope.statTags = ItemService.buildStatTags($scope.items, $scope.ratingValues.averageRating);
-                } else if ($scope.view === 'Character') {
-                    $scope.statTags = CharacterService.buildCharacterTags($scope.items);
-                    $scope.statSeries = CharacterService.buildSeriesList($scope.items);
-                    $scope.voiceActors = CharacterService.buildVoiceActors($scope.items);
-                    $scope.gender = CharacterService.buildGenderDistribution($scope.statTags, $scope.items.length);
-                }
+                });
             }
         });
         

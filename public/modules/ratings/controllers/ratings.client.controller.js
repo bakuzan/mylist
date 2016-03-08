@@ -24,11 +24,6 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         $scope.ratingLevel = undefined; //default rating filter
         //rating 'tooltip' function
         $scope.maxRating = 10;
-        $scope.isLoading = true;
-        $scope.loading = function(value) {
-            $scope.isLoading = ListService.loader(value);
-        };
-        
         $scope.hoveringOver = function(value) {
             $scope.overStar = value;
             $scope.percent = 100 * (value / $scope.maxRating);

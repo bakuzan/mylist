@@ -9,7 +9,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.whichController = 'mangaitem';
-        $scope.isLoading = true;
         //paging variables.
         $scope.pageConfig = {
             currentPage: 0,
@@ -169,10 +168,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         //latest date display format.
         $scope.latestDate = function(latest, updated) {
             return ItemService.latestDate(latest, updated);
-        };
-                
-        $scope.loading = function(value) {
-            $scope.isLoading = ListService.loader(value);
         };
         
         $scope.deleteHistory = function(item, history) {

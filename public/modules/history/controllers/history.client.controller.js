@@ -12,7 +12,6 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
         $scope.filterConfig = {
             historyFilter: 'Today'
         };
-        $scope.isLoading = true;
         $scope.historyGroups = [
             { name: 'Today' },
             { name: 'Yesterday' },
@@ -60,10 +59,6 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
                 });
             }
         });
-        
-        $scope.loading = function(value) {
-            $scope.isLoading = ListService.loader(value);
-        };
         
         $scope.happenedWhen = function(when) {
             return HistoryService.happenedWhen(when);

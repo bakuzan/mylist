@@ -62,10 +62,6 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.historyDetails = {};
         $scope.areTagless = false; //are any items tagless
         $scope.taglessItem = false; //filter variable for showing tagless items.
-        $scope.isLoading = true;
-        $scope.loading = function(value) {
-            $scope.isLoading = ListService.loader(value);
-        };
         //handle getting view items and setting view specific defaults.
         function getItems(view) {
             if (view === 'Anime') {

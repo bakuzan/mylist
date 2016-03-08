@@ -9,7 +9,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.whichController = 'character';
-        $scope.isLoading = true;
         //paging variables.
         $scope.pageConfig = {
             currentPage: 0,
@@ -185,9 +184,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             $scope.imgPath = '/modules/characters/img/' + $scope.myFile.name;
             fileUpload.uploadFileToUrl($scope.myFile, '/fileUploadCharacter');
         };
-        
-        $scope.loading = function(value) {
-            $scope.isLoading = ListService.loader(value);
-        };
+
 	}
 ]);

@@ -9,7 +9,6 @@ angular.module('toptens').controller('ToptensController', ['$scope', '$statePara
 		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.whichController = 'topten';
-        $scope.isLoading = true;
         //paging variables.
         $scope.pageConfig = {
             currentPage: 0,
@@ -32,10 +31,6 @@ angular.module('toptens').controller('ToptensController', ['$scope', '$statePara
         $scope.viewConfig = {
             displayType: '',
             linkSuffix: ''
-        };
-    
-        $scope.loading = function(value) {
-            $scope.isLoading = ListService.loader(value);
         };
 
 		// Remove existing Topten

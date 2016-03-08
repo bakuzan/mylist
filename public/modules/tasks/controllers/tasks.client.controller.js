@@ -13,7 +13,6 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
         
         $rootScope.commonArrays = ListService.getCommonArrays();
         $scope.whichController = 'task';
-        $scope.isLoading = false;
         //paging variables.
         $scope.pageConfig = {
             currentPage: 0,
@@ -31,10 +30,6 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
         };
         $scope.mangaUpdate = {
             isPopup: ''
-        };
-        
-        $scope.loading = function(value) {
-            $scope.isLoading = ListService.loader(value);
         };
         
         $scope.tabFilter = function(tabName) {

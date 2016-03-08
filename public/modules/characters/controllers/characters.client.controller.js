@@ -43,13 +43,11 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         
         $scope.$watchCollection('characters', function() {
             if ($scope.characters!==undefined) {
-                spinnerService.loading('characters', function() {
-    //                console.log($scope.characters);
-                    $scope.filterConfig.areTagless = ListService.checkForTagless($scope.characters);
-                    $scope.filterConfig.statTags = CharacterService.buildCharacterTags($scope.characters);
-                    $scope.filterConfig.voiceActors = CharacterService.buildVoiceActors($scope.characters);
-                    $scope.filterConfig.series = CharacterService.buildSeriesList($scope.characters);
-                });
+//                console.log($scope.characters);
+                $scope.filterConfig.areTagless = ListService.checkForTagless($scope.characters);
+                $scope.filterConfig.statTags = CharacterService.buildCharacterTags($scope.characters);
+                $scope.filterConfig.voiceActors = CharacterService.buildVoiceActors($scope.characters);
+                $scope.filterConfig.series = CharacterService.buildSeriesList($scope.characters);
             }
         });
 

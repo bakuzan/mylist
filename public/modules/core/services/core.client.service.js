@@ -82,19 +82,19 @@ var spinners = {},
         // Check if spinnerId was in the queue, if so then fire the
         // queued function.
         if (queue[data.name]) {
-            console.log(queue, loads);
+//            console.log(queue, loads);
             if(loads[data.name]) {
-                console.log(loads[data.name]);
+//                console.log(loads[data.name]);
                 this[queue[data.name]](data.name, loads[data.name]);
                 delete loads[data.name];
                 delete queue[data.name];
             } else {
-                console.log('queued', queue);
+//                console.log('queued', queue);
                 this[queue[data.name]](data.name);
                 delete queue[data.name];
             }
         }
-        console.log(spinners);
+//        console.log(spinners);
     },
     _unregister: function (name) {
       if (spinners.hasOwnProperty(name)) {
@@ -109,16 +109,13 @@ var spinners = {},
             return;
         }
         var spinner = spinners[name];
-        console.log(name, func, spinners);
         spinner.show(name);
-        console.log('loading: ', func, name);
         process(func).then(function(result) {
             spinner.hide(name);
-            console.log('finsihed: ', result, name);
         });
     },
     show: function (name) {
-        console.log('show');
+//        console.log('show');
         if (!this.spinners[name]) {
             queue[name] = 'show';
             return;
@@ -130,7 +127,7 @@ var spinners = {},
       spinner.show();
     },
     hide: function (name) {
-        console.log('hide');
+//        console.log('hide');
         if (!this.spinners[name]) {
             queue[name] = 'hide';
             return;
@@ -142,7 +139,7 @@ var spinners = {},
       spinner.hide();
     },
     toggle: function (name) {
-        console.log('toggle');
+//        console.log('toggle');
         if (!this.spinners[name]) {
             queue[name] = 'toggle';
             return;

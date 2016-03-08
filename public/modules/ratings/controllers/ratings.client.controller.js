@@ -30,15 +30,13 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         };
         
         function getItems(view) {
-            spinnerService.loading('rating', function() {
-                if (view === 'Anime') {
-                    $scope.items = Animeitems.query();
-                } else if (view === 'Manga') {
-                    $scope.items = Mangaitems.query();
-                }
-                $scope.viewItem = undefined;
-    //            console.log(view, $scope.items);
-            });
+            if (view === 'Anime') {
+                $scope.items = Animeitems.query();
+            } else if (view === 'Manga') {
+                $scope.items = Mangaitems.query();
+            }
+            $scope.viewItem = undefined;
+//            console.log(view, $scope.items);
         }
         
         $scope.find = function(view) {
@@ -75,14 +73,10 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         };
         
         /** Episode rating functions below here.
-         */
-        
-        $scope.$watch('viewItem', function(newValue) {
-            console.log(newValue);
-        });
-        
+         */        
         $scope.viewEpisodeRatings = function(item) {
             $scope.viewItem = ($scope.viewItem !== item) ? item : undefined;
+            $scope.isEqual = ($scope.viewItem === item) ? true : false; 
             $scope.search = ($scope.viewItem === item) ? item.title : '';
             if ($scope.viewItem !== undefined) {
                 $scope.summaryFunctions = StatisticsService.buildSummaryFunctions($scope.viewItem.meta.history);
@@ -90,7 +84,7 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         };
         
         $scope.episodeScore = function(finished) {
-            console.log('finished: ', finished, $scope.viewItem.meta.history);
+//            console.log('finished: ', finished, $scope.viewItem.meta.history);
             if (finished) {
                 var item = $scope.viewItem;
                 item.$update(function() {

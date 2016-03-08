@@ -39,7 +39,7 @@ angular.module('core').directive('myProgress', function() {
     }
   };
 })
-.directive('loadingSpinner', function(spinnerService) {
+.directive('loadingSpinner', ['$http', 'spinnerService', function($http, spinnerService) {
     return {
         restrict: 'A',
         transclude: true,
@@ -52,6 +52,20 @@ angular.module('core').directive('myProgress', function() {
         bindToController: 'loadingSpinner',
         controller: function ($scope) {
             $scope.active = false;
+            $scope.isLoading = function () {
+                return $http.pendingRequests.length > 0;
+            };
+            
+            $scope.$watch($scope.isLoading, function (v) {
+                if ($scope.size === 'fullscreen') {
+                    if(v) {
+                        $scope.active = true;
+                    } else {
+                        $scope.active = false;
+                    }
+                }
+            });
+            
             var api = {
                 name: $scope.name,
                 show: function () {
@@ -64,12 +78,11 @@ angular.module('core').directive('myProgress', function() {
                     $scope.active = !$scope.active;
                 }
             };
+            
             spinnerService._register(api);
-            console.log('loader ' + $scope.name, api);
             $scope.$on('$destroy', function () {
-                console.log('captured $destroy event');
                 spinnerService._unregister($scope.name);
             });
         }
     };
-}); 
+}]); 

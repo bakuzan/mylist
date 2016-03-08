@@ -60,11 +60,9 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         
         $scope.$watchCollection('mangaitems', function() {
             if ($scope.mangaitems!==undefined) {
-                spinnerService.loading('manga', function() {
-    //                console.log($scope.mangaitems);
-                    $scope.filterConfig.areTagless = ListService.checkForTagless($scope.mangaitems);
-                    $scope.filterConfig.statTags = ItemService.buildStatTags($scope.mangaitems, 0);
-                });
+//                console.log($scope.mangaitems);
+                $scope.filterConfig.areTagless = ListService.checkForTagless($scope.mangaitems);
+                $scope.filterConfig.statTags = ItemService.buildStatTags($scope.mangaitems, 0);
             }
         });
         

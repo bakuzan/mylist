@@ -653,8 +653,10 @@ div.slider-full-screen {
   background-color: rgba(240, 240, 240, 0.5);
   z-index: 1000; }
   .loader.fullscreen .circular {
-    top: 30%;
+    top: 25%;
+    bottom: auto;
     left: 40%;
+    right: auto;
     width: 25%;
     height: 25%; }
 

@@ -64,7 +64,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         
         $scope.$watchCollection('animeitems', function() {
             if ($scope.animeitems!==undefined) {
-                console.log($scope.animeitems);
+//                console.log($scope.animeitems);
                 $scope.filterConfig.areTagless = ListService.checkForTagless($scope.animeitems);
                 $scope.filterConfig.statTags = ItemService.buildStatTags($scope.animeitems, 0);
             }
@@ -181,10 +181,8 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
          *  (0) returns only ongoing series. (1) returns all series.
          */
 		function getAnime(value) {
-            spinnerService.loading('anime', function() {
-                $scope.animeitems = Animeitems.query({
-                    status: value
-                });
+            $scope.animeitems = Animeitems.query({
+                status: value
             });
 		}
         

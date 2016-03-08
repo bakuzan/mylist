@@ -24,13 +24,11 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
         var latestDate = new Date().setDate(new Date().getDate() - 29);
         
         $scope.buildHistory = function() {
-            spinnerService.loading('history', function() {
-                $scope.animeitems = AnimeHistory.query({
-                    latest: latestDate
-                });
-                $scope.mangaitems = MangaHistory.query({
-                    latest: latestDate
-                });
+            $scope.animeitems = AnimeHistory.query({
+                latest: latestDate
+            });
+            $scope.mangaitems = MangaHistory.query({
+                latest: latestDate
             });
         };
         //Needed to catch 'Character' setting and skip it.

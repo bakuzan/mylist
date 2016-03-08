@@ -7,7 +7,7 @@
             <div list-filters filter-config="filterConfig" items="toptens" page="whichController"></div>
         </div>
         <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
-        <div class="col-lg-8 col-md-6 col-sm-6 item-list-container" loading-spinner name="topten">
+        <div class="col-lg-8 col-md-6 col-sm-6 item-list-container" loading-spinner name="topten" size="fullscreen">
             <div page-controls page-config="pageConfig" showing-count="filterConfig.showingCount"></div>
             <div class="list-group col-lg-12 col-md-12 col-sm-12">
                 <div data-ng-repeat="item in toptens | orderBy: filterConfig.sortType:filterConfig.sortReverse | filter: filterConfig.search | startFrom: pageConfig.currentPage*pageConfig.pageSize | limitTo: pageConfig.pageSize" class="list-group-item col-lg-12 col-md-12 col-sm-12">

@@ -40,7 +40,7 @@ angular.module('statistics')
             self.shiftTabs = function(direction) {
                 switch(direction) {
                     case 'origin':
-                        console.log(self.listShift, (self.listShift - 100));
+//                        console.log(self.listShift, (self.listShift - 100));
                         if ((self.listShift + 100) > 0) {
                             self.listShift = 0;
                         } else {

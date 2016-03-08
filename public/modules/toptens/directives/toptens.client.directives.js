@@ -133,7 +133,7 @@ angular.module('toptens')
             };
             
             window.addEventListener('resize', function(e) {
-                console.log(el.offsetWidth, width);
+//                console.log(el.offsetWidth, width);
                 if(el.offsetWidth !== width) {
                     width = el.offsetWidth;
                     shift = width;

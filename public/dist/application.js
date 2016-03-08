@@ -124,15 +124,14 @@ angular.module('animeitems').config(['$stateProvider',
 'use strict';
 
 // Animeitems controller
-angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, AnimeFactory) {
+angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory', 'spinnerService',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, AnimeFactory, spinnerService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.whichController = 'animeitem';
-        $scope.isLoading = true;
         //paging variables.
         $scope.pageConfig = {
             currentPage: 0,
@@ -188,7 +187,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         
         $scope.$watchCollection('animeitems', function() {
             if ($scope.animeitems!==undefined) {
-                console.log($scope.animeitems);
+//                console.log($scope.animeitems);
                 $scope.filterConfig.areTagless = ListService.checkForTagless($scope.animeitems);
                 $scope.filterConfig.statTags = ItemService.buildStatTags($scope.animeitems, 0);
             }
@@ -258,7 +257,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		};
         $scope.tickOff = function(item) {
             item.episodes += 1;
-            item.latest = $scope.itemUpdate; //update latest.
+            item.latest = new Date(); //update latest.
             $scope.updateHistory = true; //add to history.
             $scope.animeitem = item;
             $scope.update();
@@ -293,10 +292,6 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             return ItemService.latestDate(latest, updated);
         };
         
-        $scope.loading = function(value) {
-            $scope.isLoading = ListService.loader(value);
-        };
-        
         $scope.deleteHistory = function(item, history) {
             //are you sure option...
             NotificationFactory.confirmation(function() {
@@ -309,8 +304,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
          *  (0) returns only ongoing series. (1) returns all series.
          */
 		function getAnime(value) {
-            console.log('getting', $scope.filterConfig.ongoingList);
-			$scope.animeitems = Animeitems.query({
+            $scope.animeitems = Animeitems.query({
                 status: value
             });
 		}
@@ -1266,15 +1260,14 @@ angular.module('characters').config(['$stateProvider',
 'use strict';
 
 // Characters controller
-angular.module('characters').controller('CharactersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Characters', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ListService', 'CharacterService', 'NotificationFactory',
-	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window, ListService, CharacterService, NotificationFactory) {
+angular.module('characters').controller('CharactersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Characters', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ListService', 'CharacterService', 'NotificationFactory', 'spinnerService',
+	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window, ListService, CharacterService, NotificationFactory, spinnerService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.whichController = 'character';
-        $scope.isLoading = true;
         //paging variables.
         $scope.pageConfig = {
             currentPage: 0,
@@ -1448,10 +1441,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             $scope.imgPath = '/modules/characters/img/' + $scope.myFile.name;
             fileUpload.uploadFileToUrl($scope.myFile, '/fileUploadCharacter');
         };
-        
-        $scope.loading = function(value) {
-            $scope.isLoading = ListService.loader(value);
-        };
+
 	}
 ]);
 'use strict';
@@ -2387,7 +2377,54 @@ angular.module('core').directive('myProgress', function() {
       });
     }
   };
-});
+})
+.directive('loadingSpinner', ['$http', 'spinnerService', function($http, spinnerService) {
+    return {
+        restrict: 'A',
+        transclude: true,
+        replace: true,
+        templateUrl: '/modules/core/templates/loading-spinner.html',
+        scope: {
+            name: '@',
+            size: '@?'
+        },
+        bindToController: 'loadingSpinner',
+        controller: function ($scope) {
+            $scope.active = false;
+            $scope.isLoading = function () {
+                return $http.pendingRequests.length > 0;
+            };
+            
+            $scope.$watch($scope.isLoading, function (v) {
+                if ($scope.size === 'fullscreen') {
+                    if(v) {
+                        $scope.active = true;
+                    } else {
+                        $scope.active = false;
+                    }
+                }
+            });
+            
+            var api = {
+                name: $scope.name,
+                show: function () {
+                    $scope.active = true;
+                },
+                hide: function () {
+                    $scope.active = false;
+                },
+                toggle: function () {
+                    $scope.active = !$scope.active;
+                }
+            };
+            
+            spinnerService._register(api);
+            $scope.$on('$destroy', function () {
+                spinnerService._unregister($scope.name);
+            });
+        }
+    };
+}]); 
 'use strict';
 
 angular.module('core').filter('dayFilter', function() {
@@ -2486,7 +2523,8 @@ angular.module('core').filter('dayFilter', function() {
 'use strict';
 
 //Service to provide common access to features.
-angular.module('core').factory('NotificationFactory', function() {
+angular.module('core')
+.factory('NotificationFactory', function() {
     var self = this;
     /*global swal */
     /*global toastr */
@@ -2537,7 +2575,106 @@ angular.module('core').factory('NotificationFactory', function() {
             }, thenDo);
         }
     };
-});
+})
+.factory('spinnerService', ['$q', function($q) {
+var spinners = {},
+    queue = {}, 
+    loads = {};
+    
+    function process(func) {
+        return $q(function(resolve, reject) {
+            resolve(func());
+        });
+    }
+    
+  return {
+      spinners: spinners,
+    // private method for spinner registration.
+    _register: function (data) {
+        if (!data.hasOwnProperty('name')) {
+            throw new Error('Spinner must specify a name when registering with the spinner service.');
+        }
+        if (spinners.hasOwnProperty(data.name)) {
+            throw new Error('A spinner with the name \'' + data.name + '\' has already been registered.');
+        }
+        spinners[data.name] = data;
+        // Increase the spinner count.
+        this.count++;
+
+        // Check if spinnerId was in the queue, if so then fire the
+        // queued function.
+        if (queue[data.name]) {
+//            console.log(queue, loads);
+            if(loads[data.name]) {
+//                console.log(loads[data.name]);
+                this[queue[data.name]](data.name, loads[data.name]);
+                delete loads[data.name];
+                delete queue[data.name];
+            } else {
+//                console.log('queued', queue);
+                this[queue[data.name]](data.name);
+                delete queue[data.name];
+            }
+        }
+//        console.log(spinners);
+    },
+    _unregister: function (name) {
+      if (spinners.hasOwnProperty(name)) {
+        delete spinners[name];
+      }
+    },
+    loading: function (name, func) {
+        if (!this.spinners[name]) {
+            queue[name] = 'loading';
+            loads[name] = func;
+            console.log('defer', loads[name]);
+            return;
+        }
+        var spinner = spinners[name];
+        spinner.show(name);
+        process(func).then(function(result) {
+            spinner.hide(name);
+        });
+    },
+    show: function (name) {
+//        console.log('show');
+        if (!this.spinners[name]) {
+            queue[name] = 'show';
+            return;
+        }
+      var spinner = spinners[name];
+      if (!spinner) {
+        throw new Error('No spinner named \'' + name + '\' is registered.');
+      }
+      spinner.show();
+    },
+    hide: function (name) {
+//        console.log('hide');
+        if (!this.spinners[name]) {
+            queue[name] = 'hide';
+            return;
+        }
+      var spinner = spinners[name];
+      if (!spinner) {
+        throw new Error('No spinner named \'' + name + '\' is registered.');
+      }
+      spinner.hide();
+    },
+    toggle: function (name) {
+//        console.log('toggle');
+        if (!this.spinners[name]) {
+            queue[name] = 'toggle';
+            return;
+        }
+      var spinner = spinners[name];
+      if (!spinner) {
+        throw new Error('No spinner named \'' + name + '\' is registered.');
+      }
+      spinner.toggle();
+    },
+    count: 0
+  };
+}]);
 'use strict';
 
 //Menu service used for managing  menus
@@ -2906,8 +3043,8 @@ angular.module('history').config(['$stateProvider', '$urlRouterProvider',
 'use strict';
 
 // History controller
-angular.module('history').controller('HistoryController', ['$scope', '$stateParams', '$location', 'Authentication', 'AnimeHistory', 'MangaHistory', 'HistoryService', 'ListService',
-	function($scope, $stateParams, $location, Authentication, AnimeHistory, MangaHistory, HistoryService, ListService) {
+angular.module('history').controller('HistoryController', ['$scope', '$stateParams', '$location', 'Authentication', 'AnimeHistory', 'MangaHistory', 'HistoryService', 'ListService', 'spinnerService',
+	function($scope, $stateParams, $location, Authentication, AnimeHistory, MangaHistory, HistoryService, ListService, spinnerService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -2917,7 +3054,6 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
         $scope.filterConfig = {
             historyFilter: 'Today'
         };
-        $scope.isLoading = true;
         $scope.historyGroups = [
             { name: 'Today' },
             { name: 'Yesterday' },
@@ -2929,23 +3065,13 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
         ];
         var latestDate = new Date().setDate(new Date().getDate() - 29);
         
-        function getAnimeitems() {
-             // Find list of mangaitems.
+        $scope.buildHistory = function() {
             $scope.animeitems = AnimeHistory.query({
                 latest: latestDate
             });
-        }
-        
-        function getMangaitems() {
-             // Find list of mangaitems.
             $scope.mangaitems = MangaHistory.query({
                 latest: latestDate
             });
-        }
-        
-        $scope.buildHistory = function() {
-            getAnimeitems();
-            getMangaitems();
         };
         //Needed to catch 'Character' setting and skip it.
         $scope.$watch('view', function(newValue) {
@@ -2973,10 +3099,6 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
                 });
             }
         });
-        
-        $scope.loading = function(value) {
-            $scope.isLoading = ListService.loader(value);
-        };
         
         $scope.happenedWhen = function(when) {
             return HistoryService.happenedWhen(when);
@@ -3217,15 +3339,14 @@ angular.module('mangaitems').config(['$stateProvider',
 'use strict';
 
 // Mangaitems controller
-angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'MangaFactory',
-	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, MangaFactory) {
+angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'MangaFactory', 'spinnerService',
+	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, MangaFactory, spinnerService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.whichController = 'mangaitem';
-        $scope.isLoading = true;
         //paging variables.
         $scope.pageConfig = {
             currentPage: 0,
@@ -3350,7 +3471,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		};
         $scope.tickOff = function(item) {
             item.chapters += 1;
-            item.latest = $scope.itemUpdate; //update latest.
+            item.latest = new Date(); //update latest.
             $scope.updateHistory = true; //add to history.
             $scope.mangaitem = item;
             $scope.update();
@@ -3383,10 +3504,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         //latest date display format.
         $scope.latestDate = function(latest, updated) {
             return ItemService.latestDate(latest, updated);
-        };
-                
-        $scope.loading = function(value) {
-            $scope.isLoading = ListService.loader(value);
         };
         
         $scope.deleteHistory = function(item, history) {
@@ -3530,8 +3647,8 @@ angular.module('ratings').config(['$stateProvider', '$urlRouterProvider',
 'use strict';
 
 // History controller
-angular.module('ratings').controller('RatingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'ListService', 'NotificationFactory', 'StatisticsService',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, ListService, NotificationFactory, StatisticsService) {
+angular.module('ratings').controller('RatingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'ListService', 'NotificationFactory', 'StatisticsService', 'spinnerService',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, ListService, NotificationFactory, StatisticsService, spinnerService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -3553,11 +3670,6 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         $scope.ratingLevel = undefined; //default rating filter
         //rating 'tooltip' function
         $scope.maxRating = 10;
-        $scope.isLoading = true;
-        $scope.loading = function(value) {
-            $scope.isLoading = ListService.loader(value);
-        };
-        
         $scope.hoveringOver = function(value) {
             $scope.overStar = value;
             $scope.percent = 100 * (value / $scope.maxRating);
@@ -3607,14 +3719,10 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         };
         
         /** Episode rating functions below here.
-         */
-        
-        $scope.$watch('viewItem', function(newValue) {
-            console.log(newValue);
-        });
-        
+         */        
         $scope.viewEpisodeRatings = function(item) {
             $scope.viewItem = ($scope.viewItem !== item) ? item : undefined;
+            $scope.isEqual = ($scope.viewItem === item) ? true : false; 
             $scope.search = ($scope.viewItem === item) ? item.title : '';
             if ($scope.viewItem !== undefined) {
                 $scope.summaryFunctions = StatisticsService.buildSummaryFunctions($scope.viewItem.meta.history);
@@ -3622,7 +3730,7 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         };
         
         $scope.episodeScore = function(finished) {
-            console.log('finished: ', finished, $scope.viewItem.meta.history);
+//            console.log('finished: ', finished, $scope.viewItem.meta.history);
             if (finished) {
                 var item = $scope.viewItem;
                 item.$update(function() {
@@ -3671,8 +3779,8 @@ angular.module('statistics').config(['$stateProvider', '$urlRouterProvider',
 'use strict';
 
 // Statistics controller
-angular.module('statistics').controller('StatisticsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'Characters', 'ListService', 'ItemService', 'CharacterService', 'StatisticsService', '$filter',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, Characters, ListService, ItemService, CharacterService, StatisticsService, $filter) {
+angular.module('statistics').controller('StatisticsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'Characters', 'ListService', 'ItemService', 'CharacterService', 'StatisticsService', '$filter', 'spinnerService',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, Characters, ListService, ItemService, CharacterService, StatisticsService, $filter, spinnerService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -3732,10 +3840,6 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.historyDetails = {};
         $scope.areTagless = false; //are any items tagless
         $scope.taglessItem = false; //filter variable for showing tagless items.
-        $scope.isLoading = true;
-        $scope.loading = function(value) {
-            $scope.isLoading = ListService.loader(value);
-        };
         //handle getting view items and setting view specific defaults.
         function getItems(view) {
             if (view === 'Anime') {
@@ -3882,6 +3986,7 @@ angular.module('statistics')
             var self = this;
             self.tabs = [];
             self.currentTab = undefined;
+            self.listShift = 0;
             
             self.addTab = function addTab(tab) {
                 self.tabs.push(tab);
@@ -3900,13 +4005,68 @@ angular.module('statistics')
                 selectedTab.active = true;
                 self.currentTab = ($scope.tabContainer.model === undefined) ? undefined : selectedTab.heading;
             };
+            
+            self.shiftTabs = function(direction) {
+                switch(direction) {
+                    case 'origin':
+//                        console.log(self.listShift, (self.listShift - 100));
+                        if ((self.listShift + 100) > 0) {
+                            self.listShift = 0;
+                        } else {
+                            self.listShift += 100;
+                        }
+                        break;
+                        
+                    case 'offset':
+                        if ((self.listShift - 100) < ($scope.elWidth - $scope.ulWidth)) {
+                            self.listShift = $scope.elWidth - $scope.ulWidth;
+                        } else {
+                            self.listShift -= 100;
+                        }
+                        break;
+                }
+            };
+            
         },
         link: function(scope, element, attrs, model) {
-            scope.$watchCollection('tabContainer.currentTab', function(newValue) {
+            var el = element[0],
+                ul = el.children[0].children[0];
+            scope.elWidth = el.offsetWidth;
+            scope.ulWidth = ul.offsetWidth;
+            
+            scope.$watch('tabContainer.currentTab', function(newValue) {
                 if (newValue !== undefined && model.$viewValue !== undefined) {
                     model.$setViewValue(newValue);
                 }
             });
+            
+            scope.$watch(
+                function () {
+                    return {
+                        width: el.offsetWidth,
+                    };
+                }, function () {
+                    scope.elWidth = el.offsetWidth;
+                }, true
+            );
+            
+            scope.$watch(
+                function () {
+                    return {
+                        width: ul.offsetWidth,
+                    };
+                }, function () {
+                    scope.ulWidth = ul.offsetWidth;
+                }, true
+            );
+            
+            scope.$watch('tabContainer.listShift', function(newValue) {
+                if(newValue !== undefined) {
+                    var shift = (newValue === 0) ? '' : 'px';
+                    ul.style.left = newValue + shift;
+                }
+            });
+            
         }
     };
 })
@@ -3925,7 +4085,36 @@ angular.module('statistics')
             tabContainerCtrl.addTab(scope);
         }
     };
-});
+})
+.directive('detectFlood', ['$timeout', function($timeout) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            var el = element[0];
+            
+            function overflowCheck() {
+                if (el.scrollWidth > el.offsetWidth) {
+                    el.classList.add('flooded');
+                } else {
+                    el.classList.remove('flooded');
+                }
+            }
+            overflowCheck();
+            
+            scope.$watch(
+                function () {
+                    return {
+                        width: el.offsetWidth,
+                    };
+                }, function () {
+                    console.log('detect flood?');
+                        overflowCheck();
+                }, true
+            );
+            
+        }
+    };
+}]);
 'use strict';
 
 //Statistics service 
@@ -4050,8 +4239,8 @@ angular.module('tasks').config(['$stateProvider',
 'use strict';
 
 // Tasks controller
-angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory',
-	function($scope, $rootScope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory) {
+angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory', 'spinnerService',
+	function($scope, $rootScope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory, spinnerService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -4062,7 +4251,6 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
         
         $rootScope.commonArrays = ListService.getCommonArrays();
         $scope.whichController = 'task';
-        $scope.isLoading = false;
         //paging variables.
         $scope.pageConfig = {
             currentPage: 0,
@@ -4082,10 +4270,6 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
             isPopup: ''
         };
         
-        $scope.loading = function(value) {
-            $scope.isLoading = ListService.loader(value);
-        };
-        
         $scope.tabFilter = function(tabName) {
             $scope.filterConfig.search.day = tabName;
         };
@@ -4096,7 +4280,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
         
 		// Create new Task
 		$scope.create = function() {
-            console.log(this.newTask);
+//            console.log(this.newTask);
                 // Create new Task object
                 var task = new Tasks ({
                     description: this.newTask.description,
@@ -4353,7 +4537,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
 
 		// Find a list of Tasks
 		function find(check) {
-			Tasks.query(function(result) {
+            Tasks.query(function(result) {
                 $scope.tasks = result;
                 if (check === true) checkStatus();
             });
@@ -4566,8 +4750,7 @@ angular.module('tasks').factory('Tasks', ['$resource',
 	}
 ])
 .factory('TaskFactory', ['Animeitems', 'Mangaitems', 'AnimeFactory', 'MangaFactory', function(Animeitems, Mangaitems, AnimeFactory, MangaFactory) {
-    var obj = {},
-        itemUpdate = new Date();
+    var obj = {};
     
         obj.getWeekBeginning = function() {
             var newDate = new Date(),
@@ -4584,7 +4767,7 @@ angular.module('tasks').factory('Tasks', ['$resource',
             query.$promise.then(function(data) {
                 console.log(data);
                 data.episodes += 1;
-                data.latest = itemUpdate;
+                data.latest = new Date();
                 AnimeFactory.update(data, undefined, true, undefined);
             });
         };
@@ -4597,7 +4780,7 @@ angular.module('tasks').factory('Tasks', ['$resource',
                 console.log(data);
                 data.chapters = chapters;
                 data.volumes = volumes;
-                data.latest = itemUpdate;
+                data.latest = new Date();
                 MangaFactory.update(data, undefined, true, undefined);
             });
         };
@@ -4822,15 +5005,14 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
 'use strict';
 
 // Toptens controller
-angular.module('toptens').controller('ToptensController', ['$scope', '$stateParams', '$location', 'Authentication', 'Toptens', 'NotificationFactory', 'ListService',
-	function($scope, $stateParams, $location, Authentication, Toptens, NotificationFactory, ListService) {
+angular.module('toptens').controller('ToptensController', ['$scope', '$stateParams', '$location', 'Authentication', 'Toptens', 'NotificationFactory', 'ListService', 'spinnerService',
+	function($scope, $stateParams, $location, Authentication, Toptens, NotificationFactory, ListService, spinnerService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.whichController = 'topten';
-        $scope.isLoading = true;
         //paging variables.
         $scope.pageConfig = {
             currentPage: 0,
@@ -4854,10 +5036,6 @@ angular.module('toptens').controller('ToptensController', ['$scope', '$statePara
             displayType: '',
             linkSuffix: ''
         };
-    
-        $scope.loading = function(value) {
-            $scope.isLoading = ListService.loader(value);
-        };
 
 		// Remove existing Topten
 		$scope.remove = function(topten) {
@@ -4880,8 +5058,8 @@ angular.module('toptens').controller('ToptensController', ['$scope', '$statePara
 
 		// Find a list of Toptens
 		$scope.find = function() {
-			$scope.toptens = Toptens.query();
-            console.log($scope.toptens);
+            $scope.toptens = Toptens.query();
+//            console.log($scope.toptens);
 		};
 
 		// Find existing Topten
@@ -5031,7 +5209,7 @@ angular.module('toptens')
             };
             
             window.addEventListener('resize', function(e) {
-                console.log(el.offsetWidth, width);
+//                console.log(el.offsetWidth, width);
                 if(el.offsetWidth !== width) {
                     width = el.offsetWidth;
                     shift = width;

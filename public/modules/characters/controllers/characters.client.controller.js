@@ -1,15 +1,14 @@
 'use strict';
 
 // Characters controller
-angular.module('characters').controller('CharactersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Characters', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ListService', 'CharacterService', 'NotificationFactory',
-	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window, ListService, CharacterService, NotificationFactory) {
+angular.module('characters').controller('CharactersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Characters', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ListService', 'CharacterService', 'NotificationFactory', 'spinnerService',
+	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window, ListService, CharacterService, NotificationFactory, spinnerService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.whichController = 'character';
-        $scope.isLoading = true;
         //paging variables.
         $scope.pageConfig = {
             currentPage: 0,
@@ -183,9 +182,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             $scope.imgPath = '/modules/characters/img/' + $scope.myFile.name;
             fileUpload.uploadFileToUrl($scope.myFile, '/fileUploadCharacter');
         };
-        
-        $scope.loading = function(value) {
-            $scope.isLoading = ListService.loader(value);
-        };
+
 	}
 ]);

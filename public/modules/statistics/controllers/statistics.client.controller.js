@@ -1,8 +1,8 @@
 'use strict';
 
 // Statistics controller
-angular.module('statistics').controller('StatisticsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'Characters', 'ListService', 'ItemService', 'CharacterService', 'StatisticsService', '$filter',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, Characters, ListService, ItemService, CharacterService, StatisticsService, $filter) {
+angular.module('statistics').controller('StatisticsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'Characters', 'ListService', 'ItemService', 'CharacterService', 'StatisticsService', '$filter', 'spinnerService',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, Characters, ListService, ItemService, CharacterService, StatisticsService, $filter, spinnerService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -62,10 +62,6 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.historyDetails = {};
         $scope.areTagless = false; //are any items tagless
         $scope.taglessItem = false; //filter variable for showing tagless items.
-        $scope.isLoading = true;
-        $scope.loading = function(value) {
-            $scope.isLoading = ListService.loader(value);
-        };
         //handle getting view items and setting view specific defaults.
         function getItems(view) {
             if (view === 'Anime') {

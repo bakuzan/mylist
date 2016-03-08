@@ -1,15 +1,14 @@
 'use strict';
 
 // Mangaitems controller
-angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'MangaFactory',
-	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, MangaFactory) {
+angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'MangaFactory', 'spinnerService',
+	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, MangaFactory, spinnerService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.whichController = 'mangaitem';
-        $scope.isLoading = true;
         //paging variables.
         $scope.pageConfig = {
             currentPage: 0,
@@ -134,7 +133,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		};
         $scope.tickOff = function(item) {
             item.chapters += 1;
-            item.latest = $scope.itemUpdate; //update latest.
+            item.latest = new Date(); //update latest.
             $scope.updateHistory = true; //add to history.
             $scope.mangaitem = item;
             $scope.update();
@@ -167,10 +166,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         //latest date display format.
         $scope.latestDate = function(latest, updated) {
             return ItemService.latestDate(latest, updated);
-        };
-                
-        $scope.loading = function(value) {
-            $scope.isLoading = ListService.loader(value);
         };
         
         $scope.deleteHistory = function(item, history) {

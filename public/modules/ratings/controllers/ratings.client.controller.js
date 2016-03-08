@@ -1,8 +1,8 @@
 'use strict';
 
 // History controller
-angular.module('ratings').controller('RatingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'ListService', 'NotificationFactory', 'StatisticsService',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, ListService, NotificationFactory, StatisticsService) {
+angular.module('ratings').controller('RatingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'ListService', 'NotificationFactory', 'StatisticsService', 'spinnerService',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, ListService, NotificationFactory, StatisticsService, spinnerService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -24,11 +24,6 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         $scope.ratingLevel = undefined; //default rating filter
         //rating 'tooltip' function
         $scope.maxRating = 10;
-        $scope.isLoading = true;
-        $scope.loading = function(value) {
-            $scope.isLoading = ListService.loader(value);
-        };
-        
         $scope.hoveringOver = function(value) {
             $scope.overStar = value;
             $scope.percent = 100 * (value / $scope.maxRating);
@@ -78,14 +73,10 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         };
         
         /** Episode rating functions below here.
-         */
-        
-        $scope.$watch('viewItem', function(newValue) {
-            console.log(newValue);
-        });
-        
+         */        
         $scope.viewEpisodeRatings = function(item) {
             $scope.viewItem = ($scope.viewItem !== item) ? item : undefined;
+            $scope.isEqual = ($scope.viewItem === item) ? true : false; 
             $scope.search = ($scope.viewItem === item) ? item.title : '';
             if ($scope.viewItem !== undefined) {
                 $scope.summaryFunctions = StatisticsService.buildSummaryFunctions($scope.viewItem.meta.history);
@@ -93,7 +84,7 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         };
         
         $scope.episodeScore = function(finished) {
-            console.log('finished: ', finished, $scope.viewItem.meta.history);
+//            console.log('finished: ', finished, $scope.viewItem.meta.history);
             if (finished) {
                 var item = $scope.viewItem;
                 item.$update(function() {

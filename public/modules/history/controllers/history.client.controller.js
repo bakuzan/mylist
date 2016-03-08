@@ -1,8 +1,8 @@
 'use strict';
 
 // History controller
-angular.module('history').controller('HistoryController', ['$scope', '$stateParams', '$location', 'Authentication', 'AnimeHistory', 'MangaHistory', 'HistoryService', 'ListService',
-	function($scope, $stateParams, $location, Authentication, AnimeHistory, MangaHistory, HistoryService, ListService) {
+angular.module('history').controller('HistoryController', ['$scope', '$stateParams', '$location', 'Authentication', 'AnimeHistory', 'MangaHistory', 'HistoryService', 'ListService', 'spinnerService',
+	function($scope, $stateParams, $location, Authentication, AnimeHistory, MangaHistory, HistoryService, ListService, spinnerService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
@@ -12,7 +12,6 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
         $scope.filterConfig = {
             historyFilter: 'Today'
         };
-        $scope.isLoading = true;
         $scope.historyGroups = [
             { name: 'Today' },
             { name: 'Yesterday' },
@@ -24,23 +23,13 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
         ];
         var latestDate = new Date().setDate(new Date().getDate() - 29);
         
-        function getAnimeitems() {
-             // Find list of mangaitems.
+        $scope.buildHistory = function() {
             $scope.animeitems = AnimeHistory.query({
                 latest: latestDate
             });
-        }
-        
-        function getMangaitems() {
-             // Find list of mangaitems.
             $scope.mangaitems = MangaHistory.query({
                 latest: latestDate
             });
-        }
-        
-        $scope.buildHistory = function() {
-            getAnimeitems();
-            getMangaitems();
         };
         //Needed to catch 'Character' setting and skip it.
         $scope.$watch('view', function(newValue) {
@@ -68,10 +57,6 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
                 });
             }
         });
-        
-        $scope.loading = function(value) {
-            $scope.isLoading = ListService.loader(value);
-        };
         
         $scope.happenedWhen = function(when) {
             return HistoryService.happenedWhen(when);

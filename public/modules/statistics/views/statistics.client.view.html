@@ -14,11 +14,11 @@
         </div>
         <h1>{{view}} statistics</h1>
     </div>
-    <div class="col-lg-12 col-md-12 col-sm-12 relative" style="top: 100px" ng-hide="view === 'Character'">
+    <div class="col-lg-12 col-md-12 col-sm-12 relative" style="top: 100px" ng-hide="view === 'Character'" loading-spinner name="items" size="fullscreen">
         <div class="col-lg-12 col-md-12 col-sm-12 stat-overview">
                 <span class="accent-text">{{overview.ongoing}} in progress</span> - <span class="green-text">{{overview.completed}}  completed</span>
         </div><!-- OVERVIEW STATS END -->
-        <div tab-container>
+        <div tab-container class="width-100">
             <div tab-view heading="history">
                 <div class="col-lg-12 col-md-12 col-sm-12 stat-history-panel">
                     <div class="stat-header">
@@ -53,7 +53,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="year in historyDetails[detail.history][detail.history] | orderBy: '-year'" ng-hide="loading(year.year)">
+                                <tr ng-repeat="year in historyDetails[detail.history][detail.history] | orderBy: '-year'">
                                     <th ng-class="(detail.isEpisodeRatings) ? '' : 'clickable'" 
                                         ng-click="(detail.isEpisodeRatings) ? '' : historyDetail(year.year, '', '', detail.history)">
                                         <span>{{year.year}}</span>
@@ -202,7 +202,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-12 col-md-12 col-sm-12 relative stat-view" style="top: 100px" ng-show="view === 'Character'">
+    <div class="col-lg-12 col-md-12 col-sm-12 relative stat-view" style="top: 100px" ng-show="view === 'Character'" loading-spinner name="character" size="fullscreen">
         <div class="col-lg-12 col-md-12 col-sm-12 stat-gender-panel primary-background">
             <div class="stat-gender-progress-container">
                 <progress>
@@ -212,7 +212,7 @@
                 </progress>
             </div>
         </div><!-- GENDER PERCENTAGE BAR END -->
-        <div tab-container>
+        <div tab-container class="width-100">
             <div tab-view heading="tags">
                 <div class="col-lg-12 col-md-12 col-sm-12 stat-tag-panel">
                     <div class="col-lg-6 col-md-6 col-sm-6 stat-tag-main">
@@ -413,5 +413,4 @@
             </div>
         </div>
     </div>
-    <section class="loading-image" data-ng-if="isLoading"></section>
 </section>

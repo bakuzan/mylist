@@ -17,6 +17,7 @@ angular.module('statistics')
             var self = this;
             self.tabs = [];
             self.currentTab = undefined;
+            self.listShift = 0;
             
             self.addTab = function addTab(tab) {
                 self.tabs.push(tab);
@@ -35,13 +36,68 @@ angular.module('statistics')
                 selectedTab.active = true;
                 self.currentTab = ($scope.tabContainer.model === undefined) ? undefined : selectedTab.heading;
             };
+            
+            self.shiftTabs = function(direction) {
+                switch(direction) {
+                    case 'origin':
+//                        console.log(self.listShift, (self.listShift - 100));
+                        if ((self.listShift + 100) > 0) {
+                            self.listShift = 0;
+                        } else {
+                            self.listShift += 100;
+                        }
+                        break;
+                        
+                    case 'offset':
+                        if ((self.listShift - 100) < ($scope.elWidth - $scope.ulWidth)) {
+                            self.listShift = $scope.elWidth - $scope.ulWidth;
+                        } else {
+                            self.listShift -= 100;
+                        }
+                        break;
+                }
+            };
+            
         },
         link: function(scope, element, attrs, model) {
-            scope.$watchCollection('tabContainer.currentTab', function(newValue) {
+            var el = element[0],
+                ul = el.children[0].children[0];
+            scope.elWidth = el.offsetWidth;
+            scope.ulWidth = ul.offsetWidth;
+            
+            scope.$watch('tabContainer.currentTab', function(newValue) {
                 if (newValue !== undefined && model.$viewValue !== undefined) {
                     model.$setViewValue(newValue);
                 }
             });
+            
+            scope.$watch(
+                function () {
+                    return {
+                        width: el.offsetWidth,
+                    };
+                }, function () {
+                    scope.elWidth = el.offsetWidth;
+                }, true
+            );
+            
+            scope.$watch(
+                function () {
+                    return {
+                        width: ul.offsetWidth,
+                    };
+                }, function () {
+                    scope.ulWidth = ul.offsetWidth;
+                }, true
+            );
+            
+            scope.$watch('tabContainer.listShift', function(newValue) {
+                if(newValue !== undefined) {
+                    var shift = (newValue === 0) ? '' : 'px';
+                    ul.style.left = newValue + shift;
+                }
+            });
+            
         }
     };
 })
@@ -60,4 +116,33 @@ angular.module('statistics')
             tabContainerCtrl.addTab(scope);
         }
     };
-});
+})
+.directive('detectFlood', ['$timeout', function($timeout) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            var el = element[0];
+            
+            function overflowCheck() {
+                if (el.scrollWidth > el.offsetWidth) {
+                    el.classList.add('flooded');
+                } else {
+                    el.classList.remove('flooded');
+                }
+            }
+            overflowCheck();
+            
+            scope.$watch(
+                function () {
+                    return {
+                        width: el.offsetWidth,
+                    };
+                }, function () {
+                    console.log('detect flood?');
+                        overflowCheck();
+                }, true
+            );
+            
+        }
+    };
+}]);

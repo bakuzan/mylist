@@ -1,15 +1,14 @@
 'use strict';
 
 // Animeitems controller
-angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, AnimeFactory) {
+angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory', 'spinnerService',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, AnimeFactory, spinnerService) {
 		$scope.authentication = Authentication;
         
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
         
         $scope.whichController = 'animeitem';
-        $scope.isLoading = true;
         //paging variables.
         $scope.pageConfig = {
             currentPage: 0,
@@ -65,7 +64,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         
         $scope.$watchCollection('animeitems', function() {
             if ($scope.animeitems!==undefined) {
-                console.log($scope.animeitems);
+//                console.log($scope.animeitems);
                 $scope.filterConfig.areTagless = ListService.checkForTagless($scope.animeitems);
                 $scope.filterConfig.statTags = ItemService.buildStatTags($scope.animeitems, 0);
             }
@@ -135,7 +134,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		};
         $scope.tickOff = function(item) {
             item.episodes += 1;
-            item.latest = $scope.itemUpdate; //update latest.
+            item.latest = new Date(); //update latest.
             $scope.updateHistory = true; //add to history.
             $scope.animeitem = item;
             $scope.update();
@@ -170,10 +169,6 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             return ItemService.latestDate(latest, updated);
         };
         
-        $scope.loading = function(value) {
-            $scope.isLoading = ListService.loader(value);
-        };
-        
         $scope.deleteHistory = function(item, history) {
             //are you sure option...
             NotificationFactory.confirmation(function() {
@@ -186,8 +181,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
          *  (0) returns only ongoing series. (1) returns all series.
          */
 		function getAnime(value) {
-            console.log('getting', $scope.filterConfig.ongoingList);
-			$scope.animeitems = Animeitems.query({
+            $scope.animeitems = Animeitems.query({
                 status: value
             });
 		}

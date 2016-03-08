@@ -12,8 +12,7 @@ angular.module('tasks').factory('Tasks', ['$resource',
 	}
 ])
 .factory('TaskFactory', ['Animeitems', 'Mangaitems', 'AnimeFactory', 'MangaFactory', function(Animeitems, Mangaitems, AnimeFactory, MangaFactory) {
-    var obj = {},
-        itemUpdate = new Date();
+    var obj = {};
     
         obj.getWeekBeginning = function() {
             var newDate = new Date(),
@@ -30,7 +29,7 @@ angular.module('tasks').factory('Tasks', ['$resource',
             query.$promise.then(function(data) {
                 console.log(data);
                 data.episodes += 1;
-                data.latest = itemUpdate;
+                data.latest = new Date();
                 AnimeFactory.update(data, undefined, true, undefined);
             });
         };
@@ -43,7 +42,7 @@ angular.module('tasks').factory('Tasks', ['$resource',
                 console.log(data);
                 data.chapters = chapters;
                 data.volumes = volumes;
-                data.latest = itemUpdate;
+                data.latest = new Date();
                 MangaFactory.update(data, undefined, true, undefined);
             });
         };

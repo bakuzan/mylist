@@ -52,19 +52,19 @@ angular.module('core').directive('myProgress', function() {
         bindToController: 'loadingSpinner',
         controller: function ($scope) {
             $scope.active = false;
-            $scope.isLoading = function () {
-                return $http.pendingRequests.length > 0;
-            };
+//            $scope.isLoading = function () {
+//                return $http.pendingRequests.length > 0;
+//            };
             
-            $scope.$watch($scope.isLoading, function (v) {
-                if ($scope.size === 'fullscreen') {
-                    if(v) {
-                        $scope.active = true;
-                    } else {
-                        $scope.active = false;
-                    }
-                }
-            });
+//            $scope.$watch($scope.isLoading, function (v) {
+//                if ($scope.size === 'fullscreen') {
+//                    if(v) {
+//                        $scope.active = true;
+//                    } else {
+//                        $scope.active = false;
+//                    }
+//                }
+//            });
             
             var api = {
                 name: $scope.name,

@@ -138,7 +138,7 @@ angular.module('statistics')
                         width: el.offsetWidth,
                     };
                 }, function () {
-                    console.log('detect flood?');
+//                    console.log('detect flood?');
                         overflowCheck();
                 }, true
             );

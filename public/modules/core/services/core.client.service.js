@@ -59,12 +59,6 @@ var spinners = {},
     queue = {}, 
     loads = {};
     
-    function process(func) {
-        return $q(function(resolve, reject) {
-            resolve(func());
-        });
-    }
-    
   return {
       spinners: spinners,
     // private method for spinner registration.
@@ -101,18 +95,37 @@ var spinners = {},
         delete spinners[name];
       }
     },
-    loading: function (name, func) {
+    loading: function (name, optionsOrPromise) {
         if (!this.spinners[name]) {
             queue[name] = 'loading';
-            loads[name] = func;
-            console.log('defer', loads[name]);
+            loads[name] = optionsOrPromise;
+//            console.log('defer', loads[name]);
             return;
         }
         var spinner = spinners[name];
         spinner.show(name);
-        process(func).then(function(result) {
-            spinner.hide(name);
-        });
+        optionsOrPromise = optionsOrPromise || {};
+        
+        //Check if it's promise
+        if (optionsOrPromise.always || optionsOrPromise['finally']) { 
+            optionsOrPromise = {
+                promise: optionsOrPromise
+            };
+        }
+
+        var options = angular.extend({}, optionsOrPromise);
+
+        if (options.promise) { 
+            if (options.promise.always) {
+                options.promise.always(function () {
+                    spinner.hide(name);
+                });
+            } else if (options.promise['finally']) {
+                options.promise['finally'](function () {
+                    spinner.hide(name);
+                });
+            }
+        }
     },
     show: function (name) {
 //        console.log('show');

@@ -54,7 +54,9 @@ angular.module('toptens').controller('ToptensController', ['$scope', '$statePara
 
 		// Find a list of Toptens
 		$scope.find = function() {
-            $scope.toptens = Toptens.query();
+            spinnerService.loading('topten', Toptens.query().$promise.then(function(result) {
+                $scope.toptens = result;
+            }));
 //            console.log($scope.toptens);
 		};
 

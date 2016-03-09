@@ -141,7 +141,9 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 
 		// Find a list of Mangaitems
 		$scope.find = function() {
-			$scope.mangaitems = Mangaitems.query();
+            spinnerService.loading('manga', Mangaitems.query().$promise.then(function(result) {
+                $scope.mangaitems = result;
+            }));
 		};
 
 		// Find existing Mangaitem

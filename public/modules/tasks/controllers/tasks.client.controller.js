@@ -300,10 +300,10 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
 
 		// Find a list of Tasks
 		function find(check) {
-            Tasks.query(function(result) {
+            spinnerService.loading('tasks', Tasks.query().$promise.then(function(result) {
                 $scope.tasks = result;
                 if (check === true) checkStatus();
-            });
+            }));
 		}
         find(true);
         $scope.refreshItems = function() {

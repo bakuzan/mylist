@@ -519,6 +519,7 @@ div.slider-full-screen {
   .horizontal-list-item.in-display {
     visibility: visible;
     opacity: 1;
+    overflow: hidden;
     -webkit-transition: all linear 0.5s;
     -o-transition: all linear 0.5s;
     -moz-transition: all linear 0.5s;

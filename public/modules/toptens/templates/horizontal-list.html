@@ -1,5 +1,5 @@
 <div class="horizontal-list">
-    <div class="horizontal-list-scroller" ng-style="{left: horizontalList.offset + 'px' }" ng-transclude>
+    <div class="horizontal-list-scroller" ng-style="{left: horizontalList.clicks * horizontalList.shift + 'px' }" ng-transclude>
         
     </div>
     <a class="horizontal-list-control left" ng-click="horizontalList.moveItems('left')"><i class="fa fa-chevron-left"></i></a>

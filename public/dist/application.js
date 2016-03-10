@@ -5213,7 +5213,8 @@ angular.module('toptens')
         controller: function($scope) {
             var self = this;
             self.items = [];
-            self.offset = 0;
+            self.shift = 0;
+            self.clicks = 0;
             self.register = function(item) {
                 self.items.push(item);
                 if([0, 1, 2].indexOf(item.position) > -1) {
@@ -5223,7 +5224,7 @@ angular.module('toptens')
             
             function setVisibility() {
                 var values = [],
-                    check = Math.abs(self.offset / $scope.settings.itemWidth);
+                    check = self.clicks * 3;
                 for(var i = 0; i < 3; i++) {
                     values.push(check + i);
                 }
@@ -5235,15 +5236,15 @@ angular.module('toptens')
             self.moveItems = function(direction) {
                 console.log($scope.settings, direction);
                 if(direction === 'left') {
-                    if(self.offset + $scope.settings.shift > 0) {
-                        self.offset = 0;
+                    if((self.clicks - 1) < 0) {
+                        self.clicks = 0;
                     } else {
-                        self.offset += $scope.settings.shift;
+                        self.clicks -= 1;
                     }
                     setVisibility();
                 } else if (direction === 'right') {
-                    if (Math.abs((self.offset - $scope.settings.shift) / $scope.settings.itemWidth) < self.items.length) {
-                        self.offset -= $scope.settings.shift;
+                    if ((self.clicks + 1) < Math.ceil(self.items.length / 3)) {
+                        self.clicks += 1;
                     }
                     setVisibility();
                 }
@@ -5260,18 +5261,16 @@ angular.module('toptens')
             };
             
             function listSettings() {
-                scope.settings.width = el.offsetWidth;
-                scope.settings.shift = scope.settings.width;
-                scope.settings.itemWidth = scope.settings.shift / 3;
+                ctrl.shift = -el.offsetWidth;
+                ctrl.itemWidth = el.offsetWidth / 3;
                 angular.forEach(ctrl.items, function(item) {
-                    item.itemWidth = scope.settings.itemWidth;
+                    item.itemWidth = ctrl.itemWidth;
                 });
             }
             listSettings();
             
             window.addEventListener('resize', function(e) {
-//                console.log(el.offsetWidth, width);
-                if(el.offsetWidth !== scope.settings.width) {
+                if(el.offsetWidth !== Math.abs(ctrl.shift)) {
                     listSettings();
                     scope.$apply();
                 }
@@ -5290,7 +5289,7 @@ angular.module('toptens')
         require: '^horizontalList',
         link: function(scope, element, attr, horizontalListCtrl) {
             scope.isVisible = false;
-            scope.itemWidth = '33%';
+            scope.itemWidth = horizontalListCtrl.itemWidth;
             scope.position = element.index();
             horizontalListCtrl.register(scope);
         }

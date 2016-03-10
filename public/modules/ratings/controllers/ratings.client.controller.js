@@ -31,9 +31,13 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         
         function getItems(view) {
             if (view === 'Anime') {
-                $scope.items = Animeitems.query();
+                spinnerService.loading('rating', Animeitems.query().$promise.then(function(result) {
+                    $scope.items = result;
+                }));
             } else if (view === 'Manga') {
-                $scope.items = Mangaitems.query();
+                spinnerService.loading('rating', Mangaitems.query().$promise.then(function(result) {
+                    $scope.items = result;
+                }));
             }
             $scope.viewItem = undefined;
 //            console.log(view, $scope.items);

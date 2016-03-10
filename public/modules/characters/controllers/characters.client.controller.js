@@ -154,7 +154,9 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         
         // Find a list of Animeitems
 		$scope.findAnime = function() {
-			$scope.animeitems = Animeitems.query();
+            spinnerService.loading('characters', Animeitems.query().$promise.then(function(result) {
+                $scope.animeitems = result;
+            }));
 		};
         
         // Find existing Animeitem

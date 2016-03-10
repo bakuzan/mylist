@@ -66,13 +66,19 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         function getItems(view) {
             if (view === 'Anime') {
                 $scope.filterConfig.sort.tag.type = 'ratingWeighted'; //stat tag sort
-                $scope.items = Animeitems.query();
+                spinnerService.loading('items', Animeitems.query().$promise.then(function(result) {
+                    $scope.items = result;
+                }));
             } else if (view === 'Manga') {
                 $scope.filterConfig.sort.tag.type = 'ratingWeighted'; //stat tag sort
-                $scope.items = Mangaitems.query();
+                spinnerService.loading('items', Mangaitems.query().$promise.then(function(result) {
+                    $scope.items = result;
+                }));
             } else if (view === 'Character') {
                 $scope.filterConfig.sort.tag.type = 'count'; //stat tag sort
-                $scope.items = Characters.query();
+                spinnerService.loading('character', Characters.query().$promise.then(function(result) {
+                    $scope.items = result;
+                }));
             }
         }
         $scope.find = function(view) {

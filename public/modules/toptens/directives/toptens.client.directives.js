@@ -100,44 +100,76 @@ angular.module('toptens')
         restrict: 'A',
         replace: true,
         transclude: true,
+        require: 'horizontalList',
+        scope: {},
         templateUrl: '/modules/toptens/templates/horizontal-list.html',
-        link: function(scope, element, attr) {
-            scope.horizontalList = {
-                itemWidth: '',
-                offset: 0
-            };
-            var el = element[0],
-                width = el.offsetWidth,
-                shift = width,
-                child = el.children[0],
-                cWidth = child.offsetWidth,
-                style = child.style,
-                value = 0;
-            scope.horizontalList.itemWidth = shift / 3;
-            
-            function move(value) {
-                style.left = value + 'px';
-                scope.horizontalList.offset = value;
-            }
-            
-            scope.moveItems = function(direction) {
-                if(direction === 'left') {
-                    if(value !== 0) {
-                        value += shift;
-                        move(value);
-                    }
-                } else if (direction === 'right') {
-                    value -= shift;
-                    move(value);
+        bindToController: true,
+        controllerAs: 'horizontalList',
+        controller: function($scope) {
+            var self = this;
+            self.items = [];
+            self.offset = 0;
+            self.register = function(item) {
+                self.items.push(item);
+                if([0, 1, 2].indexOf(item.position) > -1) {
+                    item.isVisible = true;
                 }
             };
             
+            function setVisibility() {
+                var values = [],
+                    check = Math.abs(self.offset / $scope.settings.itemWidth);
+                for(var i = 0; i < 3; i++) {
+                    values.push(check + i);
+                }
+                angular.forEach(self.items, function(item) {
+                    item.isVisible = (values.indexOf(item.position) > -1);
+                });
+            }
+            
+            self.moveItems = function(direction) {
+                console.log($scope.settings, direction);
+                if(direction === 'left') {
+                    if(self.offset + $scope.settings.shift > 0) {
+                        self.offset = 0;
+                    } else {
+                        self.offset += $scope.settings.shift;
+                    }
+                    setVisibility();
+                } else if (direction === 'right') {
+                    if (Math.abs((self.offset - $scope.settings.shift) / $scope.settings.itemWidth) > self.items.length) {
+                        
+                    } else {
+                        self.offset -= $scope.settings.shift;
+                    }
+                    setVisibility();
+                }
+            };
+            
+        },
+        link: function(scope, element, attr, ctrl) {
+            var el = element[0],
+                child = el.children[0];
+            scope.settings = {
+                child: child,
+                style: child.style,
+                value: 0
+            };
+            
+            function listSettings() {
+                scope.settings.width = el.offsetWidth;
+                scope.settings.shift = scope.settings.width;
+                scope.settings.itemWidth = scope.settings.shift / 3;
+                angular.forEach(ctrl.items, function(item) {
+                    item.itemWidth = scope.settings.itemWidth;
+                });
+            }
+            listSettings();
+            
             window.addEventListener('resize', function(e) {
 //                console.log(el.offsetWidth, width);
-                if(el.offsetWidth !== width) {
-                    width = el.offsetWidth;
-                    shift = width;
-                    scope.horizontalList.itemWidth = shift / 3;
+                if(el.offsetWidth !== scope.settings.width) {
+                    listSettings();
                     scope.$apply();
                 }
             });
@@ -150,31 +182,14 @@ angular.module('toptens')
         restrict: 'A',
         replace: true,
         transclude: true,
+        scope: {},
         templateUrl: '/modules/toptens/templates/horizontal-list-item.html',
-        link: function(scope, element, attr) {
-            var position = element.index();
-            
-            function setVisibility() {
-                var values = [],
-                    check = Math.abs(scope.$parent.horizontalList.offset / scope.$parent.horizontalList.itemWidth);
-                for(var i = 0; i < 3; i++) {
-                    values.push(check + i);
-                }
-                scope.isVisible = (values.indexOf(position) > -1);
-            }
-            
-            scope.$watch('horizontalList.offset', function(newValue) {
-                if(newValue !== undefined) {
-                    setVisibility();
-                }
-            });
-            
-            scope.$watch('horizontalList.itemWidth', function(newValue) {
-                if(newValue !== undefined) {
-                    setVisibility();
-                }
-            });
-            
+        require: '^horizontalList',
+        link: function(scope, element, attr, horizontalListCtrl) {
+            scope.isVisible = false;
+            scope.itemWidth = '33%';
+            scope.position = element.index();
+            horizontalListCtrl.register(scope);
         }
     };
 });

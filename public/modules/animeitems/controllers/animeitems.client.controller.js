@@ -181,9 +181,9 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
          *  (0) returns only ongoing series. (1) returns all series.
          */
 		function getAnime(value) {
-            $scope.animeitems = Animeitems.query({
-                status: value
-            });
+            spinnerService.loading('anime', Animeitems.query({ status: value }).$promise.then(function(result) {
+                $scope.animeitems = result;
+            }));
 		}
         
         //Set defaults on requery and "neutralise" the other search variable.

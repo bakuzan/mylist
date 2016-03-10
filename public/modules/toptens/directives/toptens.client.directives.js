@@ -137,9 +137,7 @@ angular.module('toptens')
                     }
                     setVisibility();
                 } else if (direction === 'right') {
-                    if (Math.abs((self.offset - $scope.settings.shift) / $scope.settings.itemWidth) > self.items.length) {
-                        
-                    } else {
+                    if (Math.abs((self.offset - $scope.settings.shift) / $scope.settings.itemWidth) < self.items.length) {
                         self.offset -= $scope.settings.shift;
                     }
                     setVisibility();

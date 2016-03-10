@@ -304,9 +304,9 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
          *  (0) returns only ongoing series. (1) returns all series.
          */
 		function getAnime(value) {
-            $scope.animeitems = Animeitems.query({
-                status: value
-            });
+            spinnerService.loading('anime', Animeitems.query({ status: value }).$promise.then(function(result) {
+                $scope.animeitems = result;
+            }));
 		}
         
         //Set defaults on requery and "neutralise" the other search variable.
@@ -1413,7 +1413,9 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         
         // Find a list of Animeitems
 		$scope.findAnime = function() {
-			$scope.animeitems = Animeitems.query();
+            spinnerService.loading('characters', Animeitems.query().$promise.then(function(result) {
+                $scope.animeitems = result;
+            }));
 		};
         
         // Find existing Animeitem
@@ -2391,19 +2393,19 @@ angular.module('core').directive('myProgress', function() {
         bindToController: 'loadingSpinner',
         controller: function ($scope) {
             $scope.active = false;
-            $scope.isLoading = function () {
-                return $http.pendingRequests.length > 0;
-            };
+//            $scope.isLoading = function () {
+//                return $http.pendingRequests.length > 0;
+//            };
             
-            $scope.$watch($scope.isLoading, function (v) {
-                if ($scope.size === 'fullscreen') {
-                    if(v) {
-                        $scope.active = true;
-                    } else {
-                        $scope.active = false;
-                    }
-                }
-            });
+//            $scope.$watch($scope.isLoading, function (v) {
+//                if ($scope.size === 'fullscreen') {
+//                    if(v) {
+//                        $scope.active = true;
+//                    } else {
+//                        $scope.active = false;
+//                    }
+//                }
+//            });
             
             var api = {
                 name: $scope.name,
@@ -2581,12 +2583,6 @@ var spinners = {},
     queue = {}, 
     loads = {};
     
-    function process(func) {
-        return $q(function(resolve, reject) {
-            resolve(func());
-        });
-    }
-    
   return {
       spinners: spinners,
     // private method for spinner registration.
@@ -2623,18 +2619,37 @@ var spinners = {},
         delete spinners[name];
       }
     },
-    loading: function (name, func) {
+    loading: function (name, optionsOrPromise) {
         if (!this.spinners[name]) {
             queue[name] = 'loading';
-            loads[name] = func;
-            console.log('defer', loads[name]);
+            loads[name] = optionsOrPromise;
+//            console.log('defer', loads[name]);
             return;
         }
         var spinner = spinners[name];
         spinner.show(name);
-        process(func).then(function(result) {
-            spinner.hide(name);
-        });
+        optionsOrPromise = optionsOrPromise || {};
+        
+        //Check if it's promise
+        if (optionsOrPromise.always || optionsOrPromise['finally']) { 
+            optionsOrPromise = {
+                promise: optionsOrPromise
+            };
+        }
+
+        var options = angular.extend({}, optionsOrPromise);
+
+        if (options.promise) { 
+            if (options.promise.always) {
+                options.promise.always(function () {
+                    spinner.hide(name);
+                });
+            } else if (options.promise['finally']) {
+                options.promise['finally'](function () {
+                    spinner.hide(name);
+                });
+            }
+        }
     },
     show: function (name) {
 //        console.log('show');
@@ -3066,12 +3081,12 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
         var latestDate = new Date().setDate(new Date().getDate() - 29);
         
         $scope.buildHistory = function() {
-            $scope.animeitems = AnimeHistory.query({
-                latest: latestDate
-            });
-            $scope.mangaitems = MangaHistory.query({
-                latest: latestDate
-            });
+            spinnerService.loading('history', AnimeHistory.query({ latest: latestDate }).$promise.then(function(result) {
+                $scope.animeitems = result;
+                return MangaHistory.query({ latest: latestDate }).$promise;
+            }).then(function(result) {
+               $scope.mangaitems = result; 
+            }));
         };
         //Needed to catch 'Character' setting and skip it.
         $scope.$watch('view', function(newValue) {
@@ -3479,7 +3494,9 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 
 		// Find a list of Mangaitems
 		$scope.find = function() {
-			$scope.mangaitems = Mangaitems.query();
+            spinnerService.loading('manga', Mangaitems.query().$promise.then(function(result) {
+                $scope.mangaitems = result;
+            }));
 		};
 
 		// Find existing Mangaitem
@@ -3677,9 +3694,13 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         
         function getItems(view) {
             if (view === 'Anime') {
-                $scope.items = Animeitems.query();
+                spinnerService.loading('rating', Animeitems.query().$promise.then(function(result) {
+                    $scope.items = result;
+                }));
             } else if (view === 'Manga') {
-                $scope.items = Mangaitems.query();
+                spinnerService.loading('rating', Mangaitems.query().$promise.then(function(result) {
+                    $scope.items = result;
+                }));
             }
             $scope.viewItem = undefined;
 //            console.log(view, $scope.items);
@@ -3844,13 +3865,19 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         function getItems(view) {
             if (view === 'Anime') {
                 $scope.filterConfig.sort.tag.type = 'ratingWeighted'; //stat tag sort
-                $scope.items = Animeitems.query();
+                spinnerService.loading('items', Animeitems.query().$promise.then(function(result) {
+                    $scope.items = result;
+                }));
             } else if (view === 'Manga') {
                 $scope.filterConfig.sort.tag.type = 'ratingWeighted'; //stat tag sort
-                $scope.items = Mangaitems.query();
+                spinnerService.loading('items', Mangaitems.query().$promise.then(function(result) {
+                    $scope.items = result;
+                }));
             } else if (view === 'Character') {
                 $scope.filterConfig.sort.tag.type = 'count'; //stat tag sort
-                $scope.items = Characters.query();
+                spinnerService.loading('character', Characters.query().$promise.then(function(result) {
+                    $scope.items = result;
+                }));
             }
         }
         $scope.find = function(view) {
@@ -4107,7 +4134,7 @@ angular.module('statistics')
                         width: el.offsetWidth,
                     };
                 }, function () {
-                    console.log('detect flood?');
+//                    console.log('detect flood?');
                         overflowCheck();
                 }, true
             );
@@ -4537,10 +4564,10 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
 
 		// Find a list of Tasks
 		function find(check) {
-            Tasks.query(function(result) {
+            spinnerService.loading('tasks', Tasks.query().$promise.then(function(result) {
                 $scope.tasks = result;
                 if (check === true) checkStatus();
-            });
+            }));
 		}
         find(true);
         $scope.refreshItems = function() {
@@ -5058,7 +5085,9 @@ angular.module('toptens').controller('ToptensController', ['$scope', '$statePara
 
 		// Find a list of Toptens
 		$scope.find = function() {
-            $scope.toptens = Toptens.query();
+            spinnerService.loading('topten', Toptens.query().$promise.then(function(result) {
+                $scope.toptens = result;
+            }));
 //            console.log($scope.toptens);
 		};
 
@@ -5176,44 +5205,74 @@ angular.module('toptens')
         restrict: 'A',
         replace: true,
         transclude: true,
+        require: 'horizontalList',
+        scope: {},
         templateUrl: '/modules/toptens/templates/horizontal-list.html',
-        link: function(scope, element, attr) {
-            scope.horizontalList = {
-                itemWidth: '',
-                offset: 0
-            };
-            var el = element[0],
-                width = el.offsetWidth,
-                shift = width,
-                child = el.children[0],
-                cWidth = child.offsetWidth,
-                style = child.style,
-                value = 0;
-            scope.horizontalList.itemWidth = shift / 3;
-            
-            function move(value) {
-                style.left = value + 'px';
-                scope.horizontalList.offset = value;
-            }
-            
-            scope.moveItems = function(direction) {
-                if(direction === 'left') {
-                    if(value !== 0) {
-                        value += shift;
-                        move(value);
-                    }
-                } else if (direction === 'right') {
-                    value -= shift;
-                    move(value);
+        bindToController: true,
+        controllerAs: 'horizontalList',
+        controller: function($scope) {
+            var self = this;
+            self.items = [];
+            self.offset = 0;
+            self.register = function(item) {
+                self.items.push(item);
+                if([0, 1, 2].indexOf(item.position) > -1) {
+                    item.isVisible = true;
                 }
             };
             
+            function setVisibility() {
+                var values = [],
+                    check = Math.abs(self.offset / $scope.settings.itemWidth);
+                for(var i = 0; i < 3; i++) {
+                    values.push(check + i);
+                }
+                angular.forEach(self.items, function(item) {
+                    item.isVisible = (values.indexOf(item.position) > -1);
+                });
+            }
+            
+            self.moveItems = function(direction) {
+                console.log($scope.settings, direction);
+                if(direction === 'left') {
+                    if(self.offset + $scope.settings.shift > 0) {
+                        self.offset = 0;
+                    } else {
+                        self.offset += $scope.settings.shift;
+                    }
+                    setVisibility();
+                } else if (direction === 'right') {
+                    if (Math.abs((self.offset - $scope.settings.shift) / $scope.settings.itemWidth) < self.items.length) {
+                        self.offset -= $scope.settings.shift;
+                    }
+                    setVisibility();
+                }
+            };
+            
+        },
+        link: function(scope, element, attr, ctrl) {
+            var el = element[0],
+                child = el.children[0];
+            scope.settings = {
+                child: child,
+                style: child.style,
+                value: 0
+            };
+            
+            function listSettings() {
+                scope.settings.width = el.offsetWidth;
+                scope.settings.shift = scope.settings.width;
+                scope.settings.itemWidth = scope.settings.shift / 3;
+                angular.forEach(ctrl.items, function(item) {
+                    item.itemWidth = scope.settings.itemWidth;
+                });
+            }
+            listSettings();
+            
             window.addEventListener('resize', function(e) {
 //                console.log(el.offsetWidth, width);
-                if(el.offsetWidth !== width) {
-                    width = el.offsetWidth;
-                    shift = width;
-                    scope.horizontalList.itemWidth = shift / 3;
+                if(el.offsetWidth !== scope.settings.width) {
+                    listSettings();
                     scope.$apply();
                 }
             });
@@ -5226,31 +5285,14 @@ angular.module('toptens')
         restrict: 'A',
         replace: true,
         transclude: true,
+        scope: {},
         templateUrl: '/modules/toptens/templates/horizontal-list-item.html',
-        link: function(scope, element, attr) {
-            var position = element.index();
-            
-            function setVisibility() {
-                var values = [],
-                    check = Math.abs(scope.$parent.horizontalList.offset / scope.$parent.horizontalList.itemWidth);
-                for(var i = 0; i < 3; i++) {
-                    values.push(check + i);
-                }
-                scope.isVisible = (values.indexOf(position) > -1);
-            }
-            
-            scope.$watch('horizontalList.offset', function(newValue) {
-                if(newValue !== undefined) {
-                    setVisibility();
-                }
-            });
-            
-            scope.$watch('horizontalList.itemWidth', function(newValue) {
-                if(newValue !== undefined) {
-                    setVisibility();
-                }
-            });
-            
+        require: '^horizontalList',
+        link: function(scope, element, attr, horizontalListCtrl) {
+            scope.isVisible = false;
+            scope.itemWidth = '33%';
+            scope.position = element.index();
+            horizontalListCtrl.register(scope);
         }
     };
 });

@@ -1,7 +1,7 @@
 <div class="horizontal-list">
-    <div class="horizontal-list-scroller" ng-transclude>
+    <div class="horizontal-list-scroller" ng-style="{left: horizontalList.offset + 'px' }" ng-transclude>
         
     </div>
-    <a class="horizontal-list-control left" ng-click="moveItems('left')"><i class="fa fa-chevron-left"></i></a>
-    <a class="horizontal-list-control right" ng-click="moveItems('right')"><i class="fa fa-chevron-right"></i></a>
+    <a class="horizontal-list-control left" ng-click="horizontalList.moveItems('left')"><i class="fa fa-chevron-left"></i></a>
+    <a class="horizontal-list-control right" ng-click="horizontalList.moveItems('right')"><i class="fa fa-chevron-right"></i></a>
 </div>

@@ -100,12 +100,15 @@ angular.module('toptens')
         restrict: 'A',
         replace: true,
         transclude: true,
+        require: 'horizontalList',
+        scope: {},
         templateUrl: '/modules/toptens/templates/horizontal-list.html',
-        bindToController: 'horizontalList',
+        bindToController: true,
+        controllerAs: 'horizontalList',
         controller: function($scope) {
             var self = this;
             self.items = [];
-            
+            self.offset = 0;
             self.register = function(item) {
                 self.items.push(item);
                 if([0, 1, 2].indexOf(item.position) > -1) {
@@ -115,7 +118,7 @@ angular.module('toptens')
             
             function setVisibility() {
                 var values = [],
-                    check = Math.abs($scope.horizontalList.offset / $scope.horizontalList.itemWidth);
+                    check = Math.abs(self.offset / $scope.settings.itemWidth);
                 for(var i = 0; i < 3; i++) {
                     values.push(check + i);
                 }
@@ -124,44 +127,49 @@ angular.module('toptens')
                 });
             }
             
-            function move(value) {
-                $scope.horizontalList.style.left = value + 'px';
-                $scope.horizontalList.offset = value;
-                setVisibility();
-            }
-            
             self.moveItems = function(direction) {
+                console.log($scope.settings, direction);
                 if(direction === 'left') {
-                    if($scope.horizontalList.value !== 0) {
-                        $scope.horizontalList.value += $scope.horizontalList.shift;
-                        move(value);
+                    if(self.offset + $scope.settings.shift > 0) {
+                        self.offset = 0;
+                    } else {
+                        self.offset += $scope.settings.shift;
                     }
+                    setVisibility();
                 } else if (direction === 'right') {
-                    $scope.horizontalList.value -= $scope.horizontalList.shift;
-                    move($scope.horizontalList.value);
+                    if (Math.abs((self.offset - $scope.settings.shift) / $scope.settings.itemWidth) > self.items.length) {
+                        
+                    } else {
+                        self.offset -= $scope.settings.shift;
+                    }
+                    setVisibility();
                 }
             };
             
         },
-        link: function(scope, element, attr) {
-            scope.horizontalList = {
-                el: element[0],
-                child: element.children[0],
-                cWidth: element.children[0].offsetWidth,
-                style: element.children[0].style,
+        link: function(scope, element, attr, ctrl) {
+            var el = element[0],
+                child = el.children[0];
+            scope.settings = {
+                child: child,
+                style: child.style,
                 value: 0
             };
-            scope.horizontalList.width = scope.horizontalList.el.offsetWidth;
-            scope.horizontalList.shift = scope.horizontalList.width;
-            scope.horizontalList.itemWidth = scope.horizontalList.shift / 3;
-            console.log(scope);
+            
+            function listSettings() {
+                scope.settings.width = el.offsetWidth;
+                scope.settings.shift = scope.settings.width;
+                scope.settings.itemWidth = scope.settings.shift / 3;
+                angular.forEach(ctrl.items, function(item) {
+                    item.itemWidth = scope.settings.itemWidth;
+                });
+            }
+            listSettings();
             
             window.addEventListener('resize', function(e) {
 //                console.log(el.offsetWidth, width);
-                if(el.offsetWidth !== scope.horizontalList.width) {
-                    scope.horizontalList.width = scope.horizontalList.el.offsetWidth;
-                    scope.horizontalList.shift = scope.horizontalList.width;
-                    scope.horizontalList.itemWidth = scope.horizontalList.shift / 3;
+                if(el.offsetWidth !== scope.settings.width) {
+                    listSettings();
                     scope.$apply();
                 }
             });
@@ -174,10 +182,12 @@ angular.module('toptens')
         restrict: 'A',
         replace: true,
         transclude: true,
+        scope: {},
         templateUrl: '/modules/toptens/templates/horizontal-list-item.html',
         require: '^horizontalList',
         link: function(scope, element, attr, horizontalListCtrl) {
             scope.isVisible = false;
+            scope.itemWidth = '33%';
             scope.position = element.index();
             horizontalListCtrl.register(scope);
         }

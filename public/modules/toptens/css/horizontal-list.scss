@@ -18,6 +18,7 @@ $height: 200px;
     &.in-display {
         visibility: visible;
         opacity: 1;
+        overflow: hidden;
         @include transition(all linear .5s);
     }
     &.out-display {

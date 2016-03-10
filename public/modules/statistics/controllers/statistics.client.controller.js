@@ -123,15 +123,20 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         function getSummaryFunctions(array) {
             //Check whether to do ratings or episode ratings.
             if (!$scope.detail.isEpisodeRatings) {
-                $scope.historyDetails.summaryFunctions = StatisticsService.buildSummaryFunctions(array);
+                spinnerService.loading('detail', StatisticsService.buildSummaryFunctions(array).then(function(result) {
+                    $scope.historyDetails.summaryFunctions = result;
+                }));
                 if ($scope.detail.summary.isVisible === true) {
-                    $scope.historyDetails.yearSummary = StatisticsService.buildYearSummary(array, $scope.detail.year, $scope.detail.summary.type);
+                    spinnerService.loading('detail', 
+                        StatisticsService.buildYearSummary(array, $scope.detail.year, $scope.detail.summary.type).then(function(result) {
+                            $scope.historyDetails.yearSummary = result;
+                        })
+                    );
                 }
             } else {
-                angular.forEach(array, function(item) {
-                    var episodeSummaryFunctions = StatisticsService.buildSummaryFunctions(item.meta.history);
-                    item.meta.episodeSummaryFunctions = episodeSummaryFunctions;
-                });
+                spinnerService.loading('detail', StatisticsService.buildEpisodeSummaries(array).then(function(result) {
+                        console.log(array);
+                }));
             }
 //            console.log(array, $scope.historyDetails);
         }

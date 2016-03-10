@@ -140,8 +140,10 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 
 		// Find a list of Characters
 		$scope.find = function() {
-			$scope.characters = Characters.query();
+            spinnerService.loading('characters', Characters.query().$promise.then(function(result) {
+			$scope.characters = result;
             //console.log($scope.characters);
+            }));
 		};
 
 		// Find existing Character
@@ -154,9 +156,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         
         // Find a list of Animeitems
 		$scope.findAnime = function() {
-            spinnerService.loading('characters', Animeitems.query().$promise.then(function(result) {
-                $scope.animeitems = result;
-            }));
+            $scope.animeitems = Animeitems.query();
 		};
         
         // Find existing Animeitem

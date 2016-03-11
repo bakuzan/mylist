@@ -11,8 +11,7 @@ angular.module('toptens')
         },
         template: '<div class="steps" ng-transclude>' +
                   '</div>',
-        bindToController: true,
-        controllerAs: 'steps',
+        bindToController: 'steps',
         controller: function($scope) {
             var self = this;
             self.steps = [];

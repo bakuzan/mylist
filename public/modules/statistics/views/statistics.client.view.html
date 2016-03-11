@@ -22,14 +22,10 @@
                             <h3>
                                 History
                             </h3>
-                            <h3 class="btn btn-primary stat-header-label" ng-model="detail.history" btn-radio="'months'"
-                                ng-click="detail.isVisible=false; detail.isEpisodeRatings=false">
-                                by month
-                            </h3>
-                            <h3 class="btn btn-primary stat-header-label" ng-model="detail.history" btn-radio="'seasons'" 
-                                ng-click="detail.isVisible=false" ng-show="view === 'Anime'">
-                                by season
-                            </h3>
+                            <div tab-container ng-model="detail.history" style="width: 250px">
+                                <div tab-view heading="months" ng-click="detail.isVisible=false; detail.isEpisodeRatings=false"></div>
+                                <div tab-view heading="seasons" ng-click="detail.isVisible=false" disabled="view === 'Manga'"></div>
+                            </div>
                             <div class="margin-auto padding-left-15" ng-show="detail.history === 'seasons'">
                                 <input type="checkbox" class="phantom-control" ng-model="detail.isEpisodeRatings" ng-change="toggleEpisodeRatings(detailItems)" />
                                 <span class="display-inline-block font-18 padding-left-5"> 
@@ -201,11 +197,12 @@
     <div class="col-lg-12 col-md-12 col-sm-12 relative stat-view" style="top: 100px" ng-show="view === 'Character'" loading-spinner name="character" size="fullscreen">
         <div class="col-lg-12 col-md-12 col-sm-12 stat-gender-panel primary-background">
             <div class="stat-gender-progress-container">
-                <progress>
-                    <bar type="danger" value="gender.female.percentage">{{gender.female.percentage}}{{::gender.female.text}}</bar>
-                    <bar type="primary" value="gender.male.percentage">{{gender.male.percentage}}{{::gender.male.text}}</bar>
-                    <bar type="success" value="gender.nosex.percentage">{{gender.nosex.percentage}}{{::gender.nosex.text}}</bar>
-                </progress>
+                <!-- replace with own progress bar -->
+                <div class="relative" style="height: 20px">
+                    <div class="display-inline-block" style="background: red" ng-style="{ 'width': gender.female.percentage + '%' }">{{gender.female.percentage}}{{::gender.female.text}}</div>
+                    <div class="display-inline-block" style="background: green" ng-style="{ 'width': gender.male.percentage + '%' }">{{gender.male.percentage}}{{::gender.male.text}}</div>
+                    <div class="display-inline-block" style="background: blue" ng-style="{ 'width': gender.nosex.percentage + '%' }">{{gender.nosex.percentage}}{{::gender.nosex.text}}</div>
+                </div>
             </div>
         </div><!-- GENDER PERCENTAGE BAR END -->
         <div tab-container class="width-100">

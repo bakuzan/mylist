@@ -28,13 +28,15 @@ angular.module('statistics')
             };
             
             self.select = function(selectedTab) {
-                angular.forEach(self.tabs, function(tab) {
-                    if(tab.active && tab !== selectedTab) {
-                      tab.active = false;
-                    }
-                });
-                selectedTab.active = true;
-                self.currentTab = ($scope.tabContainer.model === undefined) ? undefined : selectedTab.heading;
+                if(!selectedTab.disabled) {
+                    angular.forEach(self.tabs, function(tab) {
+                        if(tab.active && tab !== selectedTab) {
+                          tab.active = false;
+                        }
+                    });
+                    selectedTab.active = true;
+                    self.currentTab = ($scope.tabContainer.model === undefined) ? undefined : selectedTab.heading;
+                }
             };
             
             self.shiftTabs = function(direction) {
@@ -109,7 +111,8 @@ angular.module('statistics')
         template: '<div class="tab-view" role="tabpanel" ng-show="active" ng-transclude></div>',
         require: '^tabContainer',
         scope: {
-            heading: '@'
+            heading: '@',
+            disabled: '='
         },
         link: function (scope, element, attrs, tabContainerCtrl) {
             scope.active = false;

@@ -4,7 +4,7 @@
             <li class="tab-control-option"
                 role="taboptions"
                 ng-repeat="tab in tabContainer.tabs"
-                ng-class="{'active': tab.active}">
+                ng-class="{'active': tab.active, 'disabled': tab.disabled }">
               <a href=""
                  role="tab"
                  ng-click="tabContainer.select(tab)">{{tab.heading}}</a>

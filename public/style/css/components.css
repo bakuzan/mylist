@@ -651,12 +651,12 @@ div.slider-full-screen {
   background-color: rgba(240, 240, 240, 0.5);
   z-index: 1000; }
   .loader.fullscreen .circular {
-    top: 25%;
+    top: 25vh;
     bottom: auto;
-    left: 40%;
+    left: 35vw;
     right: auto;
-    width: 25%;
-    height: 25%; }
+    width: 25vw;
+    height: 25vh; }
 
 .circular {
   animation: rotate 2s linear infinite;

@@ -23,8 +23,7 @@
 }
 
 /* remove not-allowed cursor */
-.form-control[disabled],
-input[type="checkbox"][disabled], input[type="checkbox"].disabled {
+.form-control[disabled], input[type="checkbox"][disabled], input[type="checkbox"].disabled, button[disabled] {
     cursor: default;
 }
 
@@ -495,10 +494,16 @@ nav {
 .btn-primary:active {
     @extend .btn-primary:focus;
 }
+.btn-primary:active:focus {
+    @extend .btn-primary:focus;
+}
+.btn-primary:active:hover {
+    @extend .btn-primary:focus;
+}
 .btn-primary.active {
     @extend .btn-primary:focus;
 }
-.btn-primary:disabled, .btn-primary[disabled] {
+.btn-primary:disabled, .btn-primary[disabled], .btn-primary:disabled:hover,  .btn-primary[disabled]:hover {
     background-color: $brand-tertiary;
     border-color: $brand-tertiary;
 }
@@ -523,10 +528,16 @@ nav {
 .btn-accent:active {
     @extend .btn-accent:focus;
 }
+.btn-accent:active:focus {
+    @extend .btn-accent:focus;
+}
+.btn-accent:active:hover {
+    @extend .btn-accent:focus;
+}
 .btn-accent.active {
     @extend .btn-accent:focus;
 }
-.btn-accent:disabled, .btn-accent[disabled] {
+.btn-accent:disabled, .btn-accent[disabled], .btn-accent:disabled:hover, .btn-accent[disabled]:hover {
     background-color: $brand-tertiary;
     border-color: $brand-tertiary;
 }
@@ -551,6 +562,12 @@ nav {
 .btn-success:active {
     @extend .btn-success:focus;
 }
+.btn-success:active:focus {
+    @extend .btn-success:focus;
+}
+.btn-success:active:hover {
+    @extend .btn-success:focus;
+}
 .btn-success.active {
     @extend .btn-success:focus;
 }
@@ -573,6 +590,12 @@ nav {
     @extend .btn-danger:focus;
 }
 .btn-danger:active {
+    @extend .btn-danger:focus;
+}
+.btn-danger:active:focus {
+    @extend .btn-danger:focus;
+}
+.btn-danger:active:hover {
     @extend .btn-danger:focus;
 }
 .btn-danger.active {

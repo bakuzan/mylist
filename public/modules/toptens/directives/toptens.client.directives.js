@@ -11,9 +11,9 @@ angular.module('toptens')
         },
         template: '<div class="steps" ng-transclude>' +
                   '</div>',
-        bindToController: 'steps',
+        bindToController: true,
+        controllerAs: 'steps',
         controller: function($scope) {
-            console.log($scope);
             var self = this;
             self.steps = [];
             
@@ -129,7 +129,6 @@ angular.module('toptens')
             }
             
             self.moveItems = function(direction) {
-                console.log($scope.settings, direction);
                 if(direction === 'left') {
                     if((self.clicks - 1) < 0) {
                         self.clicks = 0;

@@ -1,13 +1,11 @@
 <section data-ng-controller="HistoryController" ng-init="buildHistory()" ng-show="authentication.user">
     <span keycuts></span>
     <div class="fixed-header width-100 secondary-background padding-10" style="top: 50px; left: 0">
-        <div class="text-right pull-right">
-            <li class="tab-control-option" ng-class="(view === 'Anime') ? 'active' : ''" ng-model="view" btn-radio="'Anime'">
-                <a>Anime</a>
-            </li>
-            <li class="tab-control-option" ng-class="(view === 'Manga') ? 'active' : ''" ng-model="view" btn-radio="'Manga'">
-                <a>Manga</a>
-            </li>
+        <div class="view-controls absolute position-right" style="min-width: 165px">
+            <div tab-container ng-model="view">
+                <div tab-view heading="Anime"></div>
+                <div tab-view heading="Manga"></div>
+            </div>
         </div>
         <h1>{{view}} history</h1>
         <div class="input-group">

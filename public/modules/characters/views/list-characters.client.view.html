@@ -6,8 +6,10 @@
     <div class="container">
         <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }">
             <div class="view-controls">
-                <label class="btn btn-primary" ng-model="isList" btn-radio="'list'">List</label>
-                <label class="btn btn-primary" ng-model="isList" btn-radio="'slider'">Slider</label>
+                <div tab-container ng-model="isList">
+                    <div tab-view heading="list"></div>
+                    <div tab-view heading="slider"></div>
+                </div>
             </div>
             <div list-filters filter-config="filterConfig" items="characters" page="whichController"></div>
         </div>

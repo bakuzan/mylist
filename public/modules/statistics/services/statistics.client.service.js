@@ -51,13 +51,18 @@ angular.module('statistics').service('StatisticsService', ['$filter', 'ListServi
                 attr   = (type === 'months') ? 'number'     : 'text'  ,
                 commonArrays = ListService.getCommonArrays(),
                 i = commonArrays[type].length, 
-                yearSummary = [];
+                yearSummary = [], results = [];
+            
             for(var j = 0; j < i; j++) {
-                var filteredArray = $filter(filter)(array, year, commonArrays[type][j][attr]);
-                    self.buildSummaryFunctions(filteredArray).then(function(result) {
-                        yearSummary = processYearSummary(yearSummary, result);
-                    });
+                var filteredArray = $filter(filter)(array, year, commonArrays[type][j][attr]),
+                    promise = self.buildSummaryFunctions(filteredArray);
+                results.push(promise);
             }
+            angular.forEach(results, function(promise) {
+                promise.then(function(result) {
+                    yearSummary = processYearSummary(yearSummary, result);
+                });
+            });
             resolve(yearSummary);
         });
     };

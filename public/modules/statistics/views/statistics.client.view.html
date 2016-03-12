@@ -197,11 +197,19 @@
     <div class="col-lg-12 col-md-12 col-sm-12 relative stat-view" style="top: 100px" ng-show="view === 'Character'" loading-spinner name="character" size="fullscreen">
         <div class="col-lg-12 col-md-12 col-sm-12 stat-gender-panel primary-background">
             <div class="stat-gender-progress-container">
-                <!-- replace with own progress bar -->
-                <div class="relative" style="height: 20px">
-                    <div class="display-inline-block" style="background: red" ng-style="{ 'width': gender.female.percentage + '%' }">{{gender.female.percentage}}{{::gender.female.text}}</div>
-                    <div class="display-inline-block" style="background: green" ng-style="{ 'width': gender.male.percentage + '%' }">{{gender.male.percentage}}{{::gender.male.text}}</div>
-                    <div class="display-inline-block" style="background: blue" ng-style="{ 'width': gender.nosex.percentage + '%' }">{{gender.nosex.percentage}}{{::gender.nosex.text}}</div>
+                <div percentage-bar-container>
+                    <div percentage-bar 
+                         percentage="{{gender.female.percentage}}" 
+                         display="{{gender.female.percentage}}{{::gender.female.text}}"
+                         colour="red"></div>
+                    <div percentage-bar 
+                         percentage="{{gender.male.percentage}}" 
+                         display="{{gender.male.percentage}}{{::gender.male.text}}"
+                         colour="green"></div>
+                    <div percentage-bar 
+                         percentage="{{gender.nosex.percentage}}" 
+                         display="{{gender.nosex.percentage}}{{::gender.nosex.text}}"
+                         colour="blue"></div>
                 </div>
             </div>
         </div><!-- GENDER PERCENTAGE BAR END -->

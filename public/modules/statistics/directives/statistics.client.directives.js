@@ -27,6 +27,17 @@ angular.module('statistics')
                 }
             };
             
+            self.disable = function(disabledTab) {
+                if(disabledTab.active) {
+                    angular.forEach(self.tabs, function(tab) {
+                        if(!tab.disabled) {
+                            self.select(tab);
+                            return;
+                        }
+                    });
+                }
+            };
+            
             self.select = function(selectedTab) {
                 if(!selectedTab.disabled) {
                     angular.forEach(self.tabs, function(tab) {
@@ -117,6 +128,15 @@ angular.module('statistics')
         link: function (scope, element, attrs, tabContainerCtrl) {
             scope.active = false;
             tabContainerCtrl.addTab(scope);
+            
+            scope.$watch('disabled', function(newValue) {
+                if(newValue !== undefined) {
+                    if(newValue) {
+                        console.log(scope.heading, newValue);
+                        tabContainerCtrl.disable(scope);
+                    }
+                }
+            });
         }
     };
 })
@@ -148,4 +168,34 @@ angular.module('statistics')
             
         }
     };
-}]);
+}])
+.directive('percentageBarContainer', function() {
+  return {
+      restrict: 'A',
+      replace: true,
+      transclude: true,
+      bindToController: true,
+      template: '<div class="relative" style="height: 20px;" ng-transclude></div>',
+      controllerAs: 'percentageBarContainer',
+      controller: function($scope) {
+          
+      }
+  };
+})
+.directive('percentageBar', function() {
+    return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+            type: '@?',
+            percentage: '@',
+            colour: '@?',
+            display: '@?'
+        },
+        require: '^percentageBarContainer',
+        templateUrl: '/modules/statistics/templates/percentage-bar.html',
+        link: function(scope, element, attrs, percentageBarContainerCtrl) {
+
+        }
+    };
+});

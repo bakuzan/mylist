@@ -13,7 +13,6 @@ angular.module('toptens')
                   '</div>',
         bindToController: 'steps',
         controller: function($scope) {
-            console.log($scope);
             var self = this;
             self.steps = [];
             
@@ -129,7 +128,6 @@ angular.module('toptens')
             }
             
             self.moveItems = function(direction) {
-                console.log($scope.settings, direction);
                 if(direction === 'left') {
                     if((self.clicks - 1) < 0) {
                         self.clicks = 0;

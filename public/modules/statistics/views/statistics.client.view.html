@@ -1,16 +1,12 @@
 <section data-ng-controller="StatisticsController" data-ng-init="find(view)" data-ng-show="authentication.user">
     <span keycuts></span>
     <div class="fixed-header width-100 secondary-background padding-10" style="top: 50px; left: 0">
-        <div class="text-right pull-right">
-            <li class="tab-control-option" ng-class="(view === 'Anime') ? 'active' : ''" ng-model="view" btn-radio="'Anime'">
-                <a>Anime</a>
-            </li>
-            <li class="tab-control-option" ng-class="(view === 'Manga') ? 'active' : ''" ng-model="view" btn-radio="'Manga'">
-                <a>Manga</a>
-            </li>
-            <li class="tab-control-option" ng-class="(view === 'Character') ? 'active' : ''" ng-model="view" btn-radio="'Character'">
-                <a>Character</a>
-            </li>
+        <div class="view-controls absolute position-right" style="min-width: 285px">
+            <div tab-container ng-model="view">
+                <div tab-view heading="Anime"></div>
+                <div tab-view heading="Manga"></div>
+                <div tab-view heading="Character"></div>
+            </div>
         </div>
         <h1>{{view}} statistics</h1>
     </div>
@@ -26,14 +22,10 @@
                             <h3>
                                 History
                             </h3>
-                            <h3 class="btn btn-primary stat-header-label" ng-model="detail.history" btn-radio="'months'"
-                                ng-click="detail.isVisible=false; detail.isEpisodeRatings=false">
-                                by month
-                            </h3>
-                            <h3 class="btn btn-primary stat-header-label" ng-model="detail.history" btn-radio="'seasons'" 
-                                ng-click="detail.isVisible=false" ng-show="view === 'Anime'">
-                                by season
-                            </h3>
+                            <div tab-container ng-model="detail.history" style="width: 250px">
+                                <div tab-view heading="months" ng-click="detail.isVisible=false; detail.isEpisodeRatings=false"></div>
+                                <div tab-view heading="seasons" ng-click="detail.isVisible=false" disabled="view === 'Manga'"></div>
+                            </div>
                             <div class="margin-auto padding-left-15" ng-show="detail.history === 'seasons'">
                                 <input type="checkbox" class="phantom-control" ng-model="detail.isEpisodeRatings" ng-change="toggleEpisodeRatings(detailItems)" />
                                 <span class="display-inline-block font-18 padding-left-5"> 
@@ -67,7 +59,7 @@
                             </tbody>
                         </table>
                     </div><!-- HISTORY PANEL END -->
-                    <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="detail.isVisible">
+                    <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="detail.isVisible"  loading-spinner name="detail">
                         <div class="col-lg-12 col-md-12 col-sm-12 margin-top-10" 
                              ng-show="(detail.summary.isVisible && detailItems.length > 1) && detail.isEpisodeRatings === false">
                             <table class="col-lg-12 col-md-12 col-sm-12">
@@ -205,11 +197,20 @@
     <div class="col-lg-12 col-md-12 col-sm-12 relative stat-view" style="top: 100px" ng-show="view === 'Character'" loading-spinner name="character" size="fullscreen">
         <div class="col-lg-12 col-md-12 col-sm-12 stat-gender-panel primary-background">
             <div class="stat-gender-progress-container">
-                <progress>
-                    <bar type="danger" value="gender.female.percentage">{{gender.female.percentage}}{{::gender.female.text}}</bar>
-                    <bar type="primary" value="gender.male.percentage">{{gender.male.percentage}}{{::gender.male.text}}</bar>
-                    <bar type="success" value="gender.nosex.percentage">{{gender.nosex.percentage}}{{::gender.nosex.text}}</bar>
-                </progress>
+                <div percentage-bar-container>
+                    <div percentage-bar 
+                         percentage="{{gender.female.percentage}}" 
+                         display="{{gender.female.percentage}}{{::gender.female.text}}"
+                         colour="red"></div>
+                    <div percentage-bar 
+                         percentage="{{gender.male.percentage}}" 
+                         display="{{gender.male.percentage}}{{::gender.male.text}}"
+                         colour="green"></div>
+                    <div percentage-bar 
+                         percentage="{{gender.nosex.percentage}}" 
+                         display="{{gender.nosex.percentage}}{{::gender.nosex.text}}"
+                         colour="blue"></div>
+                </div>
             </div>
         </div><!-- GENDER PERCENTAGE BAR END -->
         <div tab-container class="width-100">

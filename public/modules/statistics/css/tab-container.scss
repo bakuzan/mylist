@@ -42,6 +42,12 @@
             color: #000;
         }
     }
+    &.disabled {
+        background: #999;
+        a {
+            color: #ccc;
+        }
+    }
     a {
         color: #e9e9e9;
         text-decoration: none;

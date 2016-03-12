@@ -1,28 +1,30 @@
 'use strict';
 
 //Statistics service 
-angular.module('statistics').service('StatisticsService', ['$filter', 'ListService', function($filter, ListService) {
+angular.module('statistics').service('StatisticsService', ['$filter', 'ListService', '$q', function($filter, ListService, $q) {
     var self = this;
     
     this.buildSummaryFunctions = function(array) {
-        if (array !== undefined) {
-            var i = array.length, highestRating = 0, lowestRating = 10, averageRating = 0, modeRating = {}, ratings = { count: 0, sum: 0 };
-            while(i--) {
-//                console.log(array[i]);
-                highestRating = array[i].rating > highestRating ? array[i].rating : highestRating;
-                lowestRating = 0 < array[i].rating && array[i].rating < lowestRating ? array[i].rating : lowestRating;
-                ratings.count += array[i].rating > 0 ? 1 : 0;
-                ratings.sum += array[i].rating;
-                averageRating = (ratings.sum / ratings.count).toFixed(2);
-                modeRating = self.getModeMap(array, 'rating', 0);
+        return $q(function(resolve, reject) {
+            if (array !== undefined) {
+                var i = array.length, highestRating = 0, lowestRating = 10, averageRating = 0, modeRating = {}, ratings = { count: 0, sum: 0 };
+                while(i--) {
+    //                console.log(array[i]);
+                    highestRating = array[i].rating > highestRating ? array[i].rating : highestRating;
+                    lowestRating = 0 < array[i].rating && array[i].rating < lowestRating ? array[i].rating : lowestRating;
+                    ratings.count += array[i].rating > 0 ? 1 : 0;
+                    ratings.sum += array[i].rating;
+                    averageRating = (ratings.sum / ratings.count).toFixed(2);
+                    modeRating = self.getModeMap(array, 'rating', 0);
+                }
+                resolve([ 
+                    { metric: 'Average rating', value: averageRating },
+                    { metric: 'Highest rating', value: highestRating },
+                    { metric: 'Lowest rating',  value: (lowestRating === 10) ? 0 : lowestRating },
+                    { metric: 'Mode rating',    value: (modeRating.value === undefined) ? 0 : modeRating.value }
+                ]);
             }
-            return [ 
-                { metric: 'Average rating', value: averageRating },
-                { metric: 'Highest rating', value: highestRating },
-                { metric: 'Lowest rating',  value: (lowestRating === 10) ? 0 : lowestRating },
-                { metric: 'Mode rating',    value: (modeRating.value === undefined) ? 0 : modeRating.value }
-            ];
-        }
+        });
     };
     
     function processYearSummary(summary, array) {
@@ -44,17 +46,36 @@ angular.module('statistics').service('StatisticsService', ['$filter', 'ListServi
     }
     
     this.buildYearSummary = function(array, year, type) {
-        var filter = (type === 'months') ? 'endedMonth' : 'season',
-            attr   = (type === 'months') ? 'number'     : 'text'  ,
-            commonArrays = ListService.getCommonArrays(),
-            i = commonArrays[type].length, 
-            yearSummary = [];
-        for(var j = 0; j < i; j++) {
-            var filteredArray = $filter(filter)(array, year, commonArrays[type][j][attr]),
-                result = self.buildSummaryFunctions(filteredArray);
-            yearSummary = processYearSummary(yearSummary, result);
-        }
-        return yearSummary;
+        return $q(function(resolve, reject) {
+            var filter = (type === 'months') ? 'endedMonth' : 'season',
+                attr   = (type === 'months') ? 'number'     : 'text'  ,
+                commonArrays = ListService.getCommonArrays(),
+                i = commonArrays[type].length, 
+                yearSummary = [], results = [];
+            
+            for(var j = 0; j < i; j++) {
+                var filteredArray = $filter(filter)(array, year, commonArrays[type][j][attr]),
+                    promise = self.buildSummaryFunctions(filteredArray);
+                results.push(promise);
+            }
+            angular.forEach(results, function(promise) {
+                promise.then(function(result) {
+                    yearSummary = processYearSummary(yearSummary, result);
+                });
+            });
+            resolve(yearSummary);
+        });
+    };
+    
+    this.buildEpisodeSummaries = function(array) {
+        return $q(function(resolve, reject) {
+            angular.forEach(array, function(item) {
+                self.buildSummaryFunctions(item.meta.history).then(function(result) {
+                    item.meta.episodeSummaryFunctions = result;
+                });
+            });
+            resolve(array);
+        });
     };
     
     this.getModeMap = function(array, attr, ignore) {

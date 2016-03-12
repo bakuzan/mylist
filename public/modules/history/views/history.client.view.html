@@ -1,23 +1,27 @@
 <section data-ng-controller="HistoryController" ng-init="buildHistory()" ng-show="authentication.user">
     <span keycuts></span>
     <div class="fixed-header width-100 secondary-background padding-10" style="top: 50px; left: 0">
-        <div class="text-right pull-right">
-            <li class="tab-control-option" ng-class="(view === 'Anime') ? 'active' : ''" ng-model="view" btn-radio="'Anime'">
-                <a>Anime</a>
-            </li>
-            <li class="tab-control-option" ng-class="(view === 'Manga') ? 'active' : ''" ng-model="view" btn-radio="'Manga'">
-                <a>Manga</a>
-            </li>
+        <div class="view-controls absolute position-right" style="min-width: 165px">
+            <div tab-container ng-model="view">
+                <div tab-view heading="Anime"></div>
+                <div tab-view heading="Manga"></div>
+            </div>
         </div>
         <h1>{{view}} history</h1>
+        <div class="input-group">
+            <div class="input-group-addon">
+                <i class="fa fa-search"></i>
+            </div>
+            <input type="text" class="form-control" placeholder="search" ng-model="filterConfig.search.name">
+        </div>
     </div>
-    <div class="col-lg-12 col-md-12 col-sm-12 history-list-container relative" style="top: 90px"  loading-spinner name="history" size="fullscreen">
+    <div class="col-lg-12 col-md-12 col-sm-12 history-list-container relative" style="top: 125px" loading-spinner name="history" size="fullscreen">
         <div tab-container ng-model="filterConfig.historyFilter">
             <div tab-view ng-repeat="item in historyGroups" heading="{{item.name}}"></div>
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12 history-list" ng-show="view === 'Anime'">
             <div class="col-lg-12 col-md-12 col-sm-12 history-list-item" 
-                 ng-repeat="item in animeHistory | historySeparator:'group':filterConfig.historyFilter | orderBy: ['-latest','-oldest']">
+                 ng-repeat="item in animeHistory | filter: filterConfig.search.name | historySeparator:'group':filterConfig.historyFilter | orderBy: ['-latest','-oldest']">
                 <h4 class="history-group-header clickable" ng-click="viewItem = (viewItem === item.title) ? '' : item.title">
                     {{item.title}} - ({{animeHistoryItems.length}})
                 </h4>
@@ -32,7 +36,7 @@
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12 history-list" ng-show="view === 'Manga'">
             <div class="col-lg-12 col-md-12 col-sm-12 history-list-item" 
-                 ng-repeat="item in mangaHistory | historySeparator:'group':filterConfig.historyFilter | orderBy: ['-latest','-oldest']">
+                 ng-repeat="item in mangaHistory | filter: filterConfig.search | historySeparator:'group':filterConfig.historyFilter | orderBy: ['-latest','-oldest']">
                 <h4 class="history-group-header clickable" ng-click="viewItem = (viewItem === item.title) ? '' : item.title">
                     {{item.title}} - ({{mangaHistoryItems.length}})
                 </h4>

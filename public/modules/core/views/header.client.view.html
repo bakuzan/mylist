@@ -10,12 +10,12 @@
 	</div>
 	<nav class="collapse navbar-collapse" collapse="!isCollapsed" role="navigation">
 		<ul class="nav navbar-nav" data-ng-if="menu.shouldRender(authentication.user);">
-			<li data-ng-repeat="item in menu.items | orderBy: 'position'" data-ng-if="item.shouldRender(authentication.user);" ng-switch="item.menuItemType" ui-route="{{item.uiRoute}}" class="{{item.menuItemClass}}" ng-class="{active: ($uiRoute)}" dropdown="item.menuItemType === 'dropdown'">
-				<a ng-switch-when="dropdown" class="dropdown-toggle">
+			<li data-ng-repeat="item in menu.items | orderBy: 'position'" data-ng-if="item.shouldRender(authentication.user);" ng-switch="item.menuItemType" ui-route="{{item.uiRoute}}" class="{{item.menuItemClass}}" ng-class="{active: ($uiRoute)}" uib-dropdown="item.menuItemType === 'dropdown'">
+				<a ng-switch-when="dropdown" class="dropdown-toggle" uib-dropdown-toggle>
 					<span data-ng-bind="item.title"></span>
 					<b class="caret"></b>
 				</a>
-				<ul ng-switch-when="dropdown" class="dropdown-menu">
+				<ul ng-switch-when="dropdown" class="dropdown-menu" uib-dropdown-menu>
 					<li data-ng-repeat="subitem in item.items | orderBy: 'position'" data-ng-if="subitem.shouldRender(authentication.user);" ui-route="{{subitem.uiRoute}}" ng-class="{active: $uiRoute}">
 						<a href="/#!/{{subitem.link}}" data-ng-bind="subitem.title"></a>
 					</li>
@@ -40,11 +40,11 @@
 -->
         </ul>
         <ul class="additional-navbar-links-dropdown nav navbar-nav">
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <li class="dropdown" uib-dropdown>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" uib-dropdown-toggle>
                     <span>More </span><b class="caret"></b>
                 </a>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu" uib-dropdown-menu>
                     <li ng-class="{ active: isActive('/history')}">
                         <a href="/#!/history" class="navbar-link" data-ng-show="authentication.user"><i class="fa fa-history"></i> History</a>
                     </li>
@@ -57,21 +57,23 @@
                 </ul>
             </li>
         </ul>
+<!--
 		<ul class="nav navbar-nav navbar-right" data-ng-hide="authentication.user">
-			<!--<li ui-route="/signup" ng-class="{active: $uiRoute}">
+			<li ui-route="/signup" ng-class="{active: $uiRoute}">
 				<a href="/#!/signup">Sign Up</a>
-			</li>-->
+			</li>
 			<li class="divider-vertical"></li>
 			<li ui-route="/signin" ng-class="{active: $uiRoute}">
 				<a href="/#!/signin">Sign In</a>
 			</li>
 		</ul>
+-->
 		<ul class="nav navbar-nav navbar-right" data-ng-show="authentication.user">
-			<li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+			<li class="dropdown" uib-dropdown>
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" uib-dropdown-toggle>
 					<!--<span data-ng-bind="authentication.user.displayName"></span>--> <b class="caret"></b>
 				</a>
-				<ul class="dropdown-menu">
+				<ul class="dropdown-menu" uib-dropdown-menu>
 					<!--<li>
 						<a href="/#!/settings/profile">Edit Profile</a>
 					</li>

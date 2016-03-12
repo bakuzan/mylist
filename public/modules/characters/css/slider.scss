@@ -138,6 +138,9 @@ div.slider-full-screen {
         width: 100vw;
         height: $slider-full-screen-height;
         z-index: 1000;
+        a.full-screen-control {
+            right: 15px;
+        }
         .slide {
             .slide-image {
                 height: $slider-full-screen-height;

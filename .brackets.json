@@ -4,7 +4,9 @@
         "moment.js",
         "C:/Users/Steven/Documents/whispering-lowlands-3953/public/lib/angular-touch/angular-touch.js",
         "C:/Users/Steven/Documents/whispering-lowlands-3953/public/lib/bootstrap/dist/js/bootstrap.js",
-        "C:/Users/Steven/Documents/whispering-lowlands-3953/public/lib/bootstrap/dist/js/bootstrap.min.js"
-        "C:/Users/Steven/Documents/whispering-lowlands-3953/public/lib/ng-file-upload-shim/angular-file-upload-shim.min.js"
+        "C:/Users/Steven/Documents/whispering-lowlands-3953/public/lib/ng-file-upload-shim/angular-file-upload-shim.min.js",
+        "C:/Users/Steven/Documents/whispering-lowlands-3953/public/lib/bootstrap/dist/js/bootstrap.min.js",
+        "C:/Users/Steven/Documents/whispering-lowlands-3953/public/lib/bootstrap/dist/js/npm.js",
+        "C:/Users/Steven/Documents/whispering-lowlands-3953/public/lib/bootstrap/grunt/bs-commonjs-generator.js"
     ]
 }

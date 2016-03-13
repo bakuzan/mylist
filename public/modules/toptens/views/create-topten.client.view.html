@@ -41,7 +41,7 @@
                             <label for="list-item" class="col-lg-3 col-md-3 col-sm-3 control-label">Select {{topten.type}}</label>
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <input type="text" id="list" class="form-control" ng-model="stepConfig.listGen.toptenItem" 
-                                       uib-typeahead="item as item[stepConfig.listGen.typeDisplay] for item in stepConfig.listGen.items | filter: { title: $viewValue } | limitTo: 10"
+                                       uib-typeahead="item as item[stepConfig.listGen.typeDisplay] for item in stepConfig.listGen.items | filter: $viewValue | limitTo: 10"
                                        typeahead-on-select="pushItem(stepConfig.listGen.toptenItem)">
                             </div>
                         </div>

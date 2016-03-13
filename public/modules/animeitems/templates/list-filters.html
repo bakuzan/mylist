@@ -25,7 +25,7 @@
                 <div class="input-group-addon clickable" clear-tag-values>
                     <i class="fa fa-tags"></i>
                 </div>
-               <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags" typeahead="stat.tag for stat in filterConfig.statTags | filter: $viewValue" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
+               <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags" uib-typeahead="stat.tag for stat in filterConfig.statTags | filter: $viewValue | limitTo: 10" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
            </div>
             <div class="input-group mt search-tag-list-container" ng-hide="filterConfig.searchTags===undefined || filterConfig.searchTags==='' || filterConfig.searchTags===null">
                <ul class="tag-list col-lg-12 col-md-12">
@@ -99,7 +99,7 @@
                 <div class="input-group-addon clickable" data-ng-click="filterConfig.ratingLevel=undefined">
                     <i class="fa fa-star"></i>
                 </div>
-                   <rating class="form-control rating-stars clickable" ng-model="filterConfig.ratingLevel" readonly="false" max="filterConfig.ratingActions.maxRating" on-hover="hoveringOver(value)" on-leave="filterConfig.ratingActions.overStar = null" id="rating" name="rating"></rating>
+                   <uib-rating class="form-control rating-stars clickable" ng-model="filterConfig.ratingLevel" readonly="false" max="filterConfig.ratingActions.maxRating" on-hover="hoveringOver(value)" on-leave="filterConfig.ratingActions.overStar = null" id="rating" name="rating"></uib-rating>
                 <div class="input-group-addon">
                     <span data-ng-show="filterConfig.ratingActions.overStar!=null" 
                           class="label rating-label" 
@@ -117,13 +117,13 @@
               <div class="input-group-addon">
                   <i class="fa fa-book"></i>
               </div>
-                <input type="text" class="form-control" placeholder="search series" ng-model="filterConfig.seriesFilter" typeahead="series.name for series in filterConfig.series | filter: $viewValue">
+                <input type="text" class="form-control" placeholder="search series" ng-model="filterConfig.seriesFilter" uib-typeahead="series.name for series in filterConfig.series | filter: $viewValue | limitTo: 5">
             </div>
             <div class="input-group mt" ng-if="page === 'character'">
                 <div class="input-group-addon">
                     <i class="fa fa-microphone"></i>
                 </div>
-                <input type="text" class="form-control" placeholder="search voice" ng-model="filterConfig.search.voice" typeahead="voice.name for voice in filterConfig.voiceActors | filter: $viewValue ">
+                <input type="text" class="form-control" placeholder="search voice" ng-model="filterConfig.search.voice" uib-typeahead="voice.name for voice in filterConfig.voiceActors | filter: $viewValue | limitTo: 5">
             </div>
             <div class="input-group mt" ng-if="page === 'topten'">
                 <div class="input-group-addon">

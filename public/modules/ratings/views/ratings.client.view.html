@@ -27,7 +27,7 @@
                 <div class="input-group-addon clickable" data-ng-click="ratingLevel=undefined">
                     <i class="fa fa-star"></i>
                 </div>
-                   <rating class="form-control rating-stars clickable" data-ng-model="ratingLevel" readonly="false" max="maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></rating>
+                   <uib-rating class="form-control rating-stars clickable" data-ng-model="ratingLevel" readonly="false" max="maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></uib-rating>
                 <div class="input-group-addon">
                     <span data-ng-show="overStar!=null" class="label rating-label" ng-class="{'label-warning': percent<40, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}">{{percent}}%</span>
                 </div>

@@ -11,37 +11,45 @@ angular.module('characters').factory('Characters', ['$resource',
 		});
 	}
 ])
-.service('CharacterService', function() {
+.service('CharacterService', ['$q', function($q) {
     
     //build the character gender distribution.
     this.buildGenderDistribution = function(items, maxCount) {
-        var check, 
-            gender = { 
-                male: { count: 0, percentage: 0, text: '% male.'},
-                female: { count: 0, percentage: 0, text: '% female.'},
-                nosex: { count: 0, percentage: 0, text: '% unassigned.'}
-            };
-        angular.forEach(items, function(item) {
-            if (item.tag === 'male') {
-                gender.male.count = item.count;
-                gender.male.percentage = Number(((item.count / maxCount) * 100).toFixed(2));
-            } else if (item.tag === 'female') {
-                gender.female.count = item.count;
-                gender.female.percentage = Number(((item.count / maxCount) * 100).toFixed(2));
+        return $q(function(resolve, reject) {
+            var check, gender = [];
+            angular.forEach(items, function(item) {
+                if (item.tag === 'male') {
+                    gender.push({ 
+                        type: 'male', 
+                        count: item.count, 
+                        percentage: Number(((item.count / maxCount) * 100).toFixed(2)), 
+                        text: '% male.'
+                    });
+                } else if (item.tag === 'female') {
+                    gender.push({ 
+                        type: 'female', 
+                        count: item.count, 
+                        percentage: Number(((item.count / maxCount) * 100).toFixed(2)), 
+                        text: '% female.'
+                    });
+                }
+            });
+            gender.push({
+                type: 'unassigned',
+                count: maxCount - gender[0].count - gender[1].count,
+                percentage: Number(((maxCount - gender[0].count - gender[1].count / maxCount) * 100).toFixed(2)), 
+                text: '% unassigned.'
+            });
+
+            //Fudge any rounding errors.
+            check = gender[0].percentage + gender[1].percentage + gender[2].percentage;
+            if (check > 100) {
+                gender[2].percentage -= (check - 100).toFixed(2);
+            } else if (check < 100) {
+                gender[2].percentage += (100 - check).toFixed(2);
             }
+            resolve(gender);
         });
-        gender.nosex.count = maxCount - gender.male.count - gender.female.count;
-        gender.nosex.percentage = Number(((gender.nosex.count / maxCount) * 100).toFixed(2));
-        
-        //Fudge any rounding errors.
-        check = gender.female.percentage + gender.male.percentage + gender.nosex.percentage;
-        if (check > 100) {
-            gender.nosex.percentage -= (check - 100).toFixed(2);
-        } else if (check < 100) {
-            gender.nosex.percentage += (100 - check).toFixed(2);
-        }
-//        console.log('GD: ', gender);
-        return gender;
     };
     
     this.buildCharacterTags = function(items) {
@@ -150,4 +158,4 @@ angular.module('characters').factory('Characters', ['$resource',
         return statSeries;
     };
     
-});
+}]);

@@ -83,7 +83,10 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
             $scope.isEqual = ($scope.viewItem === item) ? true : false; 
             $scope.search = ($scope.viewItem === item) ? item.title : '';
             if ($scope.viewItem !== undefined) {
-                $scope.summaryFunctions = StatisticsService.buildSummaryFunctions($scope.viewItem.meta.history);
+                spinnerService.loading('summary', 
+                                       StatisticsService.buildSummaryFunctions($scope.viewItem.meta.history).then(function(result) {
+                    $scope.summaryFunctions = result;
+                }));
             }
         };
         
@@ -94,7 +97,10 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
                 item.$update(function() {
                     $location.path('ratings');
                     NotificationFactory.success('Saved!', 'New episode rating was saved successfully');
-                    $scope.summaryFunctions = StatisticsService.buildSummaryFunctions($scope.viewItem.meta.history);
+                    spinnerService.loading('summary',
+                                           StatisticsService.buildSummaryFunctions($scope.viewItem.meta.history).then(function(result) {
+                        $scope.summaryFunctions = result;
+                    }));
                 }, function(errorResponse) {
                     $scope.error = errorResponse.data.message;
                     NotificationFactory.error('Error!', 'Your change failed!');

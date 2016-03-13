@@ -198,18 +198,10 @@
         <div class="col-lg-12 col-md-12 col-sm-12 stat-gender-panel primary-background">
             <div class="stat-gender-progress-container">
                 <div percentage-bar-container>
-                    <div percentage-bar 
-                         percentage="{{gender.female.percentage}}" 
-                         display="{{gender.female.percentage}}{{::gender.female.text}}"
-                         colour="red"></div>
-                    <div percentage-bar 
-                         percentage="{{gender.male.percentage}}" 
-                         display="{{gender.male.percentage}}{{::gender.male.text}}"
-                         colour="green"></div>
-                    <div percentage-bar 
-                         percentage="{{gender.nosex.percentage}}" 
-                         display="{{gender.nosex.percentage}}{{::gender.nosex.text}}"
-                         colour="blue"></div>
+                    <div ng-repeat="sex in gender" percentage-bar percentage="{{sex.percentage}}" 
+                         display="{{sex.percentage | number: 2}}{{::sex.text}}"
+                         colour="{{sex.colour}}" type="white-text"
+                         hover-data="{{sex.percentage | number: 2}}{{::sex.text}}"></div>
                 </div>
             </div>
         </div><!-- GENDER PERCENTAGE BAR END -->

@@ -87,7 +87,6 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         //required for ctrl+v clicks.
         $scope.$watch('view', function(newValue) {
             if ($scope.view !== undefined) {
-                $scope.isLoading = true;
                 getItems(newValue);
                 //reset defaults that are shared between views.
                 $scope.detail.history = 'months';
@@ -114,7 +113,12 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                     $scope.statTags = CharacterService.buildCharacterTags($scope.items);
                     $scope.statSeries = CharacterService.buildSeriesList($scope.items);
                     $scope.voiceActors = CharacterService.buildVoiceActors($scope.items);
-                    $scope.gender = CharacterService.buildGenderDistribution($scope.statTags, $scope.items.length);
+                    CharacterService.buildGenderDistribution($scope.statTags, $scope.items.length).then(function(result) {
+                        $scope.gender = result;
+                        $scope.gender[0].colour = '#c9302c'; //'red'; '#d9534f'; //
+                        $scope.gender[1].colour = '#449d44'; //'green';'#5cb85c'; //
+                        $scope.gender[2].colour = '#31b0d5'; //'blue';'#5bc0de'; //
+                    });
                 }
             }
         });

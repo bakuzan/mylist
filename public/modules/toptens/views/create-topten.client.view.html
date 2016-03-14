@@ -25,7 +25,8 @@
                         <div class="form-group" ng-if="isCreate">
                             <label for="type" class="col-lg-3 col-md-3 col-sm-3 control-label">Type</label>
                             <div class="col-lg-6 col-md-6 col-sm-6">
-                                <select class="form-control" ng-model="topten.type" ng-options="option.name as option.name for option in commonArrays.itemTypes">
+                                <select class="form-control" ng-model="topten.type" 
+                                        ng-options="option.name as option.name for option in commonArrays.itemTypes">
                                 </select>
                             </div>
                         </div>
@@ -41,7 +42,7 @@
                             <label for="list-item" class="col-lg-3 col-md-3 col-sm-3 control-label">Select {{topten.type}}</label>
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <input type="text" id="list" class="form-control" ng-model="stepConfig.listGen.toptenItem" 
-                                       uib-typeahead="item as item[stepConfig.listGen.typeDisplay] for item in stepConfig.listGen.items | filter: $viewValue | limitTo: 10"
+                                       uib-typeahead="item as item[stepConfig.listGen.typeDisplay] for item in stepConfig.listGen.items | toptenFilter:stepConfig.listGen.typeDisplay:$viewValue | limitTo: 10"
                                        typeahead-on-select="pushItem(stepConfig.listGen.toptenItem)">
                             </div>
                         </div>

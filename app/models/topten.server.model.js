@@ -37,6 +37,20 @@ var ToptenSchema = new Schema({
         type: Boolean,
         default: false
     },
+    isRanked: {
+        type: Boolean,
+        default: false
+    },
+    conditions: {
+        limit: {
+            type: Number
+        },
+        series: {
+            anime: [ { type: Schema.ObjectId, ref: 'Animeitem' } ],
+            manga: [ { type: Schema.ObjectId, ref: 'Mangaitem' } ]
+        },
+        tags: []
+    },
     meta: {
         created: {
             type: Date,

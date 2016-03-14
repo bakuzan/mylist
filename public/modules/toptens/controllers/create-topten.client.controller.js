@@ -1,23 +1,28 @@
 'use strict';
 
 // Toptens controller
-angular.module('toptens').controller('CreateToptenController', ['$scope', '$stateParams', '$location', 'Authentication', 'Toptens', 'ListService', 'Animeitems', 'Mangaitems', 'Characters', 'NotificationFactory',
-	function($scope, $stateParams, $location, Authentication, Toptens, ListService, Animeitems, Mangaitems, Characters, NotificationFactory) {
+angular.module('toptens').controller('CreateToptenController', ['$scope', '$stateParams', '$location', 'Authentication', 'Toptens', 'ListService', 'Animeitems', 'Mangaitems', 'Characters', 'NotificationFactory', 'CharacterService',
+	function($scope, $stateParams, $location, Authentication, Toptens, ListService, Animeitems, Mangaitems, Characters, NotificationFactory, CharacterService) {
 		$scope.authentication = Authentication;
         
         $scope.stepConfig = {
             steps: [1,2,3,4,5,6,7,8,9,10],
             stepHeaders: [
                 { text: 'Select attributes' },
+                { text: 'Set conditions' },
                 { text: 'Populate list' }
             ],
             currentStep: 1,
-            stepCount: 2,
+            stepCount: 3,
             listGen: {
                 items: [],
                 displayList: [],
                 typeDisplay: '',
-                toptenItem: ''
+                toptenItem: '',
+                seriesLimit: '',
+                tagLimit: '',
+                series: [],
+                tags: []
             }
         };
         var toptenCopy = {
@@ -25,9 +30,18 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
             description: '',
             type: '',
             isFavourite: false,
+            isRanked: false,
             animeList: [],
             mangaList: [],
-            characterList: []
+            characterList: [],
+            conditions: {
+                limit: 0,
+                series: {
+                    anime: [],
+                    manga: []
+                },
+                tags: []
+            }
         };
         $scope.topten = {};
         angular.copy(toptenCopy, $scope.topten);
@@ -48,9 +62,18 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
                 description: this.topten.description,
                 type: this.topten.type,
                 isFavourite: this.topten.isFavourite,
+                isRanked: this.topten.isRanked,
                 animeList: this.topten.animeList.length > 0 ? this.topten.animeList : null,
                 characterList: this.topten.characterList.length > 0 ? this.topten.characterList : null,
-                mangaList: this.topten.mangaList.length > 0 ? this.topten.mangaList : null
+                mangaList: this.topten.mangaList.length > 0 ? this.topten.mangaList : null,
+                conditions: {
+                    limit: this.topten.conditions.limit,
+                    series: {
+                        anime: this.topten.conditions.series.anime,
+                        manga: this.topten.conditions.series.manga,
+                    },
+                    tags: this.topten.conditions.tags
+                }
 			});
 
 			// Redirect after save
@@ -82,19 +105,29 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
             var type = ListService.manipulateString($scope.topten.type, 'upper', true);
             switch(type) {
                 case 'Anime':
-                    $scope.stepConfig.listGen.items = Animeitems.query();
-                    $scope.stepConfig.listGen.typeDisplay = 'title';
+                    Animeitems.query().$promise.then(function(result) {
+                        $scope.stepConfig.listGen.items = result;
+                        $scope.stepConfig.listGen.typeDisplay = 'title';
+                        $scope.stepConfig.listGen.tags = CharacterService.buildCharacterTags(result);
+                    });
                     break;
                 case 'Manga':
-                    $scope.stepConfig.listGen.items = Mangaitems.query();
-                    $scope.stepConfig.listGen.typeDisplay = 'title';
+                    Mangaitems.query().$promise.then(function(result) {
+                        $scope.stepConfig.listGen.items = result;
+                        $scope.stepConfig.listGen.typeDisplay = 'title';
+                        $scope.stepConfig.listGen.tags = CharacterService.buildCharacterTags(result);
+                    });
                     break;
                 case 'Character':
-                    $scope.stepConfig.listGen.items = Characters.query();
-                    $scope.stepConfig.listGen.typeDisplay = 'name';
+                    Characters.query().$promise.then(function(result) {
+                        $scope.stepConfig.listGen.items = result;
+                        $scope.stepConfig.listGen.typeDisplay = 'name';
+                        $scope.stepConfig.listGen.tags = CharacterService.buildCharacterTags(result);
+                        $scope.stepConfig.listGen.series = CharacterService.buildSeriesList(result);
+                    });
                     break;
             }
-            console.log('type set: ', $scope.stepConfig.listGen.items, $scope.stepConfig.listGen.typeDisplay);
+            console.log('type set: ', $scope.stepConfig.listGen);
         }
         
         //Processing on step submits.
@@ -118,6 +151,14 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
                     break;
                     
                 case 2:
+                    if($scope.isCreate) {
+                        callback();
+                    } else {
+                        callback();
+                    }
+                    break;
+                    
+                case 3:
                     callback();
                     break;
             }
@@ -150,6 +191,21 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
             }
             $scope.topten[$scope.topten.type + 'List'].splice(index, 1);
             NotificationFactory.warning('Removed!', 'Item has been removed from list.');
+        };
+        
+        $scope.pushCondition = function(type, item) {
+            console.log(type, item);
+            switch(type) {
+                case 'series':
+                    
+                    $scope.stepConfig.listGen.seriesLimit = '';
+                    break;
+                    
+                case 'tag':
+                    
+                    $scope.stepConfig.listGen.tagLimit = '';
+                    break;
+            };
         };
         
         //Step related functions:

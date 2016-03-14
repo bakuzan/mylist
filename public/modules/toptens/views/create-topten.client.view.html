@@ -2,7 +2,7 @@
     <div class="page-header">
         <h1>
             List creation - {{stepConfig.stepHeaders[stepConfig.currentStep - 1].text}}
-            <a class="float-right" hover-data="cancel" href="/#!/toptens"><i class="fa fa-close"></i></a>
+            <a class="float-right hover-data-bottom" hover-data="cancel" href="/#!/toptens"><i class="fa fa-close"></i></a>
         </h1>
     </div>
     <div class="col-lg-12 col-md-12 col-sm-12">
@@ -34,6 +34,36 @@
                             <label for="isFavourite" class="col-lg-3 col-md-3 col-sm-3 control-label">Is favourite?</label>
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <input type="checkbox" id="isFavourite" class="phantom-control font-20" ng-model="topten.isFavourite" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="isRanked" class="col-lg-3 col-md-3 col-sm-3 control-label">Is ranked?</label>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <input type="checkbox" id="isRanked" class="phantom-control font-20" ng-model="topten.isRanked" />
+                            </div>
+                        </div>
+                    </div>
+                    <div step>
+                        <div class="form-group">
+                            <label for="limit" class="col-lg-3 col-md-3 col-sm-3 control-label">Limit</label>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <input type="number" id="limit" class="form-control" min="0" ng-model="topten.conditions.limit" />
+                            </div>
+                        </div>
+                        <div class="form-group" ng-show="topten.type === 'character'">
+                            <label for="series" class="col-lg-3 col-md-3 col-sm-3 control-label">Restrict by series</label>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <input type="text" id="series" class="form-control" ng-model="stepConfig.listGen.seriesLimit"
+                                       uib-typeahead="item as item.name for item in stepConfig.listGen.series | filter: $viewValue | limitTo: 10"
+                                       typeahead-on-select="pushCondition('series', stepConfig.listGen.seriesLimit)"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="tag" class="col-lg-3 col-md-3 col-sm-3 control-label">Restrict by tag</label>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <input type="text" id="tag" class="form-control" ng-model="stepConfig.listGen.tagLimit"
+                                       uib-typeahead="item as item.tag for item in stepConfig.listGen.tags | filter: $viewValue | limitTo: 10"
+                                       typeahead-on-select="pushCondition('tag', stepConfig.listGen.tagLimit)"/>
                             </div>
                         </div>
                     </div>

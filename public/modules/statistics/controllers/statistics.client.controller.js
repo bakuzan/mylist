@@ -115,9 +115,9 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                     $scope.voiceActors = CharacterService.buildVoiceActors($scope.items);
                     CharacterService.buildGenderDistribution($scope.statTags, $scope.items.length).then(function(result) {
                         $scope.gender = result;
-                        $scope.gender[0].colour = 'red';
-                        $scope.gender[1].colour = 'green';
-                        $scope.gender[2].colour = 'blue';
+                        $scope.gender[0].colour = '#c9302c'; //'red'; '#d9534f'; //
+                        $scope.gender[1].colour = '#449d44'; //'green';'#5cb85c'; //
+                        $scope.gender[2].colour = '#31b0d5'; //'blue';'#5bc0de'; //
                     });
                 }
             }

@@ -17,6 +17,7 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
             listGen: {
                 items: [],
                 displayList: [],
+                seriesList: [],
                 typeDisplay: '',
                 toptenItem: '',
                 seriesLimit: '',
@@ -35,7 +36,7 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
             mangaList: [],
             characterList: [],
             conditions: {
-                limit: 0,
+                limit: null,
                 series: {
                     anime: [],
                     manga: []
@@ -195,17 +196,56 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
         
         $scope.pushCondition = function(type, item) {
             console.log(type, item);
+            var index, indexTwo;
             switch(type) {
                 case 'series':
-                    
+                    index = ListService.findWithAttr($scope.topten.conditions.series.manga, '_id', item._id);
+                    indexTwo = $scope.topten.conditions.series.manga.indexOf(item._id);
+                    if(index === -1 && indexTwo === -1) {
+                        $scope.topten.conditions.series.manga.push(item._id);
+                        $scope.stepConfig.listGen.seriesList.push(item);
+                    } else {
+                        NotificationFactory.warning('Duplicate!', 'Series has already been added to list.');
+                    }
                     $scope.stepConfig.listGen.seriesLimit = '';
                     break;
                     
                 case 'tag':
-                    
+                    index = ListService.findWithAttr($scope.topten.conditions.tags, 'tag', item.tag);
+                    if(index === -1) {
+                        $scope.topten.conditions.tags.push(item);
+                    } else {
+                        NotificationFactory.warning('Duplicate!', 'Tag has already been added to list.');
+                    }
                     $scope.stepConfig.listGen.tagLimit = '';
                     break;
-            };
+            }
+        };
+        
+        $scope.removeCondition = function(type, item) {
+            console.log(type, item);
+            var index, indexTwo;
+            switch(type) {
+                case 'series':
+                    index = ListService.findWithAttr($scope.topten.conditions.series.manga, '_id', item._id);
+                    if(index === -1) {
+                        index = $scope.topten.conditions.series.manga.indexOf(item._id);
+                        $scope.topten.conditions.series.manga.splice(index, 1);
+                    } else {
+                        $scope.topten.conditions.series.manga.splice(index, 1);
+                    }
+                    indexTwo = $scope.stepConfig.listGen.seriesList.indexOf(item);
+                    console.log(indexTwo, item._id, $scope.stepConfig.listGen.seriesList,$scope.topten.conditions.series.manga);
+                    $scope.stepConfig.listGen.seriesList.splice(indexTwo, 1);
+                    NotificationFactory.warning('Removed!', 'Series has been removed from list.');
+                    break;
+                    
+                case 'tag':
+                    index = $scope.topten.conditions.tags.indexOf(item);
+                    $scope.topten.conditions.tags.splice(index, 1);
+                    NotificationFactory.warning('Removed!', 'Tag has been removed from list.');
+                    break;
+            }
         };
         
         //Step related functions:

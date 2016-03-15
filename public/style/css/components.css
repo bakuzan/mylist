@@ -451,7 +451,7 @@ div.slider-full-screen {
   width: 100%;
   bottom: -10px;
   display: inline-flex;
-  z-index: 5; }
+  z-index: 1; }
   .step-button-group button {
     z-index: 1; }
 

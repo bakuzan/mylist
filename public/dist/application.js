@@ -3101,6 +3101,7 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
                 $scope.animeitems = result;
                 return MangaHistory.query({ latest: latestDate }).$promise;
             }).then(function(result) {
+//                console.log('manga', result);
                $scope.mangaitems = result; 
             }));
         };

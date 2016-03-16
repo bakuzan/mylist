@@ -47,7 +47,7 @@
                         <div class="form-group">
                             <label for="limit" class="col-lg-3 col-md-3 col-sm-3 control-label">Limit</label>
                             <div class="col-lg-6 col-md-6 col-sm-6">
-                                <input type="number" id="limit" class="form-control" min="0" ng-model="topten.conditions.limit" />
+                                <input type="number" id="limit" class="form-control" ng-min="{{stepConfig.limitMin}}" ng-model="topten.conditions.limit" />
                             </div>
                         </div>
                         <div class="form-group" ng-show="topten.type === 'character'">
@@ -98,7 +98,7 @@
                                        typeahead-on-select="pushItem(stepConfig.listGen.toptenItem)">
                             </div>
                         </div>
-                        <div class="form-group height-100">
+                        <div class="height-90">
                             <label for="list" class="col-lg-3 col-md-3 col-sm-3 control-label">List</label>
                             <div class="col-lg-6 col-md-6 col-sm-6 height-90 overflow-auto-hover">
                                 <div ng-repeat="item in stepConfig.listGen.displayList track by item._id">

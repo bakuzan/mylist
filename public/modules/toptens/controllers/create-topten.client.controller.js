@@ -15,6 +15,7 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
             currentStep: 1,
             stepCount: 3,
             listGen: {
+                itemsCached: [],
                 items: [],
                 displayList: [],
                 seriesList: [],
@@ -24,7 +25,8 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
                 tagLimit: '',
                 series: [],
                 tags: []
-            }
+            },
+            limitMin: 0
         };
         var toptenCopy = {
             name: '',
@@ -144,6 +146,7 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
                                 var index = ListService.findWithAttr($scope.stepConfig.listGen.items, '_id', item._id);
                                 $scope.stepConfig.listGen.displayList.push($scope.stepConfig.listGen.items[index]);
                             });
+                            $scope.stepConfig.limitMin = $scope.stepConfig.listGen.displayList.length;
                         }
                         callback();
                     } else if ($scope.topten.type === '') {
@@ -153,6 +156,17 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
                     
                 case 2:
                     if($scope.isCreate) {
+                        if($scope.topten.conditions.series.manga.length > 0) {
+                            angular.copy($scope.stepConfig.listGen.items, $scope.stepConfig.listGen.cachedItems);
+                            var i = $scope.topten.conditions.series.manga.length;
+                            while(i--) {
+                                if(ListService.findWithAttr($scope.topten.conditions.series.manga, 
+                                                            'title',
+                                                            $scope.stepConfig.listGen.items[i].manga.title) === -1) {
+                                    $scope.stepConfig.listGen.items.splice(i, 1);
+                                }
+                            }
+                        }
                         callback();
                     } else {
                         callback();
@@ -166,15 +180,20 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
         }
         
         $scope.pushItem = function(item) {
-            var index = $scope.topten[$scope.topten.type+'List'].indexOf(item._id);
-            if (!$scope.isCreate && index === -1) {
-                index = ListService.findWithAttr($scope.topten[$scope.topten.type+'List'], '_id', item._id);    
-            }
-            if (index === -1) {
-                $scope.topten[$scope.topten.type + 'List'].push(item._id);
-                $scope.stepConfig.listGen.displayList.push(item);
+            console.log($scope.topten.conditions, $scope.stepConfig.listGen.displayList.length);
+            if($scope.topten.conditions.limit === null || $scope.topten.conditions.limit === 0 || $scope.topten.conditions.limit > $scope.stepConfig.listGen.displayList.length) {
+                var index = $scope.topten[$scope.topten.type+'List'].indexOf(item._id);
+                if (!$scope.isCreate && index === -1) {
+                    index = ListService.findWithAttr($scope.topten[$scope.topten.type+'List'], '_id', item._id);    
+                }
+                if (index === -1) {
+                    $scope.topten[$scope.topten.type + 'List'].push(item._id);
+                    $scope.stepConfig.listGen.displayList.push(item);
+                } else {
+                    NotificationFactory.warning('Duplicate!', 'Item has already been added to list.');
+                }
             } else {
-                NotificationFactory.warning('Duplicate!', 'Item has already been added to list.');
+                NotificationFactory.error('Full!', 'Item list has reached the defined capacity.');
             }
             $scope.stepConfig.listGen.toptenItem = '';
         };

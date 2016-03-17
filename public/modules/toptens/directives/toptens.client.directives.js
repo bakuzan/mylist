@@ -198,8 +198,8 @@ angular.module('toptens')
             });
 
             var isEmpty = function (value) {
-               return angular.isUndefined(value) || value === "" || value === null;
-            }
+               return angular.isUndefined(value) || value === '' || value === null;
+            };
 
             var minValidator = function(value) {
               var min = scope.$eval(attr.ngMin) || 0;
@@ -225,6 +225,11 @@ angular.module('toptens')
             scope.$watch(attr.ngMax, function(){
                 if (ctrl.$isDirty) ctrl.$setViewValue(ctrl.$viewValue);
             });
+            
+            var isEmpty = function (value) {
+               return angular.isUndefined(value) || value === '' || value === null;
+            };
+            
             var maxValidator = function(value) {
               var max = scope.$eval(attr.ngMax) || Infinity;
               if (!isEmpty(value) && value > max) {

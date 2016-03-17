@@ -45,10 +45,7 @@ var ToptenSchema = new Schema({
         limit: {
             type: Number
         },
-        series: {
-            anime: [ { type: Schema.ObjectId, ref: 'Animeitem' } ],
-            manga: [ { type: Schema.ObjectId, ref: 'Mangaitem' } ]
-        },
+        series: [],
         tags: []
     },
     meta: {

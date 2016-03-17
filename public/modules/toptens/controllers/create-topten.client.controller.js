@@ -39,10 +39,7 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
             characterList: [],
             conditions: {
                 limit: null,
-                series: {
-                    anime: [],
-                    manga: []
-                },
+                series: [],
                 tags: []
             }
         };
@@ -71,10 +68,7 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
                 mangaList: this.topten.mangaList.length > 0 ? this.topten.mangaList : null,
                 conditions: {
                     limit: this.topten.conditions.limit,
-                    series: {
-                        anime: this.topten.conditions.series.anime,
-                        manga: this.topten.conditions.series.manga,
-                    },
+                    series: this.topten.conditions.series,
                     tags: this.topten.conditions.tags
                 }
 			});
@@ -135,6 +129,7 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
         
         //Processing on step submits.
         function process(number, direction, callback) {
+            console.log(number, direction);
             switch(number) {
                 case 1: 
                     if ($scope.topten.type !== '' && $scope.isCreate) {
@@ -155,32 +150,72 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
                     break;
                     
                 case 2:
-                    if($scope.isCreate) {
-                        if($scope.topten.conditions.series.manga.length > 0) {
-                            angular.copy($scope.stepConfig.listGen.items, $scope.stepConfig.listGen.cachedItems);
-                            var i = $scope.topten.conditions.series.manga.length;
-                            while(i--) {
-                                if(ListService.findWithAttr($scope.topten.conditions.series.manga, 
-                                                            'title',
-                                                            $scope.stepConfig.listGen.items[i].manga.title) === -1) {
+                    angular.copy($scope.stepConfig.listGen.items, $scope.stepConfig.listGen.itemsCached);
+                    console.log($scope.stepConfig.listGen.items, $scope.stepConfig.listGen.cachedItems);
+                    if($scope.topten.conditions.series.length > 0) {
+                        var i = $scope.stepConfig.listGen.items.length;
+                        while(i--) {
+                            var remove = true;
+                            if($scope.stepConfig.listGen.items[i].anime !== null) {
+                                angular.forEach($scope.topten.conditions.series, function(series) {
+                                    console.log($scope.stepConfig.listGen.items[i].anime.title,
+                                                series.name,
+                                                $scope.stepConfig.listGen.items[i].anime.title.indexOf(series.name));
+                                    if($scope.stepConfig.listGen.items[i].anime.title.indexOf(series.name) > -1) {
+                                        remove = false;
+                                    }
+                                });
+                                if(remove) {
                                     $scope.stepConfig.listGen.items.splice(i, 1);
                                 }
+                            } else if($scope.stepConfig.listGen.items[i].manga !== null) {
+                                angular.forEach($scope.topten.conditions.series, function(series) {
+                                    console.log($scope.stepConfig.listGen.items[i].manga.title,
+                                                series.name,
+                                                $scope.stepConfig.listGen.items[i].manga.title.indexOf(series.name));
+                                    if($scope.stepConfig.listGen.items[i].manga.title.indexOf(series.name) > -1) {
+                                        remove = false;
+                                    }
+                                });
+                                if(remove) {
+                                    $scope.stepConfig.listGen.items.splice(i, 1);
+                                }
+                            } else {
+                                $scope.stepConfig.listGen.items.splice(i, 1);
                             }
                         }
-                        callback();
-                    } else {
-                        callback();
                     }
+                    
+                    if($scope.topten.conditions.tags.length > 0) {
+                        var i = $scope.stepConfig.listGen.items.length;
+                        while(i--) {
+                            var remove = 0;
+                            angular.forEach($scope.topten.conditions.tags, function(tag) {
+                                console.log($scope.stepConfig.listGen.items[i].tags, 
+                                            tag.tag, 
+                                            ListService.findWithAttr($scope.stepConfig.listGen.items[i].tags, 'text', tag.tag));
+                                if(ListService.findWithAttr($scope.stepConfig.listGen.items[i].tags, 'text', tag.tag) > -1) {
+                                    remove++;
+                                }
+                            });
+                            if(remove !== $scope.topten.conditions.tags.length) {
+                                $scope.stepConfig.listGen.items.splice(i, 1);
+                            }
+                        }
+                    }
+                    callback();
                     break;
                     
                 case 3:
+                    if(!direction) {
+                        $scope.stepConfig.listGen.items = $scope.stepConfig.listGen.itemsCached;
+                    }
                     callback();
                     break;
             }
         }
         
         $scope.pushItem = function(item) {
-            console.log($scope.topten.conditions, $scope.stepConfig.listGen.displayList.length);
             if($scope.topten.conditions.limit === null || $scope.topten.conditions.limit === 0 || $scope.topten.conditions.limit > $scope.stepConfig.listGen.displayList.length) {
                 var index = $scope.topten[$scope.topten.type+'List'].indexOf(item._id);
                 if (!$scope.isCreate && index === -1) {
@@ -207,21 +242,19 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
             index = $scope.topten[$scope.topten.type + 'List'].indexOf(item._id);
             if (!$scope.isCreate && index === -1) {
                 index = ListService.findWithAttr($scope.topten[$scope.topten.type+'List'], '_id', item._id);    
-                console.log('is item');
             }
             $scope.topten[$scope.topten.type + 'List'].splice(index, 1);
             NotificationFactory.warning('Removed!', 'Item has been removed from list.');
         };
         
         $scope.pushCondition = function(type, item) {
-            console.log(type, item);
             var index, indexTwo;
             switch(type) {
                 case 'series':
-                    index = ListService.findWithAttr($scope.topten.conditions.series.manga, '_id', item._id);
-                    indexTwo = $scope.topten.conditions.series.manga.indexOf(item._id);
+                    index = ListService.findWithAttr($scope.topten.conditions.series, 'name', item.name);
+                    indexTwo = $scope.topten.conditions.series.indexOf(item);
                     if(index === -1 && indexTwo === -1) {
-                        $scope.topten.conditions.series.manga.push(item._id);
+                        $scope.topten.conditions.series.push(item);
                         $scope.stepConfig.listGen.seriesList.push(item);
                     } else {
                         NotificationFactory.warning('Duplicate!', 'Series has already been added to list.');
@@ -242,19 +275,17 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
         };
         
         $scope.removeCondition = function(type, item) {
-            console.log(type, item);
             var index, indexTwo;
             switch(type) {
                 case 'series':
-                    index = ListService.findWithAttr($scope.topten.conditions.series.manga, '_id', item._id);
+                    index = ListService.findWithAttr($scope.topten.conditions.series, 'name', item.name);
                     if(index === -1) {
-                        index = $scope.topten.conditions.series.manga.indexOf(item._id);
-                        $scope.topten.conditions.series.manga.splice(index, 1);
+                        index = $scope.topten.conditions.series.indexOf(item);
+                        $scope.topten.conditions.series.splice(index, 1);
                     } else {
-                        $scope.topten.conditions.series.manga.splice(index, 1);
+                        $scope.topten.conditions.series.splice(index, 1);
                     }
                     indexTwo = $scope.stepConfig.listGen.seriesList.indexOf(item);
-                    console.log(indexTwo, item._id, $scope.stepConfig.listGen.seriesList,$scope.topten.conditions.series.manga);
                     $scope.stepConfig.listGen.seriesList.splice(indexTwo, 1);
                     NotificationFactory.warning('Removed!', 'Series has been removed from list.');
                     break;

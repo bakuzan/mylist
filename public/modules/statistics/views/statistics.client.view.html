@@ -27,8 +27,8 @@
                                 <div tab-view heading="seasons" ng-click="detail.isVisible=false" disabled="view === 'Manga'"></div>
                             </div>
                             <div class="margin-auto padding-left-15" ng-show="detail.history === 'seasons'">
-                                <input type="checkbox" class="phantom-control" ng-model="detail.isEpisodeRatings" ng-change="toggleEpisodeRatings(detailItems)" />
-                                <span class="display-inline-block font-18 padding-left-5"> 
+                                <input type="checkbox" class="phantom-control" ng-model="detail.isEpisodeRatings" />
+                                <span class="display-inline-block font-18 padding-left-5">
                                     use episode ratings
                                 </span>
                             </div>
@@ -46,12 +46,12 @@
                             </thead>
                             <tbody>
                                 <tr ng-repeat="year in historyDetails[detail.history][detail.history] | orderBy: '-year'">
-                                    <th ng-class="(detail.isEpisodeRatings) ? '' : 'clickable'" 
+                                    <th ng-class="(detail.isEpisodeRatings) ? '' : 'clickable'"
                                         ng-click="(detail.isEpisodeRatings) ? '' : historyDetail(year.year, '', '', detail.history)">
                                         <span>{{year.year}}</span>
                                     </th>
-                                    <td ng-repeat="part in year[detail.history]" 
-                                        ng-click="historyDetail(year.year, part[detail.history==='months' ? 'number' : 'text'], part.text)" 
+                                    <td ng-repeat="part in year[detail.history]"
+                                        ng-click="historyDetail(year.year, part[detail.history==='months' ? 'number' : 'text'], part.text)"
                                         hover-data="{{part.count}} {{detail.history === 'months' ? 'completed' : 'watched' }} {{part.text}} {{year.year}}.">
                                         <span class="stat-month-box" ng-style="{'opacity': part.count / historyDetails[detail.history].max }"></span>
                                     </td>
@@ -60,7 +60,7 @@
                         </table>
                     </div><!-- HISTORY PANEL END -->
                     <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="detail.isVisible"  loading-spinner name="detail">
-                        <div class="col-lg-12 col-md-12 col-sm-12 margin-top-10" 
+                        <div class="col-lg-12 col-md-12 col-sm-12 margin-top-10"
                              ng-show="(detail.summary.isVisible && detailItems.length > 1) && detail.isEpisodeRatings === false">
                             <table class="col-lg-12 col-md-12 col-sm-12">
                                 <thead>
@@ -75,7 +75,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="stat-detail padding-bottom-15" 
+                        <div class="stat-detail padding-bottom-15"
                              ng-class="(detail.isEpisodeRatings) ? 'col-lg-12 col-md-12 col-sm-12' : 'col-lg-8 col-md-8 col-sm-8'">
                             <div class="stat-detail-header">
                                 <h3>{{detailItems.length}} {{detail.history === 'months' ? 'Completed' : 'Watched' }} {{detail.divisionText}} {{detail.year}}</h3>
@@ -101,7 +101,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="col-lg-4 col-md-4 col-sm-4 margin-top-55 margin-bottom-20" 
+                        <div class="col-lg-4 col-md-4 col-sm-4 margin-top-55 margin-bottom-20"
                              ng-show="detailItems.length > 0 && detail.isEpisodeRatings === false">
                             <table class="col-lg-12 col-md-12 col-sm-12">
                                 <tbody>
@@ -198,7 +198,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12 stat-gender-panel primary-background">
             <div class="stat-gender-progress-container">
                 <div percentage-bar-container>
-                    <div ng-repeat="sex in gender" percentage-bar percentage="{{sex.percentage}}" 
+                    <div ng-repeat="sex in gender" percentage-bar percentage="{{sex.percentage}}"
                          display="{{sex.percentage | number: 2}}{{::sex.text}}"
                          colour="{{sex.colour}}" type="white-text"
                          hover-data="{{sex.percentage | number: 2}}{{::sex.text}}"></div>

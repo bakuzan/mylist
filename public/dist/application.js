@@ -3826,10 +3826,10 @@ angular.module('statistics').config(['$stateProvider', '$urlRouterProvider',
 angular.module('statistics').controller('StatisticsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'Characters', 'ListService', 'ItemService', 'CharacterService', 'StatisticsService', '$filter', 'spinnerService',
 	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, Characters, ListService, ItemService, CharacterService, StatisticsService, $filter, spinnerService) {
 		$scope.authentication = Authentication;
-        
+
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
-        
+
         $scope.view = 'Anime';
         $scope.detail = {
             isVisible: false,
@@ -3925,7 +3925,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 if ($scope.view !== 'Character') {
                     $scope.overview = ItemService.buildOverview($scope.items);
                     $scope.historyDetails.months = ItemService.completeByMonth($scope.items);
-                    if ($scope.view === 'Anime') { 
+                    if ($scope.view === 'Anime') {
                         $scope.historyDetails.seasons = ItemService.completeBySeason($scope.items);
                     }
                     $scope.ratingValues = ItemService.getRatingValues($scope.items);
@@ -3944,7 +3944,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 }
             }
         });
-        
+
         //Builds ratings aggregates.
         function getSummaryFunctions(array) {
             //Check whether to do ratings or episode ratings.
@@ -3953,7 +3953,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                     $scope.historyDetails.summaryFunctions = result;
                 }));
                 if ($scope.detail.summary.isVisible === true) {
-                    spinnerService.loading('detail', 
+                    spinnerService.loading('detail',
                         StatisticsService.buildYearSummary(array, $scope.detail.year, $scope.detail.summary.type).then(function(result) {
                             $scope.historyDetails.yearSummary = result;
                         })
@@ -3966,17 +3966,13 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             }
 //            console.log(array, $scope.historyDetails);
         }
-        $scope.$watchGroup(['detail.history', 'detail.year', 'detail.division'], function(newValues) {
+        $scope.$watchGroup(['detail.history', 'detail.year', 'detail.division', 'detail.isEpisodeRatings'], function(newValues) {
             if (newValues !== undefined) {
                 var filtered = $filter('statisticsDetailFilter')($scope.items, newValues[0], newValues[1], newValues[2]);
                 getSummaryFunctions(filtered);
             }
         });
-        
-        $scope.toggleEpisodeRatings = function(items) {
-            getSummaryFunctions(items);
-        };
-        
+
         $scope.historyDetail = function(year, division, divisionText, summaryType) {
             if ($scope.detail.year === year && $scope.detail.divisionText === divisionText) {
                 $scope.detail.isVisible = !$scope.detail.isVisible;
@@ -3989,7 +3985,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 $scope.detail.summary.isVisible = (summaryType === undefined) ? false : true;
             }
         };
-        
+
         $scope.tableDetail = function(type, name) {
             if ($scope.tableDetail[type] === name) {
                 $scope.filterConfig.search[type] = '';
@@ -4006,7 +4002,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 }
             }
         };
-        
+
         /** Using the start date of confirmed 'in-season' shows
          *  to populate the new season attrs. that will work with the new
          *  filters in the hopes accuracy and speed will increase.
@@ -4023,9 +4019,10 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 });
             }
         };
-        
+
     }
 ]);
+
 'use strict';
 
 angular.module('statistics')

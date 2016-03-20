@@ -41,7 +41,7 @@ exports.update = function(req, res) {
 
 	topten = _.extend(topten , req.body);
 	topten.meta.updated = Date.now();
-	
+
 	topten.save(function(err) {
 		if (err) {
 			return res.status(400).send({
@@ -96,9 +96,9 @@ exports.list = function(req, res) {
 exports.toptenByID = function(req, res, next, id) {
 	Topten.findById(id)
         .populate('user', 'displayName')
-        .populate('animeList', 'title image')
-        .populate('mangaList', 'title image')
-        .populate('characterList', 'name image')
+        .populate('animeList', 'title image manga tags')
+        .populate('mangaList', 'title image anime tags')
+        .populate('characterList', 'name image anime manga tags')
         .exec(function(err, topten) {
         if (err) return next(err);
 		if (! topten) return next(new Error('Failed to load Topten ' + id));

@@ -1,0 +1,11 @@
+<div ng-controller="statisticsTopten">
+  <div>
+    <div ng-repeat="condition in self.list.conditions">{{condition}}</div>
+  </div>
+  <div>
+    <div ng-repeat="tag in self.toptenInfo.tags">{{tag}}</div>
+  </div>
+  <div>
+    <div ng-repeat="series in self.toptenInfo.series">{{series}}</div>
+  </div>
+</div>

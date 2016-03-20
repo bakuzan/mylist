@@ -1,13 +1,13 @@
 'use strict';
 
 // Toptens controller
-angular.module('toptens').controller('ToptensController', ['$scope', '$stateParams', '$location', 'Authentication', 'Toptens', 'NotificationFactory', 'ListService', 'spinnerService',
-	function($scope, $stateParams, $location, Authentication, Toptens, NotificationFactory, ListService, spinnerService) {
+angular.module('toptens').controller('ToptensController', ['$scope', '$stateParams', '$location', 'Authentication', '$uibModal', 'Toptens', 'NotificationFactory', 'ListService', 'spinnerService',
+	function($scope, $stateParams, $location, Authentication, $uibModal, Toptens, NotificationFactory, ListService, spinnerService) {
 		$scope.authentication = Authentication;
-        
+
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
-        
+
         $scope.whichController = 'topten';
         //paging variables.
         $scope.pageConfig = {
@@ -30,13 +30,15 @@ angular.module('toptens').controller('ToptensController', ['$scope', '$statePara
         };
         $scope.viewConfig = {
             displayType: '',
-            linkSuffix: ''
+            linkSuffix: '',
+						tags: [],
+						series: []
         };
 
 		// Remove existing Topten
 		$scope.remove = function(topten) {
             NotificationFactory.confirmation(function() {
-                if ( topten ) { 
+                if ( topten ) {
                     topten.$remove();
                     for (var i in $scope.toptens) {
                         if ($scope.toptens [i] === topten) {
@@ -66,9 +68,23 @@ angular.module('toptens').controller('ToptensController', ['$scope', '$statePara
                 $scope.topten = result;
                 $scope.viewConfig.displayType = ($scope.topten.type === 'character') ? 'name' : 'title';
                 $scope.viewConfig.linkSuffix = ($scope.topten.type === 'character') ? 's' : 'items';
-//                console.log($scope.topten, $scope.viewConfig);
+              //  console.log($scope.topten, $scope.viewConfig);
             });
 		};
-        
+
+		$scope.openListStats = function() {
+			var modalInstance = $uibModal.open({
+				animation: true,
+      	templateUrl: '/modules/toptens/views/statistics-topten.client.view.html',
+      	controller: 'statisticsTopten',
+      	size: 'lg',
+      	resolve: {
+        	list: function () {
+          	return $scope.topten;
+					}
+				}
+			});
+		};
+
 	}
 ]);

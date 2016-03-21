@@ -1,22 +1,35 @@
-<section data-ng-controller="OrdersController">
+<section data-ng-controller="CreateOrdersController as ctrl">
     <div class="page-header">
-        <h1>New Order</h1>
+        <h1>Order</h1>
     </div>
-    <div class="col-md-12">
-        <form class="form-horizontal" data-ng-submit="create()" novalidate>
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <form class="form-horizontal" novalidate>
             <fieldset>
-                <div class="form-group">
-                    <label class="control-label" for="name">Name</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="name" id="name" class="form-control" placeholder="Name" required>
+              <div steps step-config="stepConfig">
+                <div step>
+                  <div class="form-group">
+                    <label for="series" class="col-lg-3 col-md-3 col-sm-3 control-label">Select series</label>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                      <input type="text" id="list" class="form-control" ng-model="ctrl.order.series"
+                             uib-typeahead="item._id as item.title for item in ctrl.stepConfig.items | toptenFilter:'title':$viewValue | limitTo: 5">
                     </div>
+                  </div>
                 </div>
-                <div class="form-group">
-                    <input type="submit" class="btn btn-default">
-                </div>
-				<div data-ng-show="error" class="text-danger">
-					<strong data-ng-bind="error"></strong>
-				</div>
+              </div>
+              <div step-controls>
+                  <button class="btn btn-primary width-50"
+                          ng-click="cancel()" ng-show="stepConfig.currentStep === 1">CANCEL</button>
+                  <button class="btn btn-primary width-50"
+                          ng-click="takeStep(stepConfig.currentStep, false)" ng-show="stepConfig.currentStep !== 1">BACK</button>
+                  <button class="btn btn-primary width-50"
+                          ng-click="takeStep(stepConfig.currentStep, true)" ng-show="stepConfig.currentStep !== stepConfig.stepCount">NEXT</button>
+                  <button class="btn btn-primary width-50"
+                          ng-click="(isCreate) ? create() : update()" ng-show="stepConfig.currentStep === stepConfig.stepCount"
+                          ng-disabled="toptenForm.$invalid">SAVE</button>
+              </div>
+      				<div data-ng-show="error" class="text-danger">
+      					<strong data-ng-bind="error"></strong>
+      				</div>
             </fieldset>
         </form>
     </div>

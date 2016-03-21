@@ -12,7 +12,7 @@ var mongoose = require('mongoose'),
 var OrderSchema = new Schema({
 	series: {
 		type: Schema.ObjectId,
-		ref: 'Mangaitem'
+		ref: 'Mangaitem',
 		required: 'Please link to a series.'
 	},
 	nextVolume: {
@@ -36,12 +36,12 @@ var OrderSchema = new Schema({
 	},
 	meta: {
 		 updated: {
-	type: Date,
-			default: Date.now
+			 type: Date,
+			 default: Date.now
 	 },
 	 created: {
-	type: Date,
-	default: Date.now
+			type: Date,
+			default: Date.now
 	 },
 		 history: {
 			 type: Array,

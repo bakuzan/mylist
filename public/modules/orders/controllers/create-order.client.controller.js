@@ -1,65 +1,85 @@
 'use strict';
-
-// Orders controller
-angular.module('orders').controller('CreateOrdersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Orders',
-	function($scope, $stateParams, $location, Authentication, Orders) {
-		$scope.authentication = Authentication;
-		var self = this,
-    orderCopy = {
-      series: '',
-      nextVolume: {
-        volume: 0,
-        rrp: 0,
-        prices: []
-      },
-      rrp: 0,
-      orderHistory: []
+var CreateOrdersController = (function () {
+    function CreateOrdersController($scope, $stateParams, $location, Authentication, Orders, Mangaitems) {
+        this.$scope = $scope;
+        this.$stateParams = $stateParams;
+        this.$location = $location;
+        this.Authentication = Authentication;
+        this.Orders = Orders;
+        this.Mangaitems = Mangaitems;
+        this.order = {};
+        this.orderCopy = {
+            series: '',
+            nextVolume: {
+                volume: 0,
+                rrp: 0,
+                prices: []
+            },
+            rrp: 0,
+            orderHistory: []
+        };
+        this.authentication = this.Authentication;
+        this.stepConfig = {
+            stepHeaders: [
+                { text: '' },
+                { text: '' }
+            ],
+            currentStep: 1,
+            stepCount: 1,
+            items: []
+        };
+        this.init();
+        this.findOne();
+    }
+    CreateOrdersController.prototype.init = function () {
+        if (this.$stateParams.orderId !== undefined) {
+            console.log('edit mode');
+            this.findOne();
+        }
+        else {
+            console.log('create mode');
+            this.Mangaitems.query().$promise.then(function (result) {
+                self.stepConfig.items = result;
+                console.log('items: ', result);
+            });
+        }
+        console.log('init done.');
     };
-    self.order = {};
-    angular.copy(orderCopy, self.order);
-
-		// Create new Order
-		self.create = function() {
-			// Create new Order object
-			var order = new Orders ({
-        series: this.order.series,
-        nextVolume: {
-          volume: this.order.nextVolume.volume,
-          rrp: this.order.nextVolume.rrp,
-          prices: this.order.nextVolume.prices
-        },
-        rrp: this.order.rrp,
-        orderHistory: this.order.orderHistory
-			});
-
-			// Redirect after save
-			order.$save(function(response) {
-				$location.path('orders/' + response._id);
-
-				// Clear form fields
-        angular.copy(orderCopy, self.order);
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-			});
-		};
-
-		// Update existing Order
-		self.update = function() {
-			var order = $scope.order;
-
-			order.$update(function() {
-				$location.path('orders/' + order._id);
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-			});
-		};
-
-		// Find existing Order
-		self.findOne = function() {
-			$scope.order = Orders.get({
-				orderId: $stateParams.orderId
-			});
-		};
-
-	}
-]);
+    CreateOrdersController.prototype.create = function () {
+        var order = new this.Orders({
+            series: this.order.series,
+            nextVolume: {
+                volume: this.order.nextVolume.volume,
+                rrp: this.order.nextVolume.rrp,
+                prices: this.order.nextVolume.prices
+            },
+            rrp: this.order.rrp,
+            orderHistory: this.order.orderHistory
+        });
+        order.$save(function (response) {
+            this.$location.path('orders/' + response._id);
+            angular.copy(this.orderCopy, this.order);
+        }, function (errorResponse) {
+            this.error = errorResponse.data.message;
+        });
+    };
+    CreateOrdersController.prototype.update = function () {
+        var order = this.order;
+        order.$update(function () {
+            this.$location.path('orders/' + order._id);
+        }, function (errorResponse) {
+            this.error = errorResponse.data.message;
+        });
+    };
+    CreateOrdersController.prototype.findOne = function () {
+        this.Orders.get({ orderId: this.$stateParams.orderId }).$promise.then(function (result) {
+            this.order = result;
+            console.log('found one: ', result);
+        });
+    };
+    CreateOrdersController.controllerId = 'CreateOrdersController';
+    CreateOrdersController.self = this;
+    CreateOrdersController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'Mangaitems'];
+    return CreateOrdersController;
+}());
+angular.module('orders').controller(CreateOrdersController.controllerId, CreateOrdersController);

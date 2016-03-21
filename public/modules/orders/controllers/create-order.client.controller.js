@@ -7,47 +7,54 @@ var CreateOrdersController = (function () {
         this.Authentication = Authentication;
         this.Orders = Orders;
         this.Mangaitems = Mangaitems;
+        this.isCreateMode = this.$stateParams.orderId === undefined;
         this.order = {};
         this.orderCopy = {
             series: '',
             nextVolume: {
-                volume: 0,
-                rrp: 0,
+                volume: 1,
+                rrp: 0.00,
                 prices: []
             },
-            rrp: 0,
+            rrp: 0.00,
             orderHistory: []
         };
         this.authentication = this.Authentication;
         this.stepConfig = {
             stepHeaders: [
-                { text: '' },
-                { text: '' }
+                { text: 'Set next order' },
+                { text: 'Set prices' }
             ],
             currentStep: 1,
-            stepCount: 1,
+            stepCount: 2,
             items: []
         };
         this.init();
         this.findOne();
     }
     CreateOrdersController.prototype.init = function () {
-        if (this.$stateParams.orderId !== undefined) {
-            console.log('edit mode');
-            this.findOne();
-        }
-        else {
+        var _this = this;
+        angular.copy(this.orderCopy, this.order);
+        if (this.isCreateMode) {
             console.log('create mode');
             this.Mangaitems.query().$promise.then(function (result) {
-                self.stepConfig.items = result;
+                _this.stepConfig.items = result;
                 console.log('items: ', result);
             });
         }
-        console.log('init done.');
+        else {
+            console.log('edit mode');
+            this.findOne();
+        }
+        console.log('init done: ');
+    };
+    CreateOrdersController.prototype.takeStep = function (step, direction) {
+        console.log('stepping: ', step, direction);
+        this.stepConfig.currentStep = (direction) ? step + 1 : step - 1;
     };
     CreateOrdersController.prototype.create = function () {
         var order = new this.Orders({
-            series: this.order.series,
+            series: this.order.series._id,
             nextVolume: {
                 volume: this.order.nextVolume.volume,
                 rrp: this.order.nextVolume.rrp,
@@ -78,7 +85,6 @@ var CreateOrdersController = (function () {
         });
     };
     CreateOrdersController.controllerId = 'CreateOrdersController';
-    CreateOrdersController.self = this;
     CreateOrdersController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'Mangaitems'];
     return CreateOrdersController;
 }());

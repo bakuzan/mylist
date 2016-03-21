@@ -1,37 +1,38 @@
 'use strict';
 
 interface ICreateOrdersController {
+	isCreateMode: boolean;
 	order: Orders;
 	orderCopy: Orders;
 	stepConfig: any;
 	authentication: any;
 	create: () => void;
 	update: () => void;
+	takeStep: (step: number, direction: boolean) => void;
 }
 // Orders controller
 class CreateOrdersController implements ICreateOrdersController {
 	static controllerId = 'CreateOrdersController';
-	static self = this;
+	isCreateMode: boolean = this.$stateParams.orderId === undefined;
 	order: Orders = {};
 	orderCopy: Orders = {
 		series: '',
 		nextVolume: {
-			volume: 0,
-			rrp: 0,
+			volume: 1,
+			rrp: 0.00,
 			prices: []
 		},
-		rrp: 0,
+		rrp: 0.00,
 		orderHistory: []
 	};
 	authentication: any = this.Authentication;
-	angular.copy(orderCopy, order);
 	stepConfig: any = {
 		stepHeaders: [
-			{ text: '' },
-			{ text: '' }
+			{ text: 'Set next order' },
+			{ text: 'Set prices' }
 		],
 		currentStep: 1,
-		stepCount: 1,
+		stepCount: 2,
 		items: []
 	};
 
@@ -43,24 +44,30 @@ class CreateOrdersController implements ICreateOrdersController {
 	}
 
 	private init() {
-		if(this.$stateParams.orderId !== undefined) {
-			console.log('edit mode');
-			this.findOne();
-		} else {
+		angular.copy(this.orderCopy, this.order);
+		if(this.isCreateMode) {
 			console.log('create mode');
-			this.Mangaitems.query().$promise.then(function(result) {
-				self.stepConfig.items = result;
+			this.Mangaitems.query().$promise.then((result) => {
+				this.stepConfig.items = result;
 				console.log('items: ', result);
 			});
+		} else {
+			console.log('edit mode');
+			this.findOne();
 		}
-		console.log('init done.');
+		console.log('init done: ');
+	}
+
+	takeStep(step: number, direction: boolean): void {
+		console.log('stepping: ', step, direction);
+		this.stepConfig.currentStep = (direction) ? step + 1 : step - 1;
 	}
 
 		// Create new Order
 		create(): void {
 			// Create new Order object
 			var order = new this.Orders ({
-        series: this.order.series,
+        series: this.order.series._id,
         nextVolume: {
           volume: this.order.nextVolume.volume,
           rrp: this.order.nextVolume.rrp,

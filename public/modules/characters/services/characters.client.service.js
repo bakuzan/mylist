@@ -147,9 +147,9 @@ angular.module('characters').factory('Characters', ['$resource',
             // add if not in
             if (add === true) {
                 if (item.anime !== null) {
-                    statSeries.push({ name: item.anime.title, count: 1 });
+                    statSeries.push({ _id: item.anime._id, name: item.anime.title, count: 1 });
                 } else if (item.manga !== null) {
-                    statSeries.push({ name: item.manga.title, count: 1 });
+                    statSeries.push({ _id: item.manga._id, name: item.manga.title, count: 1 });
                 }
             }
             add = true; //reset add status.

@@ -40,6 +40,7 @@ exports.update = function(req, res) {
 	var topten = req.topten ;
 
 	topten = _.extend(topten , req.body);
+	topten.meta.updated = Date.now();
 
 	topten.save(function(err) {
 		if (err) {
@@ -72,7 +73,7 @@ exports.delete = function(req, res) {
 /**
  * List of Toptens
  */
-exports.list = function(req, res) { 
+exports.list = function(req, res) {
 	Topten.find().sort('-created')
         .populate('user', 'displayName')
         .populate('animeList', 'title')
@@ -92,12 +93,12 @@ exports.list = function(req, res) {
 /**
  * Topten middleware
  */
-exports.toptenByID = function(req, res, next, id) { 
+exports.toptenByID = function(req, res, next, id) {
 	Topten.findById(id)
         .populate('user', 'displayName')
-        .populate('animeList', 'title image')
-        .populate('mangaList', 'title image')
-        .populate('characterList', 'name image')
+        .populate('animeList', 'title image manga tags')
+        .populate('mangaList', 'title image anime tags')
+        .populate('characterList', 'name image anime manga tags')
         .exec(function(err, topten) {
         if (err) return next(err);
 		if (! topten) return next(new Error('Failed to load Topten ' + id));

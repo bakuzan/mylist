@@ -37,6 +37,17 @@ var ToptenSchema = new Schema({
         type: Boolean,
         default: false
     },
+    isRanked: {
+        type: Boolean,
+        default: false
+    },
+    conditions: {
+        limit: {
+            type: Number
+        },
+        series: [],
+        tags: []
+    },
     meta: {
         created: {
             type: Date,

@@ -1,11 +1,29 @@
-<div ng-controller="statisticsTopten">
+<div class="primary-background padding-10" style="height: 90vh">
   <div>
-    <div ng-repeat="condition in self.list.conditions">{{condition}}</div>
+    <label class="cursor-pointer" ng-click="showConditions=!showConditions">Conditions</label>
+    <div ng-show="showConditions">
+      <div ng-if="list.conditions.limit > 0">
+        <label>Limit: </label><span>{{list.conditions.limit}}</span><br/>
+      </div>
+      <div ng-if="list.conditions.tags.length > 0">
+        <label>Tags</label>
+        <div ng-repeat="tag in list.conditions.tags">{{tag.tag}}</div><br/>
+      </div>
+      <div ng-if="list.conditions.series.length > 0">
+        <label>Series</label>
+        <div ng-repeat="series in list.conditions.series">{{series.name}}</div>
+      </div>
+    </div>
   </div>
   <div>
-    <div ng-repeat="tag in self.toptenInfo.tags">{{tag}}</div>
-  </div>
-  <div>
-    <div ng-repeat="series in self.toptenInfo.series">{{series}}</div>
+    <label>Item statistics</label>
+    <div>
+      <div>
+        <div ng-repeat="tag in toptenInfo.tags">{{tag.tag}}</div>
+      </div>
+      <div>
+        <div ng-repeat="series in toptenInfo.series">{{series.name}}</div>
+      </div>
+    </div>
   </div>
 </div>

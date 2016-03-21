@@ -1,24 +1,27 @@
+'use strict';
+
 angular.module('toptens').controller('statisticsTopten', ['$scope','$uibModalInstance','list', 'CharacterService',
  function ($scope, $uibModalInstance, list, CharacterService) {
    var self = this;
-   self.list = list;
-   self.toptenInfo = {
-     listType: '',
+   $scope.list = list;
+   $scope.toptenInfo = {
      tags: [],
      series: []
    };
 
-   self.process = function() {
-     self.toptenInfo.listType = self.list.type + 'List';
-     self.toptenInfo.tags = CharacterService.buildCharacterTags(self.list[listType]);
-     self.toptenInfo.series = CharacterService.buildSeriesList(self.list[listType]);
-   };
+   function process() {
+     var listType = $scope.list.type + 'List';
+     $scope.toptenInfo.tags = CharacterService.buildCharacterTags($scope.list[listType]);
+     $scope.toptenInfo.series = CharacterService.buildSeriesList($scope.list[listType]);
+     console.log('process: ', listType, $scope.toptenInfo, $scope.list);
+   }
+   process();
 
-  self.ok = function () {
+  $scope.ok = function () {
     $uibModalInstance.close();
   };
 
-  self.cancel = function () {
+  $scope.cancel = function () {
     $uibModalInstance.dismiss('cancel');
   };
 }]);

@@ -1,29 +1,42 @@
 <div class="primary-background padding-10" style="height: 90vh">
-  <div>
-    <label class="cursor-pointer" ng-click="showConditions=!showConditions">Conditions</label>
-    <div ng-show="showConditions">
-      <div ng-if="list.conditions.limit > 0">
-        <label>Limit: </label><span>{{list.conditions.limit}}</span><br/>
-      </div>
-      <div ng-if="list.conditions.tags.length > 0">
-        <label>Tags</label>
-        <div ng-repeat="tag in list.conditions.tags">{{tag.tag}}</div><br/>
-      </div>
-      <div ng-if="list.conditions.series.length > 0">
-        <label>Series</label>
-        <div ng-repeat="series in list.conditions.series">{{series.name}}</div>
-      </div>
+  <a class="close-button mt" ng-click="cancel()"><i class="fa fa-times"></i></a>
+  <div tab-container class="width-95">
+    <div tab-view heading="conditions" class="margin-5">
+        <div ng-if="list.conditions.limit > 0">
+          <label>Limit:</label>&nbsp;<span>{{list.conditions.limit}}</span><br/>
+        </div>
+        <div ng-if="list.conditions.tags.length > 0">
+          <label>Tags</label><small class="text-muted margin-left-10">must include all</small>
+          <div ng-repeat="tag in list.conditions.tags">{{tag.tag}}</div><br/>
+        </div>
+        <div ng-if="list.conditions.series.length > 0">
+          <label>Series</label><small class="text-muted margin-left-10">at least one of</small>
+          <div ng-repeat="series in list.conditions.series">{{series.name}}</div>
+        </div>
     </div>
-  </div>
-  <div>
-    <label>Item statistics</label>
-    <div>
-      <div>
-        <div ng-repeat="tag in toptenInfo.tags">{{tag.tag}}</div>
-      </div>
-      <div>
-        <div ng-repeat="series in toptenInfo.series">{{series.name}}</div>
-      </div>
+    <div tab-view heading="statistics" class="margin-5">
+        <div class="margin-top-5" ng-if="toptenInfo.tags.length > 0">
+          <label>Tags</label>
+          <table class="width-40">
+            <tbody>
+              <tr ng-repeat="tag in toptenInfo.tags | orderBy: '-count'">
+                <td>{{tag.tag}}</td>
+                <td>{{tag.count}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="margin-top-5" ng-if="toptenInfo.series.length > 0">
+          <label>Series</label>
+          <table class="width-40">
+            <tbody>
+              <tr ng-repeat="series in toptenInfo.series | orderBy: '-count'">
+                <td>{{series.name}}</td>
+                <td>{{series.count}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
     </div>
   </div>
 </div>

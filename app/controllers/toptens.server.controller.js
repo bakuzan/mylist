@@ -96,14 +96,21 @@ exports.list = function(req, res) {
 exports.toptenByID = function(req, res, next, id) {
 	Topten.findById(id)
         .populate('user', 'displayName')
-        .populate('animeList', 'title image manga tags')
-        .populate('mangaList', 'title image anime tags')
-        .populate('characterList', 'name image anime manga tags')
+        .populate({ path: 'animeList', select: 'title image tags' })
+        .populate({ path: 'mangaList', select: 'title image tags' })
+        .populate({	path: 'characterList', select: 'name image tags' })
         .exec(function(err, topten) {
+					var options = {
+						path: 'animeList.manga',
+						model: 'Mangaitem'
+					};
+
         if (err) return next(err);
-		if (! topten) return next(new Error('Failed to load Topten ' + id));
-		req.topten = topten ;
-		next();
+				if (! topten) return next(new Error('Failed to load Topten ' + id));
+				Topten.populate(topten, options, function (err, toptens) {
+							req.topten = topten;
+							next();
+				});
 	});
 };
 

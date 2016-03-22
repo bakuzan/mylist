@@ -17,10 +17,6 @@ angular.module('toptens').controller('statisticsTopten', ['$scope','$uibModalIns
    }
    process();
 
-  $scope.ok = function () {
-    $uibModalInstance.close();
-  };
-
   $scope.cancel = function () {
     $uibModalInstance.dismiss('cancel');
   };

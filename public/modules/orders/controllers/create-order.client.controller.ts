@@ -2,8 +2,8 @@
 
 interface ICreateOrdersController {
 	isCreateMode: boolean;
-	order: Orders;
-	orderCopy: Orders;
+	order: OrderSchema;
+	orderCopy: OrderSchema;
 	stepConfig: any;
 	authentication: any;
 	create: () => void;
@@ -14,8 +14,8 @@ interface ICreateOrdersController {
 class CreateOrdersController implements ICreateOrdersController {
 	static controllerId = 'CreateOrdersController';
 	isCreateMode: boolean = this.$stateParams.orderId === undefined;
-	order: Orders = {};
-	orderCopy: Orders = {
+	order: OrderSchema = {};
+	orderCopy: OrderSchema = {
 		series: '',
 		nextVolume: {
 			volume: 1,

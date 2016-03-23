@@ -132,12 +132,12 @@ angular.module('characters').factory('Characters', ['$resource',
         //get series counts.
         angular.forEach(items, function(item) {
             for(var i=0; i < statSeries.length; i++) {
-                if (item.anime !== null) {
+                if (item.anime) {
                     if (statSeries[i].name === item.anime.title) {
                         add = false;
                         statSeries[i].count += 1;
                     }
-                } else if (item.manga !== null) {
+                } else if (item.manga) {
                     if (statSeries[i].name === item.manga.title) {
                         add = false;
                         statSeries[i].count += 1;

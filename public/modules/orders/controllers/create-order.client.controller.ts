@@ -9,8 +9,11 @@ interface ICreateOrdersController {
 	create: () => void;
 	update: () => void;
 	takeStep: (step: number, direction: boolean) => void;
+	cancel: () => void;
+	processOrder: () => void;
+	openBoughtDialog: () => void;
 }
-// Orders controller
+// CU Orders controller
 class CreateOrdersController implements ICreateOrdersController {
 	static controllerId = 'CreateOrdersController';
 	isCreateMode: boolean = this.$stateParams.orderId === undefined;
@@ -36,9 +39,9 @@ class CreateOrdersController implements ICreateOrdersController {
 		items: []
 	};
 
-	static $inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'Mangaitems'];
+	static $inject = ['$scope', '$stateParams', '$location', 'Authentication', '$q', 'Orders', 'Mangaitems', '$uibModal'];
 
-	constructor(private $scope, private $stateParams, private $location, private Authentication, private Orders, private Mangaitems) {
+	constructor(private $scope, private $stateParams, private $location, private Authentication, private $q, private Orders, private Mangaitems, private $uibModal) {
 		this.init();
 		this.findOne();
 	}
@@ -61,6 +64,22 @@ class CreateOrdersController implements ICreateOrdersController {
 	takeStep(step: number, direction: boolean): void {
 		console.log('stepping: ', step, direction);
 		this.stepConfig.currentStep = (direction) ? step + 1 : step - 1;
+	}
+
+	processOrder(): void {
+		if(this.order.nextVolume.volume > 0) {
+			var temp = angular.copy(this.order.nextVolume);
+			this.order.orderHistory.push(this.order.nextVolume);
+			this.order.nextVolume = {
+				volume: temp.volume + 1,
+				rrp: this.order.rrp,
+				prices: []
+			};
+		}
+	}
+
+	cancel(): void {
+		this.$location.path('orders');
 	}
 
 		// Create new Order
@@ -99,12 +118,25 @@ class CreateOrdersController implements ICreateOrdersController {
 			});
 		}
 
+		//Open dialog
+		openBoughtDialog(): void {
+			var modalInstance = this.$uibModal.open({
+				animation: true,
+      	templateUrl: '/modules/toptens/views/complete-order.client.view.html',
+      	controller: 'completeOrder',
+      	size: 'lg',
+      	resolve: {
+        	order: function () {
+          	return this.order;
+					}
+				}
+			});
+		}
+
 		// Find existing Order
 		private findOne() {
-			this.Orders.get({ orderId: this.$stateParams.orderId }).$promise.then(function(result) {
-				this.order = result;
-				console.log('found one: ', result);
-			});
+			this.order = this.Orders.get({ orderId: this.$stateParams.orderId });
+			console.log('found one: ', this.order);
 		}
 	}
 //Register controller.

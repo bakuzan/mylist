@@ -19,7 +19,7 @@ angular.module('orders').config(['$stateProvider',
 		}).
 		state('editOrder', {
 			url: '/orders/:orderId/edit',
-			templateUrl: 'modules/orders/views/edit-order.client.view.html'
+			templateUrl: 'modules/orders/views/create-order.client.view.html'
 		});
 	}
 ]);

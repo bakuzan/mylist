@@ -1,12 +1,14 @@
 'use strict';
 var CreateOrdersController = (function () {
-    function CreateOrdersController($scope, $stateParams, $location, Authentication, Orders, Mangaitems) {
+    function CreateOrdersController($scope, $stateParams, $location, Authentication, $q, Orders, Mangaitems, $uibModal) {
         this.$scope = $scope;
         this.$stateParams = $stateParams;
         this.$location = $location;
         this.Authentication = Authentication;
+        this.$q = $q;
         this.Orders = Orders;
         this.Mangaitems = Mangaitems;
+        this.$uibModal = $uibModal;
         this.isCreateMode = this.$stateParams.orderId === undefined;
         this.order = {};
         this.orderCopy = {
@@ -52,6 +54,20 @@ var CreateOrdersController = (function () {
         console.log('stepping: ', step, direction);
         this.stepConfig.currentStep = (direction) ? step + 1 : step - 1;
     };
+    CreateOrdersController.prototype.processOrder = function () {
+        if (this.order.nextVolume.volume > 0) {
+            var temp = angular.copy(this.order.nextVolume);
+            this.order.orderHistory.push(this.order.nextVolume);
+            this.order.nextVolume = {
+                volume: temp.volume + 1,
+                rrp: this.order.rrp,
+                prices: []
+            };
+        }
+    };
+    CreateOrdersController.prototype.cancel = function () {
+        this.$location.path('orders');
+    };
     CreateOrdersController.prototype.create = function () {
         var order = new this.Orders({
             series: this.order.series._id,
@@ -78,14 +94,25 @@ var CreateOrdersController = (function () {
             this.error = errorResponse.data.message;
         });
     };
-    CreateOrdersController.prototype.findOne = function () {
-        this.Orders.get({ orderId: this.$stateParams.orderId }).$promise.then(function (result) {
-            this.order = result;
-            console.log('found one: ', result);
+    CreateOrdersController.prototype.openBoughtDialog = function () {
+        var modalInstance = this.$uibModal.open({
+            animation: true,
+            templateUrl: '/modules/toptens/views/complete-order.client.view.html',
+            controller: 'completeOrder',
+            size: 'lg',
+            resolve: {
+                order: function () {
+                    return this.order;
+                }
+            }
         });
     };
+    CreateOrdersController.prototype.findOne = function () {
+        this.order = this.Orders.get({ orderId: this.$stateParams.orderId });
+        console.log('found one: ', this.order);
+    };
     CreateOrdersController.controllerId = 'CreateOrdersController';
-    CreateOrdersController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'Mangaitems'];
+    CreateOrdersController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', '$q', 'Orders', 'Mangaitems', '$uibModal'];
     return CreateOrdersController;
 }());
 angular.module('orders').controller(CreateOrdersController.controllerId, CreateOrdersController);

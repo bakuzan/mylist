@@ -12,24 +12,24 @@ angular.module('characters').factory('Characters', ['$resource',
 	}
 ])
 .service('CharacterService', ['$q', function($q) {
-    
+
     //build the character gender distribution.
     this.buildGenderDistribution = function(items, maxCount) {
         return $q(function(resolve, reject) {
             var check, gender = [];
             angular.forEach(items, function(item) {
                 if (item.tag === 'male') {
-                    gender.push({ 
-                        type: 'male', 
-                        count: item.count, 
-                        percentage: Number(((item.count / maxCount) * 100).toFixed(2)), 
+                    gender.push({
+                        type: 'male',
+                        count: item.count,
+                        percentage: Number(((item.count / maxCount) * 100).toFixed(2)),
                         text: '% male.'
                     });
                 } else if (item.tag === 'female') {
-                    gender.push({ 
-                        type: 'female', 
-                        count: item.count, 
-                        percentage: Number(((item.count / maxCount) * 100).toFixed(2)), 
+                    gender.push({
+                        type: 'female',
+                        count: item.count,
+                        percentage: Number(((item.count / maxCount) * 100).toFixed(2)),
                         text: '% female.'
                     });
                 }
@@ -37,7 +37,7 @@ angular.module('characters').factory('Characters', ['$resource',
             gender.push({
                 type: 'unassigned',
                 count: maxCount - gender[0].count - gender[1].count,
-                percentage: Number(((maxCount - gender[0].count - gender[1].count / maxCount) * 100).toFixed(2)), 
+                percentage: Number(((maxCount - gender[0].count - gender[1].count / maxCount) * 100).toFixed(2)),
                 text: '% unassigned.'
             });
 
@@ -51,7 +51,7 @@ angular.module('characters').factory('Characters', ['$resource',
             resolve(gender);
         });
     };
-    
+
     this.buildCharacterTags = function(items) {
         var add = true, statTags = [];
         //is tag in array?
@@ -60,7 +60,7 @@ angular.module('characters').factory('Characters', ['$resource',
                 for(var i=0; i < statTags.length; i++) {
                     if (statTags[i].tag === tag.text) {
                         add = false;
-                        statTags[i].count += 1; 
+                        statTags[i].count += 1;
                     }
                 }
                 // add if not in
@@ -71,10 +71,10 @@ angular.module('characters').factory('Characters', ['$resource',
             });
 //          console.log($scope.statTags);
         });
-        
+
         return statTags;
     };
-    
+
     this.buildRelatedCharacterTags = function(items, name) {
         var add = true, tagDetailCollection = [], tagDetailResult = [];
         //get all character tag arrays that contain the chosen tag into a collection.
@@ -93,7 +93,7 @@ angular.module('characters').factory('Characters', ['$resource',
                     //if exists and not the search value - increment the count.
                     if (tagDetailResult[i].name===bit.text && bit.text!==name) {
                         add = false;
-                        tagDetailResult[i].count += 1; 
+                        tagDetailResult[i].count += 1;
                     }
                 }
                 //add if true and not the tag we searched on.
@@ -106,11 +106,11 @@ angular.module('characters').factory('Characters', ['$resource',
 //        console.log(tagDetailResult);
         return tagDetailResult;
     };
-    
+
     this.buildVoiceActors = function(items) {
         var add = true, voiceActors = [];
         //is voice actor in array?
-        angular.forEach(items, function(item) { 
+        angular.forEach(items, function(item) {
             for(var i=0; i < voiceActors.length; i++) {
                 if (voiceActors[i].name === item.voice) {
                     add = false;
@@ -123,39 +123,39 @@ angular.module('characters').factory('Characters', ['$resource',
             }
             add = true; //reset add status.
         });
-        
+
         return voiceActors;
     };
-    
+
     this.buildSeriesList = function(items) {
         var add = true, statSeries = [];
         //get series counts.
         angular.forEach(items, function(item) {
             for(var i=0; i < statSeries.length; i++) {
-                if (item.anime !== null) {
+                if (item.anime) {
                     if (statSeries[i].name === item.anime.title) {
                         add = false;
-                        statSeries[i].count += 1; 
+                        statSeries[i].count += 1;
                     }
-                } else if (item.manga !== null) {
+                } else if (item.manga) {
                     if (statSeries[i].name === item.manga.title) {
                         add = false;
-                        statSeries[i].count += 1; 
+                        statSeries[i].count += 1;
                     }
                 }
             }
             // add if not in
             if (add === true) {
-                if (item.anime !== null) {
+                if (typeof(item.anime) === 'object' && item.anime !== null) {
                     statSeries.push({ _id: item.anime._id, name: item.anime.title, count: 1 });
-                } else if (item.manga !== null) {
+                } else if (typeof(item.manga) === 'object' && item.manga !== null) {
                     statSeries.push({ _id: item.manga._id, name: item.manga.title, count: 1 });
                 }
             }
             add = true; //reset add status.
         });
-        
+
         return statSeries;
     };
-    
+
 }]);

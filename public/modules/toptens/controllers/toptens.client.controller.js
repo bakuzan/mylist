@@ -68,7 +68,6 @@ angular.module('toptens').controller('ToptensController', ['$scope', '$statePara
                 $scope.topten = result;
                 $scope.viewConfig.displayType = ($scope.topten.type === 'character') ? 'name' : 'title';
                 $scope.viewConfig.linkSuffix = ($scope.topten.type === 'character') ? 's' : 'items';
-              //  console.log($scope.topten, $scope.viewConfig);
             });
 		};
 

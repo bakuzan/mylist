@@ -10,6 +10,7 @@ interface ICreateOrdersController {
 	update: () => void;
 	takeStep: (step: number, direction: boolean) => void;
 	cancel: () => void;
+	findOne: () => void;
 	processOrder: () => void;
 	openBoughtDialog: () => void;
 }
@@ -39,11 +40,10 @@ class CreateOrdersController implements ICreateOrdersController {
 		items: []
 	};
 
-	static $inject = ['$scope', '$stateParams', '$location', 'Authentication', '$q', 'Orders', 'Mangaitems', '$uibModal'];
+	static $inject = ['$scope', '$stateParams', '$location', 'Authentication', '$q', 'Orders', 'Mangaitems', '$uibModal', 'NotificationFactory'];
 
-	constructor(private $scope, private $stateParams, private $location, private Authentication, private $q, private Orders, private Mangaitems, private $uibModal) {
+	constructor(private $scope, private $stateParams, private $location, private Authentication, private $q, private Orders, private Mangaitems, private $uibModal, private NotificationFactory) {
 		this.init();
-		this.findOne();
 	}
 
 	private init() {
@@ -75,6 +75,7 @@ class CreateOrdersController implements ICreateOrdersController {
 				rrp: this.order.rrp,
 				prices: []
 			};
+			this.update();
 		}
 	}
 
@@ -97,13 +98,14 @@ class CreateOrdersController implements ICreateOrdersController {
 			});
 
 			// Redirect after save
-			order.$save(function(response) {
+			order.$save((response) => {
 				this.$location.path('orders/' + response._id);
-
+				this.NotificationFactory.success('Saved!', 'New Order was successfully saved!');
 				// Clear form fields
         angular.copy(this.orderCopy, this.order);
 			}, function(errorResponse) {
 				this.error = errorResponse.data.message;
+				this.NotificationFactory.error('Error!', 'Order failed to save!');
 			});
 		}
 
@@ -111,10 +113,12 @@ class CreateOrdersController implements ICreateOrdersController {
 		update(): void {
 			var order = this.order;
 
-			order.$update(function() {
+			order.$update(() => {
 				this.$location.path('orders/' + order._id);
+				this.NotificationFactory.success('Saved!', 'Order was successfully saved!');
 			}, function(errorResponse) {
 				this.error = errorResponse.data.message;
+				this.NotificationFactory.error('Error!', 'Order failed to save!');
 			});
 		}
 
@@ -122,19 +126,24 @@ class CreateOrdersController implements ICreateOrdersController {
 		openBoughtDialog(): void {
 			var modalInstance = this.$uibModal.open({
 				animation: true,
-      	templateUrl: '/modules/toptens/views/complete-order.client.view.html',
-      	controller: 'completeOrder',
-      	size: 'lg',
+      	templateUrl: '/modules/orders/views/complete-order.client.view.html',
+      	controller: 'CompleteOrdersController as modal',
+      	size: 'md',
       	resolve: {
-        	order: function () {
+        	order: () => {
           	return this.order;
 					}
 				}
 			});
+			modalInstance.result.then((result) => {
+				console.log(result);
+				this.order = result;
+				this.processOrder();
+			});
 		}
 
 		// Find existing Order
-		private findOne() {
+		findOne(): void {
 			this.order = this.Orders.get({ orderId: this.$stateParams.orderId });
 			console.log('found one: ', this.order);
 		}

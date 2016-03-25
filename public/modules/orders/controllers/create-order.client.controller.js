@@ -1,6 +1,6 @@
 'use strict';
 var CreateOrdersController = (function () {
-    function CreateOrdersController($scope, $stateParams, $location, Authentication, $q, Orders, Mangaitems, $uibModal) {
+    function CreateOrdersController($scope, $stateParams, $location, Authentication, $q, Orders, Mangaitems, $uibModal, NotificationFactory) {
         this.$scope = $scope;
         this.$stateParams = $stateParams;
         this.$location = $location;
@@ -9,6 +9,7 @@ var CreateOrdersController = (function () {
         this.Orders = Orders;
         this.Mangaitems = Mangaitems;
         this.$uibModal = $uibModal;
+        this.NotificationFactory = NotificationFactory;
         this.isCreateMode = this.$stateParams.orderId === undefined;
         this.order = {};
         this.orderCopy = {
@@ -32,7 +33,6 @@ var CreateOrdersController = (function () {
             items: []
         };
         this.init();
-        this.findOne();
     }
     CreateOrdersController.prototype.init = function () {
         var _this = this;
@@ -63,12 +63,14 @@ var CreateOrdersController = (function () {
                 rrp: this.order.rrp,
                 prices: []
             };
+            this.update();
         }
     };
     CreateOrdersController.prototype.cancel = function () {
         this.$location.path('orders');
     };
     CreateOrdersController.prototype.create = function () {
+        var _this = this;
         var order = new this.Orders({
             series: this.order.series._id,
             nextVolume: {
@@ -80,31 +82,42 @@ var CreateOrdersController = (function () {
             orderHistory: this.order.orderHistory
         });
         order.$save(function (response) {
-            this.$location.path('orders/' + response._id);
-            angular.copy(this.orderCopy, this.order);
+            _this.$location.path('orders/' + response._id);
+            _this.NotificationFactory.success('Saved!', 'New Order was successfully saved!');
+            angular.copy(_this.orderCopy, _this.order);
         }, function (errorResponse) {
             this.error = errorResponse.data.message;
+            this.NotificationFactory.error('Error!', 'Order failed to save!');
         });
     };
     CreateOrdersController.prototype.update = function () {
+        var _this = this;
         var order = this.order;
         order.$update(function () {
-            this.$location.path('orders/' + order._id);
+            _this.$location.path('orders/' + order._id);
+            _this.NotificationFactory.success('Saved!', 'Order was successfully saved!');
         }, function (errorResponse) {
             this.error = errorResponse.data.message;
+            this.NotificationFactory.error('Error!', 'Order failed to save!');
         });
     };
     CreateOrdersController.prototype.openBoughtDialog = function () {
+        var _this = this;
         var modalInstance = this.$uibModal.open({
             animation: true,
-            templateUrl: '/modules/toptens/views/complete-order.client.view.html',
-            controller: 'completeOrder',
-            size: 'lg',
+            templateUrl: '/modules/orders/views/complete-order.client.view.html',
+            controller: 'CompleteOrdersController as modal',
+            size: 'md',
             resolve: {
                 order: function () {
-                    return this.order;
+                    return _this.order;
                 }
             }
+        });
+        modalInstance.result.then(function (result) {
+            console.log(result);
+            _this.order = result;
+            _this.processOrder();
         });
     };
     CreateOrdersController.prototype.findOne = function () {
@@ -112,7 +125,7 @@ var CreateOrdersController = (function () {
         console.log('found one: ', this.order);
     };
     CreateOrdersController.controllerId = 'CreateOrdersController';
-    CreateOrdersController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', '$q', 'Orders', 'Mangaitems', '$uibModal'];
+    CreateOrdersController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', '$q', 'Orders', 'Mangaitems', '$uibModal', 'NotificationFactory'];
     return CreateOrdersController;
 }());
 angular.module('orders').controller(CreateOrdersController.controllerId, CreateOrdersController);

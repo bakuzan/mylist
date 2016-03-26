@@ -3,9 +3,11 @@
   <div tab-container class="width-95 height-100">
     <div tab-view heading="order history" class="height-90 margin-5">
       <div class="list-group col-lg-12 col-md-12 col-sm-12">
-        <div ng-repeat="item in modal.order.orderHistory">
+        <div ng-repeat="item in modal.order.orderHistory" class="padding-5 margin-bottom-5">
+          {{item.prices}}
           Volume: <span ng-bind="item.volume"></span><br/>
-          Bought: <span ng-bind="item.date"></span>
+          Bought on: <span ng-bind="item.date"></span><br/>
+          Paid: <span ng-bind="modal.amountPaid(item.prices)"></span>
         </div>
       </div>
     </div>

@@ -10,6 +10,7 @@ export interface IOrder extends mongoose.Document {
 	series: Schema.ObjectId;
 	nextVolume: {
 		volume: Number;
+		date: Date;
 		rrp: Number;
 		prices: Array<Object>;
 	};
@@ -33,6 +34,10 @@ export const OrderSchema = new Schema({
 		nextVolume: {
 			volume:{
 				type: Number
+			},
+			date: {
+				type: Date,
+				default: Date.now
 			},
 			rrp: {
 				type: Number

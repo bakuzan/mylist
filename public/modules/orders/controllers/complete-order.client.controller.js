@@ -16,7 +16,7 @@ var CompleteOrdersController = (function () {
         this.order.nextVolume.prices.splice(index, 1);
     };
     CompleteOrdersController.prototype.completeOrder = function () {
-        this.order.nextVolume.prices.push({ company: this.newPrice.company, price: this.newPrice.price, rrp: this.order.rrp, paid: true });
+        this.order.nextVolume.prices.push({ company: this.newPrice.company, date: Date.now(), price: this.newPrice.price, rrp: this.order.rrp, paid: true });
         this.$uibModalInstance.close(this.order);
     };
     CompleteOrdersController.prototype.cancel = function () {

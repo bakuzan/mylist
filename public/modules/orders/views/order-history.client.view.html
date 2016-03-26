@@ -1,0 +1,13 @@
+<div class="primary-background padding-10 overflow-hidden" style="height: 40vh">
+  <a class="close-button mt" ng-click="modal.cancel()"><i class="fa fa-times"></i></a>
+  <div tab-container class="width-95 height-100">
+    <div tab-view heading="order history" class="height-90 margin-5">
+      <div class="list-group col-lg-12 col-md-12 col-sm-12">
+        <div ng-repeat="item in modal.order.orderHistory">
+          Volume: <span ng-bind="item.volume"></span><br/>
+          Bought: <span ng-bind="item.date"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

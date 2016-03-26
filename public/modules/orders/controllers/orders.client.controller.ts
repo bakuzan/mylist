@@ -7,6 +7,7 @@ interface IOrdersController {
 	remove: (order: OrderSchema) => void;
 	find: () => void;
 	findOne: () => void;
+	openOrderHistoryDialog: () => void;
 }
 // Orders controller
 class OrdersController implements IOrdersController {
@@ -14,9 +15,13 @@ class OrdersController implements IOrdersController {
 	authentication: any = this.Authentication;
 	order: OrderSchema = undefined;
 	orders: Array<OrderSchema> = [];
+	pageConfig: any = {
+			currentPage: 0,
+			pageSize: 10
+	};
 
-	static $inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Orders'];
-	constructor(private $scope, private $stateParams, private $location, private Authentication, private Orders) {
+	static $inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'spinnerService', '$uibModal'];
+	constructor(private $scope, private $stateParams, private $location, private Authentication, private Orders, private spinnerService, private $uibModal) {
 		this.init();
 	}
 
@@ -50,13 +55,30 @@ class OrdersController implements IOrdersController {
 
 	// Find a list of Orders
 	find(): void {
-		this.orders = this.Orders.query();
+		this.spinnerService.loading('orders', this.Orders.query().$promise.then((result) => {
+			this.orders = result;
+		}));
 	}
 
 	// Find existing Order
 	findOne(): void {
-		this.order = this.Orders.get({
-			orderId: this.$stateParams.orderId
+		this.spinnerService.loading('orders', this.Orders.get({	orderId: this.$stateParams.orderId }).$promise.then((result) => {
+			this.order = result;
+		}));
+	}
+
+	//Open dialog
+	openOrderHistoryDialog(): void {
+		var modalInstance = this.$uibModal.open({
+			animation: true,
+			templateUrl: '/modules/orders/views/order-history.client.view.html',
+			controller: 'OrderHistoryController as modal',
+			size: 'md',
+			resolve: {
+				order: () => {
+					return this.order;
+				}
+			}
 		});
 	}
 

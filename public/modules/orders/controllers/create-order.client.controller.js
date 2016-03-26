@@ -16,6 +16,7 @@ var CreateOrdersController = (function () {
             series: '',
             nextVolume: {
                 volume: 1,
+                date: Date.now(),
                 rrp: 0.00,
                 prices: []
             },

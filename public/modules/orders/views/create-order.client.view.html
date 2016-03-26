@@ -7,12 +7,12 @@
             <fieldset>
               <div steps step-config="ctrl.stepConfig">
                 <div one-step>
-                  <div class="form-group" ng-if="ctrl.isCreateMode">
+                  <div class="form-group">
                     <label for="series" class="col-lg-3 col-md-3 col-sm-3 control-label">Select series</label>
                     <div class="col-lg-6 col-md-6 col-sm-6">
                       <input type="text" id="series" class="form-control" ng-model="ctrl.order.series"
                              uib-typeahead="item as item.title for item in ctrl.stepConfig.items | toptenFilter:'title':$viewValue | limitTo: 5"
-                             typeahead-on-select="ctrl.order.nextVolume.volume = ctrl.order.series.volumes + 1">
+                             typeahead-on-select="ctrl.order.nextVolume.volume = ctrl.order.series.volumes + 1" ng-disabled="!ctrl.isCreateMode">
                     </div>
                   </div>
                   <div class="form-group">
@@ -22,6 +22,12 @@
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-3">
                       <button class="btn btn-primary" ng-click="ctrl.openBoughtDialog()">Bought</button>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="date" class="col-lg-3 col-md-3 col-sm-3 control-label">Release date</label>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                      <input type="date" id="date" class="form-control" ng-model="ctrl.order.nextVolume.date" format-date />
                     </div>
                   </div>
                   <div class="form-group">

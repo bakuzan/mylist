@@ -1,13 +1,21 @@
 <section data-ng-controller="OrdersController as ctrl">
-	<div class="page-header">
+	<div class="page-header margin-top-0">
+		<div class="pull-right" data-ng-show="((ctrl.authentication.user) && (ctrl.authentication.user._id == ctrl.order.user._id))">
+			<a class="btn btn-accent" href="/#!/orders">
+					<i class="glyphicon glyphicon-chevron-left"></i>
+			</a>
+			<a class="btn btn-primary" href="/#!/orders/{{ctrl.order._id}}/edit">
+				<i class="glyphicon glyphicon-edit"></i>
+			</a>
+			<a class="btn btn-primary" data-ng-click="ctrl.remove();">
+				<i class="glyphicon glyphicon-trash"></i>
+			</a>
+		</div>
 		<h1 data-ng-bind="ctrl.order.series.title"></h1>
-	</div>
-	<div class="pull-right" data-ng-show="((ctrl.authentication.user) && (ctrl.authentication.user._id == ctrl.order.user._id))">
-		<a class="btn btn-primary" href="/#!/orders/{{ctrl.order._id}}/edit">
-			<i class="glyphicon glyphicon-edit"></i>
-		</a>
-		<a class="btn btn-primary" data-ng-click="ctrl.remove();">
-			<i class="glyphicon glyphicon-trash"></i>
-		</a>
+		<p class="list-group-item-text">
+				Next volume: <span ng-bind="ctrl.order.nextVolume.volume"></span><br/>
+				Release: <span ng-bind="ctrl.order.nextVolume.date | date: 'dd-MMM-yyyy'"></span><br/>
+		</p>
+		<p class="btn btn-primary margin-0" ng-click="ctrl.openOrderHistoryDialog()">View order history</p>
 	</div>
 </section>

@@ -11,6 +11,10 @@ exports.OrderSchema = new Schema({
         volume: {
             type: Number
         },
+        date: {
+            type: Date,
+            default: Date.now
+        },
         rrp: {
             type: Number
         },

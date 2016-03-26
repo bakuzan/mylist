@@ -1,14 +1,20 @@
 'use strict';
 var OrdersController = (function () {
-    function OrdersController($scope, $stateParams, $location, Authentication, Orders) {
+    function OrdersController($scope, $stateParams, $location, Authentication, Orders, spinnerService, $uibModal) {
         this.$scope = $scope;
         this.$stateParams = $stateParams;
         this.$location = $location;
         this.Authentication = Authentication;
         this.Orders = Orders;
+        this.spinnerService = spinnerService;
+        this.$uibModal = $uibModal;
         this.authentication = this.Authentication;
         this.order = undefined;
         this.orders = [];
+        this.pageConfig = {
+            currentPage: 0,
+            pageSize: 10
+        };
         this.init();
     }
     OrdersController.prototype.init = function () {
@@ -39,15 +45,33 @@ var OrdersController = (function () {
         }
     };
     OrdersController.prototype.find = function () {
-        this.orders = this.Orders.query();
+        var _this = this;
+        this.spinnerService.loading('orders', this.Orders.query().$promise.then(function (result) {
+            _this.orders = result;
+        }));
     };
     OrdersController.prototype.findOne = function () {
-        this.order = this.Orders.get({
-            orderId: this.$stateParams.orderId
+        var _this = this;
+        this.spinnerService.loading('orders', this.Orders.get({ orderId: this.$stateParams.orderId }).$promise.then(function (result) {
+            _this.order = result;
+        }));
+    };
+    OrdersController.prototype.openOrderHistoryDialog = function () {
+        var _this = this;
+        var modalInstance = this.$uibModal.open({
+            animation: true,
+            templateUrl: '/modules/orders/views/order-history.client.view.html',
+            controller: 'OrderHistoryController as modal',
+            size: 'md',
+            resolve: {
+                order: function () {
+                    return _this.order;
+                }
+            }
         });
     };
     OrdersController.controllerId = 'OrdersController';
-    OrdersController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Orders'];
+    OrdersController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'spinnerService', '$uibModal'];
     return OrdersController;
 }());
 angular.module('orders').controller(OrdersController.controllerId, OrdersController);

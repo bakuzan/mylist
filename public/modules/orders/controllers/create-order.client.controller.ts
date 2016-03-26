@@ -23,6 +23,7 @@ class CreateOrdersController implements ICreateOrdersController {
 		series: '',
 		nextVolume: {
 			volume: 1,
+			date: Date.now(),
 			rrp: 0.00,
 			prices: []
 		},

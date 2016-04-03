@@ -310,9 +310,9 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
                 $scope.isCreate = false;
                 Toptens.get({ toptenId: $stateParams.toptenId }).$promise.then(function(result) {
                     $scope.topten = result;
+										console.log('topten: ', result);
                     typeSetItemPopulate();
                 });
-                console.log('topten: ', $scope.topten);
             }
         }
         inital();

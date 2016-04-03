@@ -100,15 +100,20 @@ exports.toptenByID = function(req, res, next, id) {
         .populate({ path: 'mangaList', select: 'title image anime tags' })
         .populate({	path: 'characterList', select: 'name image anime manga tags' })
         .exec(function(err, topten) {
-					var options = {	path: '', model: '' };
+					var options = {	path: '', model: '', select: '' }, selectValues = 'title image start end tags';
 					if(topten.animeList !== null) {
 						options.path = 'animeList.manga';
 						options.model = 'Mangaitem';
+						options.select = selectValues;
 					} else if (topten.mangaList !== null) {
 						options.path = 'mangaList.anime';
 						options.model = 'Animeitem';
+						options.select = selectValues + ' season';
 					} else if (topten.characterList !== null) {
-						options = [{ path: 'characterList.manga', model: 'Mangaitem' }, { path: 'characterList.anime', model: 'Animeitem' }];
+						options = [
+							{ path: 'characterList.manga', model: 'Mangaitem', select: selectValues },
+							{ path: 'characterList.anime', model: 'Animeitem', select: selectValues + ' season' }
+						];
 					}
 
         if (err) return next(err);

@@ -4,10 +4,10 @@
 angular.module('characters').controller('CharactersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Characters', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ListService', 'CharacterService', 'NotificationFactory', 'spinnerService',
 	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window, ListService, CharacterService, NotificationFactory, spinnerService) {
 		$scope.authentication = Authentication;
-        
+
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
-        
+
         $scope.whichController = 'character';
         //paging variables.
         $scope.pageConfig = {
@@ -40,10 +40,10 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
         $scope.trustAsResourceUrl = function(url) {
             return $sce.trustAsResourceUrl(url);
         };
-        
+
         $scope.$watchCollection('characters', function() {
             if ($scope.characters!==undefined) {
-//                console.log($scope.characters);
+							// console.log('watch characters: ', $scope.characters);
                 $scope.filterConfig.areTagless = ListService.checkForTagless($scope.characters);
                 $scope.filterConfig.statTags = CharacterService.buildCharacterTags($scope.characters);
                 $scope.filterConfig.voiceActors = CharacterService.buildVoiceActors($scope.characters);
@@ -57,7 +57,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             $scope.tagArray = ListService.addTag($scope.tagArray, $scope.newTag);
             $scope.newTag = '';
         };
-        
+
 		// Create new Character
 		$scope.create = function() {
             //console.log($scope.tagArray);
@@ -92,7 +92,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 		$scope.remove = function(character) {
             //are you sure option...
             NotificationFactory.confirmation(function() {
-                if ( character ) { 
+                if ( character ) {
                     character.$remove();
 
                     for (var i in $scope.characters) {
@@ -120,15 +120,15 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             if ($scope.character.anime!==null && $scope.character.anime!==undefined) {
                 character.anime = $scope.character.anime._id;
             }
-            
+
             if ($scope.tagArray!==undefined) {
                 character.tags = ListService.concatenateTagArrays(character.tags, $scope.tagArray);
             }
-            
+
             if ($scope.imgPath!==undefined && $scope.imgPath!==null && $scope.imgPath!=='') {
                 character.image = $scope.imgPath;
             }
-            
+
 			character.$update(function() {
 				$location.path('characters');
                 NotificationFactory.success('Saved!', 'Character was saved successfully');
@@ -141,44 +141,44 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 		// Find a list of Characters
 		$scope.find = function() {
             spinnerService.loading('characters', Characters.query().$promise.then(function(result) {
-			$scope.characters = result;
-            //console.log($scope.characters);
+							$scope.characters = result;
+            // console.log('find characters: ', $scope.characters);
             }));
 		};
 
 		// Find existing Character
 		$scope.findOne = function() {
-			$scope.character = Characters.get({ 
+			$scope.character = Characters.get({
 				characterId: $stateParams.characterId
 			});
 //            console.log($scope.character);
 		};
-        
+
         // Find a list of Animeitems
 		$scope.findAnime = function() {
             $scope.animeitems = Animeitems.query();
 		};
-        
+
         // Find existing Animeitem
 		$scope.findOneAnime = function(anime) {
             //console.log(anime);
-			$scope.animeitem = Animeitems.get({ 
+			$scope.animeitem = Animeitems.get({
 				animeitemId: anime
 			});
 		};
-        
+
         // Find a list of Mangaitems
 		$scope.findManga = function() {
 			$scope.mangaitems = Mangaitems.query();
 		};
-        
+
         // Find existing Animeitem
 		$scope.findOneManga = function(manga) {
-			$scope.mangaitem = Mangaitems.get({ 
+			$scope.mangaitem = Mangaitems.get({
 				mangaitemId: manga
 			});
 		};
-        
+
         //image upload
         $scope.uploadFile = function(){
             $scope.imgPath = '/modules/characters/img/' + $scope.myFile.name;

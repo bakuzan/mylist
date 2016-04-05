@@ -17,34 +17,34 @@
         <div class="col-lg-8 col-md-6 col-sm-6 item-list-container" loading-spinner name="characters" size="fullscreen">
             <div page-controls page-config="pageConfig" showing-count="filterConfig.showingCount" ng-hide="isList === 'slider'"></div>
             <div class="list-group col-lg-12 col-md-12 col-sm-12" data-ng-show="isList==='list'">
-                <div data-ng-repeat="character in characters | orderBy: filterConfig.sortType:filterConfig.sortReverse | filter: filterConfig.search | mediaFilter: filterConfig.media | seriesFilter: filterConfig.seriesFilter | tagFilter: filterConfig.searchTags:filterConfig.taglessItem | startFrom: pageConfig.currentPage*pageConfig.pageSize | limitTo: pageConfig.pageSize" character_Back="{{trustAsResourceUrl(character.image)}}" class="list-group-item" ng-class="viewItem===character ? 'col-lg-12 col-md-12 col-sm-12 character-expanded' : ' col-lg-6 col-md-6 col-sm-6 character-default'">
-            <div class="clickable view-item-top" ng-click="viewItem===character ? viewItem='' : viewItem=character">
-			 <h4 class="dark-bordered-font-heading" data-ng-bind="character.name"></h4>
-                <p class="list-group-item-text">
-                    <span class="dark-bordered-font" data-ng-bind="character.voice"></span>
-                </p>
-                <span class="dark-bordered-font" data-ng-show="character.manga!==undefined && character.manga!==null" data-ng-bind="character.manga.title"></span>
-                <span class="dark-bordered-font" data-ng-show="character.anime!==undefined && character.manga===null" data-ng-bind="character.anime.title"></span>
-            </div>
-            <div class="view-item-detail" ng-if="viewItem===character">
-            <p class="clickable" ng-init="showCharacterTags = false" ng-click="showCharacterTags=!showCharacterTags"><i class="fa" ng-class="showCharacterTags ? 'fa-minus-square' : 'fa-plus-square'"></i> View Tags</p>
-                <div class="col-lg-12 col-md-12 col-sm-12 item-tags" ng-show="showCharacterTags">
-                    <span class="col-md-2 tag-bubble" ng-repeat="tag in character.tags">{{tag.text}}</span>
+              <div data-ng-repeat="character in characters | orderBy: filterConfig.sortType:filterConfig.sortReverse | filter: filterConfig.search | mediaFilter: filterConfig.media | seriesFilter: filterConfig.seriesFilter | tagFilter: filterConfig.searchTags:filterConfig.taglessItem | startFrom: pageConfig.currentPage*pageConfig.pageSize | limitTo: pageConfig.pageSize" character-back="{{trustAsResourceUrl(character.image)}}" class="list-group-item" ng-class="viewItem===character ? 'col-lg-12 col-md-12 col-sm-12 character-expanded' : ' col-lg-6 col-md-6 col-sm-6 character-default'">
+                <div class="clickable view-item-top" ng-click="viewItem===character ? viewItem='' : viewItem=character">
+                  <h4 class="dark-bordered-font-heading" data-ng-bind="character.name"></h4>
+                    <p class="list-group-item-text">
+                      <span class="dark-bordered-font" data-ng-bind="character.voice"></span>
+                    </p>
+                    <span class="dark-bordered-font" data-ng-show="character.manga!==undefined && character.manga!==null" data-ng-bind="character.manga.title"></span>
+                    <span class="dark-bordered-font" data-ng-show="character.anime!==undefined && character.manga===null" data-ng-bind="character.anime.title"></span>
                 </div>
-                <div class="item-actions" data-ng-show="((authentication.user) && (authentication.user._id == character.user._id))">
-                    <a class="btn btn-accent" href="/#!/characters/{{character._id}}">
-                        <i class="fa fa-eye"></i>
-                    </a>
-                    <a class="btn btn-primary" href="/#!/characters/{{character._id}}/edit">
-                        <i class="glyphicon glyphicon-edit"></i>
-                    </a>
-                </div>
-            </div><!-- VIEW ITEM END-->
-        </div><!-- LIST ITEM END -->
+                <div class="view-item-detail" ng-if="viewItem===character">
+                  <p class="clickable" ng-init="showCharacterTags = false" ng-click="showCharacterTags=!showCharacterTags"><i class="fa" ng-class="showCharacterTags ? 'fa-minus-square' : 'fa-plus-square'"></i> View Tags</p>
+                  <div class="col-lg-12 col-md-12 col-sm-12 item-tags" ng-show="showCharacterTags">
+                      <span class="col-md-2 tag-bubble" ng-repeat="tag in character.tags">{{tag.text}}</span>
+                  </div>
+                  <div class="item-actions" data-ng-show="((authentication.user) && (authentication.user._id == character.user._id))">
+                      <a class="btn btn-accent" href="/#!/characters/{{character._id}}">
+                          <i class="fa fa-eye"></i>
+                      </a>
+                      <a class="btn btn-primary" href="/#!/characters/{{character._id}}/edit">
+                          <i class="glyphicon glyphicon-edit"></i>
+                      </a>
+                  </div>
+                </div><!-- VIEW ITEM END-->
+              </div><!-- LIST ITEM END -->
             </div><!-- LIST END -->
             <div class="slider-container col-lg-12 col-md-12 col-sm-12" data-ng-show="isList==='slider'">
                 <ul slider slides="characters" interval="1000"></ul>
             </div><!-- SLIDER END -->
-        </div>
+          </div>
     </div>
 </section>

@@ -4,10 +4,10 @@
 angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'MangaFactory', 'spinnerService',
 	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, MangaFactory, spinnerService) {
 		$scope.authentication = Authentication;
-        
+
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
-        
+
         $scope.whichController = 'mangaitem';
         //paging variables.
         $scope.pageConfig = {
@@ -29,9 +29,9 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             taglessItem: false,
             areTagless: false,
             selectListOptions: ListService.getSelectListOptions($scope.whichController),
-            statTags: ItemService.buildStatTags($scope.animeitems, 0)
+            statTags: []
         };
-        
+
         /** today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
          *      AND chapter/volume/start/latest auto-pop in create.
          */
@@ -57,7 +57,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             $scope.tagArray = ListService.addTag($scope.tagArray, $scope.newTag);
             $scope.newTag = '';
         };
-        
+
         $scope.$watchCollection('mangaitems', function() {
             if ($scope.mangaitems!==undefined) {
 //                console.log($scope.mangaitems);
@@ -65,10 +65,10 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                 $scope.filterConfig.statTags = ItemService.buildStatTags($scope.mangaitems, 0);
             }
         });
-        
+
         // Create new Mangaitem
 		$scope.create = function() {
-            
+
             var mangaitem = new Mangaitems();
             //Handle situation if objects not selected.
                 // Create new Mangaitem object
@@ -108,7 +108,7 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		$scope.remove = function(mangaitem) {
             //are you sure option...
             NotificationFactory.confirmation(function() {
-                if ( mangaitem ) { 
+                if ( mangaitem ) {
                     mangaitem.$remove();
 
                     for (var i in $scope.mangaitems) {
@@ -153,23 +153,23 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                 //            console.log($scope.mangaitem);
             });
 		};
-        
+
         // Find a list of Animeitems for dropdowns.
 		$scope.findAnime = function() {
 			$scope.animeitems = Animeitems.query();
 		};
-        
+
         //image upload
         $scope.uploadFile = function(){
             $scope.imgPath = '/modules/mangaitems/img/' + $scope.myFile.name;
             fileUpload.uploadFileToUrl($scope.myFile, '/fileUpload');
         };
-        
+
         //latest date display format.
         $scope.latestDate = function(latest, updated) {
             return ItemService.latestDate(latest, updated);
         };
-        
+
         $scope.deleteHistory = function(item, history) {
             //are you sure option...
            NotificationFactory.confirmation(function() {

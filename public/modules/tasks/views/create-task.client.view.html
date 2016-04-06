@@ -5,7 +5,7 @@
         <form name="scheduleForm" reset-form="newTask" class="form-horizontal" novalidate>
             <fieldset>
                 <div steps step-config="stepConfig">
-                    <div step>
+                    <div one-step>
                         <div class="form-group">
                             <label for="description" class="col-lg-3 col-md-3 col-sm-3 control-label">Description</label>
                             <div class="col-lg-8 col-md-8 col-sm-8">
@@ -44,7 +44,7 @@
                             </div>
                         </div>
                     </div>
-                    <div step>
+                    <div one-step>
                         <div ng-show="newTask.link.linked">
                             <div class="form-group">
                                 <label for="link.id" class="col-lg-3 col-md-3 col-sm-3 control-label">Link to</label>
@@ -100,13 +100,13 @@
                     </div>
                 </div>
                 <div step-controls style="bottom: 10px">
-                    <button class="btn btn-primary width-50" 
+                    <button class="btn btn-primary width-50"
                             ng-click="cancel()" ng-show="stepConfig.currentStep === 1">CANCEL</button>
-                    <button class="btn btn-primary width-50" 
+                    <button class="btn btn-primary width-50"
                             ng-click="backStep(stepConfig.currentStep)" ng-show="stepConfig.currentStep === 2">BACK</button>
-                    <button class="btn btn-primary width-50" 
+                    <button class="btn btn-primary width-50"
                             ng-click="takeStep(stepConfig.currentStep)" ng-show="stepConfig.currentStep === 1">NEXT</button>
-                    <button class="btn btn-primary width-50" 
+                    <button class="btn btn-primary width-50"
                             ng-click="create(); cancel();" ng-show="stepConfig.currentStep === 2"
                             ng-disabled="scheduleForm.$invalid">CREATE</button>
                 </div>

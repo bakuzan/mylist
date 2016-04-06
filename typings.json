@@ -1,0 +1,7 @@
+{
+  "ambientDependencies": {
+    "angular": "registry:dt/angular#1.5.0+20160318102130",
+    "mongoose": "registry:dt/mongoose#3.8.5+20160316155526",
+    "promise": "registry:dt/promise#7.1.1+20160316171810"
+  }
+}

@@ -1,0 +1,88 @@
+<section data-ng-controller="CreateOrdersController as ctrl">
+    <div class="page-header">
+        <h1>{{ctrl.isCreateMode ? 'Create' : 'Edit'}} Order - {{ctrl.stepConfig.stepHeaders[ctrl.stepConfig.currentStep-1].text}}</h1>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <form class="form-horizontal" name="orderForm" novalidate>
+            <fieldset>
+              <div steps step-config="ctrl.stepConfig">
+                <div one-step>
+                  <div class="form-group">
+                    <label for="series" class="col-lg-3 col-md-3 col-sm-3 control-label">Select series</label>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                      <input type="text" id="series" class="form-control" ng-model="ctrl.order.series"
+                             uib-typeahead="item as item.title for item in ctrl.stepConfig.items | toptenFilter:'title':$viewValue | limitTo: 5"
+                             typeahead-on-select="ctrl.order.nextVolume.volume = ctrl.order.series.volumes + 1" ng-disabled="!ctrl.isCreateMode">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="nextVolume" class="col-lg-3 col-md-3 col-sm-3 control-label">Next volume</label>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                      <input type="number" id="nextVolume" class="form-control" min="1" ng-model="ctrl.order.nextVolume.volume" />
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                      <button class="btn btn-primary" ng-click="ctrl.openBoughtDialog()">Bought</button>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="date" class="col-lg-3 col-md-3 col-sm-3 control-label">Release date</label>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                      <input type="date" id="date" class="form-control" ng-model="ctrl.order.nextVolume.date" format-date />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="rrp" class="col-lg-3 col-md-3 col-sm-3 control-label">RRP</label>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                      <input type="number" id="rrp" class="form-control" ng-model="ctrl.order.rrp" min="0" step="0.01" />
+                    </div>
+                  </div>
+
+                </div>
+                <div one-step>
+                  <div class="form-group">
+                    <label for="company" class="col-lg-3 col-md-3 col-sm-3 control-label">Company</label>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                      <input type="text" id="company" class="form-control" ng-model="ctrl.newPrice.company" />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="price" class="col-lg-3 col-md-3 col-sm-3 control-label">Price</label>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                      <input type="number" id="price" class="form-control" ng-model="ctrl.newPrice.price" min="0" step="0.01" />
+                    </div>
+                    <button class="btn btn-primary col-lg-2 col-md-2 col-sm-2" ng-click="ctrl.order.nextVolume.prices.push(ctrl.newPrice); ctrl.newPrice = null">Add price</button>
+                  </div>
+                  <div ng-hide="true">
+                    <input type="checkbox" ng-model="ctrl.newPrice.paid" />
+                  </div>
+                  <div class="form-group height-100">
+                      <label for="list" class="col-lg-3 col-md-3 col-sm-3 control-label">List</label>
+                      <div class="col-lg-6 col-md-6 col-sm-6 height-90 overflow-auto-hover">
+                          <div ng-repeat="item in ctrl.order.nextVolume.prices">
+                              <span>{{item.company}}</span> - <span>£{{item.price}}</span>
+                              <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="ctrl.order.nextVolume.prices.splice($index, 1)">
+                                  <i class="fa fa-trash-o"></i>
+                              </a>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+              <div step-controls>
+                  <button class="btn btn-primary width-50"
+                          ng-click="ctrl.cancel()" ng-show="ctrl.stepConfig.currentStep === 1">CANCEL</button>
+                  <button class="btn btn-primary width-50"
+                          ng-click="ctrl.takeStep(ctrl.stepConfig.currentStep, false)" ng-show="ctrl.stepConfig.currentStep !== 1">BACK</button>
+                  <button class="btn btn-primary width-50"
+                          ng-click="ctrl.takeStep(ctrl.stepConfig.currentStep, true)" ng-show="ctrl.stepConfig.currentStep !== ctrl.stepConfig.stepCount">NEXT</button>
+                  <button class="btn btn-primary width-50"
+                          ng-click="(ctrl.isCreateMode) ? ctrl.create() : ctrl.update()" ng-show="ctrl.stepConfig.currentStep === ctrl.stepConfig.stepCount"
+                          ng-disabled="orderForm.$invalid">SAVE</button>
+              </div>
+      				<div data-ng-show="error" class="text-danger">
+      					<strong data-ng-bind="error"></strong>
+      				</div>
+            </fieldset>
+        </form>
+    </div>
+</section>

@@ -15,14 +15,14 @@ angular.module('toptens')
         controller: function($scope) {
             var self = this;
             self.steps = [];
-            
+
             self.register = function(step) {
                 self.steps.push(step);
                 if(step.stepNumber === 1) {
                     step.active = true;
                 }
             };
-            
+
             $scope.$watch('stepConfig.currentStep', function(newValue) {
                 if (newValue !== undefined) {
                     angular.forEach(self.steps, function(step) {
@@ -34,11 +34,11 @@ angular.module('toptens')
                     });
                 }
             });
-            
+
         }
     };
 })
-.directive('step', function() {
+.directive('oneStep', function() {
   return {
       restrict: 'A',
       replace: true,
@@ -50,7 +50,7 @@ angular.module('toptens')
           scope.active = false;
           scope.stepNumber = elm.index() + 1;
           stepsController.register(scope);
-      }  
+      }
   };
 })
 .directive('stepControls', function() {
@@ -67,7 +67,7 @@ angular.module('toptens')
         restrict: 'A',
         scope: {},
         link: function(scope, element, attrs) {
-            
+
             window.addEventListener('scroll', function (evt) {
                 var stickyClass = 'sticky-scroll-top', stickyInnerClass = 'sticky-inner-container',
                     scrollTop = document.body.scrollTop,
@@ -90,7 +90,7 @@ angular.module('toptens')
                     inner.classList.remove(stickyInnerClass);
                 }
           });
-            
+
         }
     };
 })
@@ -115,7 +115,7 @@ angular.module('toptens')
                     item.isVisible = true;
                 }
             };
-            
+
             function setVisibility() {
                 var values = [],
                     check = self.clicks * 3;
@@ -126,7 +126,7 @@ angular.module('toptens')
                     item.isVisible = (values.indexOf(item.position) > -1);
                 });
             }
-            
+
             self.moveItems = function(direction) {
                 if(direction === 'left') {
                     if((self.clicks - 1) < 0) {
@@ -142,7 +142,7 @@ angular.module('toptens')
                     setVisibility();
                 }
             };
-            
+
         },
         link: function(scope, element, attr, ctrl) {
             var el = element[0],
@@ -152,7 +152,7 @@ angular.module('toptens')
                 style: child.style,
                 value: 0
             };
-            
+
             function listSettings() {
                 ctrl.shift = -el.offsetWidth;
                 ctrl.itemWidth = el.offsetWidth / 3;
@@ -161,14 +161,14 @@ angular.module('toptens')
                 });
             }
             listSettings();
-            
+
             window.addEventListener('resize', function(e) {
                 if(el.offsetWidth !== Math.abs(ctrl.shift)) {
                     listSettings();
                     scope.$apply();
                 }
             });
-            
+
         }
     };
 })
@@ -225,11 +225,11 @@ angular.module('toptens')
             scope.$watch(attr.ngMax, function(){
                 if (ctrl.$isDirty) ctrl.$setViewValue(ctrl.$viewValue);
             });
-            
+
             var isEmpty = function (value) {
                return angular.isUndefined(value) || value === '' || value === null;
             };
-            
+
             var maxValidator = function(value) {
               var max = scope.$eval(attr.ngMax) || Infinity;
               if (!isEmpty(value) && value > max) {

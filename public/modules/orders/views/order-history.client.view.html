@@ -1,0 +1,15 @@
+<div class="primary-background padding-10 overflow-hidden" style="height: 40vh">
+  <a class="close-button mt" ng-click="modal.cancel()"><i class="fa fa-times"></i></a>
+  <div tab-container class="width-95 height-100">
+    <div tab-view heading="order history" class="height-90 margin-5">
+      <div class="list-group col-lg-12 col-md-12 col-sm-12 height-90 overflow-auto-hover">
+        <div ng-repeat="item in modal.order.orderHistory | orderBy: '-volume'" class="padding-5 margin-bottom-5">
+          Volume: <span ng-bind="item.volume"></span><br/>
+          Bought on: <span ng-bind="item.purchaseDate | date: 'dd MMM yy'"></span><br/>
+          Paid: <span ng-bind="'£' + item.paid"></span><br/>
+          Cost: <span ng-bind="item.saving + '%'" hover-data="RRP: £{{item.rrpInstance}}"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

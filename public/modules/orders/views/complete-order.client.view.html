@@ -1,4 +1,4 @@
-<div class="primary-background padding-10 overflow-hidden" style="height: 40vh">
+<div class="primary-background padding-10 overflow-hidden" style="height: 50vh">
   <a class="close-button mt" ng-click="modal.cancel()"><i class="fa fa-times"></i></a>
   <div tab-container class="width-95 height-100">
     <div tab-view heading="order details" class="height-90 margin-5">
@@ -24,6 +24,12 @@
             <label for="price" class="col-lg-3 col-md-3 col-sm-3 control-label">Price</label>
             <div class="col-lg-6 col-md-6 col-sm-6">
               <input type="number" id="price" class="form-control" ng-model="modal.newPrice.price" min="0" step="0.01" required="" />
+            </div>
+          </div>
+          <div class="form-group col-lg-12 col-md-12 col-sm-12">
+            <label for="date" class="col-lg-3 col-md-3 col-sm-3 control-label">Date</label>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <input type="date" id="date" class="form-control" ng-model="modal.newPrice.date" format-date required="" />
             </div>
           </div>
           <div class="relative col-lg-12 col-md-12 col-sm-12">

@@ -1,9 +1,11 @@
 'use strict';
 
+import Order = require('../../../../app/models/order.server.model'); //Find out how to use this properly.
+
 interface ICreateOrdersController {
 	isCreateMode: boolean;
-	order: OrderSchema;
-	orderCopy: OrderSchema;
+	order: Order.IOrder;
+	orderCopy: Order.IOrder;
 	stepConfig: any;
 	authentication: any;
 	create: () => void;
@@ -18,8 +20,8 @@ interface ICreateOrdersController {
 class CreateOrdersController implements ICreateOrdersController {
 	static controllerId = 'CreateOrdersController';
 	isCreateMode: boolean = this.$stateParams.orderId === undefined;
-	order: OrderSchema = {};
-	orderCopy: OrderSchema = {
+	order: any = {};
+	orderCopy: any = {
 		series: '',
 		nextVolume: {
 			volume: 1,
@@ -73,6 +75,7 @@ class CreateOrdersController implements ICreateOrdersController {
 			this.order.orderHistory.push(this.order.nextVolume);
 			this.order.nextVolume = {
 				volume: temp.volume + 1,
+				date: null,
 				rrp: this.order.rrp,
 				prices: []
 			};
@@ -90,6 +93,7 @@ class CreateOrdersController implements ICreateOrdersController {
 			var order = new this.Orders ({
         series: this.order.series._id,
         nextVolume: {
+					date:  this.order.nextVolume.date,
           volume: this.order.nextVolume.volume,
           rrp: this.order.nextVolume.rrp,
           prices: this.order.nextVolume.prices

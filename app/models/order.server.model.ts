@@ -4,25 +4,27 @@
  * Module dependencies.
  */
 import * as mongoose from 'mongoose';
-const Schema: any = mongoose.Schema;
+let Schema: any = mongoose.Schema;
 
-export interface IOrder extends mongoose.Document {
+export interface IOrder {
 	series: Schema.ObjectId;
 	nextVolume: {
 		volume: Number;
 		date: Date;
 		rrp: Number;
-		prices: Array<Object>;
+		prices: Array<any>;
 	};
 	rrp: Number;
-	orderHistory: Array<Object>;
+	orderHistory: Array<any>;
 	meta: {
 		 updated: Date;
 		 created: Date;
-		 history: Array<Object>;
+		 history: Array<any>;
 	};
 	user: Schema.ObjectId;
 }
+
+export interface IOrderModel extends IOrder, mongoose.Document {}
 
 export const OrderSchema = new Schema({
 	/** Order Schema */
@@ -74,4 +76,4 @@ export const OrderSchema = new Schema({
 		}
 });
 
-export const Order = mongoose.model<IOrder>('Order', OrderSchema);
+export const Order = mongoose.model<IOrderModel>('Order', OrderSchema);

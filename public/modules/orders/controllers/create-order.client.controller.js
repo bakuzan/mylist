@@ -61,6 +61,7 @@ var CreateOrdersController = (function () {
             this.order.orderHistory.push(this.order.nextVolume);
             this.order.nextVolume = {
                 volume: temp.volume + 1,
+                date: null,
                 rrp: this.order.rrp,
                 prices: []
             };
@@ -75,6 +76,7 @@ var CreateOrdersController = (function () {
         var order = new this.Orders({
             series: this.order.series._id,
             nextVolume: {
+                date: this.order.nextVolume.date,
                 volume: this.order.nextVolume.volume,
                 rrp: this.order.nextVolume.rrp,
                 prices: this.order.nextVolume.prices

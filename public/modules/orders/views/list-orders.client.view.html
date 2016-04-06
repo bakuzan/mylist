@@ -21,7 +21,7 @@
         <div class="col-lg-8 col-md-6 col-sm-6 item-list-container" loading-spinner name="orders" size="fullscreen">
             <div page-controls page-config="ctrl.pageConfig" showing-count="showingCount"></div>
             <div class="list-group col-lg-12 col-md-12 col-sm-12">
-              <div data-ng-repeat="item in ctrl.orders | filter: search | startFrom: ctrl.pageConfig.currentPage*ctrl.pageConfig.pageSize | limitTo: ctrl.pageConfig.pageSize" class="list-group-item col-lg-12 col-md-12 col-sm-12">
+              <div data-ng-repeat="item in ctrl.orders | orderBy: 'nextVolume.date' | filter: search | startFrom: ctrl.pageConfig.currentPage*ctrl.pageConfig.pageSize | limitTo: ctrl.pageConfig.pageSize" class="list-group-item col-lg-12 col-md-12 col-sm-12">
                 <div class="view-item-top">
                     <h4 class="list-group-item-heading clickable" ng-click="(viewItem === item) ? viewItem='' : viewItem=item" data-ng-bind="item.series.title"></h4>
                     <p class="list-group-item-text">

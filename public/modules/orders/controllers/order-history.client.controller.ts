@@ -1,7 +1,6 @@
 'use strict';
 
 interface IOrderHistoryController {
-	amountPaid: (prices: Array<any>) => void;
 	cancel: () => void;
 }
 // Order history controller
@@ -11,15 +10,22 @@ class OrderHistoryController implements IOrderHistoryController {
   static $inject = ['$scope','$uibModalInstance','order', '$filter'];
 
   constructor(private $scope, private $uibModalInstance, private order, private $filter) {
+		this.processHistory();
   }
 
-	amountPaid(prices: Array<any>): void {
-		angular.forEach(prices, (price) => {
-			console.log(price, price.paid);
-			if(price.paid) {
-				var cost = this.$filter('number')(price.price, 2);
-				cost = this.$filter('currency')(price.price, '£');
-				return cost;
+	processHistory(): void {
+		angular.forEach(this.order.orderHistory, (item) => {
+			console.log('order history: ', item);
+			var len = item.prices.length;
+			for(var i = 0; i < len; i++) {
+				if(item.prices[i].paid) {
+					var cost = this.$filter('number')(item.prices[i].price, 2),
+							rrp = this.$filter('number')(item.prices[i].rrp, 2);
+					item.purchaseDate = item.prices[i].date;
+					item.paid = cost;
+					item.rrpInstance = rrp;
+					item.saving = ((cost / rrp) * 100).toFixed(2);
+				}
 			}
 		});
 	}

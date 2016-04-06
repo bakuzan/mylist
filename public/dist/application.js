@@ -67,6 +67,10 @@ ApplicationConfiguration.registerModule('history');
 ApplicationConfiguration.registerModule('mangaitems');
 'use strict';
 
+// Use applicaion configuration module to register a new module
+ApplicationConfiguration.registerModule('orders');
+'use strict';
+
 // Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('ratings');
 'use strict';
@@ -3664,6 +3668,333 @@ angular.module('mangaitems').factory('Mangaitems', ['$resource',
 }]);
 'use strict';
 
+// Configuring the Articles module
+angular.module('orders').run(['Menus',
+	function(Menus) {
+		// Set top bar menu items
+		Menus.addMenuItem('topbar', 'Orders', 'orders', 'dropdown', '/orders(/create)?');
+		Menus.addSubMenuItem('topbar', 'orders', 'List Orders', 'orders');
+		Menus.addSubMenuItem('topbar', 'orders', 'New Order', 'orders/create');
+	}
+]);
+'use strict';
+
+//Setting up route
+angular.module('orders').config(['$stateProvider',
+	function($stateProvider) {
+		// Orders state routing
+		$stateProvider.
+		state('listOrders', {
+			url: '/orders',
+			templateUrl: 'modules/orders/views/list-orders.client.view.html'
+		}).
+		state('createOrder', {
+			url: '/orders/create',
+			templateUrl: 'modules/orders/views/create-order.client.view.html'
+		}).
+		state('viewOrder', {
+			url: '/orders/:orderId',
+			templateUrl: 'modules/orders/views/view-order.client.view.html'
+		}).
+		state('editOrder', {
+			url: '/orders/:orderId/edit',
+			templateUrl: 'modules/orders/views/create-order.client.view.html'
+		});
+	}
+]);
+
+'use strict';
+var CompleteOrdersController = (function () {
+    function CompleteOrdersController($scope, $uibModalInstance, order) {
+        this.$scope = $scope;
+        this.$uibModalInstance = $uibModalInstance;
+        this.order = order;
+        this.newPrice = {
+            company: '',
+            price: null
+        };
+    }
+    CompleteOrdersController.prototype.editOrder = function (index) {
+        var item = this.order.nextVolume.prices[index];
+        this.newPrice.company = item.company;
+        this.newPrice.price = item.price;
+        this.order.nextVolume.prices.splice(index, 1);
+    };
+    CompleteOrdersController.prototype.completeOrder = function () {
+        this.order.nextVolume.prices.push({ company: this.newPrice.company, date: this.newPrice.date, price: this.newPrice.price, rrp: this.order.rrp, paid: true });
+        this.$uibModalInstance.close(this.order);
+    };
+    CompleteOrdersController.prototype.cancel = function () {
+        this.$uibModalInstance.dismiss('cancel');
+    };
+    CompleteOrdersController.controllerId = 'CompleteOrdersController';
+    CompleteOrdersController.$inject = ['$scope', '$uibModalInstance', 'order'];
+    return CompleteOrdersController;
+}());
+angular.module('orders').controller(CompleteOrdersController.controllerId, CompleteOrdersController);
+
+'use strict';
+var CreateOrdersController = (function () {
+    function CreateOrdersController($scope, $stateParams, $location, Authentication, $q, Orders, Mangaitems, $uibModal, NotificationFactory) {
+        this.$scope = $scope;
+        this.$stateParams = $stateParams;
+        this.$location = $location;
+        this.Authentication = Authentication;
+        this.$q = $q;
+        this.Orders = Orders;
+        this.Mangaitems = Mangaitems;
+        this.$uibModal = $uibModal;
+        this.NotificationFactory = NotificationFactory;
+        this.isCreateMode = this.$stateParams.orderId === undefined;
+        this.order = {};
+        this.orderCopy = {
+            series: '',
+            nextVolume: {
+                volume: 1,
+                date: Date.now(),
+                rrp: 0.00,
+                prices: []
+            },
+            rrp: 0.00,
+            orderHistory: []
+        };
+        this.authentication = this.Authentication;
+        this.stepConfig = {
+            stepHeaders: [
+                { text: 'Set next order' },
+                { text: 'Set prices' }
+            ],
+            currentStep: 1,
+            stepCount: 2,
+            items: []
+        };
+        this.init();
+    }
+    CreateOrdersController.prototype.init = function () {
+        var _this = this;
+        angular.copy(this.orderCopy, this.order);
+        if (this.isCreateMode) {
+            console.log('create mode');
+            this.Mangaitems.query().$promise.then(function (result) {
+                _this.stepConfig.items = result;
+                console.log('items: ', result);
+            });
+        }
+        else {
+            console.log('edit mode');
+            this.findOne();
+        }
+        console.log('init done: ');
+    };
+    CreateOrdersController.prototype.takeStep = function (step, direction) {
+        console.log('stepping: ', step, direction);
+        this.stepConfig.currentStep = (direction) ? step + 1 : step - 1;
+    };
+    CreateOrdersController.prototype.processOrder = function () {
+        if (this.order.nextVolume.volume > 0) {
+            var temp = angular.copy(this.order.nextVolume);
+            this.order.orderHistory.push(this.order.nextVolume);
+            this.order.nextVolume = {
+                volume: temp.volume + 1,
+                date: null,
+                rrp: this.order.rrp,
+                prices: []
+            };
+            this.update();
+        }
+    };
+    CreateOrdersController.prototype.cancel = function () {
+        this.$location.path('orders');
+    };
+    CreateOrdersController.prototype.create = function () {
+        var _this = this;
+        var order = new this.Orders({
+            series: this.order.series._id,
+            nextVolume: {
+                date: this.order.nextVolume.date,
+                volume: this.order.nextVolume.volume,
+                rrp: this.order.nextVolume.rrp,
+                prices: this.order.nextVolume.prices
+            },
+            rrp: this.order.rrp,
+            orderHistory: this.order.orderHistory
+        });
+        order.$save(function (response) {
+            _this.$location.path('orders/' + response._id);
+            _this.NotificationFactory.success('Saved!', 'New Order was successfully saved!');
+            angular.copy(_this.orderCopy, _this.order);
+        }, function (errorResponse) {
+            this.error = errorResponse.data.message;
+            this.NotificationFactory.error('Error!', 'Order failed to save!');
+        });
+    };
+    CreateOrdersController.prototype.update = function () {
+        var _this = this;
+        var order = this.order;
+        order.$update(function () {
+            _this.$location.path('orders/' + order._id);
+            _this.NotificationFactory.success('Saved!', 'Order was successfully saved!');
+        }, function (errorResponse) {
+            this.error = errorResponse.data.message;
+            this.NotificationFactory.error('Error!', 'Order failed to save!');
+        });
+    };
+    CreateOrdersController.prototype.openBoughtDialog = function () {
+        var _this = this;
+        var modalInstance = this.$uibModal.open({
+            animation: true,
+            templateUrl: '/modules/orders/views/complete-order.client.view.html',
+            controller: 'CompleteOrdersController as modal',
+            size: 'md',
+            resolve: {
+                order: function () {
+                    return _this.order;
+                }
+            }
+        });
+        modalInstance.result.then(function (result) {
+            console.log(result);
+            _this.order = result;
+            _this.processOrder();
+        });
+    };
+    CreateOrdersController.prototype.findOne = function () {
+        this.order = this.Orders.get({ orderId: this.$stateParams.orderId });
+        console.log('found one: ', this.order);
+    };
+    CreateOrdersController.controllerId = 'CreateOrdersController';
+    CreateOrdersController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', '$q', 'Orders', 'Mangaitems', '$uibModal', 'NotificationFactory'];
+    return CreateOrdersController;
+}());
+angular.module('orders').controller(CreateOrdersController.controllerId, CreateOrdersController);
+
+'use strict';
+var OrderHistoryController = (function () {
+    function OrderHistoryController($scope, $uibModalInstance, order, $filter) {
+        this.$scope = $scope;
+        this.$uibModalInstance = $uibModalInstance;
+        this.order = order;
+        this.$filter = $filter;
+        this.processHistory();
+    }
+    OrderHistoryController.prototype.processHistory = function () {
+        var _this = this;
+        angular.forEach(this.order.orderHistory, function (item) {
+            console.log('order history: ', item);
+            var len = item.prices.length;
+            for (var i = 0; i < len; i++) {
+                if (item.prices[i].paid) {
+                    var cost = _this.$filter('number')(item.prices[i].price, 2), rrp = _this.$filter('number')(item.prices[i].rrp, 2);
+                    item.purchaseDate = item.prices[i].date;
+                    item.paid = cost;
+                    item.rrpInstance = rrp;
+                    item.saving = ((cost / rrp) * 100).toFixed(2);
+                }
+            }
+        });
+    };
+    OrderHistoryController.prototype.cancel = function () {
+        this.$uibModalInstance.dismiss('cancel');
+    };
+    OrderHistoryController.controllerId = 'OrderHistoryController';
+    OrderHistoryController.$inject = ['$scope', '$uibModalInstance', 'order', '$filter'];
+    return OrderHistoryController;
+}());
+angular.module('orders').controller(OrderHistoryController.controllerId, OrderHistoryController);
+
+'use strict';
+var OrdersController = (function () {
+    function OrdersController($scope, $stateParams, $location, Authentication, Orders, spinnerService, $uibModal) {
+        this.$scope = $scope;
+        this.$stateParams = $stateParams;
+        this.$location = $location;
+        this.Authentication = Authentication;
+        this.Orders = Orders;
+        this.spinnerService = spinnerService;
+        this.$uibModal = $uibModal;
+        this.authentication = this.Authentication;
+        this.order = undefined;
+        this.orders = [];
+        this.pageConfig = {
+            currentPage: 0,
+            pageSize: 10
+        };
+        this.init();
+    }
+    OrdersController.prototype.init = function () {
+        console.log('init: ', this.$stateParams);
+        if (this.$stateParams.orderId) {
+            console.log('find one');
+            this.findOne();
+        }
+        else {
+            console.log('find all');
+            this.find();
+        }
+    };
+    OrdersController.prototype.remove = function (order) {
+        if (order) {
+            order.$remove();
+            for (var i = 0, length = this.order.length; i < length; i++) {
+                if (this.orders[i] === order) {
+                    this.orders.splice(i, 1);
+                    return;
+                }
+            }
+        }
+        else {
+            this.order.$remove(function () {
+                this.$location.path('orders');
+            });
+        }
+    };
+    OrdersController.prototype.find = function () {
+        var _this = this;
+        this.spinnerService.loading('orders', this.Orders.query().$promise.then(function (result) {
+            _this.orders = result;
+        }));
+    };
+    OrdersController.prototype.findOne = function () {
+        var _this = this;
+        this.spinnerService.loading('orders', this.Orders.get({ orderId: this.$stateParams.orderId }).$promise.then(function (result) {
+            _this.order = result;
+        }));
+    };
+    OrdersController.prototype.openOrderHistoryDialog = function () {
+        var _this = this;
+        var modalInstance = this.$uibModal.open({
+            animation: true,
+            templateUrl: '/modules/orders/views/order-history.client.view.html',
+            controller: 'OrderHistoryController as modal',
+            size: 'md',
+            resolve: {
+                order: function () {
+                    return _this.order;
+                }
+            }
+        });
+    };
+    OrdersController.controllerId = 'OrdersController';
+    OrdersController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'spinnerService', '$uibModal'];
+    return OrdersController;
+}());
+angular.module('orders').controller(OrdersController.controllerId, OrdersController);
+
+'use strict';
+
+//Orders service used to communicate Orders REST endpoints
+angular.module('orders').factory('Orders', ['$resource',
+	function($resource) {
+		return $resource('orders/:orderId', { orderId: '@_id'
+		}, {
+			update: {
+				method: 'PUT'
+			}
+		});
+	}
+]);
+'use strict';
+
 // Setting up route
 angular.module('ratings').config(['$stateProvider', '$urlRouterProvider',
 	function($stateProvider, $urlRouterProvider) {
@@ -5223,14 +5554,14 @@ angular.module('toptens')
         controller: function($scope) {
             var self = this;
             self.steps = [];
-            
+
             self.register = function(step) {
                 self.steps.push(step);
                 if(step.stepNumber === 1) {
                     step.active = true;
                 }
             };
-            
+
             $scope.$watch('stepConfig.currentStep', function(newValue) {
                 if (newValue !== undefined) {
                     angular.forEach(self.steps, function(step) {
@@ -5242,11 +5573,11 @@ angular.module('toptens')
                     });
                 }
             });
-            
+
         }
     };
 })
-.directive('step', function() {
+.directive('oneStep', function() {
   return {
       restrict: 'A',
       replace: true,
@@ -5258,7 +5589,7 @@ angular.module('toptens')
           scope.active = false;
           scope.stepNumber = elm.index() + 1;
           stepsController.register(scope);
-      }  
+      }
   };
 })
 .directive('stepControls', function() {
@@ -5275,7 +5606,7 @@ angular.module('toptens')
         restrict: 'A',
         scope: {},
         link: function(scope, element, attrs) {
-            
+
             window.addEventListener('scroll', function (evt) {
                 var stickyClass = 'sticky-scroll-top', stickyInnerClass = 'sticky-inner-container',
                     scrollTop = document.body.scrollTop,
@@ -5298,7 +5629,7 @@ angular.module('toptens')
                     inner.classList.remove(stickyInnerClass);
                 }
           });
-            
+
         }
     };
 })
@@ -5323,7 +5654,7 @@ angular.module('toptens')
                     item.isVisible = true;
                 }
             };
-            
+
             function setVisibility() {
                 var values = [],
                     check = self.clicks * 3;
@@ -5334,7 +5665,7 @@ angular.module('toptens')
                     item.isVisible = (values.indexOf(item.position) > -1);
                 });
             }
-            
+
             self.moveItems = function(direction) {
                 if(direction === 'left') {
                     if((self.clicks - 1) < 0) {
@@ -5350,7 +5681,7 @@ angular.module('toptens')
                     setVisibility();
                 }
             };
-            
+
         },
         link: function(scope, element, attr, ctrl) {
             var el = element[0],
@@ -5360,7 +5691,7 @@ angular.module('toptens')
                 style: child.style,
                 value: 0
             };
-            
+
             function listSettings() {
                 ctrl.shift = -el.offsetWidth;
                 ctrl.itemWidth = el.offsetWidth / 3;
@@ -5369,14 +5700,14 @@ angular.module('toptens')
                 });
             }
             listSettings();
-            
+
             window.addEventListener('resize', function(e) {
                 if(el.offsetWidth !== Math.abs(ctrl.shift)) {
                     listSettings();
                     scope.$apply();
                 }
             });
-            
+
         }
     };
 })
@@ -5396,6 +5727,7 @@ angular.module('toptens')
         }
     };
 });
+
 'use strict';
 
 angular.module('toptens')

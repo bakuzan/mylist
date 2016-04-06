@@ -37,6 +37,14 @@ a:hover {
     @extend a:focus;
 }
 
+header {
+	div.container {
+		@media (min-width: $break-small) {
+			padding: 0;
+		}
+	}
+}
+
 .navbar-inverse {
     background-image: none;
     background-color: $brand-primary;
@@ -158,7 +166,7 @@ nav {
             @media (max-width: $break-medium) {
                 display: none;
             }
-       
+
             .navbar-link {
                 color: $brand-accent;
                 padding: 15px 15px;
@@ -170,7 +178,7 @@ nav {
             .navbar-link:focus {
                 color: $brand-accent-alter;
                 text-decoration: none;
-            }   
+            }
             .navbar-link:hover  {
                 @extend .navbar-link:focus;
             }
@@ -188,7 +196,7 @@ nav {
                 }
                 .navbar-link:focus {
                     @extend .navbar-link;
-                }   
+                }
                 .navbar-link:hover  {
                     @extend .navbar-link;
                 }
@@ -196,7 +204,7 @@ nav {
      }
      .additional-navbar-links-dropdown {
             display: none;
-            
+
             @media (max-width: $break-medium) {
                     display: block;
             }
@@ -219,7 +227,7 @@ nav {
 .accent-alter-text {
     color: $brand-accent-alter;
 }
-    
+
 
 /**
  *  Task List CSS
@@ -232,7 +240,7 @@ nav {
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
-    color: #777; 
+    color: #777;
 }
 
 /* inputs */
@@ -281,7 +289,7 @@ nav {
 .taskList {
     list-style: none;
     padding: 0 20px;
-    
+
     .taskItem:last-child {
         border-bottom: none;
     }
@@ -461,7 +469,7 @@ nav {
   left: 20vw;
   width: 65vw;
   height: auto;
-  margin-top: 10px; 
+  margin-top: 10px;
   background-color: $brand-primary;
   align-content: center;
   z-index: 1000;

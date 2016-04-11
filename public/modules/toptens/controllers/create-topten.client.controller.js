@@ -150,20 +150,21 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
                     break;
 
                 case 2:
+										var i = 0, j = 0, length;
                     angular.copy($scope.stepConfig.listGen.items, $scope.stepConfig.listGen.itemsCached);
                     // console.log('pre conditions: ', $scope.stepConfig.listGen.items.length, $scope.stepConfig.listGen.itemsCached.length);
                     if($scope.topten.conditions.series.length > 0) {
-                        var i = $scope.stepConfig.listGen.items.length;
+                        i = $scope.stepConfig.listGen.items.length;
                         while(i--) {
                             var remove = true,
-																length = $scope.topten.conditions.series.length,
 																attr = ($scope.stepConfig.listGen.items[i].anime !== null) ? 'anime' :
 																			 ($scope.stepConfig.listGen.items[i].anime !== null) ? 'manga' :
 																			 																											 null;
+														length = $scope.topten.conditions.series.length;
 													//  console.log('tag while: ', i, length, attr);
                             if(attr !== null) {
 															// console.log('tag item: ', $scope.stepConfig.listGen.items[i]);
-															for(var j = 0; j < length; j++) {
+															for(j = 0; j < length; j++) {
 																var series = $scope.topten.conditions.series[j];
 																// console.log($scope.stepConfig.listGen.items[i][attr].title, series.name, $scope.stepConfig.listGen.items[i][attr].title.indexOf(series.name));
                                 if($scope.stepConfig.listGen.items[i][attr].title.indexOf(series.name) > -1) {
@@ -182,14 +183,14 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
                     }
 
                     if($scope.topten.conditions.tags.length > 0) {
-                        var i = $scope.stepConfig.listGen.items.length;
+                        i = $scope.stepConfig.listGen.items.length;
                         while(i--) {
-                            var count = 0,
-																length = $scope.topten.conditions.tags.length;
+                            var count = 0;
+														length = $scope.topten.conditions.tags.length;
 																// console.log('tag while: ', i, length);
 														if($scope.stepConfig.listGen.items[i].tags.length > 0) {
 															// console.log('tag item: ', $scope.stepConfig.listGen.items[i].tags);
-															for(var j = 0; j < length; j++) {
+															for(j = 0; j < length; j++) {
 																var tag = $scope.topten.conditions.tags[j];
 																// console.log('tag round: ' + i + '-' + j, $scope.stepConfig.listGen.items[i].tags, tag.tag, ListService.findWithAttr($scope.stepConfig.listGen.items[i].tags, 'text', tag.tag));
 		                                if(ListService.findWithAttr($scope.stepConfig.listGen.items[i].tags, 'text', tag.tag) > -1) {

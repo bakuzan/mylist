@@ -33,7 +33,7 @@ angular.module('tasks')
                 currentStep: 1,
                 stepCount: 2
             };
-            
+
             //for adding/removing options.
             scope.addChecklistItem = function () {
                     if (scope.newTask.checklistItem!=='' && scope.newTask.checklistItem!==undefined) {
@@ -66,7 +66,7 @@ angular.module('tasks')
                     }
                 });
             };
-            
+
             scope.backStep = function(step) {
                 scope.stepConfig.currentStep -= 1;
             };
@@ -83,7 +83,7 @@ angular.module('tasks')
                 angular.copy(newTaskModel, scope.newTask);
                 scope.scheduleForm.$setPristine();
             };
-            
+
             function process(step) {
                 switch(step) {
                     case 1:
@@ -113,41 +113,18 @@ angular.module('tasks')
                         return { valid: true };
                 }
             }
-            
+
         }
     };
 }])
-.directive('taskMangaUpdate', function() {
-    return {
-        restrict: 'A',
-        replace: true,
-        scope: {
-            item: '=',
-            mangaUpdate: '='
-        },
-        templateUrl: '/modules/tasks/views/update-manga-task.client.view.html',
-        link: function (scope, element, attrs) {
-            var mangaUpdateFunction = (scope.item.link.linked);
-            scope.stepConfig = {
-                currentStep: 1,
-                stepCount: 1
-            };
-            
-            scope.updateManga = function(item) {
-                if (mangaUpdateFunction) {
-                    scope.$parent.tickOffChecklist(item);
-                } else {
-                    scope.$parent.tickOff(item);
-                }
-            };
-            
-            scope.cancel = function() {
-                scope.mangaForm.$setPristine();
-                scope.mangaUpdate.isPopup = '';
-            };
-            
-        }
-    };
+.directive('shadowModel', function() {
+  return {
+    scope: true,
+    link: function(scope, el, att) {
+      console.log('shadow: ', scope);
+      scope[att.shadow] = angular.copy(scope[att.shadow]);
+    }
+  };
 })
 .directive('loseInterest', function ($document, $window) {
     return {

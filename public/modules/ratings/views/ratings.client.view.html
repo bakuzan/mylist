@@ -57,11 +57,11 @@
                         <i ng-show="sortType == 'rating'" class="fa" ng-class="sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                     </th>
                 </thead>
-                <tbody ng-init="changeRating=false">
+                <tbody>
                     <tr ng-repeat="item in items | filter: { title: search }:isEqual | ratingFilter: ratingLevel | orderBy: sortType:sortReverse | startFrom: pageConfig.currentPage*pageConfig.pageSize | limitTo: pageConfig.pageSize">
                         <td>
-                            <i ng-if="item.status" class="fa fa-check green-text"></i>
-                            <i ng-if="!item.status" class="fa fa-minus"></i>
+                            <i ng-if="::item.status" class="fa fa-check green-text"></i>
+                            <i ng-if="::!item.status" class="fa fa-minus"></i>
                         </td>
                         <td class="left">
                             <span class="clickable" ng-click="(view==='Anime') ? viewEpisodeRatings(item) : go(item._id)">
@@ -69,14 +69,14 @@
                             </span>
                         </td>
                         <td ng-init="newRating = item.rating">
-                            <input type="number" class="small-input phantom-control" min="0" max="{{maxRating}}" ng-model="newRating" 
+                            <input type="number" class="small-input phantom-control" min="0" max="{{::maxRating}}" ng-model="newRating"
                                    ng-blur="itemScore(item, newRating)" enter-tag="itemScore(item, newRating)" />
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <div class="fixed position-left margin-top-25" style="top: 200px; width: 100vw" 
+        <div class="fixed position-left margin-top-25" style="top: 200px; width: 100vw"
              ng-show="viewItem !== undefined && search === viewItem.title">
             <h4 class="margin-left-50"><a href="/#!/{{view.toLowerCase()}}items/{{viewItem._id}}" class="clickable">{{viewItem.title}}</a> {{viewItem.rating === 0 ? '' : '- ' + viewItem.rating}}</h4>
             <div class="table-horizontal-container">
@@ -91,7 +91,7 @@
                         <tr>
                             <th>Ratings</th>
                             <td ng-repeat="episode in viewItem.meta.history">
-                                <input type="number" class="phantom-control width-100 text-center" min="0" max="{{maxRating}}" 
+                                <input type="number" class="phantom-control width-100 text-center" min="0" max="{{::maxRating}}"
                                        ng-model="episode.rating" ng-blur="episodeScore(true)" enter-tag="episodeScore(true)" />
                             </td>
                         </tr>

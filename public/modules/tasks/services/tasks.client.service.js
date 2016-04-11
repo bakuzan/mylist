@@ -11,9 +11,9 @@ angular.module('tasks').factory('Tasks', ['$resource',
 		});
 	}
 ])
-.factory('TaskFactory', ['Animeitems', 'Mangaitems', 'AnimeFactory', 'MangaFactory', function(Animeitems, Mangaitems, AnimeFactory, MangaFactory) {
+.factory('TaskFactory', ['$q', 'Animeitems', 'Mangaitems', 'AnimeFactory', 'MangaFactory', function($q, Animeitems, Mangaitems, AnimeFactory, MangaFactory) {
     var obj = {};
-    
+
         obj.getWeekBeginning = function() {
             var newDate = new Date(),
                 day = newDate.getDay(),
@@ -21,9 +21,9 @@ angular.module('tasks').factory('Tasks', ['$resource',
             var wkBeg = new Date();
             return new Date(wkBeg.setDate(diff));
         };
-    
+
         obj.updateAnimeitem = function(task) {
-            var query = Animeitems.get({ 
+            var query = Animeitems.get({
 				animeitemId: task.link.anime._id
 			});
             query.$promise.then(function(data) {
@@ -33,19 +33,23 @@ angular.module('tasks').factory('Tasks', ['$resource',
                 AnimeFactory.update(data, undefined, true, undefined);
             });
         };
-    
+
         obj.updateMangaitem = function(task, chapters, volumes) {
-            var query = Mangaitems.get({ 
-				mangaitemId: task.link.manga._id
-			});
+					return $q(function(resolve, reject) {
+            var query = Mangaitems.get({
+							mangaitemId: task.link.manga._id
+						});
+
             query.$promise.then(function(data) {
                 console.log(data);
                 data.chapters = chapters;
                 data.volumes = volumes;
                 data.latest = new Date();
                 MangaFactory.update(data, undefined, true, undefined);
+								resolve('manga updated');
             });
+					});
         };
-    
+
     return obj;
 }]);

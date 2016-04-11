@@ -15,20 +15,20 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             if (item.manga!==null && item.manga!==undefined) {
                 animeitem.manga = item.manga._id;
             }
-            
+
             if (tagArray!==undefined) {
                 animeitem.tags = ListService.concatenateTagArrays(animeitem.tags, tagArray);
             }
-            
+
             //update the item history.
             animeitem = ItemService.itemHistory(animeitem, updateHistory, 'anime');
-            
+
             if (imgPath!==undefined && imgPath!==null && imgPath!=='') {
                 animeitem.image = imgPath;
             }
             //console.log($scope.imgPath);
             //console.log(animeitem.image);
-            
+
             //handle end date
             if (animeitem.episodes === animeitem.finalEpisode && animeitem.finalEpisode!==0) {
                 if (animeitem.end===undefined || animeitem.end === null) {
@@ -41,7 +41,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 animeitem.end = null;
 //                console.log(animeitem.end);
             }
-            
+
             //handle status: completed.
             if(animeitem.end!==undefined && animeitem.end!==null) {
                 animeitem.status = true;
@@ -50,7 +50,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 //if no end date, not complete.
                 animeitem.status = false;
             }
-            
+
             //handle re-reading, re-read count.
             if (animeitem.reWatching===true && animeitem.episodes===animeitem.finalEpisode) {
                 animeitem.reWatchCount += 1;
@@ -85,7 +85,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
     };
 }])
 .service('ListService', function() {
-    
+
         //show a loading gif if text doesn't exist.
         this.loader = function(value) {
             if (value) {
@@ -93,11 +93,11 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             }
             return true;
         };
-    
+
         this.stringReverse = function(string) {
             return string.split('').reverse().join('');
         };
-        
+
         //get number of pages for list.
         this.numberOfPages = function(showingCount, pageSize, currentPage) {
             var pageCount = Math.ceil(showingCount/pageSize);
@@ -112,7 +112,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             var pagingDetails = { currentPage: currentPage, pageCount: pageCount };
             return pagingDetails;
         };
-    
+
         //find index of object with given attr.
         this.findWithAttr = function(array, attr, value) {
             if (array !== undefined) {
@@ -120,11 +120,11 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     if(array[i][attr] === value) {
                         return i;
                     }
-                }   
+                }
             }
             return -1;
         };
-    
+
         this.manipulateString = function(string, transform, onlyFirst) {
             switch(transform.toLowerCase()) {
                 case 'lower':
@@ -139,7 +139,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     return string.toLowerCase();
             }
         };
-        
+
         //returns the options for the various filters in list pages.
         this.getSelectListOptions = function(controller) {
             var self = this, selectListOptions = [];
@@ -149,7 +149,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 if (controller === 'animeitem') {
                     selectListOptions.onHold = [ { v: '', n: 'All' }, { v: false, n: 'Ongoing' }, { v: true, n: 'On Hold' } ];
                     selectListOptions.sortOptions = [ { v: 'title', n: 'Title' },{ v: 'episodes', n: 'Episodes' },{ v: 'start', n: 'Start date' },
-                                                      { v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' } 
+                                                      { v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' }
                                                     ];
                     selectListOptions.sortOption = self.findWithAttr(selectListOptions.sortOptions, 'n', 'Latest');
                     selectListOptions.media = [ { v: '', n: 'All' }, { v: false, n: 'Online' }, { v: true, n: 'Disc' } ];
@@ -158,7 +158,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     selectListOptions.repeatType = 'reWatching';
                 } else if (controller === 'mangaitem') {
                     selectListOptions.sortOptions = [ { v: 'title', n: 'Title' },{ v: 'chapters', n: 'Chapters' },{ v: 'volumes', n: 'Volumes' },{ v: 'start', n: 'Start date' },
-                                                      { v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' } 
+                                                      { v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' }
                                                     ];
                     selectListOptions.sortOption = self.findWithAttr(selectListOptions.sortOptions, 'n', 'Latest');
                     selectListOptions.media = [ { v: '', n: 'All' }, { v: false, n: 'Online' }, { v: true, n: 'Hardcopy' } ];
@@ -169,8 +169,8 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             } else {
                 if (controller === 'character') {
                     selectListOptions.sortOptions = [ { v: 'name', n: 'Name' }, { v: 'anime.title', n: 'Anime' }, { v: 'manga.title', n: 'Manga' }, { v: 'voice', n: 'Voice' }  ];
-                    selectListOptions.media = [ 
-                        { v: '', n: '-- choose media type --' }, { v: 'none', n: 'None' }, { v: 'anime', n: 'Anime-only' }, { v: 'manga', n: 'Manga-only' }, { v: 'both', n: 'Both' } 
+                    selectListOptions.media = [
+                        { v: '', n: '-- choose media type --' }, { v: 'none', n: 'None' }, { v: 'anime', n: 'Anime-only' }, { v: 'manga', n: 'Manga-only' }, { v: 'both', n: 'Both' }
                     ];
                 } else if (controller === 'topten') {
                     selectListOptions.sortOptions = [ { v: 'name', n: 'Name' } ];
@@ -180,10 +180,10 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 selectListOptions.searchName = 'name';
                 selectListOptions.sortOption = self.findWithAttr(selectListOptions.sortOptions, 'n', 'Name');
             }
-//            console.log(selectListOptions); 
+//            console.log(selectListOptions);
             return selectListOptions;
         };
-    
+
         this.addTag = function(tagArray, newTag) {
             if (newTag!=='' && newTag!==undefined) {
                 var i = 0, alreadyAdded = false;
@@ -204,7 +204,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             }
             return tagArray;
         };
-    
+
         this.concatenateTagArrays = function(itemTags, tagArray) {
             if (itemTags.length > 0) {
                 var i = 0, alreadyAdded = false;
@@ -228,18 +228,18 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 return tagArray;
             }
         };
-    
+
         //check to see if there are items with no tags.
         this.checkForTagless = function(items) {
             var areTagless = false;
-            angular.forEach(items, function(item) { 
+            angular.forEach(items, function(item) {
                 if (item.tags.length === 0) {
                     areTagless = true;
                 }
             });
             return areTagless;
         };
-    
+
         this.getCommonArrays = function(controller) {
             var commonArrays = {},
                 itemTypes = [
@@ -247,7 +247,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     { name: 'manga' },
                     { name: 'character' }
                 ],
-                seasons = [ 
+                seasons = [
                     { number: '03', text: 'Winter' },
                     { number: '06', text: 'Spring' },
                     { number: '09', text: 'Summer' },
@@ -292,10 +292,10 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             commonArrays = { months: months, seasons: seasons, categories: categories, days: days, summaryFunctions: summaryFunctions, itemTypes: itemTypes };
             return commonArrays;
         };
-    
+
 })
 .service('ItemService', ['moment', '$filter', 'ListService', function(moment, $filter, ListService) {
-    
+
         //Using the date, returns the season.
         this.convertDateToSeason = function(date) {
             var season = '', year = date.getFullYear(), month = date.getMonth() + 1, commonArrays = ListService.getCommonArrays(),
@@ -313,7 +313,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
 //            console.log('to: ', season);
             return season;
         };
-        
+
         //add history entry to item.
         this.itemHistory = function(item, updateHistory, type) {
 //            console.log('item history: ', item, item.meta);
@@ -323,29 +323,29 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     length = type === 'anime' ? item.episodes - latestHistory : item.chapters - latestHistory;
                 if (length > 0 && (type === 'anime' ? item.reWatching === false : item.reReading === false)) {
                     for(var i = 1; i <= length; i++) {
-                        item.meta.history.push({ 
-                            date: Date.now(), 
-                            value: latestHistory + i, 
+                        item.meta.history.push({
+                            date: Date.now(),
+                            value: latestHistory + i,
                             rating: 0,
-                            title: item.title, 
-                            id: item._id 
+                            title: item.title,
+                            id: item._id
                         });
                     }
                 }
             } else {
                 if (updateHistory && (type === 'anime' ? item.reWatching === false : item.reReading === false)) {
-                    item.meta.history.push({ 
-                        date: Date.now(), 
-                        value: (type === 'anime' ? item.episodes : item.chapters), 
+                    item.meta.history.push({
+                        date: Date.now(),
+                        value: (type === 'anime' ? item.episodes : item.chapters),
                         rating: 0,
-                        title: item.title, 
-                        id: item._id 
+                        title: item.title,
+                        id: item._id
                     });
                 }
             }
             return item;
         };
-        
+
         //remove an entry from an items history.
         this.deleteHistory = function(item, history) {
             var temp = [];
@@ -357,7 +357,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             item.meta.history = temp;
             return item;
         };
-    
+
         //function to display relative time - using latest or updated date.
         this.latestDate = function(latest, updated) {
             //latest date display format.
@@ -378,7 +378,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             } else {
                  latestDate = moment(latest);
                  diff = today.diff(latestDate, 'days');
-                
+
                 //for 0 and 1 day(s) ago use the special term.
                 if (diff===0) {
                     return 'Today';
@@ -389,17 +389,17 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 }
             }
         };
-    
+
         //build statistics item overview details.
         this.buildOverview = function(items) {
-            var overview = { 
-                ongoing: $filter('filter')(items, {status: false }).length, 
+            var overview = {
+                ongoing: $filter('filter')(items, {status: false }).length,
                 completed: $filter('filter')(items, {status: true }).length
             };
 //            console.log('overview ' , overview);
             return overview;
         };
-    
+
         //calculate which month has the most anime completed in it.
         this.maxCompleteMonth = function(items) {
             var modeMap = {}, maxCount = 0;
@@ -418,7 +418,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             }
             return maxCount;
         };
-    
+
         //calculate the rating values - max rated count and average rating.
         this.getRatingValues = function(items) {
             var tempRating = 0,
@@ -438,7 +438,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
 //            console.log('values', values);
             return values;
         };
-    
+
         //calculate which month has the most anime completed in it.
         this.maxTagCount = function(items) {
             var modeMap = {}, maxCount = 0;
@@ -457,12 +457,12 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             });
             return maxCount;
         };
-    
+
         //build stat tags including counts, averages etc.
         this.buildStatTags = function(items, averageItemRating) {
             var self = this, add = true, statTags = [], checkedRating, maxTagCount = self.maxTagCount(items);
             //is tag in array?
-            angular.forEach(items, function(item) { 
+            angular.forEach(items, function(item) {
                 angular.forEach(item.tags, function(tag) {
                     for(var i=0; i < statTags.length; i++) {
                         if (statTags[i].tag===tag.text) {
@@ -473,7 +473,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                             statTags[i].ratingAdded += item.rating;
                             statTags[i].ratingAvg = statTags[i].ratingAdded === 0 ? 0 : statTags[i].ratingAdded / statTags[i].ratedCount;
                             statTags[i].ratingWeighted = self.ratingsWeighted(statTags[i].ratings, maxTagCount, averageItemRating);
-                        }            
+                        }
                     }
                     // add if not in
                     if (add===true) {
@@ -481,12 +481,12 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                         statTags.push({ tag: tag.text, count: 1, ratedCount: checkedRating, ratings: [item.rating], ratingAdded: item.rating, ratingAvg: item.rating, ratingWeighted: 0 });
                     }
                     add = true; //reset add status.
-                }); 
+                });
 //                    console.log(statTags);
             });
             return statTags;
         };
-        
+
         //function to calculate the weighted mean ratings for the genre tags.
         this.ratingsWeighted = function(ratings, maxTagCount, listAverage) {
             var values = [], weights = [], unratedCount = 0, tagMeanScore = 0, total = 0, count = 0, weight = 0, value = 0;
@@ -532,14 +532,17 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
 //            console.log('value', value);
             return value;
         };
-    
+
         //builds counts for number of items given for each rating.
         this.buildRatingsDistribution = function(items) {
             var maxCount = items.length, possibleValues = [10,9,8,7,6,5,4,3,2,1,0], ratingsDistribution = [], i = possibleValues.length;
             while(i--) {
                 var count = $filter('filter')(items, { rating: i }, true).length;
-                ratingsDistribution.push({ number: i === 0 ? '-' : i,  
-                                           text: i === 0 ? count + ' entries unrated.' : count + ' entries rated ' + i, 
+                ratingsDistribution.push({ number: i === 0 ? '-' : i,
+                                           text: i === 0 ? count + ' entries unrated.' : count + ' entries rated ' + i,
+																					 colour: i > 6 		 ? '#449d44' :
+																					 				 7 > i > 3 ? '#31b0d5' :
+																									 						 '#c9302c' ,
                                            count: count,
                                            percentage: ((count / maxCount) * 100).toFixed(2)
                                          });
@@ -547,14 +550,14 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
 //            console.log('RD: ', ratingsDistribution);
             return ratingsDistribution;
         };
-    
+
         // 'sub-function' of the completeBy... functions.
         this.endingYears = function(items) {
             var itemYears = $filter('unique')(items, 'end.substring(0,4)'); //get unqiue years as items.
             itemYears = $filter('orderBy')(itemYears, '-end.substring(0,4)'); //order desc.
             return itemYears;
         };
-    
+
         //complete by month stats
         this.completeByMonth = function(items) {
             var self = this, monthDetails = {}, completeByMonth = [], maxCompleteMonth = 0, itemYears = self.endingYears(items), i = itemYears.length;
@@ -586,7 +589,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
 //            console.log('completeByMonth', completeByMonth);
             return monthDetails;
         };
-    
+
         //complete by season stats.
         this.completeBySeason = function(items) {
             var self = this, seasonDetails = {}, completeBySeason = [], maxCompleteSeason = 0, itemYears = self.endingYears(items), i = itemYears.length;
@@ -617,7 +620,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
 //            console.log('completeBySeason', seasonDetails);
             return seasonDetails;
         };
-        
+
         //Temporary function to generate the season data for pre-exisiting items in db.
         this.setSeason = function(items, year, season) {
             var self = this, array = $filter('endedSeason')(items, year, season);
@@ -627,5 +630,5 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             });
             return array;
         };
-        
+
 }]);

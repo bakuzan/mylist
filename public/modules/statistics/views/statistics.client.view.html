@@ -81,13 +81,23 @@
                                 <h3>{{detailItems.length}} {{detail.history === 'months' ? 'Completed' : 'Watched' }} {{detail.divisionText}} {{detail.year}}</h3>
                             </div>
                             <table class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
-                                <thead ng-if="detail.isEpisodeRatings">
-                                    <th>Title</th>
-                                    <th>Rating</th>
-                                    <th ng-repeat="metric in commonArrays.summaryFunctions">{{metric.name}}</th>
+                                <thead>
+                                  <th>
+                                      <a href="" ng-click="filterConfig.sort.episodeRating.type = 'title'; filterConfig.sort.episodeRating.reverse = !filterConfig.sort.episodeRating.reverse ">
+                                         Title
+                                      </a>
+                                      <i ng-show="filterConfig.sort.episodeRating.type == 'title'" class="fa" ng-class="filterConfig.sort.episodeRating.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                                  </th>
+                                  <th>
+                                      <a href="" ng-click="filterConfig.sort.episodeRating.type = 'rating'; filterConfig.sort.episodeRating.reverse = !filterConfig.sort.episodeRating.reverse ">
+                                         Rating
+                                      </a>
+                                      <i ng-show="filterConfig.sort.episodeRating.type == 'rating'" class="fa" ng-class="filterConfig.sort.episodeRating.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                                  </th>
+                                  <th ng-repeat="metric in commonArrays.summaryFunctions" ng-if="detail.isEpisodeRatings">{{metric.name}}</th>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="item in (detailItems = (items | statisticsDetailFilter: detail.history:detail.year:detail.division | orderBy: 'title'))">
+                                    <tr ng-repeat="item in (detailItems = (items | statisticsDetailFilter: detail.history:detail.year:detail.division | orderBy: filterConfig.sort.episodeRating.type:filterConfig.sort.episodeRating.reverse))">
                                         <td class="no-wrap overflow-hidden" ng-class="(detail.isEpisodeRatings) ? '' : 'width-75'">
                                             <a href="/#!/{{view.toLowerCase()}}items/{{item._id}}"><span>{{item.title}}</span></a>
                                             <p ng-if="detail.summary.type === 'seasons'">{{item.start | date: 'MM/yyyy'}} - {{item.end | date: 'MM/yyyy'}}</p>
@@ -126,11 +136,12 @@
                             <tr ng-repeat="rating in ratingsDistribution">
                                 <th class="col-lg-1 col-md-1 col-sm-1 text-right mb"><span>{{rating.number}}</span></th>
                                 <td class="col-lg-11 col-md-11 col-sm-11 col-xs-11 stat-rating-box">
-                                    <div class="progress-container"  hover-data="{{rating.text}}.">
-                                        <div class="progress progress-bar-placement" max="100" value="{{rating.percentage}}">
-                                            <div class="bar current-progress" style="width: {{rating.percentage}}%">{{rating.percentage}}%</div>
-                                        </div>
-                                    </div>
+                                  <div percentage-bar-container>
+                                      <div percentage-bar percentage="{{::rating.percentage}}"
+                                           display="{{::rating.percentage}}%"
+                                           colour="{{::rating.colour}}" type="white-text"
+                                           hover-data="{{::rating.text}}"></div>
+                                  </div>
                                 </td>
                             </tr>
                         </tbody>

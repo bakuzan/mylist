@@ -29,6 +29,10 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 voice: false
             },
             sort: {
+								episodeRating: {
+									type: 'title',
+									reverse: false	
+								},
                 tag: {
                     type: 'ratingWeighted',
                     reverse: true

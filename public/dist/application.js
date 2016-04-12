@@ -4191,7 +4191,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             sort: {
 								episodeRating: {
 									type: 'title',
-									reverse: false	
+									reverse: false
 								},
                 tag: {
                     type: 'ratingWeighted',
@@ -4237,11 +4237,13 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                 $scope.filterConfig.sort.tag.type = 'ratingWeighted'; //stat tag sort
                 spinnerService.loading('items', Mangaitems.query().$promise.then(function(result) {
                     $scope.items = result;
+										$scope.detail.isEpisodeRatings = false;
                 }));
             } else if (view === 'Character') {
                 $scope.filterConfig.sort.tag.type = 'count'; //stat tag sort
                 spinnerService.loading('character', Characters.query().$promise.then(function(result) {
                     $scope.items = result;
+										$scope.detail.isEpisodeRatings = false;
                 }));
             }
         }

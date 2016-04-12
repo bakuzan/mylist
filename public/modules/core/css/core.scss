@@ -806,4 +806,24 @@ div.popover {
     background-color: $brand-secondary;
 }
 
+.accent-background {
+	background-color: $brand-accent;
+}
+
+.accent-alter-background {
+	background-color: $brand-accent-alter;
+}
+
+.standard-border {
+	border: $brand-border;
+}
+
+.alter-border {
+	border: $accent-line;
+}
+
+.grey-border {
+	border: $grey-line;
+}
+
 /** COLOURS END **/

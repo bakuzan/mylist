@@ -75,11 +75,10 @@
                         DAILY
                     </span>
                 </strong>
-                <div class="progress-container" hover-data="{{ ((taskItem.checklistItems | filter: {complete: true}).length / taskItem.checklistItems.length)*100 | number: 2 }}%"
-                     ng-if="taskItem.checklist">
-                    <div class="progress checklist-progress-bar" value="((taskItem.checklistItems | filter: {complete: true}).length / taskItem.checklistItems.length) * 100">
-                        <div class="bar checklist-progress" style="width: {{ ((taskItem.checklistItems | filter: {complete: true}).length / taskItem.checklistItems.length) * 100}}%"></div>
-                    </div>
+                <div class="margin-top-10" percentage-bar-container ng-if="taskItem.checklist">
+                    <div percentage-bar percentage="{{ ((taskItem.checklistItems | filter: {complete: true}).length / taskItem.checklistItems.length) * 100}}"
+                         type="white-text accent-alter-background"
+                         hover-data="{{ ((taskItem.checklistItems | filter: {complete: true}).length / taskItem.checklistItems.length)*100 | number: 2 }}%"></div>
                 </div>
                 <div ng-if="taskItem.checklist" class="checklist-list-container" ng-show="viewTask">
                     <input ng-show="!taskItem.complete && addingToChecklist" type="text" class="form-control" ng-model="insertNewChecklistItem"

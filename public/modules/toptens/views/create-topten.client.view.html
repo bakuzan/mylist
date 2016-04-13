@@ -50,43 +50,51 @@
                                 <input type="number" id="limit" class="form-control" ng-min="{{stepConfig.limitMin}}" ng-model="topten.conditions.limit" />
                             </div>
                         </div>
-                        <div class="form-group" ng-show="topten.type === 'character'">
-                            <label for="series" class="col-lg-3 col-md-3 col-sm-3 control-label">Restrict by series</label>
-                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                <input type="text" id="series" class="form-control" ng-model="stepConfig.listGen.seriesLimit"
-                                       uib-typeahead="item as item.name for item in stepConfig.listGen.series | filter: $viewValue | limitTo: 5"
-                                       typeahead-on-select="pushCondition('series', stepConfig.listGen.seriesLimit)"/>
-                            </div>
-                        </div>
-                        <div class="height-30" ng-show="topten.type === 'character'">
-                            <label for="series" class="col-lg-3 col-md-3 col-sm-3 control-label">Series</label>
-                            <div class="col-lg-6 col-md-6 col-sm-6 height-90 overflow-auto-hover">
-                                <div ng-repeat="item in topten.conditions.series track by item._id">
-                                    <span>{{item.name}}</span>
-                                    <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="removeCondition('series', item)">
-                                        <i class="fa fa-trash-o"></i>
-                                    </a>
+                        <div tab-container class="width-100 height-90">
+                          <div tab-view heading="series" disabled="topten.type !== 'character'" class="height-75">
+                            <div class="form-group">
+                                <label for="series" class="col-lg-3 col-md-3 col-sm-3 control-label">Restrict by series</label>
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <input type="text" id="series" class="form-control" ng-model="stepConfig.listGen.seriesLimit"
+                                           uib-typeahead="item as item.name for item in stepConfig.listGen.series | filter: $viewValue | limitTo: 5"
+                                           typeahead-on-select="pushCondition('series', stepConfig.listGen.seriesLimit)"/>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="tag" class="col-lg-3 col-md-3 col-sm-3 control-label">Restrict by tag</label>
-                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                <input type="text" id="tag" class="form-control" ng-model="stepConfig.listGen.tagLimit"
-                                       uib-typeahead="item as item.tag for item in stepConfig.listGen.tags | filter: $viewValue | limitTo: 5"
-                                       typeahead-on-select="pushCondition('tag', stepConfig.listGen.tagLimit)"/>
-                            </div>
-                        </div>
-                        <div class="height-30">
-                            <label for="series" class="col-lg-3 col-md-3 col-sm-3 control-label">Tags</label>
-                            <div class="col-lg-6 col-md-6 col-sm-6 height-90 overflow-auto-hover">
-                                <div ng-repeat="item in topten.conditions.tags track by item.tag">
-                                    <span>{{item.tag}}</span>
-                                    <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="removeCondition('tag', item)">
-                                        <i class="fa fa-trash-o"></i>
-                                    </a>
+                            <div class="height-75">
+                                <label for="series" class="col-lg-3 col-md-3 col-sm-3 control-label">Series</label>
+                                <div class="col-lg-6 col-md-6 col-sm-6 height-95 overflow-auto-hover">
+                                    <div ng-repeat="item in topten.conditions.series track by item._id">
+                                        <span>{{item.name}}</span>
+                                        <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="removeCondition('series', item)">
+                                            <i class="fa fa-trash-o"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
+                          </div>
+                          <div tab-view heading="tag" class="height-75">
+                            <div class="form-group">
+                                <label for="tag" class="col-lg-3 col-md-3 col-sm-3 control-label">Restrict by tag</label>
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <input type="text" id="tag" class="form-control" ng-model="stepConfig.listGen.tagLimit"
+                                           uib-typeahead="item as item.tag for item in stepConfig.listGen.tags | filter: $viewValue | limitTo: 5"
+                                           typeahead-on-select="pushCondition('tag', stepConfig.listGen.tagLimit)"/>
+                                </div>
+                            </div>
+                            <div class="height-75">
+                                <label for="series" class="col-lg-3 col-md-3 col-sm-3 control-label">Tags</label>
+                                <div class="col-lg-6 col-md-6 col-sm-6 height-95 overflow-auto-hover">
+                                    <div ng-repeat="item in topten.conditions.tags track by item.tag">
+                                        <span>{{item.tag}}</span>
+                                        <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="removeCondition('tag', item)">
+                                            <i class="fa fa-trash-o"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>
+                          <div tab-view heading="date" class="height-75">
+                          </div>
                         </div>
                     </div>
                     <div one-step>
@@ -115,6 +123,7 @@
                           </div>
                           <div class="col-lg-6 col-md-6 col-sm-6 height-90 overflow-auto-hover">
                               <div ng-repeat="item in stepConfig.listGen.displayList track by item._id">
+                                  <i class="fa fa-trophy trophy-{{::$index + 1}}" ng-if="topten.isRanked"></i>
                                   <div class="display-inline-block" ng-style="{ 'height' : imgSize.height, 'width' : imgSize.width }">
                                       <img ng-src="{{item.image}}" style="height: 100%" />
                                   </div>

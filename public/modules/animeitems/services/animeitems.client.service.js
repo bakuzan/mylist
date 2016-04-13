@@ -460,11 +460,11 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
 
         //build stat tags including counts, averages etc.
         this.buildStatTags = function(items, averageItemRating) {
-            var self = this, add = true, statTags = [], checkedRating, maxTagCount = self.maxTagCount(items);
+            var self = this, add = true, statTags = [], checkedRating, maxTagCount = self.maxTagCount(items), itemCount = items.length;
             //is tag in array?
             angular.forEach(items, function(item) {
                 angular.forEach(item.tags, function(tag) {
-                    for(var i=0; i < statTags.length; i++) {
+                    for(var i=0, len = statTags.length; i < len; i++) {
                         if (statTags[i].tag===tag.text) {
                             add = false;
                             statTags[i].count += 1;
@@ -472,7 +472,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                             statTags[i].ratings.push(item.rating);
                             statTags[i].ratingAdded += item.rating;
                             statTags[i].ratingAvg = statTags[i].ratingAdded === 0 ? 0 : statTags[i].ratingAdded / statTags[i].ratedCount;
-                            statTags[i].ratingWeighted = self.ratingsWeighted(statTags[i].ratings, maxTagCount, averageItemRating);
+                            statTags[i].ratingWeighted = self.ratingsWeighted(statTags[i].ratings);
                         }
                     }
                     // add if not in
@@ -488,12 +488,12 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         };
 
         //function to calculate the weighted mean ratings for the genre tags.
-        this.ratingsWeighted = function(ratings, maxTagCount, listAverage) {
-            var values = [], weights = [], unratedCount = 0, tagMeanScore = 0, total = 0, count = 0, weight = 0, value = 0;
+        this.ratingsWeighted = function(ratings) {
+            var values = [], weights = [], unratedCount = 0, total = 0, count = 0;
             /**
              *  create array (weights) with key(rating).
              */
-            for (var i=0; i < ratings.length; i++) {
+            for (var i=0, len = ratings.length; i < len; i++) {
                 if (ratings[i] in values) {
                     weights[ratings[i]]++;
                 } else {
@@ -516,21 +516,11 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     unratedCount = weights[k];
                 }
             }
-
-            /**
-             *  count = number of ratings for it. total/count = average rating for tag.
-             */
-            tagMeanScore = total / count;
-            tagMeanScore = tagMeanScore * count + listAverage * unratedCount;
-            tagMeanScore = tagMeanScore / count;
-            weight = count / maxTagCount;
-            weight = 1 - weight;
-            value = listAverage + (tagMeanScore - listAverage) * weight;
-//            console.log('weights', weights, 'values', values);
-//            console.log('tagMean', tagMeanScore);
-//            console.log('weight', weight);
-//            console.log('value', value);
-            return value;
+						/* Weighted average.
+						 * total = (nth_rating_value * number_of_that_value + ...)
+						 * count = number of ratings.
+						 */
+            return total / count;
         };
 
         //builds counts for number of items given for each rating.
@@ -541,8 +531,9 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                 ratingsDistribution.push({ number: i === 0 ? '-' : i,
                                            text: i === 0 ? count + ' entries unrated.' : count + ' entries rated ' + i,
 																					 colour: i > 6 		 ? '#449d44' :
-																					 				 7 > i > 3 ? '#31b0d5' :
-																									 						 '#c9302c' ,
+																					 				 7 > i && i > 3 ? '#31b0d5' :
+																									 i !== 0 ? '#c9302c' :
+																									 					 '#000000',
                                            count: count,
                                            percentage: ((count / maxCount) * 100).toFixed(2)
                                          });

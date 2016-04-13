@@ -95,10 +95,10 @@
                                       <i ng-show="filterConfig.sort.episodeRating.type == 'rating'" class="fa" ng-class="filterConfig.sort.episodeRating.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                                   </th>
                                   <th ng-repeat="metric in commonArrays.summaryFunctions" ng-if="detail.isEpisodeRatings">
-                                    <a href="" ng-click="filterConfig.sort.episodeRating.type = 'meta.episodeSummaryFunctions[{{metric.name}}]'; filterConfig.sort.episodeRating.reverse = !filterConfig.sort.episodeRating.reverse ">
+                                    <a href="" ng-click="filterConfig.sort.episodeRating.type = 'meta.episodeSummaryFunctions[{{$index}}].value'; filterConfig.sort.episodeRating.reverse = !filterConfig.sort.episodeRating.reverse ">
                                        {{metric.name}}
                                     </a>
-                                    <i ng-show="filterConfig.sort.episodeRating.type === 'meta.episodeSummaryFunctions[{{metric.name}}]'" class="fa" ng-class="filterConfig.sort.episodeRating.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                                    <i ng-show="filterConfig.sort.episodeRating.type === 'meta.episodeSummaryFunctions[{{$index}}].value'" class="fa" ng-class="filterConfig.sort.episodeRating.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                                   </th>
                                 </thead>
                                 <tbody>

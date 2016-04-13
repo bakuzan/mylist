@@ -141,8 +141,9 @@
                             </div>
                           </div>
                           <div class="col-lg-6 col-md-6 col-sm-6 height-90 overflow-auto-hover">
-                              <div ng-repeat="item in stepConfig.listGen.displayList track by item._id">
-                                  <i class="fa fa-trophy trophy-{{::$index + 1}}" ng-if="topten.isRanked"></i>
+                              <div ng-repeat="item in stepConfig.listGen.displayList track by item._id"
+                                   ng-click="swappingItems($index)" ng-class="{ selected: $index === stepConfig.swapping.one }">
+                                  <i class="fa fa-trophy trophy-{{$index + 1}}" ng-if="topten.isRanked"></i>
                                   <div class="display-inline-block" ng-style="{ 'height' : imgSize.height, 'width' : imgSize.width }">
                                       <img ng-src="{{item.image}}" style="height: 100%" />
                                   </div>

@@ -26,7 +26,11 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
                 series: [],
                 tags: []
             },
-            limitMin: 0
+            limitMin: 0,
+						swapping: {
+							one: '',
+							two: ''
+						}
         };
         var toptenCopy = {
             name: '',
@@ -340,5 +344,28 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
             }
         }
         inital();
+
+				$scope.swappingItems = function(index) {
+					console.log('item selected: ', index);
+					if($scope.stepConfig.swapping.one === '') {
+						$scope.stepConfig.swapping.one = index;
+					} else if($scope.stepConfig.swapping.one === index) {
+						$scope.stepConfig.swapping.one = '';
+					} else {
+						$scope.stepConfig.swapping.two = index;
+						//Re-order display list.
+						var temp = $scope.stepConfig.listGen.displayList[$scope.stepConfig.swapping.one];
+						$scope.stepConfig.listGen.displayList[$scope.stepConfig.swapping.one] = $scope.stepConfig.listGen.displayList[$scope.stepConfig.swapping.two];
+						$scope.stepConfig.listGen.displayList[$scope.stepConfig.swapping.two] = temp;
+						//Re-order topten item list.
+						temp = $scope.topten[$scope.topten.type + 'List'][$scope.stepConfig.swapping.one];
+						$scope.topten[$scope.topten.type + 'List'][$scope.stepConfig.swapping.one] = $scope.topten[$scope.topten.type + 'List'][$scope.stepConfig.swapping.two];
+						$scope.topten[$scope.topten.type + 'List'][$scope.stepConfig.swapping.two] = temp;
+						//Clear.
+						$scope.stepConfig.swapping.one = '';
+						$scope.stepConfig.swapping.two = '';
+					}
+				};
+
 	}
 ]);

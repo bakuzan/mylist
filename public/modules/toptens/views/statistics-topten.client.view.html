@@ -17,6 +17,12 @@
           </div>
           <div class="margin-top-20" ng-repeat="series in list.conditions.series">{{series.name}}</div>
         </div>
+        <div class="margin-top-5" ng-if="list.conditions.season">
+          <label>Season:</label>&nbsp;<span>{{list.conditions.season}}</span><br/>
+        </div>
+        <div class="margin-top-5" ng-if="list.conditions.year">
+          <label>Year:</label>&nbsp;<span>{{list.conditions.year}}</span><br/>
+        </div>
     </div>
     <div tab-view heading="statistics" class="height-90 margin-5">
         <div class="height-40 margin-top-5 overflow-auto-hover" ng-if="toptenInfo.tags.length > 0">

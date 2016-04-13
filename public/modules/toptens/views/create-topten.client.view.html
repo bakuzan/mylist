@@ -61,7 +61,7 @@
                                 </div>
                             </div>
                             <div class="height-75">
-                                <label for="series" class="col-lg-3 col-md-3 col-sm-3 control-label">Series</label>
+                                <label for="series-list" class="col-lg-3 col-md-3 col-sm-3 control-label">Series</label>
                                 <div class="col-lg-6 col-md-6 col-sm-6 height-95 overflow-auto-hover">
                                     <div ng-repeat="item in topten.conditions.series track by item._id">
                                         <span>{{item.name}}</span>
@@ -82,7 +82,7 @@
                                 </div>
                             </div>
                             <div class="height-75">
-                                <label for="series" class="col-lg-3 col-md-3 col-sm-3 control-label">Tags</label>
+                                <label for="tag-list" class="col-lg-3 col-md-3 col-sm-3 control-label">Tags</label>
                                 <div class="col-lg-6 col-md-6 col-sm-6 height-95 overflow-auto-hover">
                                     <div ng-repeat="item in topten.conditions.tags track by item.tag">
                                         <span>{{item.tag}}</span>
@@ -93,7 +93,20 @@
                                 </div>
                             </div>
                           </div>
-                          <div tab-view heading="date" class="height-75">
+                          <div tab-view heading="date" disabled="topten.type !== 'anime'" class="height-75">
+                            <div class="form-group margin-top-25">
+                                <label for="season" class="col-md-2 control-label">Restrict by release</label>
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <select class="form-control" ng-options="option.text as option.text for option in commonArrays.seasons" ng-model="topten.conditions.season" id="season" name="season">
+                                        <option value="">No Season</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                    <select class="form-control" ng-options="option.year as option.year for option in years" ng-model="topten.conditions.year" id="year" name="year">
+                                        <option value="">No Year</option>
+                                    </select>
+                                </div>
+                            </div>
                           </div>
                         </div>
                     </div>
@@ -118,6 +131,12 @@
                               </p>
                               <p ng-if="topten.conditions.tags.length > 0" class="bold">Tags:
                                 <p ng-repeat="item in topten.conditions.tags">{{item.tag}}</p>
+                              </p>
+                              <p ng-if="topten.conditions.season" class="bold">Season:
+                                <p ng-bind="topten.conditions.season"></p>
+                              </p>
+                              <p ng-if="topten.conditions.year" class="bold">Year:
+                                <p ng-bind="topten.conditions.year"></p>
                               </p>
                             </div>
                           </div>

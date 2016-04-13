@@ -544,9 +544,15 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
 
         // 'sub-function' of the completeBy... functions.
         this.endingYears = function(items) {
-            var itemYears = $filter('unique')(items, 'end.substring(0,4)'); //get unqiue years as items.
-            itemYears = $filter('orderBy')(itemYears, '-end.substring(0,4)'); //order desc.
-            return itemYears;
+            var years = [],
+								itemYears = $filter('unique')(items, 'end.substring(0,4)'); //get unqiue years as items.
+            		itemYears = $filter('orderBy')(itemYears, '-end.substring(0,4)'); //order desc.
+						angular.forEach(itemYears, function(item) {
+							if(item.end !== undefined && item.end !== null) {
+								years.push({ year: item.end.substring(0,4) });
+							}
+						});
+            return years;
         };
 
         //complete by month stats
@@ -555,21 +561,21 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             //build comlpeteByMonths object.
             while(i--) {
                 //chuck the null end date. push the year part of the other end dates with months array.
-                if (itemYears[i].end !== undefined && itemYears[i].end !== null) {
-                    completeByMonth.push({ year: itemYears[i].end.substring(0,4),
+                if (itemYears[i].year !== undefined && itemYears[i].year !== null) {
+                    completeByMonth.push({ year: itemYears[i].year,
                                           months: [
-                                                    { number: '01', text: 'January', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '01').length  },
-                                                    { number: '02', text: 'February', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '02').length },
-                                                    { number: '03', text: 'March', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '03').length },
-                                                    { number: '04', text: 'April', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '04').length },
-                                                    { number: '05', text: 'May', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '05').length },
-                                                    { number: '06', text: 'June', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '06').length },
-                                                    { number: '07', text: 'July', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '07').length },
-                                                    { number: '08', text: 'August', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '08').length },
-                                                    { number: '09', text: 'September', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '09').length },
-                                                    { number: '10', text: 'October', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '10').length },
-                                                    { number: '11', text: 'November', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '11').length },
-                                                    { number: '12', text: 'December', count: $filter('endedMonth')(items, itemYears[i].end.substring(0,4), '12').length }
+                                                    { number: '01', text: 'January', count: $filter('endedMonth')(items, itemYears[i].year, '01').length  },
+                                                    { number: '02', text: 'February', count: $filter('endedMonth')(items, itemYears[i].year, '02').length },
+                                                    { number: '03', text: 'March', count: $filter('endedMonth')(items, itemYears[i].year, '03').length },
+                                                    { number: '04', text: 'April', count: $filter('endedMonth')(items, itemYears[i].year, '04').length },
+                                                    { number: '05', text: 'May', count: $filter('endedMonth')(items, itemYears[i].year, '05').length },
+                                                    { number: '06', text: 'June', count: $filter('endedMonth')(items, itemYears[i].year, '06').length },
+                                                    { number: '07', text: 'July', count: $filter('endedMonth')(items, itemYears[i].year, '07').length },
+                                                    { number: '08', text: 'August', count: $filter('endedMonth')(items, itemYears[i].year, '08').length },
+                                                    { number: '09', text: 'September', count: $filter('endedMonth')(items, itemYears[i].year, '09').length },
+                                                    { number: '10', text: 'October', count: $filter('endedMonth')(items, itemYears[i].year, '10').length },
+                                                    { number: '11', text: 'November', count: $filter('endedMonth')(items, itemYears[i].year, '11').length },
+                                                    { number: '12', text: 'December', count: $filter('endedMonth')(items, itemYears[i].year, '12').length }
                                           ]
                                          });
                 }
@@ -587,13 +593,13 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             //build completeBySeason object.
             while(i--) {
                 //chuck the null end date. push the year part of the other end dates with seasons array.
-                if (itemYears[i].end !== undefined && itemYears[i].end !== null) {
-                    completeBySeason.push({ year: itemYears[i].end.substring(0,4),
+                if (itemYears[i].year !== undefined && itemYears[i].year !== null) {
+                    completeBySeason.push({ year: itemYears[i].year,
                                             seasons: [
-                                                        { number: '03', text: 'Winter', count: $filter('season')(items, itemYears[i].end.substring(0,4), 'Winter').length },
-                                                        { number: '06', text: 'Spring', count: $filter('season')(items, itemYears[i].end.substring(0,4), 'Spring').length },
-                                                        { number: '09', text: 'Summer', count: $filter('season')(items, itemYears[i].end.substring(0,4), 'Summer').length },
-                                                        { number: '12', text: 'Fall', count: $filter('season')(items, itemYears[i].end.substring(0,4), 'Fall').length }
+                                                        { number: '03', text: 'Winter', count: $filter('season')(items, itemYears[i].year, 'Winter').length },
+                                                        { number: '06', text: 'Spring', count: $filter('season')(items, itemYears[i].year, 'Spring').length },
+                                                        { number: '09', text: 'Summer', count: $filter('season')(items, itemYears[i].year, 'Summer').length },
+                                                        { number: '12', text: 'Fall', count: $filter('season')(items, itemYears[i].year, 'Fall').length }
                                             ]
                                           });
                 }

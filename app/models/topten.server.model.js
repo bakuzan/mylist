@@ -46,7 +46,13 @@ var ToptenSchema = new Schema({
             type: Number
         },
         series: [],
-        tags: []
+        tags: [],
+				season: {
+					type: String
+				},
+				year: {
+					type: Number
+				}
     },
     meta: {
         created: {

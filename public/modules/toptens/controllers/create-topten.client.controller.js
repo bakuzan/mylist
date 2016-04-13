@@ -1,8 +1,8 @@
 'use strict';
 
 // Toptens controller
-angular.module('toptens').controller('CreateToptenController', ['$scope', '$stateParams', '$location', 'Authentication', 'Toptens', 'ListService', 'Animeitems', 'Mangaitems', 'Characters', 'NotificationFactory', 'CharacterService',
-	function($scope, $stateParams, $location, Authentication, Toptens, ListService, Animeitems, Mangaitems, Characters, NotificationFactory, CharacterService) {
+angular.module('toptens').controller('CreateToptenController', ['$scope', '$stateParams', '$location', 'Authentication', 'Toptens', 'ListService', 'Animeitems', 'Mangaitems', 'Characters', 'NotificationFactory', 'CharacterService', 'ItemService', '$filter',
+	function($scope, $stateParams, $location, Authentication, Toptens, ListService, Animeitems, Mangaitems, Characters, NotificationFactory, CharacterService, ItemService, $filter) {
 		$scope.authentication = Authentication;
 
         $scope.stepConfig = {
@@ -40,12 +40,15 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
             conditions: {
                 limit: null,
                 series: [],
-                tags: []
+                tags: [],
+								season: null,
+								year: null
             }
         };
         $scope.topten = {};
         angular.copy(toptenCopy, $scope.topten);
         $scope.commonArrays = ListService.getCommonArrays();
+				$scope.years = [];
         $scope.isCreate = true;
         $scope.imgSize = {
             height: '50px',
@@ -69,7 +72,9 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
                 conditions: {
                     limit: this.topten.conditions.limit,
                     series: this.topten.conditions.series,
-                    tags: this.topten.conditions.tags
+                    tags: this.topten.conditions.tags,
+										season: this.topten.conditions.season,
+										year: this.topten.conditions.year,
                 }
 			});
 
@@ -106,6 +111,8 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
                         $scope.stepConfig.listGen.items = result;
                         $scope.stepConfig.listGen.typeDisplay = 'title';
                         $scope.stepConfig.listGen.tags = CharacterService.buildCharacterTags(result);
+												$scope.years = ItemService.endingYears(result);
+												console.log('years: ', $scope.years);
                     });
                     break;
                 case 'Manga':
@@ -150,64 +157,80 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
                     break;
 
                 case 2:
-										var i = 0, j = 0, length;
-                    angular.copy($scope.stepConfig.listGen.items, $scope.stepConfig.listGen.itemsCached);
-                    // console.log('pre conditions: ', $scope.stepConfig.listGen.items.length, $scope.stepConfig.listGen.itemsCached.length);
-                    if($scope.topten.conditions.series.length > 0) {
-                        i = $scope.stepConfig.listGen.items.length;
-                        while(i--) {
-                            var remove = true,
-																attr = ($scope.stepConfig.listGen.items[i].anime !== null) ? 'anime' :
-																			 ($scope.stepConfig.listGen.items[i].anime !== null) ? 'manga' :
-																			 																											 null;
-														length = $scope.topten.conditions.series.length;
-													//  console.log('tag while: ', i, length, attr);
-                            if(attr !== null) {
-															// console.log('tag item: ', $scope.stepConfig.listGen.items[i]);
-															for(j = 0; j < length; j++) {
-																var series = $scope.topten.conditions.series[j];
-																// console.log($scope.stepConfig.listGen.items[i][attr].title, series.name, $scope.stepConfig.listGen.items[i][attr].title.indexOf(series.name));
-                                if($scope.stepConfig.listGen.items[i][attr].title.indexOf(series.name) > -1) {
-                                    remove = false;
-                                }
-															}
-                              if(remove) {
-																// console.log('remove as remove: ' + remove);
-                                  $scope.stepConfig.listGen.items.splice(i, 1);
-                              }
-                            } else {
-															// console.log('straight remove');
-															$scope.stepConfig.listGen.items.splice(i, 1);
-                            }
-                        }
-                    }
+										if(direction) {
+											var i = 0, j = 0, length;
+	                    angular.copy($scope.stepConfig.listGen.items, $scope.stepConfig.listGen.itemsCached);
+	                    // console.log('pre conditions: ', $scope.stepConfig.listGen.items.length, $scope.stepConfig.listGen.itemsCached.length);
 
-                    if($scope.topten.conditions.tags.length > 0) {
-                        i = $scope.stepConfig.listGen.items.length;
-                        while(i--) {
-                            var count = 0;
-														length = $scope.topten.conditions.tags.length;
-																// console.log('tag while: ', i, length);
-														if($scope.stepConfig.listGen.items[i].tags.length > 0) {
-															// console.log('tag item: ', $scope.stepConfig.listGen.items[i].tags);
-															for(j = 0; j < length; j++) {
-																var tag = $scope.topten.conditions.tags[j];
-																// console.log('tag round: ' + i + '-' + j, $scope.stepConfig.listGen.items[i].tags, tag.tag, ListService.findWithAttr($scope.stepConfig.listGen.items[i].tags, 'text', tag.tag));
-		                                if(ListService.findWithAttr($scope.stepConfig.listGen.items[i].tags, 'text', tag.tag) > -1) {
-		                                    count++;
-		                                }
-															}
-	                            if(count !== length) {
-																// console.log('remove as count: ' + count + ' > length: ' + length);
+											if($scope.topten.conditions.season) {
+												if($scope.topten.conditions.year) {
+													$scope.stepConfig.listGen.items = $filter('season')($scope.stepConfig.listGen.items, $scope.topten.conditions.year, $scope.topten.conditions.season);
+												} else {
+													NotificationFactory.popup('Invalid form', 'A year MUST be selected when selecting a season.', 'error');
+													break;
+												}
+											} else {
+												if($scope.topten.conditions.year) {
+													$scope.stepConfig.listGen.items = $filter('filter')($scope.stepConfig.listGen.items, { season: { year: $scope.topten.conditions.year } });
+												}
+											}
+
+	                    if($scope.topten.conditions.series.length > 0) {
+	                        i = $scope.stepConfig.listGen.items.length;
+	                        while(i--) {
+	                            var remove = true,
+																	attr = ($scope.stepConfig.listGen.items[i].anime !== null) ? 'anime' :
+																				 ($scope.stepConfig.listGen.items[i].anime !== null) ? 'manga' :
+																				 																											 null;
+															length = $scope.topten.conditions.series.length;
+														//  console.log('tag while: ', i, length, attr);
+	                            if(attr !== null) {
+																// console.log('tag item: ', $scope.stepConfig.listGen.items[i]);
+																for(j = 0; j < length; j++) {
+																	var series = $scope.topten.conditions.series[j];
+																	// console.log($scope.stepConfig.listGen.items[i][attr].title, series.name, $scope.stepConfig.listGen.items[i][attr].title.indexOf(series.name));
+	                                if($scope.stepConfig.listGen.items[i][attr].title.indexOf(series.name) > -1) {
+	                                    remove = false;
+	                                }
+																}
+	                              if(remove) {
+																	// console.log('remove as remove: ' + remove);
+	                                  $scope.stepConfig.listGen.items.splice(i, 1);
+	                              }
+	                            } else {
+																// console.log('straight remove');
 																$scope.stepConfig.listGen.items.splice(i, 1);
 	                            }
-														} else {
-															// console.log('straight remove');
-															$scope.stepConfig.listGen.items.splice(i, 1);
-														}
-                        }
-                    }
-										// console.log('post conditions: ', $scope.stepConfig.listGen.items.length, $scope.stepConfig.listGen.itemsCached.length);
+	                        }
+	                    }
+
+	                    if($scope.topten.conditions.tags.length > 0) {
+	                        i = $scope.stepConfig.listGen.items.length;
+	                        while(i--) {
+	                            var count = 0;
+															length = $scope.topten.conditions.tags.length;
+																	// console.log('tag while: ', i, length);
+															if($scope.stepConfig.listGen.items[i].tags.length > 0) {
+																// console.log('tag item: ', $scope.stepConfig.listGen.items[i].tags);
+																for(j = 0; j < length; j++) {
+																	var tag = $scope.topten.conditions.tags[j];
+																	// console.log('tag round: ' + i + '-' + j, $scope.stepConfig.listGen.items[i].tags, tag.tag, ListService.findWithAttr($scope.stepConfig.listGen.items[i].tags, 'text', tag.tag));
+			                                if(ListService.findWithAttr($scope.stepConfig.listGen.items[i].tags, 'text', tag.tag) > -1) {
+			                                    count++;
+			                                }
+																}
+		                            if(count !== length) {
+																	// console.log('remove as count: ' + count + ' > length: ' + length);
+																	$scope.stepConfig.listGen.items.splice(i, 1);
+		                            }
+															} else {
+																// console.log('straight remove');
+																$scope.stepConfig.listGen.items.splice(i, 1);
+															}
+	                        }
+	                    }
+											// console.log('post conditions: ', $scope.stepConfig.listGen.items.length, $scope.stepConfig.listGen.itemsCached.length);
+										}
                     callback();
                     break;
 

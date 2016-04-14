@@ -166,16 +166,31 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
 	                    angular.copy($scope.stepConfig.listGen.items, $scope.stepConfig.listGen.itemsCached);
 	                    // console.log('pre conditions: ', $scope.stepConfig.listGen.items.length, $scope.stepConfig.listGen.itemsCached.length);
 
-											if($scope.topten.conditions.season) {
-												if($scope.topten.conditions.year) {
-													$scope.stepConfig.listGen.items = $filter('season')($scope.stepConfig.listGen.items, $scope.topten.conditions.year, $scope.topten.conditions.season);
+											if($scope.topten.type === 'anime') {
+												if($scope.topten.conditions.season) {
+													if($scope.topten.conditions.year) {
+														$scope.stepConfig.listGen.items = $filter('season')($scope.stepConfig.listGen.items, $scope.topten.conditions.year, $scope.topten.conditions.season);
+													} else {
+														NotificationFactory.popup('Invalid form', 'A year MUST be selected when selecting a season.', 'error');
+														break;
+													}
 												} else {
-													NotificationFactory.popup('Invalid form', 'A year MUST be selected when selecting a season.', 'error');
-													break;
+													if($scope.topten.conditions.year) {
+														$scope.stepConfig.listGen.items = $filter('filter')($scope.stepConfig.listGen.items, { season: { year: $scope.topten.conditions.year } });
+													}
 												}
-											} else {
-												if($scope.topten.conditions.year) {
-													$scope.stepConfig.listGen.items = $filter('filter')($scope.stepConfig.listGen.items, { season: { year: $scope.topten.conditions.year } });
+											} else if($scope.topten.type === 'character') {
+												if($scope.topten.conditions.season) {
+													if($scope.topten.conditions.year) {
+														$scope.stepConfig.listGen.items = $filter('seasonForCharacterAnime')($scope.stepConfig.listGen.items, $scope.topten.conditions.year, $scope.topten.conditions.season);
+													} else {
+														NotificationFactory.popup('Invalid form', 'A year MUST be selected when selecting a season.', 'error');
+														break;
+													}
+												} else {
+													if($scope.topten.conditions.year) {
+														$scope.stepConfig.listGen.items = $filter('filter')($scope.stepConfig.listGen.items, { anime: { season: { year: $scope.topten.conditions.year } } });
+													}
 												}
 											}
 

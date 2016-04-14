@@ -84,6 +84,17 @@ angular.module('animeitems')
         });
     };
 })
+.filter('seasonForCharacterAnime', function() {
+    return function(array, year, month) {
+        return array.filter(function(item) {
+            if (item.anime.end!== undefined && item.anime.end !== null && item.anime.season !== undefined && item.anime.season !== null) {
+                if (item.anime.season.year === year && item.anime.season.season === month) {
+                    return item;
+                }
+            }
+        });
+    };
+})
 .filter('summaryYear', function() {
     return function(array, year, type) {
         if (array !== undefined) {

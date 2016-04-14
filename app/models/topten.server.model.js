@@ -51,7 +51,7 @@ var ToptenSchema = new Schema({
 					type: String
 				},
 				year: {
-					type: Number
+					type: String
 				}
     },
     meta: {

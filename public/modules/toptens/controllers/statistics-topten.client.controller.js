@@ -12,8 +12,9 @@ angular.module('toptens').controller('statisticsTopten', ['$scope','$uibModalIns
    function process() {
      var listType = $scope.list.type + 'List';
      $scope.toptenInfo.tags = CharacterService.buildCharacterTags($scope.list[listType]);
-     $scope.toptenInfo.series = CharacterService.buildSeriesList($scope.list[listType]);
-     console.log('process: ', listType, $scope.toptenInfo, $scope.list);
+     if($scope.list.type === 'character') {
+       $scope.toptenInfo.series = CharacterService.buildSeriesList($scope.list[listType]);
+     }
    }
    process();
 

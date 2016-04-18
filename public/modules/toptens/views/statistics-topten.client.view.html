@@ -2,32 +2,35 @@
   <a class="close-button mt" ng-click="cancel()"><i class="fa fa-times"></i></a>
   <div tab-container class="width-95 height-100">
     <div tab-view heading="conditions" class="height-90 margin-5">
-        <div class="margin-top-5" ng-if="list.conditions.limit > 0">
+        <div class="margin-top-5" ng-if="::list.conditions.limit > 0">
           <label>Limit:</label>&nbsp;<span>{{list.conditions.limit}}</span><br/>
         </div>
-        <div class="height-35 margin-top-5 overflow-auto-hover" ng-if="list.conditions.tags.length > 0">
+        <div class="height-35 margin-top-5 overflow-auto-hover" ng-if="::list.conditions.tags.length > 0">
           <div class="absolute width-50 primary-background">
             <label>Tags</label><small class="text-muted margin-left-10">must include all</small>
           </div>
           <div class="margin-top-20" ng-repeat="tag in list.conditions.tags">{{tag.tag}}</div><br/>
         </div>
-        <div class="height-35 margin-top-5 overflow-auto-hover" ng-if="list.conditions.series.length > 0">
+        <div class="height-35 margin-top-5 overflow-auto-hover" ng-if="::list.conditions.series.length > 0">
           <div class="absolute width-50 primary-background">
             <label>Series</label><small class="text-muted margin-left-10">must include at least one</small>
           </div>
           <div class="margin-top-20" ng-repeat="series in list.conditions.series">{{series.name}}</div>
         </div>
-        <div class="margin-top-5" ng-if="list.conditions.season">
+        <div class="margin-top-5" ng-if="::list.conditions.season">
           <label>Season:</label>&nbsp;<span>{{list.conditions.season}}</span><br/>
         </div>
-        <div class="margin-top-5" ng-if="list.conditions.year">
+        <div class="margin-top-5" ng-if="::list.conditions.year">
           <label>Year:</label>&nbsp;<span>{{list.conditions.year}}</span><br/>
+        </div>
+        <div class="margin-top-5" ng-if="!list.conditions.limit && list.conditions.tags.length === 0 && list.conditions.series.length === 0 && !list.conditions.season && !list.conditions.year">
+          <p class="padding-10 margin-10">This list has no conditions.</p>
         </div>
     </div>
     <div tab-view heading="statistics" class="height-90 margin-5">
         <div class="height-40 margin-top-5 overflow-auto-hover" ng-if="toptenInfo.tags.length > 0">
           <label class="absolute width-50 primary-background">Tags</label>
-          <table class="width-40 margin-top-15">
+          <table class="width-40 margin-top-20">
             <tbody>
               <tr ng-repeat="tag in toptenInfo.tags | orderBy: '-count'">
                 <td>{{tag.tag}}</td>
@@ -38,7 +41,7 @@
         </div>
         <div class="height-40 margin-top-5 overflow-auto-hover" ng-if="toptenInfo.series.length > 0">
           <label class="absolute width-50 primary-background">Series</label>
-          <table class="width-40 margin-top-15">
+          <table class="width-40 margin-top-20">
             <tbody>
               <tr ng-repeat="series in toptenInfo.series | orderBy: '-count'">
                 <td>{{series.name}}</td>

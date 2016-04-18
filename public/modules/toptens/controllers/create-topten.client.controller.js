@@ -61,7 +61,7 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
 
 		// Create new Topten
 		$scope.create = function() {
-            console.log($scope.topten, this.topten);
+            // console.log($scope.topten, this.topten);
 			// Create new Topten object
             var topten = new Toptens();
 			topten = new Toptens ({
@@ -116,7 +116,6 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
                         $scope.stepConfig.listGen.typeDisplay = 'title';
                         $scope.stepConfig.listGen.tags = CharacterService.buildCharacterTags(result);
 												$scope.years = ItemService.endingYears(result);
-												console.log('years: ', $scope.years);
                     });
                     break;
                 case 'Manga':
@@ -132,15 +131,22 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
                         $scope.stepConfig.listGen.typeDisplay = 'name';
                         $scope.stepConfig.listGen.tags = CharacterService.buildCharacterTags(result);
                         $scope.stepConfig.listGen.series = CharacterService.buildSeriesList(result);
+												var getYears = [];
+												angular.forEach(result, function (item) {
+													if(item.anime) {
+														getYears.push(item.anime);
+													}
+												});
+												$scope.years = ItemService.endingYears(getYears);
                     });
                     break;
             }
-            console.log('type set: ', $scope.stepConfig.listGen);
-        }
+            // console.log('type set: ', $scope.stepConfig.listGen);
+					}
 
         //Processing on step submits.
         function process(number, direction, callback) {
-            console.log(number, direction);
+            // console.log(number, direction);
             switch(number) {
                 case 1:
                     if ($scope.topten.type !== '' && $scope.isCreate) {
@@ -341,19 +347,19 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
             process(number, direction, function() {
                 $scope.stepConfig.currentStep = (direction) ? number + 1 : number - 1;
             });
-            console.log('step: ', $scope.stepConfig, $scope.topten);
+            // console.log('step: ', $scope.stepConfig, $scope.topten);
         };
         $scope.cancel = function() {
             $location.path('toptens');
         };
 
         function inital() {
-            console.log('state params: ', $stateParams);
+            // console.log('state params: ', $stateParams);
             if ($stateParams.toptenId !== undefined) {
                 $scope.isCreate = false;
                 Toptens.get({ toptenId: $stateParams.toptenId }).$promise.then(function(result) {
                     $scope.topten = result;
-										console.log('topten: ', result);
+										// console.log('topten: ', result);
                     typeSetItemPopulate();
                 });
             }
@@ -361,7 +367,7 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
         inital();
 
 				$scope.swappingItems = function(index) {
-					console.log('item selected: ', index);
+					// console.log('item selected: ', index);
 					if($scope.stepConfig.swapping.one === '') {
 						$scope.stepConfig.swapping.one = index;
 					} else if($scope.stepConfig.swapping.one === index) {

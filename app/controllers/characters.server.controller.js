@@ -24,18 +24,18 @@ exports.postImage = function(req, res) {
         var tmpPath = file.path;
         var extIndex = tmpPath.lastIndexOf('.');
         var extension = (extIndex < 0) ? '' : tmpPath.substr(extIndex);
-        
+
         //uuid for unique filenames.
         //var filename = uuid.v4() + extension;
         var filename = file.originalFilename;
         var destPath = 'public/modules/characters/img/' + filename;
-        
+
         //server-side file type check.
         if (contentType !== 'image/png' && contentType !== 'image/jpeg') {
             fs.unlink(tmpPath);
             return res.status(400).send('File type not supported.');
         }
-        
+
         fs.rename(tmpPath, destPath, function(err) {
             if (err) {
                 return res.status(400).send('Image not saved.');
@@ -53,7 +53,7 @@ exports.postImage = function(req, res) {
 exports.create = function(req, res) {
 	var character = new Character(req.body);
 	character.user = req.user;
-    
+
 //    console.log(character);
 	character.save(function(err) {
 		if (err) {
@@ -81,7 +81,7 @@ exports.update = function(req, res) {
 
 	character = _.extend(character , req.body);
     character.meta.updated = Date.now();
-    
+
 //    console.log(character);
 	character.save(function(err) {
 		if (err) {
@@ -114,8 +114,12 @@ exports.delete = function(req, res) {
 /**
  * List of Characters
  */
-exports.list = function(req, res) { 
-	Character.find().sort('-created').populate('user', 'displayName').populate('anime', 'title').populate('manga', 'title').exec(function(err, characters) {
+exports.list = function(req, res) {
+	Character.find().sort('-created')
+	.populate('user', 'displayName')
+	.populate('anime', 'title end season')
+	.populate('manga', 'title')
+	.exec(function(err, characters) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
@@ -129,7 +133,7 @@ exports.list = function(req, res) {
 /**
  * Character middleware
  */
-exports.characterByID = function(req, res, next, id) { 
+exports.characterByID = function(req, res, next, id) {
 	Character.findById(id).populate('user', 'displayName').populate('anime', 'title').populate('manga', 'title').exec(function(err, character) {
 		if (err) return next(err);
 		if (! character) return next(new Error('Failed to load Character ' + id));

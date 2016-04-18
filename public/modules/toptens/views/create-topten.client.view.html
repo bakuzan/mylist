@@ -95,16 +95,19 @@
                           </div>
                           <div tab-view heading="date" disabled="topten.type === 'manga'" class="height-75">
                             <div class="form-group margin-top-25">
-                                <label for="season" class="col-md-2 control-label">Restrict by release</label>
+                                <label for="season" class="col-lg-2 col-md-2 col-sm-2 control-label">Restrict by release</label>
                                 <div class="col-lg-6 col-md-6 col-sm-6">
                                     <select class="form-control" ng-options="option.text as option.text for option in commonArrays.seasons" ng-model="topten.conditions.season" id="season" name="season">
                                         <option value="">No Season</option>
                                     </select>
                                 </div>
-                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="col-lg-4 col-md-4 col-sm-4">
                                     <select class="form-control" ng-options="option.year as option.year for option in years" ng-model="topten.conditions.year" id="year" name="year">
                                         <option value="">No Year</option>
                                     </select>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12" ng-if="topten.type === 'character'">
+                                  <p class="padding-10 margin-10">* Character choice will be restricted to characters whose linked anime aired during the applied filter.</p>
                                 </div>
                             </div>
                           </div>

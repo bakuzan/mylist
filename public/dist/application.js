@@ -568,6 +568,17 @@ angular.module('animeitems')
         });
     };
 })
+.filter('seasonForCharacterAnime', function() {
+    return function(array, year, month) {
+        return array.filter(function(item) {
+            if (item.anime && item.anime.season !== undefined && item.anime.season !== null) {
+                if (item.anime.season.year === year && item.anime.season.season === month) {
+                    return item;
+                }
+            }
+        });
+    };
+})
 .filter('summaryYear', function() {
     return function(array, year, type) {
         if (array !== undefined) {
@@ -5372,7 +5383,7 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
 
 		// Create new Topten
 		$scope.create = function() {
-            console.log($scope.topten, this.topten);
+            // console.log($scope.topten, this.topten);
 			// Create new Topten object
             var topten = new Toptens();
 			topten = new Toptens ({
@@ -5427,7 +5438,6 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
                         $scope.stepConfig.listGen.typeDisplay = 'title';
                         $scope.stepConfig.listGen.tags = CharacterService.buildCharacterTags(result);
 												$scope.years = ItemService.endingYears(result);
-												console.log('years: ', $scope.years);
                     });
                     break;
                 case 'Manga':
@@ -5443,15 +5453,22 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
                         $scope.stepConfig.listGen.typeDisplay = 'name';
                         $scope.stepConfig.listGen.tags = CharacterService.buildCharacterTags(result);
                         $scope.stepConfig.listGen.series = CharacterService.buildSeriesList(result);
+												var getYears = [];
+												angular.forEach(result, function (item) {
+													if(item.anime) {
+														getYears.push(item.anime);
+													}
+												});
+												$scope.years = ItemService.endingYears(getYears);
                     });
                     break;
             }
-            console.log('type set: ', $scope.stepConfig.listGen);
-        }
+            // console.log('type set: ', $scope.stepConfig.listGen);
+					}
 
         //Processing on step submits.
         function process(number, direction, callback) {
-            console.log(number, direction);
+            // console.log(number, direction);
             switch(number) {
                 case 1:
                     if ($scope.topten.type !== '' && $scope.isCreate) {
@@ -5477,16 +5494,31 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
 	                    angular.copy($scope.stepConfig.listGen.items, $scope.stepConfig.listGen.itemsCached);
 	                    // console.log('pre conditions: ', $scope.stepConfig.listGen.items.length, $scope.stepConfig.listGen.itemsCached.length);
 
-											if($scope.topten.conditions.season) {
-												if($scope.topten.conditions.year) {
-													$scope.stepConfig.listGen.items = $filter('season')($scope.stepConfig.listGen.items, $scope.topten.conditions.year, $scope.topten.conditions.season);
+											if($scope.topten.type === 'anime') {
+												if($scope.topten.conditions.season) {
+													if($scope.topten.conditions.year) {
+														$scope.stepConfig.listGen.items = $filter('season')($scope.stepConfig.listGen.items, $scope.topten.conditions.year, $scope.topten.conditions.season);
+													} else {
+														NotificationFactory.popup('Invalid form', 'A year MUST be selected when selecting a season.', 'error');
+														break;
+													}
 												} else {
-													NotificationFactory.popup('Invalid form', 'A year MUST be selected when selecting a season.', 'error');
-													break;
+													if($scope.topten.conditions.year) {
+														$scope.stepConfig.listGen.items = $filter('filter')($scope.stepConfig.listGen.items, { season: { year: $scope.topten.conditions.year } });
+													}
 												}
-											} else {
-												if($scope.topten.conditions.year) {
-													$scope.stepConfig.listGen.items = $filter('filter')($scope.stepConfig.listGen.items, { season: { year: $scope.topten.conditions.year } });
+											} else if($scope.topten.type === 'character') {
+												if($scope.topten.conditions.season) {
+													if($scope.topten.conditions.year) {
+														$scope.stepConfig.listGen.items = $filter('seasonForCharacterAnime')($scope.stepConfig.listGen.items, $scope.topten.conditions.year, $scope.topten.conditions.season);
+													} else {
+														NotificationFactory.popup('Invalid form', 'A year MUST be selected when selecting a season.', 'error');
+														break;
+													}
+												} else {
+													if($scope.topten.conditions.year) {
+														$scope.stepConfig.listGen.items = $filter('filter')($scope.stepConfig.listGen.items, { anime: { season: { year: $scope.topten.conditions.year } } });
+													}
 												}
 											}
 
@@ -5637,19 +5669,19 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
             process(number, direction, function() {
                 $scope.stepConfig.currentStep = (direction) ? number + 1 : number - 1;
             });
-            console.log('step: ', $scope.stepConfig, $scope.topten);
+            // console.log('step: ', $scope.stepConfig, $scope.topten);
         };
         $scope.cancel = function() {
             $location.path('toptens');
         };
 
         function inital() {
-            console.log('state params: ', $stateParams);
+            // console.log('state params: ', $stateParams);
             if ($stateParams.toptenId !== undefined) {
                 $scope.isCreate = false;
                 Toptens.get({ toptenId: $stateParams.toptenId }).$promise.then(function(result) {
                     $scope.topten = result;
-										console.log('topten: ', result);
+										// console.log('topten: ', result);
                     typeSetItemPopulate();
                 });
             }
@@ -5657,7 +5689,7 @@ angular.module('toptens').controller('CreateToptenController', ['$scope', '$stat
         inital();
 
 				$scope.swappingItems = function(index) {
-					console.log('item selected: ', index);
+					// console.log('item selected: ', index);
 					if($scope.stepConfig.swapping.one === '') {
 						$scope.stepConfig.swapping.one = index;
 					} else if($scope.stepConfig.swapping.one === index) {

@@ -148,10 +148,10 @@ angular.module('tasks')
         }
     };
 })
-.directive('scheduleCalendar', ['moment', 'ListService', function(moment, ListService) {
+.directive('scheduleCalendar', ['$uibModal', 'moment', 'ListService', function($uibModal, moment, ListService) {
 
   function _removeTime(date) {
-    var processedDate = moment.utc(date.day(1).hour(0).minute(0).second(0).millisecond(0));
+    var processedDate = date.day(1).hour(0).minute(0).second(0).millisecond(0);
     console.log('remove time: ', date, processedDate);
     return processedDate;
   }
@@ -186,12 +186,28 @@ angular.module('tasks')
        return days;
    }
 
+   function _displayEvents(events, date) {
+     var modalInstance = $uibModal.open({
+       animation: true,
+       templateUrl: '/modules/tasks/views/schedule-calendar-task.client.view.html',
+       controller: 'ScheduleCalendarTaskController as ctrl',
+       size: 'lg',
+       resolve: {
+         data: function () {
+           return { events: events, date: date };
+         }
+       }
+     });
+   }
+
   return {
        restrict: 'A',
        templateUrl: 'modules/tasks/templates/schedule-calendar.html',
-       scope: {},
+       scope: {
+         events: '='
+       },
        link: function(scope) {
-           scope.selected = _removeTime( moment(new Date()).add(1, 'd') );
+           scope.selected = _removeTime( moment(new Date()) );
            scope.month = scope.selected.clone();
 
            var start = scope.selected.clone();
@@ -201,7 +217,10 @@ angular.module('tasks')
            _buildMonth(scope, start, scope.month);
 
            scope.select = function(day) {
-               scope.selected = day.date;
+             if(scope.selected === day.date){
+               _displayEvents(scope.events, day.date);
+             }
+             scope.selected = day.date;
            };
 
            scope.next = function() {

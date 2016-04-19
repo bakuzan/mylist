@@ -5,7 +5,7 @@ angular.module('toptens')
     return function(array, displayType, value) {
         if(array !== undefined) {
             return array.filter(function(item) {
-                if(item[displayType].indexOf(value) > -1) {
+                if(item[displayType].toLowerCase().indexOf(value.toLowerCase()) > -1) {
                     return item;
                 }
             });

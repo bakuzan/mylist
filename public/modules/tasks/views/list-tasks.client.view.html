@@ -19,89 +19,95 @@
     </div>
     <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
     <div class="col-lg-8 col-md-6 col-sm-6 item-list-container" loading-spinner name="tasks" size="fullscreen">
-      <div schedule-calendar selected="day"></div>
-        <div class="tab-filter-container width-100 margin-top-40" id="task-tab-filter-container" sticky>
-            <div id="task-tab-filter-inner-container">
-                <div class="relative tab-filter clickable" ng-class="(filterConfig.search.day === '') ? 'tab-in' : 'tab-out' ">
-                    <label class="width-100 clickable text-center" ng-click="tabFilter('')">ALL</label>
-                </div>
-                <div class="relative tab-filter clickable" ng-class="(filterConfig.search.day === day.name) ? 'tab-in' : 'tab-out' "
-                      ng-repeat="day in commonArrays.days">
-                    <label class="width-100 clickable text-center" ng-click="tabFilter(day.name)">{{::day.name}}</label>
+      <div tab-container ng-model="view">
+        <div tab-view heading="list">
+            <div class="tab-filter-container width-100 margin-top-40" id="task-tab-filter-container" sticky>
+                <div id="task-tab-filter-inner-container">
+                    <div class="relative tab-filter clickable" ng-class="(filterConfig.search.day === '') ? 'tab-in' : 'tab-out' ">
+                        <label class="width-100 clickable text-center" ng-click="tabFilter('')">ALL</label>
+                    </div>
+                    <div class="relative tab-filter clickable" ng-class="(filterConfig.search.day === day.name) ? 'tab-in' : 'tab-out' "
+                          ng-repeat="day in commonArrays.days">
+                        <label class="width-100 clickable text-center" ng-click="tabFilter(day.name)">{{::day.name}}</label>
+                    </div>
                 </div>
             </div>
+            <ul class="taskList col-lg-12 col-md-12 col-sm-12">
+                <div ng-if="filterConfig.showingCount === 0" class="relative width-100 margin-top-20 text-center">
+                    <p class="relative width-100">No items were found using your selection criteria.</p>
+                </div>
+                <li class="taskItem" ng-repeat="taskItem in tasks | filter: filterConfig.search | calendarFilter:filterConfig.datesSelected">
+                    <input type="checkbox" class="taskCheckbox" ng-model="taskItem.complete" ng-change="tickOff(taskItem)" ng-disabled="taskItem.complete || taskItem.checklist">
+                    <span class="task-description-text complete-{{taskItem.complete}} display-inline-block" ng-class="taskItem.checklist === true ? 'clickable' : ''"
+                          ng-click="taskItem.checklist === true ? viewTask = !viewTask : ''">
+                        {{taskItem.description}}
+                    </span>
+                    <span class="separator">
+                        -
+                    </span>
+                    <span class="task-times-text complete-{{taskItem.complete}}"
+                          hover-data="{{ (taskItem.link.type==='manga') ? 'Ch ' + taskItem.link.manga.chapters + ', Vol ' +  taskItem.link.manga.volumes : '' }}">
+                        <span ng-if="taskItem.link.type!=='anime'">
+                            {{taskItem.completeTimes}}/{{taskItem.repeat}}
+                        </span>
+                        <span ng-if="taskItem.link.type==='anime'">
+                            {{taskItem.link.anime.episodes}}/{{taskItem.link.anime.finalEpisode}}
+                        </span>
+                    </span>
+                    <span class="category-{{taskItem.category}}"
+                          hover-data="{{taskItem.link.linked ? (taskItem.link.type ===  'anime') ?
+                                                                taskItem.link.anime.title        :
+                                                                taskItem.link.manga.title        :
+                                                                ''
+                                      }}">
+                        {{taskItem.category}}
+                    </span>
+                    <a class="bin-style clickable" aria-hidden="true" ng-click="deleteTask(taskItem)">
+                        <i class="fa fa-trash-o"></i>
+                    </a>
+                    <strong class="taskDate complete-{{taskItem.complete}}">
+                        <span hover-data="{{taskItem.date | date: 'dd MMM yyyy' }}"><i class="fa fa-calendar"></i></span>
+                        <span ng-hide="taskItem.daily">
+                            <span ng-if="taskItem.complete">{{taskItem.day}}</span>
+                            <select ng-if="!taskItem.complete" class="phantom-control transform-uppercase" style="width: 75px" ng-model="taskItem.day"
+                                    ng-options="obj.name as obj.name for obj in commonArrays.days" ng-change="changeTaskDay(taskItem)">
+                            </select>
+                        </span>
+                        <span ng-show="taskItem.daily">
+                            DAILY
+                        </span>
+                    </strong>
+                    <div class="margin-top-10" percentage-bar-container ng-if="taskItem.checklist">
+                        <div percentage-bar percentage="{{ ((taskItem.checklistItems | filter: {complete: true}).length / taskItem.checklistItems.length) * 100}}"
+                             type="white-text accent-alter-background"
+                             hover-data="{{ ((taskItem.checklistItems | filter: {complete: true}).length / taskItem.checklistItems.length)*100 | number: 2 }}%"></div>
+                    </div>
+                    <div ng-if="taskItem.checklist" class="checklist-list-container" ng-show="viewTask">
+                        <input ng-show="!taskItem.complete && addingToChecklist" type="text" class="form-control" ng-model="insertNewChecklistItem"
+                               enter-tag="insertChecklistItem(taskItem, insertNewChecklistItem); insertNewChecklistItem = ''">
+                        <a ng-show="!taskItem.complete" class="btn btn-accent" ng-click="addingToChecklist=!addingToChecklist">
+                            <i ng-hide="addingToChecklist" class="fa fa-plus"></i>
+                            <i ng-show="addingToChecklist" class="fa fa-minus"></i>
+                        </a>
+                        <a ng-show="!taskItem.complete && addingToChecklist"class="btn btn-accent" ng-click="insertChecklistItem(taskItem, insertNewChecklistItem); insertNewChecklistItem = ''"
+                           ng-disabled="insertNewChecklistItem==='' || insertNewChecklistItem===null || insertNewChecklistItem===undefined">
+                            Add
+                        </a>
+                        <ul class="checklist-list">
+                            <li class="checklist-item" ng-repeat="option in taskItem.checklistItems">
+                                <input type="checkbox" class="taskCheckbox" ng-model="option.complete" ng-change="tickOffChecklist(taskItem, $index)" ng-disabled="option.complete">
+                                <span class="complete-{{option.complete}}">
+                                    {{option.text}}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
         </div>
-        <ul class="taskList col-lg-12 col-md-12 col-sm-12">
-            <div ng-if="filterConfig.showingCount === 0" class="relative width-100 margin-top-20 text-center">
-                <p class="relative width-100">No items were found using your selection criteria.</p>
-            </div>
-            <li class="taskItem" ng-repeat="taskItem in tasks | filter: filterConfig.search | calendarFilter:filterConfig.datesSelected">
-                <input type="checkbox" class="taskCheckbox" ng-model="taskItem.complete" ng-change="tickOff(taskItem)" ng-disabled="taskItem.complete || taskItem.checklist">
-                <span class="task-description-text complete-{{taskItem.complete}} display-inline-block" ng-class="taskItem.checklist === true ? 'clickable' : ''"
-                      ng-click="taskItem.checklist === true ? viewTask = !viewTask : ''">
-                    {{taskItem.description}}
-                </span>
-                <span class="separator">
-                    -
-                </span>
-                <span class="task-times-text complete-{{taskItem.complete}}"
-                      hover-data="{{ (taskItem.link.type==='manga') ? 'Ch ' + taskItem.link.manga.chapters + ', Vol ' +  taskItem.link.manga.volumes : '' }}">
-                    <span ng-if="taskItem.link.type!=='anime'">
-                        {{taskItem.completeTimes}}/{{taskItem.repeat}}
-                    </span>
-                    <span ng-if="taskItem.link.type==='anime'">
-                        {{taskItem.link.anime.episodes}}/{{taskItem.link.anime.finalEpisode}}
-                    </span>
-                </span>
-                <span class="category-{{taskItem.category}}"
-                      hover-data="{{taskItem.link.linked ? (taskItem.link.type ===  'anime') ?
-                                                            taskItem.link.anime.title        :
-                                                            taskItem.link.manga.title        :
-                                                            ''
-                                  }}">
-                    {{taskItem.category}}
-                </span>
-                <a class="bin-style clickable" aria-hidden="true" ng-click="deleteTask(taskItem)">
-                    <i class="fa fa-trash-o"></i>
-                </a>
-                <strong class="taskDate complete-{{taskItem.complete}}">
-                    <span hover-data="{{taskItem.date | date: 'dd MMM yyyy' }}"><i class="fa fa-calendar"></i></span>
-                    <span ng-hide="taskItem.daily">
-                        <span ng-if="taskItem.complete">{{taskItem.day}}</span>
-                        <select ng-if="!taskItem.complete" class="phantom-control transform-uppercase" style="width: 75px" ng-model="taskItem.day"
-                                ng-options="obj.name as obj.name for obj in commonArrays.days" ng-change="changeTaskDay(taskItem)">
-                        </select>
-                    </span>
-                    <span ng-show="taskItem.daily">
-                        DAILY
-                    </span>
-                </strong>
-                <div class="margin-top-10" percentage-bar-container ng-if="taskItem.checklist">
-                    <div percentage-bar percentage="{{ ((taskItem.checklistItems | filter: {complete: true}).length / taskItem.checklistItems.length) * 100}}"
-                         type="white-text accent-alter-background"
-                         hover-data="{{ ((taskItem.checklistItems | filter: {complete: true}).length / taskItem.checklistItems.length)*100 | number: 2 }}%"></div>
-                </div>
-                <div ng-if="taskItem.checklist" class="checklist-list-container" ng-show="viewTask">
-                    <input ng-show="!taskItem.complete && addingToChecklist" type="text" class="form-control" ng-model="insertNewChecklistItem"
-                           enter-tag="insertChecklistItem(taskItem, insertNewChecklistItem); insertNewChecklistItem = ''">
-                    <a ng-show="!taskItem.complete" class="btn btn-accent" ng-click="addingToChecklist=!addingToChecklist">
-                        <i ng-hide="addingToChecklist" class="fa fa-plus"></i>
-                        <i ng-show="addingToChecklist" class="fa fa-minus"></i>
-                    </a>
-                    <a ng-show="!taskItem.complete && addingToChecklist"class="btn btn-accent" ng-click="insertChecklistItem(taskItem, insertNewChecklistItem); insertNewChecklistItem = ''"
-                       ng-disabled="insertNewChecklistItem==='' || insertNewChecklistItem===null || insertNewChecklistItem===undefined">
-                        Add
-                    </a>
-                    <ul class="checklist-list">
-                        <li class="checklist-item" ng-repeat="option in taskItem.checklistItems">
-                            <input type="checkbox" class="taskCheckbox" ng-model="option.complete" ng-change="tickOffChecklist(taskItem, $index)" ng-disabled="option.complete">
-                            <span class="complete-{{option.complete}}">
-                                {{option.text}}
-                            </span>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-        </ul>
+        <div tab-view heading="calendar">
+          <div schedule-calendar selected="day"></div>
+        </div>
+      </div>
     </div>
 </section>

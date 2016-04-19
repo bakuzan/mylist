@@ -151,7 +151,7 @@ angular.module('tasks')
 .directive('scheduleCalendar', ['moment', function(moment) {
 
   function _removeTime(date) {
-    return date.day(0).hour(0).minute(0).second(0).millisecond(0);
+    return date.day(1).hour(0).minute(0).second(0).millisecond(0);
   }
 
   function _buildMonth(scope, start, month) {
@@ -193,7 +193,7 @@ angular.module('tasks')
            scope.month = scope.selected.clone();
 
            var start = scope.selected.clone();
-           start.date(1);
+           start.date(-6);
            _removeTime(start.day(0));
 
            _buildMonth(scope, start, scope.month);
@@ -204,14 +204,14 @@ angular.module('tasks')
 
            scope.next = function() {
                var next = scope.month.clone();
-               _removeTime(next.month(next.month()+1).date(1));
+               _removeTime(next.month(next.month()+1).date(0).day(0));
                scope.month.month(scope.month.month()+1);
                _buildMonth(scope, next, scope.month);
            };
 
            scope.previous = function() {
                var previous = scope.month.clone();
-               _removeTime(previous.month(previous.month()-1).date(1));
+               _removeTime(previous.month(previous.month()-1).date(0).day(0));
                scope.month.month(scope.month.month()-1);
                _buildMonth(scope, previous, scope.month);
            };

@@ -18,7 +18,8 @@ $calendar-border-colour:#CCC;
     display:block;
     @extend .border-box;
     background:white;
-    width:300px;
+    min-width:300px;
+    width: 100%;
     border:solid 1px $calendar-border-colour;
     margin-bottom:10px;
 

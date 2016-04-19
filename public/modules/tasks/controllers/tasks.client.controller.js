@@ -7,10 +7,10 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
 
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
-				$scope.day = moment();
+
         var today = new Date(),
             day = today.getDay();
-
+				$scope.day = moment();
         $rootScope.commonArrays = ListService.getCommonArrays();
         $scope.whichController = 'task';
         //paging variables.

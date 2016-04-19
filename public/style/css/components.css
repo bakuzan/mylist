@@ -463,7 +463,8 @@ div.slider-full-screen {
   float: left;
   display: block;
   background: white;
-  width: 300px;
+  min-width: 300px;
+  width: 100%;
   border: solid 1px #CCC;
   margin-bottom: 10px; }
   .schedule-calendar > div.header {

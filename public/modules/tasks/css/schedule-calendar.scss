@@ -1,8 +1,6 @@
-$height: 100px;
-
 @mixin vertical-centre ($height) {
     height:$height;
-    line-height:$height !important;
+    line-height: $height;
     display:inline-block;
     vertical-align:middle;
 }
@@ -73,6 +71,8 @@ $calendar-border-colour:#CCC;
         }
     }
     >div.week {
+      $day-height: 50px;
+
         float:left;
         width:100%;
         border-top:solid 1px $calendar-border-colour;
@@ -86,12 +86,13 @@ $calendar-border-colour:#CCC;
             width: calc(100% / 7);
             @extend .border-box;
             border-left:solid 1px $calendar-border-colour;
-            font-size:0.75em;
-            text-align:center;
-            @include vertical-centre(30px);
+            text-align: left;
+            @include vertical-centre($day-height);
             background:white;
             cursor:pointer;
             color:black;
+            padding: 5px;
+            line-height: normal;
 
             &:first-child {
                 border-left:none;
@@ -115,6 +116,7 @@ $calendar-border-colour:#CCC;
         &.names>span {
             color:$calendar-secondary-colour;
             font-weight:bold;
+            text-align: center;
         }
     }
 }

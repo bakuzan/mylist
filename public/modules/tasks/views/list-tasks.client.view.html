@@ -10,7 +10,7 @@
             <button class="btn btn-primary show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</button>
         </h3>
     </div>
-    <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }">
+    <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }" ng-show="(filterConfig.view === 'list')">
         <a class="menu-header-bar clickable margin-bottom-10" ng-click="newTask.isAddTask = !newTask.isAddTask;">
             <i class="fa" ng-class="(newTask.isAddTask === false) ? 'fa-plus-square' : 'fa-minus-square'"></i> Add task
         </a>
@@ -18,8 +18,8 @@
         <div list-filters filter-config="filterConfig" items="tasks" page="whichController"></div>
     </div>
     <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
-    <div class="col-lg-8 col-md-6 col-sm-6 item-list-container" loading-spinner name="tasks" size="fullscreen">
-      <div tab-container ng-model="view">
+    <div class="item-list-container" loading-spinner name="tasks" size="fullscreen" ng-class="(filterConfig.view === 'list') ? 'col-lg-8 col-md-6 col-sm-6' : 'col-lg-12 col-md-12 col-sm-12'">
+      <div tab-container ng-model="filterConfig.view">
         <div tab-view heading="list">
             <div class="tab-filter-container width-100 margin-top-40" id="task-tab-filter-container" sticky>
                 <div id="task-tab-filter-inner-container">
@@ -106,7 +106,7 @@
             </ul>
         </div>
         <div tab-view heading="calendar">
-          <div schedule-calendar selected="day"></div>
+          <div class="margin-top-15" schedule-calendar></div>
         </div>
       </div>
     </div>

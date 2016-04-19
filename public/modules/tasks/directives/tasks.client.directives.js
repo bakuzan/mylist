@@ -148,22 +148,26 @@ angular.module('tasks')
         }
     };
 })
-.directive('scheduleCalendar', ['moment', function(moment) {
+.directive('scheduleCalendar', ['moment', 'ListService', function(moment, ListService) {
 
   function _removeTime(date) {
-    return date.day(1).hour(0).minute(0).second(0).millisecond(0);
+    var processedDate = moment.utc(date.day(1).hour(0).minute(0).second(0).millisecond(0));
+    console.log('remove time: ', date, processedDate);
+    return processedDate;
   }
 
   function _buildMonth(scope, start, month) {
        scope.weeks = [];
        var done = false, date = start.clone(), monthIndex = date.month(), count = 0;
        while (!done) {
-           scope.weeks.push({ days: _buildWeek(date.clone(), month) });
+         var days = _buildWeek(date.clone(), month);
+         if(ListService.findWithAttr(days, 'isCurrentMonth', true) > -1) {
+           scope.weeks.push({ days: days });
+         }
            date.add(1, 'w');
            done = count++ > 2 && monthIndex !== date.month();
            monthIndex = date.month();
        }
-       console.log('weeks: ', scope.weeks);
    }
 
    function _buildWeek(date, month) {
@@ -185,11 +189,9 @@ angular.module('tasks')
   return {
        restrict: 'A',
        templateUrl: 'modules/tasks/templates/schedule-calendar.html',
-       scope: {
-           selected: '='
-       },
+       scope: {},
        link: function(scope) {
-           scope.selected = _removeTime(scope.selected || moment());
+           scope.selected = _removeTime( moment(new Date()).add(1, 'd') );
            scope.month = scope.selected.clone();
 
            var start = scope.selected.clone();
@@ -204,14 +206,14 @@ angular.module('tasks')
 
            scope.next = function() {
                var next = scope.month.clone();
-               _removeTime(next.month(next.month()+1).date(0).day(0));
+               _removeTime(next.month(next.month()+1).date(1));
                scope.month.month(scope.month.month()+1);
                _buildMonth(scope, next, scope.month);
            };
 
            scope.previous = function() {
                var previous = scope.month.clone();
-               _removeTime(previous.month(previous.month()-1).date(0).day(0));
+               _removeTime(previous.month(previous.month()-1).date(1));
                scope.month.month(scope.month.month()-1);
                _buildMonth(scope, previous, scope.month);
            };

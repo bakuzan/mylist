@@ -10,7 +10,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
 
         var today = new Date(),
             day = today.getDay();
-				$scope.day = moment();
+
         $rootScope.commonArrays = ListService.getCommonArrays();
         $scope.whichController = 'task';
         //paging variables.
@@ -19,14 +19,15 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
             pageSize: 10
         };
         $scope.filterConfig = {
-            showingCount: 0,
-            sortType: '',
-            sortReverse: true,
-            search: {
-                description: '',
-                day: ''
-            },
-            datesSelected: false
+					view: 'list',
+          showingCount: 0,
+          sortType: '',
+          sortReverse: true,
+          search: {
+              description: '',
+              day: ''
+          },
+          datesSelected: false
         };
         $scope.mangaUpdate = {
             isPopup: ''

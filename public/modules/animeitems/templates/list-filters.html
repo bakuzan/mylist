@@ -13,13 +13,13 @@
             <input type="text" class="form-control" value="Showing {{ (filterConfig.showingCount = (items | filter: filterConfig.search | mediaFilter: filterConfig.media | ratingFilter: filterConfig.ratingLevel | tagFilter: filterConfig.searchTags:filterConfig.taglessItem).length) }} items." disabled ng-if="page !== 'topten'">
             <input type="text" class="form-control" value="Showing {{ (filterConfig.showingCount = (items | filter: filterConfig.search).length) }} items." disabled ng-if="page === 'topten'">
         </div>
-        
+
         <div class="input-group mt" ng-hide="filterConfig.expandFilters">
             <div class="input-group-addon clickable" ng-click="filterConfig.expandFilters=!filterConfig.expandFilters">
                 <i class="fa fa-filter"></i>
             </div>
         </div>
-        
+
         <div class="animate" ng-class="(filterConfig.expandFilters) ? 'ease-in' : 'ease-out'">
             <div class="input-group mt" ng-if="page !== 'topten'">
                 <div class="input-group-addon clickable" clear-tag-values>
@@ -39,9 +39,9 @@
               <div class="input-group-addon">
                   <i class="fa fa-sort"></i>
               </div>
-                <select class="form-control" 
-                        ng-model="filterConfig.sortType" 
-                        ng-init="filterConfig.sortType = filterConfig.selectListOptions.sortOptions[filterConfig.selectListOptions.sortOption].v" 
+                <select class="form-control"
+                        ng-model="filterConfig.sortType"
+                        ng-init="filterConfig.sortType = filterConfig.selectListOptions.sortOptions[filterConfig.selectListOptions.sortOption].v"
                         ng-options="so.v as so.n for so in filterConfig.selectListOptions.sortOptions">
                 </select>
             </div>
@@ -52,7 +52,7 @@
                 <input type="text" class="form-control" value="Ascending" ng-show="!filterConfig.sortReverse" disabled>
                 <input type="text" class="form-control" value="Descending" ng-show="filterConfig.sortReverse" disabled>
             </div>
-            <div class="input-group mt" ng-if="page === 'animeitem'">        
+            <div class="input-group mt" ng-if="page === 'animeitem'">
                 <div class="input-group-addon">
                     <i class="fa" ng-class="(filterConfig.ongoingList) ? 'fa-compress' : 'fa-expand'"></i>
                 </div>
@@ -74,12 +74,12 @@
             </div>
             <div class="input-group mt" ng-if="page !== 'character'">
               <div class="input-group-addon">
-                  <i class="glyphicon" 
-                     ng-class="{'glyphicon-cd' : filterConfig.selectListOptions.mediaType === 'disc', 
+                  <i class="glyphicon"
+                     ng-class="{'glyphicon-cd' : filterConfig.selectListOptions.mediaType === 'disc',
                                 'glyphicon-book' : filterConfig.selectListOptions.mediaType === 'hardcopy',
                                 'glyphicon-folder-open' : filterConfig.selectListOptions.mediaType === 'type' }"></i>
               </div>
-                <select class="form-control" 
+                <select class="form-control"
                         ng-model="filterConfig.search[filterConfig.selectListOptions.mediaType]"
                         ng-init="filterConfig.search[filterConfig.selectListOptions.mediaType] = ''"
                         ng-options="so.v as so.n for so in filterConfig.selectListOptions.media">
@@ -89,9 +89,9 @@
               <div class="input-group-addon">
                   <i class="fa fa-repeat"></i>
               </div>
-                <select class="form-control" 
-                        ng-model="filterConfig.search[filterConfig.selectListOptions.repeatType]" 
-                        ng-init="filterConfig.search[filterConfig.selectListOptions.repeatType] = ''" 
+                <select class="form-control"
+                        ng-model="filterConfig.search[filterConfig.selectListOptions.repeatType]"
+                        ng-init="filterConfig.search[filterConfig.selectListOptions.repeatType] = ''"
                         ng-options="so.v as so.n for so in filterConfig.selectListOptions.repeating">
                 </select>
             </div>
@@ -101,8 +101,8 @@
                 </div>
                    <uib-rating class="form-control rating-stars clickable" ng-model="filterConfig.ratingLevel" readonly="false" max="filterConfig.ratingActions.maxRating" on-hover="hoveringOver(value)" on-leave="filterConfig.ratingActions.overStar = null" id="rating" name="rating"></uib-rating>
                 <div class="input-group-addon">
-                    <span data-ng-show="filterConfig.ratingActions.overStar!=null" 
-                          class="label rating-label" 
+                    <span data-ng-show="filterConfig.ratingActions.overStar!=null"
+                          class="label rating-label"
                           ng-class="{'label-warning': filterConfig.ratingActions.percent<40, 'label-info': filterConfig.ratingActions.percent>=30 && filterConfig.ratingActions.percent<70, 'label-success': filterConfig.ratingActions.percent>=70}">{{filterConfig.ratingActions.percent}}%</span>
                 </div>
             </div>
@@ -131,15 +131,21 @@
                 </div>
                 <input class="phantom-control" type="checkbox" data-ng-model="filterConfig.search.isFavourite" ng-change="(filterConfig.search.isFavourite) ? true : filterConfig.search.isFavourite = ''">
             </div>
-            <div class="input-group mt" ng-if="page !== 'topten'" data-ng-show="filterConfig.areTagless">
-            <div class="input-group-addon">
-                <span class="fa-stack fa-md">
-                    <i class="fa fa-tag fa-stack-1x"></i>
-                    <i class="fa fa-ban fa-stack-2x text-danger"></i>
-                </span>
+            <div class="input-group mt" ng-if="page === 'topten'">
+                <div class="input-group-addon">
+                    <i class="fa fa-trophy trophy-5"></i>
+                </div>
+                <input class="phantom-control" type="checkbox" data-ng-model="filterConfig.search.isRanked" ng-change="(filterConfig.search.isRanked) ? true : filterConfig.search.isRanked = ''">
             </div>
-            <input class="phantom-control" type="checkbox" data-ng-model="filterConfig.taglessItem">
-        </div>
+            <div class="input-group mt" ng-if="page !== 'topten'" data-ng-show="filterConfig.areTagless">
+              <div class="input-group-addon">
+                  <span class="fa-stack fa-md">
+                      <i class="fa fa-tag fa-stack-1x"></i>
+                      <i class="fa fa-ban fa-stack-2x text-danger"></i>
+                  </span>
+              </div>
+              <input class="phantom-control" type="checkbox" data-ng-model="filterConfig.taglessItem">
+            </div>
         </div>
     </div>
     <div ng-if="page === 'task'">
@@ -153,17 +159,17 @@
             <div class="input-group-addon">
               <i class="fa fa-list-ol"></i>
             </div>
-            <input type="text" class="form-control" 
+            <input type="text" class="form-control"
                    value="Showing {{ (filterConfig.showingCount = (filteredItems = (items | filter: filterConfig.search | calendarFilter:filterConfig.datesSelected)).length) }} tasks." disabled>
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12 mt input-group">
             <div class="input-group-addon">
               <i class="fa fa-check-square"></i>
             </div>
-            <input type="text" class="form-control" 
+            <input type="text" class="form-control"
                    value="{{ (filteredItems | filter: { complete: false }).length }} remaining of {{ filterConfig.showingCount }} current tasks." disabled>
         </div>
-        <div class="input-group mt">        
+        <div class="input-group mt">
             <div class="input-group-addon">
                 <i class="fa fa-calendar-o"></i>
             </div>
@@ -171,8 +177,3 @@
         </div>
     </div>
 </div>
-
-
-
-
-            

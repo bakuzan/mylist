@@ -12,9 +12,10 @@
             <div class="list-group col-lg-12 col-md-12 col-sm-12">
                 <div data-ng-repeat="item in toptens | orderBy: filterConfig.sortType:filterConfig.sortReverse | filter: filterConfig.search | startFrom: pageConfig.currentPage*pageConfig.pageSize | limitTo: pageConfig.pageSize" class="list-group-item col-lg-12 col-md-12 col-sm-12">
                     <div class="view-item-top">
-                        <h4 class="list-group-item-heading clickable" ng-click="(viewItem === item) ? viewItem='' : viewItem=item" data-ng-bind="item.name"></h4>
+                        <h4 class="list-group-item-heading clickable display-inline-block" ng-click="(viewItem === item) ? viewItem='' : viewItem=item" data-ng-bind="item.name"></h4>
+                        <span class="item-icons" ng-if="::item.isRanked"><i class="fa fa-trophy trophy-5"></i></span>
                         <p class="list-group-item-text">
-                            <span class="item-icons" ng-if="item.isFavourite"><i class="fa fa-star" style="color: gold"></i></span>
+                            <span class="item-icons" ng-if="::item.isFavourite"><i class="fa fa-star" style="color: gold"></i></span>
                             <span ng-bind="item.description"></span>
                         </p>
                     </div>

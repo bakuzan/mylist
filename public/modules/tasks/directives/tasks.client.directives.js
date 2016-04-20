@@ -151,8 +151,7 @@ angular.module('tasks')
 .directive('scheduleCalendar', ['$uibModal', 'moment', 'ListService', function($uibModal, moment, ListService) {
 
   function _removeTime(date) {
-    var processedDate = date.day(1).hour(0).minute(0).second(0).millisecond(0);
-    console.log('remove time: ', date, processedDate);
+    var processedDate = date.day(1).hour(12).minute(0).second(0).millisecond(0);
     return processedDate;
   }
 
@@ -168,6 +167,7 @@ angular.module('tasks')
            done = count++ > 2 && monthIndex !== date.month();
            monthIndex = date.month();
        }
+       console.log('weeks: ', scope.weeks);
    }
 
    function _buildWeek(date, month) {
@@ -207,7 +207,7 @@ angular.module('tasks')
          events: '='
        },
        link: function(scope) {
-           scope.selected = _removeTime( moment(new Date()) );
+           scope.selected = _removeTime( moment() );
            scope.month = scope.selected.clone();
 
            var start = scope.selected.clone();

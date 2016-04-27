@@ -41,16 +41,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
             return $sce.trustAsResourceUrl(url);
         };
 
-        $scope.$watchCollection('characters', function() {
-            if ($scope.characters!==undefined) {
-							// console.log('watch characters: ', $scope.characters);
-                $scope.filterConfig.areTagless = ListService.checkForTagless($scope.characters);
-                $scope.filterConfig.statTags = CharacterService.buildCharacterTags($scope.characters);
-                $scope.filterConfig.voiceActors = CharacterService.buildVoiceActors($scope.characters);
-                $scope.filterConfig.series = CharacterService.buildSeriesList($scope.characters);
-            }
-        });
-
         //for adding/removing tags.
         $scope.addTag = function () {
 //            console.log($scope.newTag);
@@ -140,10 +130,14 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 
 		// Find a list of Characters
 		$scope.find = function() {
-            spinnerService.loading('characters', Characters.query().$promise.then(function(result) {
-							$scope.characters = result;
-            // console.log('find characters: ', $scope.characters);
-            }));
+			spinnerService.loading('characters', Characters.query().$promise.then(function(result) {
+				$scope.characters = result;
+				$scope.filterConfig.areTagless = ListService.checkForTagless(result);
+				$scope.filterConfig.statTags = CharacterService.buildCharacterTags(result);
+				$scope.filterConfig.voiceActors = CharacterService.buildVoiceActors(result);
+				$scope.filterConfig.series = CharacterService.buildSeriesList(result);
+				console.log('find characters: ', $scope.characters, $scope.filterConfig);
+			}));
 		};
 
 		// Find existing Character
@@ -156,7 +150,7 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 
         // Find a list of Animeitems
 		$scope.findAnime = function() {
-            $scope.animeitems = Animeitems.query();
+			$scope.animeitems = Animeitems.query();
 		};
 
         // Find existing Animeitem

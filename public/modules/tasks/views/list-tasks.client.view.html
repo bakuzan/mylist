@@ -36,7 +36,7 @@
                 <div ng-if="filterConfig.showingCount === 0" class="relative width-100 margin-top-20 text-center">
                     <p class="relative width-100">No items were found using your selection criteria.</p>
                 </div>
-                <li task-item-model ng-repeat="taskItem in tasks | filter: filterConfig.search | calendarFilter:filterConfig.datesSelected">
+                <li task-item-model ng-repeat="taskItem in tasks | orderBy: '-date' | filter: filterConfig.search | calendarFilter:filterConfig.datesSelected">
                 </li>
             </ul>
         </div>

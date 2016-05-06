@@ -17,6 +17,11 @@ angular.module('tasks').controller('ScheduleCalendarTaskController', ['$scope', 
 					ctrl.events.push(event);
 				}
 			});
+			ctrl.events.sort(function(a, b) {
+				var aDate = a.date, bDate = b.date;
+				return aDate < bDate ? 1 :
+							 aDate > bDate ? -1 : 0;
+			});
 		};
 		ctrl.init();
 

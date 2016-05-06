@@ -84,7 +84,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         });
     };
 }])
-.service('ListService', function() {
+.service('ListService', ['moment', function(moment) {
 
         //show a loading gif if text doesn't exist.
         this.loader = function(value) {
@@ -302,7 +302,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             return commonArrays;
         };
 
-})
+}])
 .service('ItemService', ['moment', '$filter', 'ListService', function(moment, $filter, ListService) {
 
         //Using the date, returns the season.

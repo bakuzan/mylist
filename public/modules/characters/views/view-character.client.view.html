@@ -1,10 +1,10 @@
 <section data-ng-controller="CharactersController" data-ng-init="findOne()" data-ng-show="authentication.user">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 page-header">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 pull-left">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 pull-left">
                 <img ng-src="{{trustAsResourceUrl(character.image)}}" height="100%" width="100%"/>
             </div>
-            <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 pull-left">
+            <div class="col-lg-9 col-md-9 col-sm-6 col-xs-6">
                 <div class="pull-right" data-ng-show="((authentication.user) && (authentication.user._id == character.user._id))">
                     <a class="btn btn-accent" href="/#!/characters">
                         <i class="glyphicon glyphicon-chevron-left"></i>

@@ -4715,8 +4715,40 @@ angular.module('tasks').config(['$stateProvider',
 'use strict';
 
 // Tasks controller
-angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory', 'spinnerService', '$uibModal',
-	function($scope, $rootScope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory, spinnerService, $uibModal) {
+angular.module('tasks').controller('ScheduleCalendarTaskController', ['$scope', '$uibModalInstance', 'moment', 'data', 'HistoryService',
+	function($scope, $uibModalInstance, moment, data, HistoryService) {
+    var ctrl = this;
+    ctrl.date = new Date(data.date);
+		ctrl.day = ctrl.date.getDay() - 1;
+		ctrl.days = data.days;
+    ctrl.events = [];
+		console.log('data: ', data);
+
+		ctrl.init = function() {
+			var weekEnds = new Date(HistoryService.weekEnding(ctrl.date));
+			angular.forEach(data.events, function(event) {
+				if(new Date(event.date) < weekEnds && event.day.substring(0, 3) === ctrl.days[ctrl.day].text) {
+					ctrl.events.push(event);
+				}
+			});
+		};
+		ctrl.init();
+
+    ctrl.submit = function () {
+      $uibModalInstance.close(ctrl.item);
+    };
+
+    ctrl.cancel = function () {
+      $uibModalInstance.dismiss('cancel');
+    };
+	}
+]);
+
+'use strict';
+
+// Tasks controller
+angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory', 'spinnerService', '$uibModal', 'moment',
+	function($scope, $rootScope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory, spinnerService, $uibModal, moment) {
 		$scope.authentication = Authentication;
 
         // If user is not signed in then redirect back to signin.
@@ -4733,14 +4765,15 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
             pageSize: 10
         };
         $scope.filterConfig = {
-            showingCount: 0,
-            sortType: '',
-            sortReverse: true,
-            search: {
-                description: '',
-                day: ''
-            },
-            datesSelected: false
+					view: 'list',
+          showingCount: 0,
+          sortType: '',
+          sortReverse: true,
+          search: {
+              description: '',
+              day: ''
+          },
+          datesSelected: false
         };
         $scope.mangaUpdate = {
             isPopup: ''
@@ -5211,7 +5244,7 @@ angular.module('tasks')
                 var interesting = angular.element(e.target).inheritedData('interesting'),
                     elm = angular.element(e.target)[0].tagName,
                     alsoInteresting = (elm === 'A') || (elm === 'I');
-//console.log(elm);
+                    //console.log(elm);
                 if (!interesting && !alsoInteresting) {
                     scope.$apply(function () {
                         scope.collapseFilters();
@@ -5220,7 +5253,99 @@ angular.module('tasks')
             });
         }
     };
-});
+})
+.directive('scheduleCalendar', ['$uibModal', 'moment', 'ListService', function($uibModal, moment, ListService) {
+
+  function _removeTime(date) {
+    var processedDate = date.day(1).hour(12).minute(0).second(0).millisecond(0);
+    return processedDate;
+  }
+
+  function _buildMonth(scope, start, month) {
+       scope.weeks = [];
+       var done = false, date = moment(start), monthIndex = date.month(), count = 0;
+       while (!done) {
+         var days = _buildWeek(moment(date), month);
+         if(ListService.findWithAttr(days, 'isCurrentMonth', true) > -1) {
+           scope.weeks.push({ days: days });
+         }
+           date.add(1, 'w');
+           done = count++ > 2 && monthIndex !== date.month();
+           monthIndex = date.month();
+       }
+       console.log('weeks: ', scope.weeks);
+   }
+
+   function _buildWeek(date, month) {
+       var days = [];
+       for (var i = 0; i < 7; i++) {
+           days.push({
+               name: date.format('dd').substring(0, 1),
+               number: date.date(),
+               isCurrentMonth: date.month() === month.month(),
+               isToday: date.isSame(new Date(), 'day'),
+               date: date
+           });
+           date = moment(date);
+           date.add(1, 'd');
+       }
+       return days;
+   }
+
+   function _displayEvents(events, date, days) {
+     var modalInstance = $uibModal.open({
+       animation: true,
+       templateUrl: '/modules/tasks/views/schedule-calendar-task.client.view.html',
+       controller: 'ScheduleCalendarTaskController as ctrl',
+       size: 'lg',
+       resolve: {
+         data: function () {
+           return { events: events, date: date, days: days };
+         }
+       }
+     });
+   }
+
+  return {
+       restrict: 'A',
+       templateUrl: 'modules/tasks/templates/schedule-calendar.html',
+       scope: {
+         events: '='
+       },
+       link: function(scope) {
+           scope.days = [{ text: 'Mon' }, { text: 'Tue' }, { text: 'Wed' }, { text: 'Thu' }, { text: 'Fri' }, { text: 'Sat' }, { text: 'Sun' }];
+           scope.selected = _removeTime( moment(new Date()) ); console.log('selected: ', scope.selected);
+           scope.month = moment(scope.selected);
+
+           var start = moment(scope.selected);
+           start.date(-6);
+           _removeTime(start.day(0));
+
+           _buildMonth(scope, start, scope.month);
+
+           scope.select = function(day) {
+             if(scope.selected === day.date){
+               _displayEvents(scope.events, day.date, scope.days);
+             }
+             scope.selected = day.date;
+           };
+
+           scope.next = function() {
+               var next = moment(scope.month);
+               _removeTime(next.month(next.month()+1).date(0));
+               scope.month.month(scope.month.month()+1);
+               _buildMonth(scope, next, scope.month);
+           };
+
+           scope.previous = function() {
+               var previous = moment(scope.month);
+               _removeTime(previous.month(previous.month()-1).date(0));
+               scope.month.month(scope.month.month()-1);
+               _buildMonth(scope, previous, scope.month);
+           };
+       }
+   };
+}]);
 
 'use strict';
 
@@ -6078,13 +6203,14 @@ angular.module('toptens')
     return function(array, displayType, value) {
         if(array !== undefined) {
             return array.filter(function(item) {
-                if(item[displayType].indexOf(value) > -1) {
+                if(item[displayType].toLowerCase().indexOf(value.toLowerCase()) > -1) {
                     return item;
                 }
             });
         }
     };
 });
+
 'use strict';
 
 //Toptens service used to communicate Toptens REST endpoints

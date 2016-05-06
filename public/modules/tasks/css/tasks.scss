@@ -16,3 +16,25 @@
     background: $brand-secondary;
     border-bottom-color: $brand-secondary;
 }
+
+/** schedule-calendar customisation **/
+
+.schedule-calendar > div.header {
+  background: $brand-primary;
+  color: $brand-accent;
+}
+.schedule-calendar > div.week > span.day {
+  background: $brand-secondary;
+  color: $brand-accent;
+}
+.schedule-calendar > div.week.names > span {
+  color: $brand-accent-alter;
+}
+.schedule-calendar > div.week > span.day.today {
+  background: $brand-tertiary;
+  color: $brand-accent-alter;
+}
+.schedule-calendar > div.week > span.day.selected {
+  background: $brand-primary;
+  color: $brand-accent;
+}

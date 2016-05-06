@@ -157,9 +157,9 @@ angular.module('tasks')
 
   function _buildMonth(scope, start, month) {
        scope.weeks = [];
-       var done = false, date = start.clone(), monthIndex = date.month(), count = 0;
+       var done = false, date = moment(start), monthIndex = date.month(), count = 0;
        while (!done) {
-         var days = _buildWeek(date.clone(), month);
+         var days = _buildWeek(moment(date), month);
          if(ListService.findWithAttr(days, 'isCurrentMonth', true) > -1) {
            scope.weeks.push({ days: days });
          }
@@ -180,13 +180,13 @@ angular.module('tasks')
                isToday: date.isSame(new Date(), 'day'),
                date: date
            });
-           date = date.clone();
+           date = moment(date);
            date.add(1, 'd');
        }
        return days;
    }
 
-   function _displayEvents(events, date) {
+   function _displayEvents(events, date, days) {
      var modalInstance = $uibModal.open({
        animation: true,
        templateUrl: '/modules/tasks/views/schedule-calendar-task.client.view.html',
@@ -194,7 +194,7 @@ angular.module('tasks')
        size: 'lg',
        resolve: {
          data: function () {
-           return { events: events, date: date };
+           return { events: events, date: date, days: days };
          }
        }
      });
@@ -207,10 +207,11 @@ angular.module('tasks')
          events: '='
        },
        link: function(scope) {
-           scope.selected = _removeTime( moment() );
-           scope.month = scope.selected.clone();
+           scope.days = [{ text: 'Mon' }, { text: 'Tue' }, { text: 'Wed' }, { text: 'Thu' }, { text: 'Fri' }, { text: 'Sat' }, { text: 'Sun' }];
+           scope.selected = _removeTime( moment(new Date()) ); console.log('selected: ', scope.selected);
+           scope.month = moment(scope.selected);
 
-           var start = scope.selected.clone();
+           var start = moment(scope.selected);
            start.date(-6);
            _removeTime(start.day(0));
 
@@ -218,21 +219,21 @@ angular.module('tasks')
 
            scope.select = function(day) {
              if(scope.selected === day.date){
-               _displayEvents(scope.events, day.date);
+               _displayEvents(scope.events, day.date, scope.days);
              }
              scope.selected = day.date;
            };
 
            scope.next = function() {
-               var next = scope.month.clone();
-               _removeTime(next.month(next.month()+1).date(1));
+               var next = moment(scope.month);
+               _removeTime(next.month(next.month()+1).date(0));
                scope.month.month(scope.month.month()+1);
                _buildMonth(scope, next, scope.month);
            };
 
            scope.previous = function() {
-               var previous = scope.month.clone();
-               _removeTime(previous.month(previous.month()-1).date(1));
+               var previous = moment(scope.month);
+               _removeTime(previous.month(previous.month()-1).date(0));
                scope.month.month(scope.month.month()-1);
                _buildMonth(scope, previous, scope.month);
            };

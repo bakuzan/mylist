@@ -90,7 +90,7 @@
     div.item-history:nth-child(even) {
         background-color: $brand-secondary;
     }
-    
+
 }
 
 .close-button {
@@ -194,6 +194,15 @@
         display: none;
     }
 }
+
+/** View anime page **/
+
+#anime-episode-history-table {
+	td {
+		padding: 0 5px;
+	}
+}
+
 
 /* PAGING CONTROLS CUSTOM */
 .paging-controls-scroll-top {

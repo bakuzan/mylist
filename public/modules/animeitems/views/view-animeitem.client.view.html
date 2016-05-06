@@ -32,7 +32,7 @@
         </div>
         <div class="text-right">
             <em class="accent-alter-text" data-ng-show="animeitem.rating==0">No rating</em>
-            <uib-rating data-ng-model="animeitem.rating" class="view-item-rating-stars" data-ng-show="animeitem.rating!==0" readonly="true" max="filterConfig.ratingActions.maxRating" id="rating" name="rating"></uib-rating>
+            <uib-rating data-ng-model="animeitem.rating" class="view-item-rating-stars" data-ng-show="animeitem.rating!==0" read-only="true" max="filterConfig.ratingActions.maxRating" id="rating" name="rating"></uib-rating>
         </div>
 	</div>
 	<small>
@@ -46,4 +46,27 @@
 			<span data-ng-bind="animeitem.season.season"></span>&nbsp;<span ng-bind="animeitem.season.year"></span>
 		</em>
 	</small>
+	<div class="relative width-50 margin-left-auto" style="top: -85px">
+		<div>
+			<div ng-if="animeitem.meta.history.length === 0">
+				<p>No recorded history.</p>
+			</div>
+			<div ng-if="animeitem.meta.history.length > 0">
+				<h3 class="margin-5">Episode history</h3>
+			</div>
+		</div>
+		<div class="overflow-auto-hover" style="height: 33vh">
+			<table ng-if="animeitem.meta.history.length > 0" id="anime-episode-history-table">
+				<tbody>
+					<tr ng-repeat="history in animeitem.meta.history | orderBy: '-value'">
+						<td>#{{history.value | numberFixedLen: 3}}</td>
+						<td><uib-rating ng-model="history.rating" class="view-item-rating-stars" read-only="true" max="filterConfig.ratingActions.maxRating"></uib-rating></td>
+						<td class="text-right">{{history.rating}}</td>
+						<td>{{history.date | date : 'dd-MM-yyyy HH:mm'}}</td>
+						<td><a class="bin-style clickable" style="position: relative" aria-hidden="true" ng-click="deleteHistory(animeitem, history)"><i class="fa fa-trash-o"></i></a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 </section>

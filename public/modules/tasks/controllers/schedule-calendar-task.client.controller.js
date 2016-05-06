@@ -8,7 +8,7 @@ angular.module('tasks').controller('ScheduleCalendarTaskController', ['$scope', 
 		ctrl.day = ctrl.date.getDay() - 1;
 		ctrl.days = data.days;
     ctrl.events = [];
-		console.log('data: ', data);
+		console.log('data: ', data, '$scope', $scope);
 
 		ctrl.init = function() {
 			var weekEnds = new Date(ListService.weekEndingForDate(ctrl.date));

@@ -18,7 +18,7 @@ angular.module('statistics')
             self.tabs = [];
             self.currentTab = undefined;
             self.listShift = 0;
-            
+
             self.addTab = function addTab(tab) {
                 self.tabs.push(tab);
 
@@ -26,7 +26,7 @@ angular.module('statistics')
                     tab.active = true;
                 }
             };
-            
+
             self.disable = function(disabledTab) {
                 if(disabledTab.active) {
                     angular.forEach(self.tabs, function(tab) {
@@ -37,7 +37,7 @@ angular.module('statistics')
                     });
                 }
             };
-            
+
             self.select = function(selectedTab) {
                 if(!selectedTab.disabled) {
                     angular.forEach(self.tabs, function(tab) {
@@ -49,7 +49,7 @@ angular.module('statistics')
                     self.currentTab = ($scope.tabContainer.model === undefined) ? undefined : selectedTab.heading;
                 }
             };
-            
+
             self.shiftTabs = function(direction) {
                 switch(direction) {
                     case 'origin':
@@ -60,7 +60,7 @@ angular.module('statistics')
                             self.listShift += 100;
                         }
                         break;
-                        
+
                     case 'offset':
                         if ((self.listShift - 100) < ($scope.elWidth - $scope.ulWidth)) {
                             self.listShift = $scope.elWidth - $scope.ulWidth;
@@ -70,20 +70,20 @@ angular.module('statistics')
                         break;
                 }
             };
-            
+
         },
         link: function(scope, element, attrs, model) {
             var el = element[0],
                 ul = el.children[0].children[0];
             scope.elWidth = el.offsetWidth;
             scope.ulWidth = ul.offsetWidth;
-            
+
             scope.$watch('tabContainer.currentTab', function(newValue) {
                 if (newValue !== undefined && model.$viewValue !== undefined) {
                     model.$setViewValue(newValue);
                 }
             });
-            
+
             scope.$watch(
                 function () {
                     return {
@@ -93,7 +93,7 @@ angular.module('statistics')
                     scope.elWidth = el.offsetWidth;
                 }, true
             );
-            
+
             scope.$watch(
                 function () {
                     return {
@@ -103,14 +103,14 @@ angular.module('statistics')
                     scope.ulWidth = ul.offsetWidth;
                 }, true
             );
-            
+
             scope.$watch('tabContainer.listShift', function(newValue) {
                 if(newValue !== undefined) {
                     var shift = (newValue === 0) ? '' : 'px';
                     ul.style.left = newValue + shift;
                 }
             });
-            
+
         }
     };
 })
@@ -128,7 +128,7 @@ angular.module('statistics')
         link: function (scope, element, attrs, tabContainerCtrl) {
             scope.active = false;
             tabContainerCtrl.addTab(scope);
-            
+
             scope.$watch('disabled', function(newValue) {
                 if(newValue !== undefined) {
                     if(newValue) {
@@ -145,7 +145,7 @@ angular.module('statistics')
         restrict: 'A',
         link: function(scope, element, attrs) {
             var el = element[0];
-            
+
             function overflowCheck() {
                 if (el.scrollWidth > el.offsetWidth) {
                     el.classList.add('flooded');
@@ -154,7 +154,7 @@ angular.module('statistics')
                 }
             }
             overflowCheck();
-            
+
             scope.$watch(
                 function () {
                     return {
@@ -165,7 +165,7 @@ angular.module('statistics')
                         overflowCheck();
                 }, true
             );
-            
+
         }
     };
 }])
@@ -173,12 +173,15 @@ angular.module('statistics')
   return {
       restrict: 'A',
       replace: true,
+      scope: {
+        border: '@?'
+      },
       transclude: true,
       bindToController: true,
-      template: '<div class="relative" style="height: 20px;" ng-transclude></div>',
+      template: '<div class="relative {{percentageBarContainer.border}}" style="height: 20px;" ng-transclude></div>',
       controllerAs: 'percentageBarContainer',
       controller: function($scope) {
-          
+
       }
   };
 })

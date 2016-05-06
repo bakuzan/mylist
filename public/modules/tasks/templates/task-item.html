@@ -39,7 +39,7 @@
             DAILY
         </span>
     </strong>
-    <div class="margin-top-10" percentage-bar-container ng-if="taskItem.checklist">
+    <div class="margin-top-10" percentage-bar-container border="alter-border" ng-if="taskItem.checklist">
         <div percentage-bar percentage="{{ ((taskItem.checklistItems | filter: {complete: true}).length / taskItem.checklistItems.length) * 100}}"
              type="white-text accent-alter-background"
              hover-data="{{ ((taskItem.checklistItems | filter: {complete: true}).length / taskItem.checklistItems.length)*100 | number: 2 }}%"></div>

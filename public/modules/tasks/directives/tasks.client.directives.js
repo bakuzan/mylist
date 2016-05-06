@@ -239,4 +239,11 @@ angular.module('tasks')
            };
        }
    };
-}]);
+}])
+.directive('taskItemModel', function() {
+  return {
+    restrict: 'A',
+    replace: true,
+    templateUrl: 'modules/tasks/templates/task-item.html'
+  };
+});

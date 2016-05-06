@@ -56,7 +56,7 @@
                                 <label for="series" class="col-lg-3 col-md-3 col-sm-3 control-label">Restrict by series</label>
                                 <div class="col-lg-6 col-md-6 col-sm-6">
                                     <input type="text" id="series" class="form-control" ng-model="stepConfig.listGen.seriesLimit"
-                                           uib-typeahead="item as item.name for item in stepConfig.listGen.series | filter: $viewValue | limitTo: 5"
+                                           uib-typeahead="item as item.name for item in stepConfig.listGen.series | filter: { name: $viewValue } | limitTo: 5"
                                            typeahead-on-select="pushCondition('series', stepConfig.listGen.seriesLimit)"/>
                                 </div>
                             </div>
@@ -77,7 +77,7 @@
                                 <label for="tag" class="col-lg-3 col-md-3 col-sm-3 control-label">Restrict by tag</label>
                                 <div class="col-lg-6 col-md-6 col-sm-6">
                                     <input type="text" id="tag" class="form-control" ng-model="stepConfig.listGen.tagLimit"
-                                           uib-typeahead="item as item.tag for item in stepConfig.listGen.tags | filter: $viewValue | limitTo: 5"
+                                           uib-typeahead="item as item.tag for item in stepConfig.listGen.tags | filter: { tag: $viewValue } | limitTo: 5"
                                            typeahead-on-select="pushCondition('tag', stepConfig.listGen.tagLimit)"/>
                                 </div>
                             </div>

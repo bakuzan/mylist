@@ -1,8 +1,8 @@
 'use strict';
 
 // Tasks controller
-angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory', 'spinnerService', '$uibModal',
-	function($scope, $rootScope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory, spinnerService, $uibModal) {
+angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory', 'spinnerService', '$uibModal', 'moment',
+	function($scope, $rootScope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory, spinnerService, $uibModal, moment) {
 		$scope.authentication = Authentication;
 
         // If user is not signed in then redirect back to signin.
@@ -19,14 +19,15 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
             pageSize: 10
         };
         $scope.filterConfig = {
-            showingCount: 0,
-            sortType: '',
-            sortReverse: true,
-            search: {
-                description: '',
-                day: ''
-            },
-            datesSelected: false
+					view: 'list',
+          showingCount: 0,
+          sortType: '',
+          sortReverse: true,
+          search: {
+              description: '',
+              day: ''
+          },
+          datesSelected: false
         };
         $scope.mangaUpdate = {
             isPopup: ''

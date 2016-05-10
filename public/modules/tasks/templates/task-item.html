@@ -7,7 +7,7 @@
     <span class="separator">
         -
     </span>
-    <span class="task-times-text complete-{{taskItem.complete}}"
+    <span class="task-times-text complete-{{taskItem.complete}} hover-data-right"
           hover-data="{{ (taskItem.link.type==='manga') ? 'Ch ' + taskItem.link.manga.chapters + ', Vol ' +  taskItem.link.manga.volumes : '' }}">
         <span ng-if="taskItem.link.type!=='anime'">
             {{taskItem.completeTimes}}/{{taskItem.repeat}}
@@ -16,7 +16,7 @@
             {{taskItem.link.anime.episodes}}/{{taskItem.link.anime.finalEpisode}}
         </span>
     </span>
-    <span class="category-{{taskItem.category}}"
+    <span class="category-{{taskItem.category}} hover-data-left"
           hover-data="{{taskItem.link.linked ? (taskItem.link.type ===  'anime') ?
                                                 taskItem.link.anime.title        :
                                                 taskItem.link.manga.title        :
@@ -51,7 +51,7 @@
             <i ng-hide="addingToChecklist" class="fa fa-plus"></i>
             <i ng-show="addingToChecklist" class="fa fa-minus"></i>
         </a>
-        <a ng-show="!taskItem.complete && addingToChecklist"class="btn btn-accent" ng-click="insertChecklistItem(taskItem, insertNewChecklistItem); insertNewChecklistItem = ''"
+        <a ng-show="!taskItem.complete && addingToChecklist" class="btn btn-accent" ng-click="insertChecklistItem(taskItem, insertNewChecklistItem); insertNewChecklistItem = ''"
            ng-disabled="insertNewChecklistItem==='' || insertNewChecklistItem===null || insertNewChecklistItem===undefined">
             Add
         </a>

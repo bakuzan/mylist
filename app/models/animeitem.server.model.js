@@ -84,6 +84,16 @@ var AnimeitemSchema = new Schema({
         type: Array,
         default: []
     },
+		video: {
+			location: {
+				type: String,
+				default: ''
+			},
+			files: {
+				type: Array,
+				default: []
+			}
+		},
     meta: {
        updated: {
 		type: Date,

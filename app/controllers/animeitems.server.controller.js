@@ -24,18 +24,18 @@ exports.postImage = function(req, res) {
         var tmpPath = file.path;
         var extIndex = tmpPath.lastIndexOf('.');
         var extension = (extIndex < 0) ? '' : tmpPath.substr(extIndex);
-        
+
         //uuid for unique filenames.
         //var filename = uuid.v4() + extension;
         var filename = file.originalFilename;
         var destPath = 'public/modules/animeitems/img/' + filename;
-        
+
         //server-side file type check.
         if (contentType !== 'image/png' && contentType !== 'image/jpeg') {
             fs.unlink(tmpPath);
             return res.status(400).send('File type not supported.');
         }
-        
+
         fs.rename(tmpPath, destPath, function(err) {
             if (err) {
                 return res.status(400).send('Image not saved.');
@@ -76,7 +76,7 @@ exports.read = function(req, res) {
  */
 exports.update = function(req, res) {
 	var animeitem = req.animeitem ;
-    
+
 	animeitem = _.extend(animeitem , req.body);
     animeitem.meta.updated = Date.now();
 
@@ -111,8 +111,8 @@ exports.delete = function(req, res) {
 /**
  * List of Animeitems
  */
-exports.list = function(req, res) { 
-    var current = [false], all = [true, false], 
+exports.list = function(req, res) {
+    var current = [false], all = [true, false],
         status = (req.query.status === '0') ? current : all;
 
 	Animeitem.find({ $or: [ { status: {$in: status } }, { reWatching: true } ] }).sort('-created').populate('user', 'displayName').populate('manga', 'title').exec(function(err, animeitems) {
@@ -149,12 +149,20 @@ exports.history = function(req, res) {
 /**
  * Animeitem middleware
  */
-exports.animeitemByID = function(req, res, next, id) { 
+exports.animeitemByID = function(req, res, next, id) {
 	Animeitem.findById(id).populate('user', 'displayName').populate('manga', 'title').exec(function(err, animeitem) {
 		if (err) return next(err);
 		if (! animeitem) return next(new Error('Failed to load Animeitem ' + id));
-		req.animeitem = animeitem ;
-		next();
+		var baseUrl = 'C:/Users/steven.walsh/Documents/MISC/',
+				seriesName = animeitem.title.toLowerCase().replace(/ /g, '-'),
+				location = baseUrl + seriesName;
+		fs.readdir(location, function (err, files) {
+			animeitem.video.location = location + '/';
+			animeitem.video.files = files;
+			req.animeitem = animeitem ;
+			next();
+		});
+
 	});
 };
 

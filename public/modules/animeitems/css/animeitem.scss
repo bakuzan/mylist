@@ -201,6 +201,11 @@
 	td {
 		padding: 0 5px;
 	}
+	tbody {
+		tr:hover, tr.loaded {
+			background-color: $brand-primary;
+		}
+	}
 }
 
 

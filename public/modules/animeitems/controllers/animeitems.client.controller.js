@@ -3,11 +3,7 @@
 // Animeitems controller
 angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory', 'spinnerService',
 	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, AnimeFactory, spinnerService) {
-		$scope.authentication = Authentication;
-
-        // If user is not signed in then redirect back to signin.
-		if (!$scope.authentication.user) $location.path('/signin');
-
+				$scope.authentication = Authentication;
         $scope.whichController = 'animeitem';
         //paging variables.
         $scope.pageConfig = {
@@ -33,7 +29,8 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             areTagless: false,
             selectListOptions: ListService.getSelectListOptions($scope.whichController),
             statTags: [],
-            commonArrays: ListService.getCommonArrays()
+            commonArrays: ListService.getCommonArrays(),
+						videoFile: ''
         };
 
         /** today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
@@ -147,10 +144,11 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 
 		// Find existing Animeitem
 		$scope.findOne = function() {
-            Animeitems.get({ animeitemId: $stateParams.animeitemId }).$promise.then(function(result) {
-                $scope.animeitem = result;
-//            console.log($scope.animeitem);
-            });
+	    Animeitems.get({ animeitemId: $stateParams.animeitemId }).$promise.then(function(result) {
+	        $scope.animeitem = result;
+					$scope.chooseVideo(1);
+	   			console.log($scope.animeitem);
+	    });
 		};
 
         // Find list of mangaitems for dropdown.
@@ -163,6 +161,12 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             $scope.imgPath = '/modules/animeitems/img/' + $scope.myFile.name;
             fileUpload.uploadFileToUrl($scope.myFile, '/fileUploadAnime');
         };
+
+				//select video for playback
+				$scope.chooseVideo = function(videoNumber) {
+					var fileUrl = window.URL.createObjectURL($scope.animeitem.video.location + $scope.animeitem.video.files[videoNumber - 1]);
+					$scope.filterConfig.videoFile = fileUrl;
+				};
 
         //latest date display format.
         $scope.latestDate = function(latest, updated) {

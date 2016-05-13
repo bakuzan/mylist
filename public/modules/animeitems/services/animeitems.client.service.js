@@ -84,7 +84,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         });
     };
 }])
-.service('ListService', function() {
+.service('ListService', ['moment', function(moment) {
 
         //show a loading gif if text doesn't exist.
         this.loader = function(value) {
@@ -139,6 +139,15 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     return string.toLowerCase();
             }
         };
+
+				this.weekEndingForDate = function(convertToSunday) {
+		        var date = new Date(convertToSunday),
+		            day = date.getDay(),
+		            diff = date.getDate() - day + (day === 0 ? 0:7),
+		            temp = new Date(convertToSunday),
+		            wkEnd = new Date(temp.setDate(diff));
+		        return moment(wkEnd.toISOString()).endOf('day');
+		    };
 
         //returns the options for the various filters in list pages.
         this.getSelectListOptions = function(controller) {
@@ -293,7 +302,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             return commonArrays;
         };
 
-})
+}])
 .service('ItemService', ['moment', '$filter', 'ListService', function(moment, $filter, ListService) {
 
         //Using the date, returns the season.

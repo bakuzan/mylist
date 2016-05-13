@@ -4,10 +4,10 @@
 angular.module('history').controller('HistoryController', ['$scope', '$stateParams', '$location', 'Authentication', 'AnimeHistory', 'MangaHistory', 'HistoryService', 'ListService', 'spinnerService',
 	function($scope, $stateParams, $location, Authentication, AnimeHistory, MangaHistory, HistoryService, ListService, spinnerService) {
 		$scope.authentication = Authentication;
-        
+
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
-        
+
         $scope.view = 'Anime';
         $scope.filterConfig = {
             historyFilter: 'Today'
@@ -22,15 +22,22 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
             { name: 'Four weeks ago' },
         ];
         var latestDate = new Date().setDate(new Date().getDate() - 29);
-        
+
         $scope.buildHistory = function() {
             spinnerService.loading('history', AnimeHistory.query({ latest: latestDate }).$promise.then(function(result) {
-                $scope.animeitems = result;
+								return HistoryService.buildHistoryList(result);
+							}).then(function(result) {
+                  //  console.log('build anime history: ', result);
+ 								$scope.animeHistory = result;
                 return MangaHistory.query({ latest: latestDate }).$promise;
             }).then(function(result) {
 //                console.log('manga', result);
-               $scope.mangaitems = result; 
-            }));
+								return HistoryService.buildHistoryList(result);
+            }).then(function(result) {
+//                    console.log('build manga history: ', result);
+								$scope.mangaHistory = result;
+						})
+					);
         };
         //Needed to catch 'Character' setting and skip it.
         $scope.$watch('view', function(newValue) {
@@ -40,28 +47,10 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
                 }
             }
         });
-        
-        $scope.$watchCollection('animeitems', function() {
-            if ($scope.animeitems!==undefined) {
-                HistoryService.buildHistoryList($scope.animeitems).then(function(result) {
-//                    console.log('build anime history: ', result);
-                    $scope.animeHistory = result;
-                });
-            }
-        });
-        
-        $scope.$watchCollection('mangaitems', function() {
-            if ($scope.mangaitems!==undefined) {
-                HistoryService.buildHistoryList($scope.mangaitems).then(function(result) {
-//                    console.log('build manga history: ', result);
-                    $scope.mangaHistory = result;
-                });
-            }
-        });
-        
+
         $scope.happenedWhen = function(when) {
             return HistoryService.happenedWhen(when);
         };
-        
+
     }
 ]);

@@ -694,7 +694,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         });
     };
 }])
-.service('ListService', function() {
+.service('ListService', ['moment', function(moment) {
 
         //show a loading gif if text doesn't exist.
         this.loader = function(value) {
@@ -749,6 +749,15 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
                     return string.toLowerCase();
             }
         };
+
+				this.weekEndingForDate = function(convertToSunday) {
+		        var date = new Date(convertToSunday),
+		            day = date.getDay(),
+		            diff = date.getDate() - day + (day === 0 ? 0:7),
+		            temp = new Date(convertToSunday),
+		            wkEnd = new Date(temp.setDate(diff));
+		        return moment(wkEnd.toISOString()).endOf('day');
+		    };
 
         //returns the options for the various filters in list pages.
         this.getSelectListOptions = function(controller) {
@@ -903,7 +912,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             return commonArrays;
         };
 
-})
+}])
 .service('ItemService', ['moment', '$filter', 'ListService', function(moment, $filter, ListService) {
 
         //Using the date, returns the season.
@@ -3105,10 +3114,10 @@ angular.module('history').config(['$stateProvider', '$urlRouterProvider',
 angular.module('history').controller('HistoryController', ['$scope', '$stateParams', '$location', 'Authentication', 'AnimeHistory', 'MangaHistory', 'HistoryService', 'ListService', 'spinnerService',
 	function($scope, $stateParams, $location, Authentication, AnimeHistory, MangaHistory, HistoryService, ListService, spinnerService) {
 		$scope.authentication = Authentication;
-        
+
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
-        
+
         $scope.view = 'Anime';
         $scope.filterConfig = {
             historyFilter: 'Today'
@@ -3123,15 +3132,22 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
             { name: 'Four weeks ago' },
         ];
         var latestDate = new Date().setDate(new Date().getDate() - 29);
-        
+
         $scope.buildHistory = function() {
             spinnerService.loading('history', AnimeHistory.query({ latest: latestDate }).$promise.then(function(result) {
-                $scope.animeitems = result;
+								return HistoryService.buildHistoryList(result);
+							}).then(function(result) {
+                  //  console.log('build anime history: ', result);
+ 								$scope.animeHistory = result;
                 return MangaHistory.query({ latest: latestDate }).$promise;
             }).then(function(result) {
 //                console.log('manga', result);
-               $scope.mangaitems = result; 
-            }));
+								return HistoryService.buildHistoryList(result);
+            }).then(function(result) {
+//                    console.log('build manga history: ', result);
+								$scope.mangaHistory = result;
+						})
+					);
         };
         //Needed to catch 'Character' setting and skip it.
         $scope.$watch('view', function(newValue) {
@@ -3141,31 +3157,14 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
                 }
             }
         });
-        
-        $scope.$watchCollection('animeitems', function() {
-            if ($scope.animeitems!==undefined) {
-                HistoryService.buildHistoryList($scope.animeitems).then(function(result) {
-//                    console.log('build anime history: ', result);
-                    $scope.animeHistory = result;
-                });
-            }
-        });
-        
-        $scope.$watchCollection('mangaitems', function() {
-            if ($scope.mangaitems!==undefined) {
-                HistoryService.buildHistoryList($scope.mangaitems).then(function(result) {
-//                    console.log('build manga history: ', result);
-                    $scope.mangaHistory = result;
-                });
-            }
-        });
-        
+
         $scope.happenedWhen = function(when) {
             return HistoryService.happenedWhen(when);
         };
-        
+
     }
 ]);
+
 'use strict';
 
 angular.module('history')
@@ -4404,7 +4403,7 @@ angular.module('statistics')
             self.tabs = [];
             self.currentTab = undefined;
             self.listShift = 0;
-            
+
             self.addTab = function addTab(tab) {
                 self.tabs.push(tab);
 
@@ -4412,7 +4411,7 @@ angular.module('statistics')
                     tab.active = true;
                 }
             };
-            
+
             self.disable = function(disabledTab) {
                 if(disabledTab.active) {
                     angular.forEach(self.tabs, function(tab) {
@@ -4423,7 +4422,7 @@ angular.module('statistics')
                     });
                 }
             };
-            
+
             self.select = function(selectedTab) {
                 if(!selectedTab.disabled) {
                     angular.forEach(self.tabs, function(tab) {
@@ -4435,7 +4434,7 @@ angular.module('statistics')
                     self.currentTab = ($scope.tabContainer.model === undefined) ? undefined : selectedTab.heading;
                 }
             };
-            
+
             self.shiftTabs = function(direction) {
                 switch(direction) {
                     case 'origin':
@@ -4446,7 +4445,7 @@ angular.module('statistics')
                             self.listShift += 100;
                         }
                         break;
-                        
+
                     case 'offset':
                         if ((self.listShift - 100) < ($scope.elWidth - $scope.ulWidth)) {
                             self.listShift = $scope.elWidth - $scope.ulWidth;
@@ -4456,20 +4455,20 @@ angular.module('statistics')
                         break;
                 }
             };
-            
+
         },
         link: function(scope, element, attrs, model) {
             var el = element[0],
                 ul = el.children[0].children[0];
             scope.elWidth = el.offsetWidth;
             scope.ulWidth = ul.offsetWidth;
-            
+
             scope.$watch('tabContainer.currentTab', function(newValue) {
                 if (newValue !== undefined && model.$viewValue !== undefined) {
                     model.$setViewValue(newValue);
                 }
             });
-            
+
             scope.$watch(
                 function () {
                     return {
@@ -4479,7 +4478,7 @@ angular.module('statistics')
                     scope.elWidth = el.offsetWidth;
                 }, true
             );
-            
+
             scope.$watch(
                 function () {
                     return {
@@ -4489,14 +4488,14 @@ angular.module('statistics')
                     scope.ulWidth = ul.offsetWidth;
                 }, true
             );
-            
+
             scope.$watch('tabContainer.listShift', function(newValue) {
                 if(newValue !== undefined) {
                     var shift = (newValue === 0) ? '' : 'px';
                     ul.style.left = newValue + shift;
                 }
             });
-            
+
         }
     };
 })
@@ -4514,7 +4513,7 @@ angular.module('statistics')
         link: function (scope, element, attrs, tabContainerCtrl) {
             scope.active = false;
             tabContainerCtrl.addTab(scope);
-            
+
             scope.$watch('disabled', function(newValue) {
                 if(newValue !== undefined) {
                     if(newValue) {
@@ -4531,7 +4530,7 @@ angular.module('statistics')
         restrict: 'A',
         link: function(scope, element, attrs) {
             var el = element[0];
-            
+
             function overflowCheck() {
                 if (el.scrollWidth > el.offsetWidth) {
                     el.classList.add('flooded');
@@ -4540,7 +4539,7 @@ angular.module('statistics')
                 }
             }
             overflowCheck();
-            
+
             scope.$watch(
                 function () {
                     return {
@@ -4551,7 +4550,7 @@ angular.module('statistics')
                         overflowCheck();
                 }, true
             );
-            
+
         }
     };
 }])
@@ -4559,12 +4558,15 @@ angular.module('statistics')
   return {
       restrict: 'A',
       replace: true,
+      scope: {
+        border: '@?'
+      },
       transclude: true,
       bindToController: true,
-      template: '<div class="relative" style="height: 20px;" ng-transclude></div>',
+      template: '<div class="relative {{percentageBarContainer.border}}" style="height: 20px;" ng-transclude></div>',
       controllerAs: 'percentageBarContainer',
       controller: function($scope) {
-          
+
       }
   };
 })
@@ -4585,6 +4587,7 @@ angular.module('statistics')
         }
     };
 });
+
 'use strict';
 
 //Statistics service 
@@ -4730,21 +4733,42 @@ angular.module('tasks').config(['$stateProvider',
 'use strict';
 
 // Tasks controller
-angular.module('tasks').controller('ScheduleCalendarTaskController', ['$scope', '$uibModalInstance', 'moment', 'data', 'HistoryService',
-	function($scope, $uibModalInstance, moment, data, HistoryService) {
+angular.module('tasks').controller('ScheduleCalendarTaskController', ['$scope', '$uibModalInstance', 'moment', 'data', 'ListService',
+	function($scope, $uibModalInstance, moment, data, ListService) {
     var ctrl = this;
+		ctrl.today = new Date();
     ctrl.date = new Date(data.date);
-		ctrl.day = ctrl.date.getDay() - 1;
+		var timeDiff = Math.abs(ctrl.date.getTime() - ctrl.today.getTime());
+		ctrl.daysFromToday = Math.ceil(timeDiff / (1000 * 3600 * 24));
+		ctrl.day = ctrl.date.getDay() > 0 ? ctrl.date.getDay() - 1 : 6;
 		ctrl.days = data.days;
     ctrl.events = [];
-		console.log('data: ', data);
+		console.log('data: ', data, 'days: ', ctrl.days, ctrl.day, ctrl.date);
 
 		ctrl.init = function() {
-			var weekEnds = new Date(HistoryService.weekEnding(ctrl.date));
+			var weekEnds = new Date(ListService.weekEndingForDate(ctrl.date));
 			angular.forEach(data.events, function(event) {
-				if(new Date(event.date) < weekEnds && event.day.substring(0, 3) === ctrl.days[ctrl.day].text) {
-					ctrl.events.push(event);
+				if(new Date(event.date) < weekEnds && ((event.day.substring(0, 3) === ctrl.days[ctrl.day].text) || (event.day === 'Any'))) {
+					// console.log('daysFromToday: ', ctrl.daysFromToday);
+					if(!event.daily) {
+						//in weeks
+						// console.log('weeks: ', event.completeTimes, Math.floor(ctrl.daysFromToday / 7), event.repeat);
+						if((event.completeTimes + Math.floor(ctrl.daysFromToday / 7) <= event.repeat) || event.repeat === 0) {
+							ctrl.events.push(event);
+						}
+					} else if(event.daily) {
+						//in days
+						// console.log('days: ', event.completeTimes, ctrl.daysFromToday, event.repeat);
+						if(((event.completeTimes + ctrl.daysFromToday) <= event.repeat) || event.repeat === 0) {
+							ctrl.events.push(event);
+						}
+					}
 				}
+			});
+			ctrl.events.sort(function(a, b) {
+				var aDate = a.date, bDate = b.date;
+				return aDate < bDate ? 1 :
+							 aDate > bDate ? -1 : 0;
 			});
 		};
 		ctrl.init();
@@ -4756,8 +4780,7 @@ angular.module('tasks').controller('ScheduleCalendarTaskController', ['$scope', 
     ctrl.cancel = function () {
       $uibModalInstance.dismiss('cancel');
     };
-	}
-]);
+	}]);
 
 'use strict';
 
@@ -5272,8 +5295,7 @@ angular.module('tasks')
 .directive('scheduleCalendar', ['$uibModal', 'moment', 'ListService', function($uibModal, moment, ListService) {
 
   function _removeTime(date) {
-    var processedDate = date.day(1).hour(12).minute(0).second(0).millisecond(0);
-    return processedDate;
+    return date.day(1).hour(12).minute(0).second(0).millisecond(0);
   }
 
   function _buildMonth(scope, start, month) {
@@ -5288,7 +5310,6 @@ angular.module('tasks')
            done = count++ > 2 && monthIndex !== date.month();
            monthIndex = date.month();
        }
-       console.log('weeks: ', scope.weeks);
    }
 
    function _buildWeek(date, month) {
@@ -5329,10 +5350,10 @@ angular.module('tasks')
        },
        link: function(scope) {
            scope.days = [{ text: 'Mon' }, { text: 'Tue' }, { text: 'Wed' }, { text: 'Thu' }, { text: 'Fri' }, { text: 'Sat' }, { text: 'Sun' }];
-           scope.selected = _removeTime( moment(new Date()) ); console.log('selected: ', scope.selected);
+           scope.selected = moment(new Date());
            scope.month = moment(scope.selected);
 
-           var start = moment(scope.selected);
+           var start = moment(_removeTime(angular.copy(scope.selected)));
            start.date(-6);
            _removeTime(start.day(0));
 
@@ -5360,7 +5381,14 @@ angular.module('tasks')
            };
        }
    };
-}]);
+}])
+.directive('taskItemModel', function() {
+  return {
+    restrict: 'A',
+    replace: true,
+    templateUrl: 'modules/tasks/templates/task-item.html'
+  };
+});
 
 'use strict';
 

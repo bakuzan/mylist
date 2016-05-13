@@ -151,8 +151,7 @@ angular.module('tasks')
 .directive('scheduleCalendar', ['$uibModal', 'moment', 'ListService', function($uibModal, moment, ListService) {
 
   function _removeTime(date) {
-    var processedDate = date.day(1).hour(12).minute(0).second(0).millisecond(0);
-    return processedDate;
+    return date.day(1).hour(12).minute(0).second(0).millisecond(0);
   }
 
   function _buildMonth(scope, start, month) {
@@ -167,7 +166,6 @@ angular.module('tasks')
            done = count++ > 2 && monthIndex !== date.month();
            monthIndex = date.month();
        }
-       console.log('weeks: ', scope.weeks);
    }
 
    function _buildWeek(date, month) {
@@ -208,10 +206,10 @@ angular.module('tasks')
        },
        link: function(scope) {
            scope.days = [{ text: 'Mon' }, { text: 'Tue' }, { text: 'Wed' }, { text: 'Thu' }, { text: 'Fri' }, { text: 'Sat' }, { text: 'Sun' }];
-           scope.selected = _removeTime( moment(new Date()) ); console.log('selected: ', scope.selected);
+           scope.selected = moment(new Date());
            scope.month = moment(scope.selected);
 
-           var start = moment(scope.selected);
+           var start = moment(_removeTime(angular.copy(scope.selected)));
            start.date(-6);
            _removeTime(start.day(0));
 
@@ -239,4 +237,11 @@ angular.module('tasks')
            };
        }
    };
-}]);
+}])
+.directive('taskItemModel', function() {
+  return {
+    restrict: 'A',
+    replace: true,
+    templateUrl: 'modules/tasks/templates/task-item.html'
+  };
+});

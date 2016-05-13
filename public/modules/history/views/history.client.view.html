@@ -17,10 +17,10 @@
     </div>
     <div class="col-lg-12 col-md-12 col-sm-12 history-list-container relative" style="top: 125px" loading-spinner name="history" size="fullscreen">
         <div tab-container ng-model="filterConfig.historyFilter">
-            <div tab-view ng-repeat="item in historyGroups" heading="{{item.name}}"></div>
+            <div tab-view ng-repeat="item in historyGroups" heading="{{::item.name}}"></div>
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12 history-list" ng-show="view === 'Anime'">
-            <div class="col-lg-12 col-md-12 col-sm-12 history-list-item" 
+            <div class="col-lg-12 col-md-12 col-sm-12 history-list-item"
                  ng-repeat="item in animeHistory | filter: filterConfig.search.name | historySeparator:'group':filterConfig.historyFilter | orderBy: ['-latest','-oldest']">
                 <h4 class="history-group-header clickable" ng-click="viewItem = (viewItem === item.title) ? '' : item.title">
                     {{item.title}} - ({{animeHistoryItems.length}})
@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12 history-list" ng-show="view === 'Manga'">
-            <div class="col-lg-12 col-md-12 col-sm-12 history-list-item" 
+            <div class="col-lg-12 col-md-12 col-sm-12 history-list-item"
                  ng-repeat="item in mangaHistory | filter: filterConfig.search.name | historySeparator:'group':filterConfig.historyFilter | orderBy: ['-latest','-oldest']">
                 <h4 class="history-group-header clickable" ng-click="viewItem = (viewItem === item.title) ? '' : item.title">
                     {{item.title}} - ({{mangaHistoryItems.length}})

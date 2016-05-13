@@ -6,7 +6,7 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
         link: function(scope, element, attrs) {
             var model = $parse(attrs.fileModel);
             var modelSetter = model.assign;
-            
+
             element.bind('change', function(){
                 scope.$apply(function(){
                     modelSetter(scope, element[0].files[0]);
@@ -72,7 +72,7 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
                       scope.first();
                   }
               });
-          
+
           /** Button Functions
            *    go to next/prev pages. skip to first/last page.
            */
@@ -92,7 +92,7 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
 //              console.log('prev');
               scope.pageConfig.currentPage -= 1;
           };
-          
+
           //Catches ctrl+left/right keypresses to change pages.
           scope.$on('my:keydown', function(event, e) {
 //              console.log(event, e);
@@ -102,10 +102,10 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
                 scope.prev();
             }
           });
-          
+
       }
   };
-    
+
 })
 .directive('listFilters', function() {
     return {
@@ -130,23 +130,23 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
                 scope.filterConfig.ratingActions.overStar = value;
                 scope.filterConfig.ratingActions.percent = 100 * (value / scope.filterConfig.ratingActions.maxRating);
             };
-            
+
             scope.itemsAvailable = function() {
-              scope.$parent.itemsAvailable();  
+              scope.$parent.itemsAvailable();
             };
-            
+
             scope.$watch('$parent.isList', function(newValue) {
                 if (newValue !== undefined) {
                     scope.isList = newValue;
                 }
             });
-            
+
             scope.collapseFilters = function() {
 //                console.log('collapse filters');
                 scope.filterConfig.expandFilters = false;
             };
-          
+
         }
-        
+
     };
 });

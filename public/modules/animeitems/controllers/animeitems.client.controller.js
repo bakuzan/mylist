@@ -30,7 +30,11 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             selectListOptions: ListService.getSelectListOptions($scope.whichController),
             statTags: [],
             commonArrays: ListService.getCommonArrays(),
-						videoFile: ''
+						videoFile: {
+							processed: '',
+							file: '',
+							error: ''
+						}
         };
 
         /** today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
@@ -164,8 +168,17 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 
 				//select video for playback
 				$scope.chooseVideo = function(videoNumber) {
-					var fileUrl = window.URL.createObjectURL($scope.animeitem.video.location + $scope.animeitem.video.files[videoNumber - 1]);
-					$scope.filterConfig.videoFile = fileUrl;
+					$scope.filterConfig.videoFile.file = $scope.animeitem.video.files[videoNumber - 1];
+					if($scope.filterConfig.videoFile.file) {
+						$scope.filterConfig.videoFile.error = ''; //clear any error.
+						var videoUrl = $scope.animeitem.video.location + $scope.filterConfig.videoFile.file,
+								blob = new Blob([videoUrl], { type: 'video/mp4' }),
+								fileUrl = window.URL.createObjectURL(blob);
+						$scope.filterConfig.videoFile.processed = $scope.trustAsResourceUrl(fileUrl);
+						console.log('video file: ', $scope.filterConfig.videoFile);
+					} else {
+						$scope.filterConfig.videoFile.error = 'There is no video for the selected episode, please select another.';
+					}
 				};
 
         //latest date display format.

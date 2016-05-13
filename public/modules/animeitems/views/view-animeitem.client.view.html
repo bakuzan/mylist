@@ -35,7 +35,7 @@
             <uib-rating data-ng-model="animeitem.rating" class="view-item-rating-stars" data-ng-show="animeitem.rating!==0" read-only="true" max="filterConfig.ratingActions.maxRating" id="rating" name="rating"></uib-rating>
         </div>
 	</div>
-	<small>
+	<small class="width-100">
 		<em class="accent-alter-text">
 			Start
 			<span data-ng-bind="animeitem.start | date:'yyyy-MMM-dd'"></span><br/>
@@ -46,51 +46,54 @@
 			<span data-ng-bind="animeitem.season.season"></span>&nbsp;<span ng-bind="animeitem.season.year"></span>
 		</em>
 	</small>
-	<section>
-		<pre>{{filterConfig.videoFile}}</pre>
-		<video controls></video>
-	</section>
-	<article class="relative width-40 margin-left-auto" style="top: -85px">
-		<header>
-			<h3 ng-if="animeitem.meta.history.length > 0" class="margin-5">Episode history</h3>
-			<h6 ng-if="animeitem.meta.history.length === 0">No recorded history.</h6>
-		</header>
-		<div class="overflow-auto-hover" style="height: 33vh">
-			<table ng-if="animeitem.meta.history.length > 0" id="anime-episode-history-table">
-				<thead ng-init="filterConfig.sortType = 'value'; filterConfig.sortReverse = true">
-					<tr>
-						<th>
-								<a href="" ng-click="filterConfig.sortType = 'value'; filterConfig.sortReverse = !filterConfig.sortReverse ">
-									 #
-								</a>
-								<i ng-show="filterConfig.sortType == 'value'" class="fa" ng-class="filterConfig.sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
-						</th>
-						<th colspan="2">
-								<a href="" ng-click="filterConfig.sortType = 'rating'; filterConfig.sortReverse = !filterConfig.sortReverse ">
-									 Rating
-								</a>
-								<i ng-show="filterConfig.sortType == 'rating'" class="fa" ng-class="filterConfig.sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
-						</th>
-						<th>
-								<a href="" ng-click="filterConfig.sortType = 'date'; filterConfig.sortReverse = !filterConfig.sortReverse ">
-									 Watched
-								</a>
-								<i ng-show="filterConfig.sortType == 'date'" class="fa" ng-class="filterConfig.sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
-						</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr class="cursor-pointer" ng-class="filterConfig.videoFile.contains(history.value | numberFixedLen: 3) ? 'loaded' : ''"
-							ng-repeat="history in animeitem.meta.history | orderBy: filterConfig.sortType:filterConfig.sortReverse" ng-click="chooseVideo(history.value)">
-						<td>{{history.value | numberFixedLen: 3}}</td>
-						<td><uib-rating ng-model="history.rating" class="view-item-rating-stars" read-only="true" max="filterConfig.ratingActions.maxRating"></uib-rating></td>
-						<td class="text-right">{{history.rating}}</td>
-						<td>{{history.date | date : 'dd-MM-yyyy HH:mm'}}</td>
-						<td><a class="bin-style clickable" style="position: relative" aria-hidden="true" ng-click="deleteHistory(animeitem, history)"><i class="fa fa-trash-o"></i></a></td>
-					</tr>
-				</tbody>
-			</table>
+	<section class="col-lg-12 col-md-12 col-sm-12">
+		<div class="col-lg-7 col-md-7 col-sm-7">
+			<p class="primary-background text-center padding-5 margin-0" ng-bind="filterConfig.videoFile.error" ng-if="filterConfig.videoFile.error !== ''"></p>
+			<video class="width-100" ng-src="{{filterConfig.videoFile.processed}}" type="video/mp4" controls></video>
+			<!-- <iframe class="width-100 height-100" ng-src="{{filterConfig.videoFile.processed}}" frameborder="0" allowfullscreen controls></iframe> -->
 		</div>
-	</article>
+		<article class="relative width-40 margin-left-auto">
+			<header>
+				<h3 ng-if="animeitem.meta.history.length > 0" class="margin-5">Episode history</h3>
+				<h6 ng-if="animeitem.meta.history.length === 0">No recorded history.</h6>
+			</header>
+			<div class="overflow-auto-hover" style="height: 33vh">
+				<table ng-if="animeitem.meta.history.length > 0" id="anime-episode-history-table">
+					<thead ng-init="filterConfig.sortType = 'value'; filterConfig.sortReverse = true">
+						<tr>
+							<th>
+									<a href="" ng-click="filterConfig.sortType = 'value'; filterConfig.sortReverse = !filterConfig.sortReverse ">
+										 #
+									</a>
+									<i ng-show="filterConfig.sortType == 'value'" class="fa" ng-class="filterConfig.sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+							</th>
+							<th colspan="2">
+									<a href="" ng-click="filterConfig.sortType = 'rating'; filterConfig.sortReverse = !filterConfig.sortReverse ">
+										 Rating
+									</a>
+									<i ng-show="filterConfig.sortType == 'rating'" class="fa" ng-class="filterConfig.sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+							</th>
+							<th>
+									<a href="" ng-click="filterConfig.sortType = 'date'; filterConfig.sortReverse = !filterConfig.sortReverse ">
+										 Watched
+									</a>
+									<i ng-show="filterConfig.sortType == 'date'" class="fa" ng-class="filterConfig.sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+							</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="cursor-pointer" ng-class="filterConfig.videoFile.file.indexOf({{ history.value | numberFixedLen: 3 }}) > -1 ? 'loaded' : ''"
+								ng-repeat="history in animeitem.meta.history | orderBy: filterConfig.sortType:filterConfig.sortReverse" ng-click="chooseVideo(history.value)">
+							<td>{{history.value | numberFixedLen: 3}}</td>
+							<td><uib-rating ng-model="history.rating" class="view-item-rating-stars" read-only="true" max="filterConfig.ratingActions.maxRating"></uib-rating></td>
+							<td class="text-right">{{history.rating}}</td>
+							<td>{{history.date | date : 'dd-MM-yyyy HH:mm'}}</td>
+							<td><a class="bin-style clickable" style="position: relative" aria-hidden="true" ng-click="deleteHistory(animeitem, history)"><i class="fa fa-trash-o"></i></a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</article>
+	</section>
 </section>

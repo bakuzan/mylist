@@ -8,10 +8,10 @@ angular.module('tasks').controller('ScheduleCalendarTaskController', ['$scope', 
     ctrl.date = new Date(data.date);
 		var timeDiff = Math.abs(ctrl.date.getTime() - ctrl.today.getTime());
 		ctrl.daysFromToday = Math.ceil(timeDiff / (1000 * 3600 * 24));
-		ctrl.day = ctrl.date.getDay() - 1;
+		ctrl.day = ctrl.date.getDay() > 0 ? ctrl.date.getDay() - 1 : 6;
 		ctrl.days = data.days;
     ctrl.events = [];
-		// console.log('data: ', data, '$scope', $scope);
+		console.log('data: ', data, 'days: ', ctrl.days, ctrl.day, ctrl.date);
 
 		ctrl.init = function() {
 			var weekEnds = new Date(ListService.weekEndingForDate(ctrl.date));

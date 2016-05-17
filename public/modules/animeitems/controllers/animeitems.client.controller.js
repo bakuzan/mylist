@@ -58,15 +58,6 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             $scope.newTag = '';
         };
 
-        $scope.$watchCollection('animeitems', function() {
-            if ($scope.animeitems!==undefined) {
-//                console.log($scope.animeitems);
-                $scope.filterConfig.areTagless = ListService.checkForTagless($scope.animeitems);
-                $scope.filterConfig.statTags = ItemService.buildStatTags($scope.animeitems, 0);
-            }
-//            console.log($scope.animeitems);
-        });
-
 		// Create new Animeitem
 		$scope.create = function() {
 			// Create new Animeitem object
@@ -138,7 +129,9 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 
         // Find a list of Animeitems
         $scope.find = function() {
-            $scope.animeitems = Animeitems.query();
+            Animeitems.query().$promise.then(function(result) {
+							$scope.animeitems = result;
+						});
         };
 
 		// Find existing Animeitem
@@ -179,6 +172,8 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		function getAnime(value) {
             spinnerService.loading('anime', Animeitems.query({ status: value }).$promise.then(function(result) {
                 $scope.animeitems = result;
+								$scope.filterConfig.areTagless = ListService.checkForTagless(result);
+								$scope.filterConfig.statTags = ItemService.buildStatTags(result, 0);
             }));
 		}
 

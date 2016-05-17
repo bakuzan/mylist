@@ -11,7 +11,7 @@ angular.module('tasks').controller('ScheduleCalendarTaskController', ['$scope', 
 		ctrl.day = ctrl.date.getDay() > 0 ? ctrl.date.getDay() - 1 : 6;
 		ctrl.days = data.days;
     ctrl.events = [];
-		console.log('data: ', data, 'days: ', ctrl.days, ctrl.day, ctrl.date);
+		console.log('scope: ', $scope, 'data: ', data, 'days: ', ctrl.days, ctrl.day, ctrl.date);
 
 		ctrl.init = function() {
 			var weekEnds = new Date(ListService.weekEndingForDate(ctrl.date));

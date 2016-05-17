@@ -20,6 +20,10 @@ angular.module('animeitems').config(['$stateProvider',
 		state('editAnimeitem', {
 			url: '/animeitems/:animeitemId/edit',
 			templateUrl: 'modules/animeitems/views/edit-animeitem.client.view.html'
+		}).
+		state('watchAnimeitem', {
+			url: '/animeitems/watch/:animeitemId',
+			templateUrl: 'modules/animeitems/views/watch-animeitem.client.view.html'
 		});
 	}
 ]);

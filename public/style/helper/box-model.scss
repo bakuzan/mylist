@@ -68,6 +68,10 @@
     }
 }
 
+.margin-0-auto {
+  margin: 0 auto;
+}
+
 .margin-auto {
     margin: auto;
 }
@@ -101,4 +105,29 @@
     .float-#{$float} {
         float: #{$float};
     }
+}
+
+@each $display in $displays {
+    .display-#{$display} {
+        display: #{$display};
+    }
+}
+
+.center-contents {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.center-in-parent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    @include transform(translateX(-50%) translateY(-50%));
+}
+
+.center-vertically {
+    position: relative;
+    top: 50%;
+    @include transform(translateY(-50%));
 }

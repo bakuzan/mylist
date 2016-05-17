@@ -208,6 +208,12 @@
 	}
 }
 
+/** Watch anime page **/
+#anime-watch-file-list {
+	li:hover, li.loaded {
+		background-color: $brand-primary;
+	}
+}
 
 /* PAGING CONTROLS CUSTOM */
 .paging-controls-scroll-top {

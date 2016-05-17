@@ -155,10 +155,19 @@ exports.animeitemByID = function(req, res, next, id) {
 		if (! animeitem) return next(new Error('Failed to load Animeitem ' + id));
 		var baseUrl = 'C:/Users/steven.walsh/Documents/MISC/',
 				seriesName = animeitem.title.toLowerCase().replace(/ /g, '-'),
-				location = baseUrl + seriesName;
+				location = baseUrl + seriesName,
+				index = 0;
 		fs.readdir(location, function (err, files) {
 			animeitem.video.location = location + '/';
-			animeitem.video.files = files;
+			if(files) {
+				for(var i = 0, len = files.length; i < len; i++) {
+					index = files[i].lastIndexOf('.');
+					animeitem.video.files.push({
+						file: files[i],
+						number: files[i].substring(index - 3, index)
+					});
+				}
+			}
 			req.animeitem = animeitem ;
 			next();
 		});

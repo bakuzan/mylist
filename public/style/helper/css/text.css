@@ -16,6 +16,18 @@
 .bold {
   font-weight: bold; }
 
+.bolder {
+  font-weight: bolder; }
+
+.normal {
+  font-weight: normal; }
+
+.lighter {
+  font-weight: lighter; }
+
+.bold {
+  font-weight: bold; }
+
 .thin {
   font-weight: lighter; }
 
@@ -73,6 +85,9 @@
 .font-40 {
   font-size: 40px; }
 
+.font-42 {
+  font-size: 42px; }
+
 .no-wrap {
   white-space: nowrap; }
 
@@ -120,5 +135,8 @@
 
 .white-text {
   color: #FFF; }
+
+.word-per-line {
+  word-spacing: 10000px; }
 
 /*# sourceMappingURL=text.css.map */

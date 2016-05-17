@@ -9,6 +9,9 @@
                     <a class="btn btn-accent" href="/#!/animeitems">
                         <i class="glyphicon glyphicon-chevron-left"></i>
                     </a>
+                    <a class="btn btn-success" href="/#!/animeitems/watch/{{animeitem._id}}" ng-if="animeitem.video.files.length > 0">
+                        <i class="fa fa-film"></i>
+                    </a>
                     <a class="btn btn-primary" href="/#!/animeitems/{{animeitem._id}}/edit">
                         <i class="glyphicon glyphicon-edit"></i>
                     </a>
@@ -46,13 +49,8 @@
 			<span data-ng-bind="animeitem.season.season"></span>&nbsp;<span ng-bind="animeitem.season.year"></span>
 		</em>
 	</small>
-	<section class="col-lg-12 col-md-12 col-sm-12">
-		<div class="col-lg-7 col-md-7 col-sm-7">
-			<p class="primary-background text-center padding-5 margin-0" ng-bind="filterConfig.videoFile.error" ng-if="filterConfig.videoFile.error !== ''"></p>
-			<video class="width-100" ng-src="{{filterConfig.videoFile.processed}}" type="video/mp4" controls></video>
-			<!-- <iframe class="width-100 height-100" ng-src="{{filterConfig.videoFile.processed}}" frameborder="0" allowfullscreen controls></iframe> -->
-		</div>
-		<article class="relative width-40 margin-left-auto">
+	<section class="col-lg-12 col-md-12 col-sm-12" style="top: -85px">
+		<article class="relative width-50 margin-left-auto">
 			<header>
 				<h3 ng-if="animeitem.meta.history.length > 0" class="margin-5">Episode history</h3>
 				<h6 ng-if="animeitem.meta.history.length === 0">No recorded history.</h6>
@@ -83,8 +81,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="cursor-pointer" ng-class="filterConfig.videoFile.file.indexOf({{ history.value | numberFixedLen: 3 }}) > -1 ? 'loaded' : ''"
-								ng-repeat="history in animeitem.meta.history | orderBy: filterConfig.sortType:filterConfig.sortReverse" ng-click="chooseVideo(history.value)">
+						<tr ng-repeat="history in animeitem.meta.history | orderBy: filterConfig.sortType:filterConfig.sortReverse">
 							<td>{{history.value | numberFixedLen: 3}}</td>
 							<td><uib-rating ng-model="history.rating" class="view-item-rating-stars" read-only="true" max="filterConfig.ratingActions.maxRating"></uib-rating></td>
 							<td class="text-right">{{history.rating}}</td>

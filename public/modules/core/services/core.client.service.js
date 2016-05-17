@@ -34,7 +34,7 @@ angular.module('core')
             toastr.error(text, title, 'Error');
         },
         popup: function (title, text, type) {
-            swal({ 
+            swal({
                 title: title,
                 text: text,
                 type: type
@@ -43,8 +43,8 @@ angular.module('core')
         confirmation: function (thenDo) {
               //are you sure option...
             swal({
-                title: 'Are you sure?', 
-                text: 'Are you sure that you want to delete this?', 
+                title: 'Are you sure?',
+                text: 'Are you sure that you want to delete this?',
                 type: 'warning',
                 showCancelButton: true,
                 closeOnConfirm: true,
@@ -56,9 +56,9 @@ angular.module('core')
 })
 .factory('spinnerService', ['$q', function($q) {
 var spinners = {},
-    queue = {}, 
+    queue = {},
     loads = {};
-    
+
   return {
       spinners: spinners,
     // private method for spinner registration.
@@ -105,9 +105,9 @@ var spinners = {},
         var spinner = spinners[name];
         spinner.show(name);
         optionsOrPromise = optionsOrPromise || {};
-        
+
         //Check if it's promise
-        if (optionsOrPromise.always || optionsOrPromise['finally']) { 
+        if (optionsOrPromise.always || optionsOrPromise['finally']) {
             optionsOrPromise = {
                 promise: optionsOrPromise
             };
@@ -115,7 +115,7 @@ var spinners = {},
 
         var options = angular.extend({}, optionsOrPromise);
 
-        if (options.promise) { 
+        if (options.promise) {
             if (options.promise.always) {
                 options.promise.always(function () {
                     spinner.hide(name);

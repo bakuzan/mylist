@@ -29,12 +29,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             areTagless: false,
             selectListOptions: ListService.getSelectListOptions($scope.whichController),
             statTags: [],
-            commonArrays: ListService.getCommonArrays(),
-						videoFile: {
-							processed: '',
-							file: '',
-							error: ''
-						}
+            commonArrays: ListService.getCommonArrays()
         };
 
         /** today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
@@ -150,7 +145,6 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 		$scope.findOne = function() {
 	    Animeitems.get({ animeitemId: $stateParams.animeitemId }).$promise.then(function(result) {
 	        $scope.animeitem = result;
-					$scope.chooseVideo(1);
 	   			console.log($scope.animeitem);
 	    });
 		};
@@ -165,21 +159,6 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
             $scope.imgPath = '/modules/animeitems/img/' + $scope.myFile.name;
             fileUpload.uploadFileToUrl($scope.myFile, '/fileUploadAnime');
         };
-
-				//select video for playback
-				$scope.chooseVideo = function(videoNumber) {
-					$scope.filterConfig.videoFile.file = $scope.animeitem.video.files[videoNumber - 1];
-					if($scope.filterConfig.videoFile.file) {
-						$scope.filterConfig.videoFile.error = ''; //clear any error.
-						var videoUrl = $scope.animeitem.video.location + $scope.filterConfig.videoFile.file,
-								blob = new Blob([videoUrl], { type: 'video/mp4' }),
-								fileUrl = window.URL.createObjectURL(blob);
-						$scope.filterConfig.videoFile.processed = $scope.trustAsResourceUrl(fileUrl);
-						console.log('video file: ', $scope.filterConfig.videoFile);
-					} else {
-						$scope.filterConfig.videoFile.error = 'There is no video for the selected episode, please select another.';
-					}
-				};
 
         //latest date display format.
         $scope.latestDate = function(latest, updated) {

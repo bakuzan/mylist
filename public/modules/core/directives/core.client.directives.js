@@ -55,7 +55,7 @@ angular.module('core').directive('myProgress', function() {
 //            $scope.isLoading = function () {
 //                return $http.pendingRequests.length > 0;
 //            };
-            
+
 //            $scope.$watch($scope.isLoading, function (v) {
 //                if ($scope.size === 'fullscreen') {
 //                    if(v) {
@@ -65,7 +65,7 @@ angular.module('core').directive('myProgress', function() {
 //                    }
 //                }
 //            });
-            
+
             var api = {
                 name: $scope.name,
                 show: function () {
@@ -78,11 +78,25 @@ angular.module('core').directive('myProgress', function() {
                     $scope.active = !$scope.active;
                 }
             };
-            
+
             spinnerService._register(api);
             $scope.$on('$destroy', function () {
                 spinnerService._unregister($scope.name);
             });
         }
     };
-}]); 
+}])
+.directive('clickPass', ['$timeout', function($timeout) {
+  return {
+    restrict: 'A',
+    link: function(scope, element, attrs) {
+      element.bind('click', function(event) {
+        $timeout(function() {
+          event.stopPropagation();
+          console.log('clicked a click pass, pass to: ', attrs.clickPass);
+          document.getElementById(attrs.clickPass).click();
+        }, 0);
+      });
+    }
+  };
+}]);

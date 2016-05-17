@@ -3,6 +3,7 @@
 // Tasks controller
 angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory', 'spinnerService', '$uibModal', 'moment',
 	function($scope, $rootScope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory, spinnerService, $uibModal, moment) {
+		var ctrl = this;
 		$scope.authentication = Authentication;
 
         // If user is not signed in then redirect back to signin.
@@ -100,10 +101,8 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
         }
 
 		// Remove existing Task
-		$scope.deleteTask = function(task) {
-            NotificationFactory.confirmation(function() {
-                remove(task);
-            });
+		ctrl.removeTask = function(task) {
+			TaskFactory.removeTask(task, $scope.tasks);
 		};
 
 		// Update existing Task

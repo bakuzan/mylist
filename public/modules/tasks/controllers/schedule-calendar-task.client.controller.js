@@ -1,8 +1,8 @@
 'use strict';
 
 // Tasks controller
-angular.module('tasks').controller('ScheduleCalendarTaskController', ['$scope', '$uibModalInstance', 'moment', 'data', 'ListService',
-	function($scope, $uibModalInstance, moment, data, ListService) {
+angular.module('tasks').controller('ScheduleCalendarTaskController', ['$scope', '$uibModalInstance', 'moment', 'data', 'ListService', 'TaskFactory',
+	function($scope, $uibModalInstance, moment, data, ListService, TaskFactory) {
     var ctrl = this;
 		ctrl.today = new Date();
     ctrl.date = new Date(data.date);
@@ -11,7 +11,7 @@ angular.module('tasks').controller('ScheduleCalendarTaskController', ['$scope', 
 		ctrl.day = ctrl.date.getDay() > 0 ? ctrl.date.getDay() - 1 : 6;
 		ctrl.days = data.days;
     ctrl.events = [];
-		console.log('scope: ', $scope, 'data: ', data, 'days: ', ctrl.days, ctrl.day, ctrl.date);
+		console.log('data: ', data, 'days: ', ctrl.days, ctrl.day, ctrl.date);
 
 		ctrl.init = function() {
 			var weekEnds = new Date(ListService.weekEndingForDate(ctrl.date));
@@ -41,11 +41,11 @@ angular.module('tasks').controller('ScheduleCalendarTaskController', ['$scope', 
 		};
 		ctrl.init();
 
-    ctrl.submit = function () {
-      $uibModalInstance.close(ctrl.item);
-    };
+		ctrl.removeTask = function(task) {
+			TaskFactory.removeTask(task, ctrl.events);
+		};
 
     ctrl.cancel = function () {
-      $uibModalInstance.dismiss('cancel');
+      $uibModalInstance.close(ctrl.events);
     };
 	}]);

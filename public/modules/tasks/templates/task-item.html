@@ -24,7 +24,7 @@
                       }}">
         {{taskItem.category}}
     </span>
-    <a class="bin-style clickable" aria-hidden="true" ng-click="deleteTask(taskItem)">
+    <a class="bin-style clickable" aria-hidden="true" ng-click="ctrl.removeTask(taskItem)">
         <i class="fa fa-trash-o"></i>
     </a>
     <strong class="taskDate complete-{{taskItem.complete}}">

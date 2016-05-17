@@ -11,7 +11,8 @@ angular.module('tasks').factory('Tasks', ['$resource',
 		});
 	}
 ])
-.factory('TaskFactory', ['$q', 'Animeitems', 'Mangaitems', 'AnimeFactory', 'MangaFactory', function($q, Animeitems, Mangaitems, AnimeFactory, MangaFactory) {
+.factory('TaskFactory', ['$q', 'Animeitems', 'Mangaitems', 'AnimeFactory', 'MangaFactory', 'NotificationFactory',
+	function($q, Animeitems, Mangaitems, AnimeFactory, MangaFactory, NotificationFactory) {
     var obj = {};
 
         obj.getWeekBeginning = function() {
@@ -50,6 +51,24 @@ angular.module('tasks').factory('Tasks', ['$resource',
             });
 					});
         };
+
+				/** Task Update,Edit,Delete functions below here.
+				 */
+
+				obj.removeTask = function(task, tasks) {
+					console.log('launch');
+					NotificationFactory.confirmation(function remove() {
+	          if ( task ) {
+	              task.$remove();
+	              for (var i in tasks) {
+	                  if (tasks[i] === task) {
+	                      tasks.splice(i, 1);
+	                  }
+	              }
+								NotificationFactory.warning('Deleted!', 'Task was successfully deleted.');
+	          }
+					});
+				};
 
     return obj;
 }]);

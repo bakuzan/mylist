@@ -1,13 +1,22 @@
 'use strict';
 
 // Animeitems controller
-angular.module('animeitems').controller('WatchAnimeController', ['$scope', 'Authentication', '$stateParams', '$timeout', 'Animeitems', '$sce',
-	function($scope, Authentication, $stateParams, $timeout, Animeitems, $sce) {
-				var ctrl = this;
+angular.module('animeitems').controller('WatchAnimeController', ['$scope', 'Authentication', '$stateParams', '$timeout', 'Animeitems', '$sce', 'ListService',
+	function($scope, Authentication, $stateParams, $timeout, Animeitems, $sce, ListService) {
+				var ctrl = this, stream = document.getElementById('stream'),
+						saved = localStorage.getItem('watched');
+				stream.onplay = function() {
+					console.log('video playing');
+					ctrl.watchedList[ctrl.videoFile.file] = true;
+					localStorage.setItem('watched', JSON.stringify(ctrl.watchedList));
+					ctrl.watchedList = JSON.parse(localStorage.getItem('watched'));
+				};
         ctrl.authentication = Authentication;
+				ctrl.watchedList = (localStorage.getItem('watched') !== null) ? JSON.parse(saved) : {};
         ctrl.videoFile = {
   				processed: '',
   				file: '',
+					number: '',
   				message: 'Please select an episode.'
         };
 
@@ -15,20 +24,12 @@ angular.module('animeitems').controller('WatchAnimeController', ['$scope', 'Auth
 				ctrl.chooseVideo = function(event, file) {
 					ctrl.videoFile.file = file;
           ctrl.videoFile.message = ''; //clear any error.
-						// var videoUrl = $scope.animeitem.video.location + $scope.filterConfig.videoFile.file,
-						// 		blob = new Blob([videoUrl], { type: 'video/mp4' }),
-						// 		fileUrl = window.URL.createObjectURL(blob);
-						// $scope.filterConfig.videoFile.processed = $scope.trustAsResourceUrl(fileUrl);
-						console.log('video file - event: ', event, 'details: ', ctrl.videoFile);
 				};
-
-        ctrl.fileGrabbed = function() {
-          console.log('grabber: ', $scope.fileGrab);
-        };
 
         $scope.$watch('fileGrab', function(nVal, oVal) {
           if(nVal) {
             ctrl.videoFile.file = nVal.name;
+						ctrl.videoFile.number = ctrl.animeitem.video.files[ListService.findWithAttr(ctrl.animeitem.video.files, 'file', nVal.name)].number;
             ctrl.videoFile.processed = $sce.trustAsResourceUrl(window.URL.createObjectURL(nVal));
           }
         });

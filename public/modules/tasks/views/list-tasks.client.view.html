@@ -1,12 +1,12 @@
 <section data-ng-controller="TasksController as ctrl">
     <div class="fixed-header">
         <h3>
-            <span class="hover-data-right" hover-data="Refresh data" ng-click="refreshItems()">
+            <span class="hover-data-right" hover-data="Refresh data" ng-click="ctrl.refreshItems()">
                 <span class="clickable">
                     <i class="fa fa-refresh animate-spin-hover font-20"></i>
                 </span>
             </span>
-            Week Beginning {{ ::weekBeginning() | dateSuffix }}
+            Week Beginning {{ ::ctrl.weekBeginning() | dateSuffix }}
             <button class="btn btn-primary show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</button>
         </h3>
     </div>
@@ -24,11 +24,11 @@
             <div class="tab-filter-container width-100 margin-top-40" id="task-tab-filter-container" sticky>
                 <div id="task-tab-filter-inner-container">
                     <div class="relative tab-filter clickable" ng-class="(filterConfig.search.day === '') ? 'tab-in' : 'tab-out' ">
-                        <label class="width-100 clickable text-center" ng-click="tabFilter('')">ALL</label>
+                        <label class="width-100 clickable text-center" ng-click="ctrl.tabFilter('')">ALL</label>
                     </div>
                     <div class="relative tab-filter clickable" ng-class="(filterConfig.search.day === day.name) ? 'tab-in' : 'tab-out' "
                           ng-repeat="day in commonArrays.days">
-                        <label class="width-100 clickable text-center" ng-click="tabFilter(day.name)">{{::day.name}}</label>
+                        <label class="width-100 clickable text-center" ng-click="ctrl.tabFilter(day.name)">{{::day.name}}</label>
                     </div>
                 </div>
             </div>

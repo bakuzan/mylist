@@ -184,7 +184,7 @@ angular.module('tasks')
        return days;
    }
 
-   function _displayEvents(scope, date) {
+   function _displayEvents(events, date, days) {
      var modalInstance = $uibModal.open({
        animation: true,
        templateUrl: '/modules/tasks/views/schedule-calendar-task.client.view.html',
@@ -192,12 +192,11 @@ angular.module('tasks')
        size: 'lg',
        resolve: {
          data: function () {
-           return { events: scope.events, date: date, days: scope.days };
+           return { events: events, date: date, days: days };
          }
        }
      }).result.then(function(result) {
-       scope.events = result;
-       console.log('closed: ', scope, result);
+       console.log('closed: ', result);
      });
    }
 
@@ -220,7 +219,7 @@ angular.module('tasks')
 
            scope.select = function(day) {
              if(scope.selected === day.date){
-               _displayEvents(scope, day.date);
+               _displayEvents(scope.events, day.date, scope.days);
              }
              scope.selected = day.date;
            };

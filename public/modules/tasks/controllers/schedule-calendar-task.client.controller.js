@@ -48,4 +48,5 @@ angular.module('tasks').controller('ScheduleCalendarTaskController', ['$scope', 
     ctrl.cancel = function () {
       $uibModalInstance.close(ctrl.events);
     };
+		
 	}]);

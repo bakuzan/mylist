@@ -1,5 +1,5 @@
 <li class="taskItem">
-    <input type="checkbox" class="taskCheckbox" ng-model="taskItem.complete" ng-change="tickOff(taskItem)" ng-disabled="taskItem.complete || taskItem.checklist">
+    <input type="checkbox" class="taskCheckbox" ng-model="taskItem.complete" ng-change="ctrl.tickOff(taskItem)" ng-disabled="taskItem.complete || taskItem.checklist">
     <span class="task-description-text complete-{{taskItem.complete}} display-inline-block" ng-class="taskItem.checklist === true ? 'clickable' : ''"
           ng-click="taskItem.checklist === true ? viewTask = !viewTask : ''">
         {{taskItem.description}}
@@ -32,7 +32,7 @@
         <span ng-hide="taskItem.daily">
             <span ng-if="taskItem.complete">{{taskItem.day}}</span>
             <select ng-if="!taskItem.complete" class="phantom-control transform-uppercase" style="width: 75px" ng-model="taskItem.day"
-                    ng-options="obj.name as obj.name for obj in commonArrays.days" ng-change="changeTaskDay(taskItem)">
+                    ng-options="obj.name as obj.name for obj in commonArrays.days" ng-change="ctrl.updateTask(taskItem)">
             </select>
         </span>
         <span ng-show="taskItem.daily">
@@ -46,18 +46,18 @@
     </div>
     <div ng-if="taskItem.checklist" class="checklist-list-container" ng-show="viewTask">
         <input ng-show="!taskItem.complete && addingToChecklist" type="text" class="form-control" ng-model="insertNewChecklistItem"
-               enter-tag="insertChecklistItem(taskItem, insertNewChecklistItem); insertNewChecklistItem = ''">
+               enter-tag="ctrl.insertChecklistItem(taskItem, insertNewChecklistItem); insertNewChecklistItem = ''">
         <a ng-show="!taskItem.complete" class="btn btn-accent" ng-click="addingToChecklist=!addingToChecklist">
             <i ng-hide="addingToChecklist" class="fa fa-plus"></i>
             <i ng-show="addingToChecklist" class="fa fa-minus"></i>
         </a>
-        <a ng-show="!taskItem.complete && addingToChecklist" class="btn btn-accent" ng-click="insertChecklistItem(taskItem, insertNewChecklistItem); insertNewChecklistItem = ''"
+        <a ng-show="!taskItem.complete && addingToChecklist" class="btn btn-accent" ng-click="ctrl.insertChecklistItem(taskItem, insertNewChecklistItem); insertNewChecklistItem = ''"
            ng-disabled="insertNewChecklistItem==='' || insertNewChecklistItem===null || insertNewChecklistItem===undefined">
             Add
         </a>
         <ul class="checklist-list">
             <li class="checklist-item" ng-repeat="option in taskItem.checklistItems">
-                <input type="checkbox" class="taskCheckbox" ng-model="option.complete" ng-change="tickOffChecklist(taskItem, $index)" ng-disabled="option.complete">
+                <input type="checkbox" class="taskCheckbox" ng-model="option.complete" ng-change="ctrl.tickOffChecklist(taskItem, $index)" ng-disabled="option.complete">
                 <span class="complete-{{option.complete}}">
                     {{option.text}}
                 </span>

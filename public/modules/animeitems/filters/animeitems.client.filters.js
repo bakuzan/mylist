@@ -76,7 +76,7 @@ angular.module('animeitems')
 .filter('season', function() {
     return function(array, year, month) {
         return array.filter(function(item) {
-            if (item.end!== undefined && item.end !== null && item.season !== undefined && item.season !== null) {
+            if (item.season !== undefined && item.season !== null) {
                 if (item.season.year === year && item.season.season === month) {
                     return item;
                 }

@@ -5,9 +5,6 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window, ListService, CharacterService, NotificationFactory, spinnerService) {
 		$scope.authentication = Authentication;
 
-        // If user is not signed in then redirect back to signin.
-		if (!$scope.authentication.user) $location.path('/signin');
-
         $scope.whichController = 'character';
         //paging variables.
         $scope.pageConfig = {

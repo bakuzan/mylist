@@ -44,9 +44,25 @@ angular.module('tasks').controller('ScheduleCalendarTaskController', ['$scope', 
 		ctrl.removeTask = function(task) {
 			TaskFactory.removeTask(task, ctrl.events);
 		};
+		//Update task.
+		ctrl.updateTask = function(task) {
+				TaskFactory.updateTask(task);
+		};
+    //Add new checklist item.
+    ctrl.insertChecklistItem = function (task, newChecklistItem) {
+        TaskFactory.insertChecklistItem(task, newChecklistItem);
+    };
+		//Tick off a task.
+		ctrl.tickOff = function(task) {
+		    TaskFactory.tickOff(task);
+		};
+    //Tick of a checklist item.
+    ctrl.tickOffChecklist = function(task, index) {
+        TaskFactory.tickOffChecklist(task, index);
+    };
 
     ctrl.cancel = function () {
       $uibModalInstance.close(ctrl.events);
     };
-		
+
 	}]);

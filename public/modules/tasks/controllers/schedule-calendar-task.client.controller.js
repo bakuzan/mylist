@@ -3,7 +3,7 @@
 // Tasks controller
 angular.module('tasks').controller('ScheduleCalendarTaskController', ['$scope', '$uibModalInstance', 'moment', 'data', 'ListService', 'TaskFactory',
 	function($scope, $uibModalInstance, moment, data, ListService, TaskFactory) {
-    var ctrl = this;
+    var ctrl = this, refresh = false;
 		ctrl.today = new Date();
     ctrl.date = new Date(data.date);
 		var timeDiff = Math.abs(ctrl.date.getTime() - ctrl.today.getTime());
@@ -54,15 +54,21 @@ angular.module('tasks').controller('ScheduleCalendarTaskController', ['$scope', 
     };
 		//Tick off a task.
 		ctrl.tickOff = function(task) {
-		    TaskFactory.tickOff(task);
+		    TaskFactory.tickOff(task).then(function(result) {
+					// console.log('update task res - tickOff: ', result);
+					refresh = result.refresh;
+				});
 		};
     //Tick of a checklist item.
     ctrl.tickOffChecklist = function(task, index) {
-        TaskFactory.tickOffChecklist(task, index);
+        TaskFactory.tickOffChecklist(task, index).then(function(result) {
+					// console.log('update task res - tickOffChecklist: ', result);
+					refresh = result.refresh;
+				});
     };
 
     ctrl.cancel = function () {
-      $uibModalInstance.close(ctrl.events);
+      $uibModalInstance.close(refresh);
     };
 
 	}]);

@@ -196,7 +196,7 @@ angular.module('tasks')
          }
        }
      }).result.then(function(result) {
-       console.log('closed: ', result);
+       console.log('closed - require refresh: ', result);
      });
    }
 

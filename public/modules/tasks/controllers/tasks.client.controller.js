@@ -71,8 +71,8 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
                 find();
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
-                console.log(errorResponse);
-                NotificationFactory.error('Error!', 'New Task failed to save!');
+        console.log(errorResponse);
+        NotificationFactory.error('Error!', 'New Task failed to save!');
 			});
 		};
 
@@ -90,11 +90,17 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
     };
 		//Tick off a task.
 		ctrl.tickOff = function(task) {
-		    TaskFactory.tickOff(task);
+		    TaskFactory.tickOff(task).then(function(result) {
+					// console.log('update task res - tickOff: ', result);
+					if(result.refresh) find();
+				});
 		};
     //Tick of a checklist item.
     ctrl.tickOffChecklist = function(task, index) {
-        TaskFactory.tickOffChecklist(task, index);
+        TaskFactory.tickOffChecklist(task, index).then(function(result) {
+					// console.log('update task res - tickOffChecklist: ', result);
+					if(result.refresh) find();
+				});
     };
 
     //Defaults the tab filter to the current day of the week.

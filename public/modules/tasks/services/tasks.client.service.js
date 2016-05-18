@@ -28,7 +28,7 @@ angular.module('tasks').factory('Tasks', ['$resource',
 							animeitemId: task.link.anime._id
 						});
             query.$promise.then(function(data) {
-                console.log(data);
+                //console.log(data);
                 data.episodes += 1;
                 data.latest = new Date();
                 AnimeFactory.update(data, undefined, true, undefined);
@@ -41,7 +41,7 @@ angular.module('tasks').factory('Tasks', ['$resource',
 							mangaitemId: task.link.manga._id
 						});
             query.$promise.then(function(data) {
-                console.log(data);
+                //console.log(data);
                 data.chapters = chapters;
                 data.volumes = volumes;
                 data.latest = new Date();
@@ -56,30 +56,31 @@ angular.module('tasks').factory('Tasks', ['$resource',
 
 			 // Update existing Task
 			 obj.updateTask = function(task, refresh) {
-				 console.log('update');
-				 if (task.link.anime) {
-					 task.link.anime = task.link.anime._id;
-				 } else if (task.link.manga) {
-					 task.link.manga = task.link.manga._id;
-				 }
+				 return $q(function(resolve, reject) {
+					 //console.log('update');
+					 if (task.link.anime) {
+						 task.link.anime = task.link.anime._id;
+					 } else if (task.link.manga) {
+						 task.link.manga = task.link.manga._id;
+					 }
 
-					task.$update(function() {
-						NotificationFactory.success('Saved!', 'Task was successfully updated!');
-						//Refresh items if the callee wasn't checkStatus.
-						if (refresh === true) {
-						   console.log('update + refresh items');
-						  //  find();
-						}
-					}, function(errorResponse) {
-						var errorMessage = errorResponse.data.message;
-					  console.log(errorResponse);
-					  NotificationFactory.error('Error!', 'Task failed to save!');
+						task.$update(function() {
+							NotificationFactory.success('Saved!', 'Task was successfully updated!');
+						  //Refresh items if the callee wasn't checkStatus.
+						  //console.log('update + refresh items');
+						  resolve({ refresh: refresh });
+						}, function(errorResponse) {
+							var errorMessage = errorResponse.data.message;
+							reject(errorMessage);
+						  //console.log(errorResponse);
+						  NotificationFactory.error('Error!', 'Task failed to save!');
+						});
 					});
 			 };
 
 			 //Remove a task.
 				obj.removeTask = function(task, tasks) {
-					console.log('launch');
+					//console.log('launch');
 					NotificationFactory.confirmation(function remove() {
 	          if ( task ) {
 	              task.$remove();
@@ -119,52 +120,68 @@ angular.module('tasks').factory('Tasks', ['$resource',
 							}
 						}
 						obj.updateMangaitem(task, task.link.manga.chapters, task.link.manga.volumes).then(function() {
-							obj.updateTask(task, true);
+							return obj.updateTask(task, true);
 						});
 					});
 				}
 
 				//Completes a task.
 				obj.tickOff = function(task) {
-					var isLinked = false;
-			    //Is it linked?
-			    if (task.link.linked === false) {
-			        task.completeTimes += 1;
-			    } else if (task.link.linked === true) {
-			        isLinked = true;
-			        /** Anime or manga?
-			         *   Update the item value AND the complete/repeat values.
-			         */
-			        if (task.link.type === 'anime') {
-			            task.completeTimes = task.link.anime.episodes + 1;
-			            task.repeat = task.link.anime.finalEpisode;
-			            this.updateAnimeitem(task);
-			        } else if (task.link.type === 'manga') {
-								  task.complete = false;
-			            launchMangaUpdateDialog(task);
-									return;
-			        }
-			    }
-			    console.log('tickoff: ', task);
-			    this.updateTask(task, isLinked);
+					return $q(function(resolve, reject) {
+						var isLinked = false;
+				    //Is it linked?
+				    if (task.link.linked === false) {
+				        task.completeTimes += 1;
+				    } else if (task.link.linked === true) {
+				        isLinked = true;
+				        /** Anime or manga?
+				         *   Update the item value AND the complete/repeat values.
+				         */
+				        if (task.link.type === 'anime') {
+				            task.completeTimes = task.link.anime.episodes + 1;
+				            task.repeat = task.link.anime.finalEpisode;
+				            obj.updateAnimeitem(task);
+				        } else if (task.link.type === 'manga') {
+									  task.complete = false;
+				            launchMangaUpdateDialog(task).then(function(result) {
+											//console.log('update task resolve: ', result);
+											return result;
+										});
+										return;
+				        }
+				    }
+				    //console.log('tickoff: ', task);
+				    obj.updateTask(task, isLinked).then(function(result) {
+							//console.log('update task resolve: ', result);
+							resolve(result);
+						});
+					});
 				};
 
 				//Completes a checklist item.
 				obj.tickOffChecklist = function(task, index) {
-					//update the option for the task.
-					var isLinked = task.link.linked;
-					if (isLinked && task.link.type === 'manga') {
-							task.checklistItems[index].complete = false;
-							launchMangaUpdateDialog(task, index);
-							return;
-					}
+					return $q(function(resolve, reject) {
+						//update the option for the task.
+						var isLinked = task.link.linked;
+						if (isLinked && task.link.type === 'manga') {
+								task.checklistItems[index].complete = false;
+								launchMangaUpdateDialog(task, index).then(function(result) {
+									//console.log('update task resolve: ', result);
+									return result;
+								});
+								return;
+						}
 
-					if(ListService.findWithAttr(task.checklistItems, 'complete', false) === -1) {
-						task.completeTimes += 1;
-						task.complete = true;
-					}
-					console.log('tickoff checklist: ', task);
-			    this.updateTask(task, isLinked);
+						if(ListService.findWithAttr(task.checklistItems, 'complete', false) === -1) {
+							task.completeTimes += 1;
+							task.complete = true;
+						}
+						//console.log('tickoff checklist: ', task);
+				    obj.updateTask(task, isLinked).then(function(result) {
+							//console.log('update task resolve: ', result);
+							resolve(result);
+						});
+					});
 				};
 
 				//Add additional items to a checklist.

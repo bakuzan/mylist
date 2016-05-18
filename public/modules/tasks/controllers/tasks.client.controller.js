@@ -26,9 +26,6 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
       },
       datesSelected: false
     };
-    $scope.mangaUpdate = {
-        isPopup: ''
-    };
 
     ctrl.tabFilter = function(tabName) {
         $scope.filterConfig.search.day = tabName;

@@ -2,7 +2,7 @@
     <span keycuts></span>
     <header class="fixed-header width-100 secondary-background padding-10" style="top: 50px; left: 0">
         <div class="view-controls absolute position-right" style="min-width: 368px">
-            <div tab-container ng-model="view">
+            <div tab-container ng-model="view" ng-change="find(view)">
                 <div tab-view heading="Anime"></div>
                 <div tab-view heading="Manga"></div>
                 <div tab-view heading="Character"></div>

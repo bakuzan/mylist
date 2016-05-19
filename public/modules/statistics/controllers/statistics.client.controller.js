@@ -70,22 +70,47 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.colours = { red: '#c9302c', green: '#449d44', blue: '#31b0d5' }; //'red'; '#d9534f'; ////'green';'#5cb85c'; ////'blue';'#5bc0de'; //
         //handle getting view items and setting view specific defaults.
         function getItems(view) {
+            //reset defaults that are shared between views.
+            $scope.detail.history = 'months';
+            $scope.filterConfig.search.tag = '';
+            $scope.detail.isVisible = false;
+            $scope.detail.isEpisodeRatings = false;
+            $scope.statTags = []; //clear to stop multiple views tags appearing.
+            $scope.ratingsDistribution = [];
             if (view === 'Anime') {
                 $scope.filterConfig.sort.tag.type = 'ratingWeighted'; //stat tag sort
                 spinnerService.loading('items', Animeitems.query().$promise.then(function(result) {
                     $scope.items = result;
+                    $scope.overview = ItemService.buildOverview(result);
+                    $scope.historyDetails.months = ItemService.completeByMonth(result);
+                    $scope.historyDetails.seasons = ItemService.completeBySeason(result);
+                    $scope.ratingValues = ItemService.getRatingValues(result);
+                    $scope.ratingsDistribution = ItemService.buildRatingsDistribution(result);
+                    $scope.statTags = ItemService.buildStatTags(result, $scope.ratingValues.averageRating);
                 }));
             } else if (view === 'Manga') {
                 $scope.filterConfig.sort.tag.type = 'ratingWeighted'; //stat tag sort
                 spinnerService.loading('items', Mangaitems.query().$promise.then(function(result) {
                     $scope.items = result;
-										$scope.detail.isEpisodeRatings = false;
+                    $scope.overview = ItemService.buildOverview(result);
+                    $scope.historyDetails.months = ItemService.completeByMonth(result);
+                    $scope.ratingValues = ItemService.getRatingValues(result);
+                    $scope.ratingsDistribution = ItemService.buildRatingsDistribution(result);
+                    $scope.statTags = ItemService.buildStatTags(result, $scope.ratingValues.averageRating);
                 }));
             } else if (view === 'Character') {
                 $scope.filterConfig.sort.tag.type = 'count'; //stat tag sort
                 spinnerService.loading('character', Characters.query().$promise.then(function(result) {
                     $scope.items = result;
-										$scope.detail.isEpisodeRatings = false;
+                    $scope.statTags = CharacterService.buildCharacterTags(result);
+                    $scope.statSeries = CharacterService.buildSeriesList(result);
+                    $scope.voiceActors = CharacterService.buildVoiceActors(result);
+                    return CharacterService.buildGenderDistribution($scope.statTags, result.length);
+                }).then(function(result) {
+                    $scope.gender = result;
+                    $scope.gender[0].colour = $scope.colours.red;
+                    $scope.gender[1].colour = $scope.colours.green;
+                    $scope.gender[2].colour = $scope.colours.blue;
                 }));
             } else if (view === 'Topten') {
               spinnerService.loading('topten', Toptens.query().$promise.then(function(result) {
@@ -101,44 +126,6 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.find = function(view) {
             getItems(view);
         };
-        //required for ctrl+v clicks.
-        $scope.$watch('view', function(newValue) {
-            if ($scope.view !== undefined) {
-                getItems(newValue);
-                //reset defaults that are shared between views.
-                $scope.detail.history = 'months';
-                $scope.filterConfig.search.tag = '';
-                $scope.detail.isVisible = false;
-                $scope.statTags = [];
-                $scope.ratingsDistribution = [];
-            }
-        });
-        //watch for items changes...occurs on view change.
-        $scope.$watchCollection('items', function() {
-            if ($scope.items !== undefined) {
-                $scope.statTags = []; //clear to stop multiple views tags appearing.
-                if ($scope.view !== 'Character') {
-                    $scope.overview = ItemService.buildOverview($scope.items);
-                    $scope.historyDetails.months = ItemService.completeByMonth($scope.items);
-                    if ($scope.view === 'Anime') {
-                        $scope.historyDetails.seasons = ItemService.completeBySeason($scope.items);
-                    }
-                    $scope.ratingValues = ItemService.getRatingValues($scope.items);
-                    $scope.ratingsDistribution = ItemService.buildRatingsDistribution($scope.items);
-                    $scope.statTags = ItemService.buildStatTags($scope.items, $scope.ratingValues.averageRating);
-                } else if ($scope.view === 'Character') {
-                    $scope.statTags = CharacterService.buildCharacterTags($scope.items);
-                    $scope.statSeries = CharacterService.buildSeriesList($scope.items);
-                    $scope.voiceActors = CharacterService.buildVoiceActors($scope.items);
-                    CharacterService.buildGenderDistribution($scope.statTags, $scope.items.length).then(function(result) {
-                        $scope.gender = result;
-                        $scope.gender[0].colour = $scope.colours.red;
-                        $scope.gender[1].colour = $scope.colours.green;
-                        $scope.gender[2].colour = $scope.colours.blue;
-                    });
-                }
-            }
-        });
 
         //Builds ratings aggregates.
         function getSummaryFunctions(array) {

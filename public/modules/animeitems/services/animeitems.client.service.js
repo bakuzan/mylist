@@ -84,7 +84,7 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
         });
     };
 }])
-.service('ListService', ['moment', function(moment) {
+.service('ListService', ['moment', '$q', function(moment, $q) {
 
         //show a loading gif if text doesn't exist.
         this.loader = function(value) {
@@ -124,6 +124,37 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             }
             return -1;
         };
+
+				/** Splitting array into multiple arrays by grouping by attributes.
+				 */
+				 this.groupItemsByProperties = function (array, groupProperties) {
+					 return $q(function (resolve, reject) {
+							 var groupedArrays = groupBy(array, function (item) {
+									 return getGroupProperties(item, groupProperties);
+							 });
+							 resolve(groupedArrays);
+					 });
+				 };
+				 //Retrieve the item values for grouping by
+				 function getGroupProperties(item, groups) {
+						 var array = [];
+						 angular.forEach(groups, function (group) {
+								 array.push(item[group]);
+						 });
+						 return array;
+				 }
+				 //Group the items into arrays using the values.
+				 function groupBy(array, f) {
+						 var groups = {};
+						 array.forEach(function (o) {
+								 var group = JSON.stringify(f(o));
+								 groups[group] = groups[group] || [];
+								 groups[group].push(o);
+						 });
+						 return Object.keys(groups).map(function (group) {
+								 return groups[group];
+						 });
+				 }
 
         this.manipulateString = function(string, transform, onlyFirst) {
             switch(transform.toLowerCase()) {

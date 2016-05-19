@@ -1,8 +1,8 @@
 'use strict';
 
 // Statistics controller
-angular.module('statistics').controller('StatisticsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'Characters', 'ListService', 'ItemService', 'CharacterService', 'StatisticsService', '$filter', 'spinnerService',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, Characters, ListService, ItemService, CharacterService, StatisticsService, $filter, spinnerService) {
+angular.module('statistics').controller('StatisticsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'Characters', 'Toptens', 'ListService', 'ItemService', 'CharacterService', 'StatisticsService', '$filter', 'spinnerService',
+	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, Characters, Toptens, ListService, ItemService, CharacterService, StatisticsService, $filter, spinnerService) {
 		$scope.authentication = Authentication;
 
         // If user is not signed in then redirect back to signin.
@@ -66,6 +66,8 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.historyDetails = {};
         $scope.areTagless = false; //are any items tagless
         $scope.taglessItem = false; //filter variable for showing tagless items.
+        $scope.toptens = { anime: [], manga: [], character: [] };
+        $scope.colours = { red: '#c9302c', green: '#449d44', blue: '#31b0d5' }; //'red'; '#d9534f'; ////'green';'#5cb85c'; ////'blue';'#5bc0de'; //
         //handle getting view items and setting view specific defaults.
         function getItems(view) {
             if (view === 'Anime') {
@@ -85,6 +87,15 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                     $scope.items = result;
 										$scope.detail.isEpisodeRatings = false;
                 }));
+            } else if (view === 'Topten') {
+              spinnerService.loading('topten', Toptens.query().$promise.then(function(result) {
+                  return ListService.groupItemsByProperties(result, ['type']);
+              }).then(function(result) {
+                for(var i = 0, type = ''; i < 3; i++) {
+                  $scope.toptens[result[i][0].type] = result[i];
+                }
+                console.log('topten arrays: ', $scope.toptens);
+              }));
             }
         }
         $scope.find = function(view) {
@@ -121,9 +132,9 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                     $scope.voiceActors = CharacterService.buildVoiceActors($scope.items);
                     CharacterService.buildGenderDistribution($scope.statTags, $scope.items.length).then(function(result) {
                         $scope.gender = result;
-                        $scope.gender[0].colour = '#c9302c'; //'red'; '#d9534f'; //
-                        $scope.gender[1].colour = '#449d44'; //'green';'#5cb85c'; //
-                        $scope.gender[2].colour = '#31b0d5'; //'blue';'#5bc0de'; //
+                        $scope.gender[0].colour = $scope.colours.red;
+                        $scope.gender[1].colour = $scope.colours.green;
+                        $scope.gender[2].colour = $scope.colours.blue;
                     });
                 }
             }

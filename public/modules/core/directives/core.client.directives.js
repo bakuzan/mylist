@@ -93,7 +93,6 @@ angular.module('core').directive('myProgress', function() {
       element.bind('click', function(event) {
         $timeout(function() {
           event.stopPropagation();
-          console.log('clicked a click pass, pass to: ', attrs.clickPass);
           document.getElementById(attrs.clickPass).click();
         }, 0);
       });

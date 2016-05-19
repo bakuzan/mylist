@@ -149,4 +149,15 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
         }
 
     };
+})
+.directive('swOnplay', function() {
+  return {
+    restrict: 'A',
+    link: function(scope, element, attrs) {
+      var el = element[0];
+      el.addEventListener('play', function() {
+        scope.$apply(attrs.swOnplay);
+      });
+    }
+  };
 });

@@ -19,7 +19,7 @@
   </div>
   <div class="col-lg-10 col-md-10 col-sm-10">
     <p class="primary-background text-center padding-5 margin-0" ng-bind="ctrl.videoFile.message" ng-if="ctrl.videoFile.message !== ''"></p>
-    <video class="width-100" id="stream" ng-src="{{ctrl.videoFile.processed}}" poster="{{trustAsResourceUrl(ctrl.animeitem.image)}}" type="video/mp4" controls></video>
+    <video class="width-100" id="stream" sw-onplay="ctrl.playVideo()" ng-src="{{ctrl.videoFile.processed}}" poster="{{trustAsResourceUrl(ctrl.animeitem.image)}}" type="video/mp4" controls></video>
   </div>
   <article class="relative width-20 margin-left-auto">
     <header>
@@ -27,8 +27,7 @@
     </header>
     <div class="overflow-auto-hover" style="height: 33vh">
       <ul class="list-group" id="anime-watch-file-list">
-        <li class="cursor-pointer padding-5" ng-class="ctrl.videoFile.file === file.file ? 'loaded' : ''"
-            ng-repeat="file in ctrl.animeitem.video.files" ng-click="ctrl.chooseVideo($event, file.file)" click-pass="file-grabber">
+        <li class="cursor-pointer padding-5" ng-class="ctrl.videoFile.file === file.file ? 'loaded' : ''" ng-repeat="file in ctrl.animeitem.video.files" click-pass="file-grabber">
             <span>#{{file.number}}</span><i class="fa fa-check padding-left-10" style="color: green" ng-show="ctrl.watchedList[file.file]"></i>
         </li>
       </ul>

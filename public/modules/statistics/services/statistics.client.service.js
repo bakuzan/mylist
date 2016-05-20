@@ -103,6 +103,19 @@ angular.module('statistics').service('StatisticsService', ['$filter', 'ListServi
         return max;
     };
 
+    this.occuranceCounter = function(array, attr) {
+      var occuranceCounter = [];
+      ListService.groupItemsByProperties(array, attr).then(function(result) {
+        for(var i = 0, len = result.length; i < len; i++) {
+          occuranceCounter.push({
+            value: attr,
+            count: result[i].length
+          });
+        }
+        resolve(occuranceCounter);
+      });
+    };
+
     this.buildToptenDataStructure = function(obj, arrayOfArrays) {
       return $q(function(resolve, reject) {
         angular.forEach(arrayOfArrays, function(array) {
@@ -117,6 +130,11 @@ angular.module('statistics').service('StatisticsService', ['$filter', 'ListServi
         });
         resolve(obj);
       });
+    };
+
+    this.buildToptenModeList = function(array, type) {
+      var attr = type === 'character' ? 'name' : 'title';
+      return self.occuranceCounter(array, attr);
     };
 
 }]);

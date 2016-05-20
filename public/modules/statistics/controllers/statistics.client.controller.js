@@ -65,7 +65,10 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.historyDetails = {};
         $scope.areTagless = false; //are any items tagless
         $scope.taglessItem = false; //filter variable for showing tagless items.
-        $scope.toptens = { type: 'anime', anime: { listCount: 0, items: [] }, manga:  { listCount: 0, items: [] }, character:  { listCount: 0, items: [] } };
+        $scope.toptens = {
+					type: 'anime',
+					anime: { listCount: 0, items: [] }, manga:  { listCount: 0, items: [] }, character:  { listCount: 0, items: [] }, detail: { items: [] }
+				 };
         $scope.colours = { red: '#c9302c', green: '#449d44', blue: '#31b0d5' }; //'red'; '#d9534f'; ////'green';'#5cb85c'; ////'blue';'#5bc0de'; //
 
 				function getItemStatistics(view, items) {
@@ -87,7 +90,8 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
 								$scope.gender[2].colour = $scope.colours.blue;
 						});
 					} else if (view ==='Topten') {
-						console.log('topten stat process: ', items);
+						$scope.toptens.deatil.items = StatisticsService.buildToptenModeList(items, $scope.toptens.type);
+						console.log('topten stat process: ', items, $scope.toptens);
 					}
 				}
 

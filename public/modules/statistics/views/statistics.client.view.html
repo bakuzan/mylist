@@ -433,20 +433,16 @@
         </div>
       </aside>
       <div tab-container ng-model="toptens.type" ng-change="ctrl.getToptenItemStatistics(view, toptens.type)" class="width-100">
-        <article tab-view heading="anime">
-        <!--
-          on list vs. on items ?
-          i.e.
-          i) frequency of conditions used?
-          ii) frequency of anime appearing in lists
-        -->
-        </article>
-        <article tab-view heading="manga">
-
-        </article>
-        <article tab-view heading="character">
-
-        </article>
+        <div tab-view heading="anime"></div>
+        <div tab-view heading="manga"></div>
+        <div tab-view heading="character"></div>
       </div>
+      <article>
+        <ul>
+          <li ng-repeat="item in toptens.detail.items">
+            <span>{{item.title}}</span>-<span>{{item.count}}</span>
+          </li>
+        </ul>
+      </article>
     </section>
 </section>

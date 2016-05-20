@@ -3,10 +3,9 @@
 // Statistics controller
 angular.module('statistics').controller('StatisticsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'Characters', 'Toptens', 'ListService', 'ItemService', 'CharacterService', 'StatisticsService', '$filter', 'spinnerService',
 	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, Characters, Toptens, ListService, ItemService, CharacterService, StatisticsService, $filter, spinnerService) {
-		$scope.authentication = Authentication;
-
-        // If user is not signed in then redirect back to signin.
-		if (!$scope.authentication.user) $location.path('/signin');
+		var ctrl = this;
+		ctrl.authentication = Authentication;
+		ctrl.dataStore = { anime: [], manga: [], character: [], toptens: [] };
 
         $scope.view = 'Anime';
         $scope.detail = {
@@ -66,9 +65,31 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         $scope.historyDetails = {};
         $scope.areTagless = false; //are any items tagless
         $scope.taglessItem = false; //filter variable for showing tagless items.
-        $scope.toptens = { anime: [], manga: [], character: [] };
+        $scope.toptens = { type: 'anime', anime: { listCount: 0, items: [] }, manga:  { listCount: 0, items: [] }, character:  { listCount: 0, items: [] } };
         $scope.colours = { red: '#c9302c', green: '#449d44', blue: '#31b0d5' }; //'red'; '#d9534f'; ////'green';'#5cb85c'; ////'blue';'#5bc0de'; //
-        //handle getting view items and setting view specific defaults.
+
+				function getItemStatistics(view, items) {
+					if(view === 'Anime' || view === 'Manga') {
+						$scope.overview = ItemService.buildOverview(items);
+						$scope.historyDetails.months = ItemService.completeByMonth(items);
+						if (view === 'Anime') $scope.historyDetails.seasons = ItemService.completeBySeason(items);
+						$scope.ratingValues = ItemService.getRatingValues(items);
+						$scope.ratingsDistribution = ItemService.buildRatingsDistribution(items);
+						$scope.statTags = ItemService.buildStatTags(items, $scope.ratingValues.averageRating);
+					} else if (view === 'Character') {
+						$scope.statTags = CharacterService.buildCharacterTags(items);
+						$scope.statSeries = CharacterService.buildSeriesList(items);
+						$scope.voiceActors = CharacterService.buildVoiceActors(items);
+						CharacterService.buildGenderDistribution($scope.statTags, items.length).then(function(result) {
+								$scope.gender = result;
+								$scope.gender[0].colour = $scope.colours.red;
+								$scope.gender[1].colour = $scope.colours.green;
+								$scope.gender[2].colour = $scope.colours.blue;
+						});
+					}
+				}
+
+				//handle getting view items and setting view specific defaults.
         function getItems(view) {
             //reset defaults that are shared between views.
             $scope.detail.history = 'months';
@@ -79,49 +100,57 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             $scope.ratingsDistribution = [];
             if (view === 'Anime') {
                 $scope.filterConfig.sort.tag.type = 'ratingWeighted'; //stat tag sort
-                spinnerService.loading('items', Animeitems.query().$promise.then(function(result) {
-                    $scope.items = result;
-                    $scope.overview = ItemService.buildOverview(result);
-                    $scope.historyDetails.months = ItemService.completeByMonth(result);
-                    $scope.historyDetails.seasons = ItemService.completeBySeason(result);
-                    $scope.ratingValues = ItemService.getRatingValues(result);
-                    $scope.ratingsDistribution = ItemService.buildRatingsDistribution(result);
-                    $scope.statTags = ItemService.buildStatTags(result, $scope.ratingValues.averageRating);
-                }));
+								if (ctrl.dataStore.anime.length === 0) {
+	                spinnerService.loading('items', Animeitems.query().$promise.then(function(result) {
+										ctrl.dataStore.anime = result;
+										$scope.items = result;
+		                getItemStatistics(view, result);
+									}));
+								} else {
+									$scope.items = ctrl.dataStore.anime;
+									getItemStatistics(view, ctrl.dataStore.anime);
+									console.log('from cache - anime');
+								}
             } else if (view === 'Manga') {
                 $scope.filterConfig.sort.tag.type = 'ratingWeighted'; //stat tag sort
-                spinnerService.loading('items', Mangaitems.query().$promise.then(function(result) {
-                    $scope.items = result;
-                    $scope.overview = ItemService.buildOverview(result);
-                    $scope.historyDetails.months = ItemService.completeByMonth(result);
-                    $scope.ratingValues = ItemService.getRatingValues(result);
-                    $scope.ratingsDistribution = ItemService.buildRatingsDistribution(result);
-                    $scope.statTags = ItemService.buildStatTags(result, $scope.ratingValues.averageRating);
-                }));
+								if (ctrl.dataStore.manga.length === 0) {
+                	spinnerService.loading('items',	Mangaitems.query().$promise.then(function(result) {
+										ctrl.dataStore.manga = result;
+										$scope.items = result;
+										getItemStatistics(view, result);
+	              	}));
+								} else {
+									$scope.items = ctrl.dataStore.manga;
+									getItemStatistics(view, ctrl.dataStore.manga);
+									console.log('from cache - anime');
+								}
             } else if (view === 'Character') {
                 $scope.filterConfig.sort.tag.type = 'count'; //stat tag sort
-                spinnerService.loading('character', Characters.query().$promise.then(function(result) {
-                    $scope.items = result;
-                    $scope.statTags = CharacterService.buildCharacterTags(result);
-                    $scope.statSeries = CharacterService.buildSeriesList(result);
-                    $scope.voiceActors = CharacterService.buildVoiceActors(result);
-                    return CharacterService.buildGenderDistribution($scope.statTags, result.length);
-                }).then(function(result) {
-                    $scope.gender = result;
-                    $scope.gender[0].colour = $scope.colours.red;
-                    $scope.gender[1].colour = $scope.colours.green;
-                    $scope.gender[2].colour = $scope.colours.blue;
-                }));
+								if (ctrl.dataStore.character.length === 0) {
+									spinnerService.loading('character', Characters.query().$promise.then(function(result) {
+										ctrl.dataStore.character = result;
+										$scope.items = result;
+										getItemStatistics(view, result);
+	                }));
+								} else {
+									$scope.items = ctrl.dataStore.character;
+									getItemStatistics(view, ctrl.dataStore.character);
+									console.log('from cache - character');
+								}
             } else if (view === 'Topten') {
-              spinnerService.loading('topten', Toptens.query().$promise.then(function(result) {
-                  return ListService.groupItemsByProperties(result, ['type']);
-              }).then(function(result) {
-                for(var i = 0, type = ''; i < 3; i++) {
-                  $scope.toptens[result[i][0].type] = result[i];
-                }
-                console.log('topten arrays: ', $scope.toptens);
-              }));
+							if (ctrl.dataStore.toptens.length === 0) {
+	              spinnerService.loading('topten', Toptens.query().$promise.then(function(result) {
+	                return ListService.groupItemsByProperties(result, ['type']);
+	              }).then(function(result) {
+									ctrl.dataStore.toptens = result;
+									return StatisticsService.buildToptenStatistics($scope.toptens, result);
+	              }).then(function(result) {
+									$scope.toptens = result;
+									console.log('topten arrays: ', $scope.toptens);
+								}));
+							}
             }
+						console.log('dataStore check: ', ctrl.dataStore);
         }
         $scope.find = function(view) {
             getItems(view);

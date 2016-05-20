@@ -1,9 +1,9 @@
 'use strict';
 
-//Statistics service 
+//Statistics service
 angular.module('statistics').service('StatisticsService', ['$filter', 'ListService', '$q', function($filter, ListService, $q) {
     var self = this;
-    
+
     this.buildSummaryFunctions = function(array) {
         return $q(function(resolve, reject) {
             if (array !== undefined) {
@@ -17,7 +17,7 @@ angular.module('statistics').service('StatisticsService', ['$filter', 'ListServi
                     averageRating = (ratings.sum / ratings.count).toFixed(2);
                     modeRating = self.getModeMap(array, 'rating', 0);
                 }
-                resolve([ 
+                resolve([
                     { metric: 'Average rating', value: averageRating },
                     { metric: 'Highest rating', value: highestRating },
                     { metric: 'Lowest rating',  value: (lowestRating === 10) ? 0 : lowestRating },
@@ -26,7 +26,7 @@ angular.module('statistics').service('StatisticsService', ['$filter', 'ListServi
             }
         });
     };
-    
+
     function processYearSummary(summary, array) {
         var i = array.length;
         if (summary.length < 1) {
@@ -37,22 +37,22 @@ angular.module('statistics').service('StatisticsService', ['$filter', 'ListServi
                 });
             }
             summary.reverse();
-        } 
+        }
         i = array.length;
         for(var j = 0; j < i; j++) {
             summary[j].values.push({ value: array[j].value });
         }
         return summary;
     }
-    
+
     this.buildYearSummary = function(array, year, type) {
         return $q(function(resolve, reject) {
             var filter = (type === 'months') ? 'endedMonth' : 'season',
                 attr   = (type === 'months') ? 'number'     : 'text'  ,
                 commonArrays = ListService.getCommonArrays(),
-                i = commonArrays[type].length, 
+                i = commonArrays[type].length,
                 yearSummary = [], results = [];
-            
+
             for(var j = 0; j < i; j++) {
                 var filteredArray = $filter(filter)(array, year, commonArrays[type][j][attr]),
                     promise = self.buildSummaryFunctions(filteredArray);
@@ -66,7 +66,7 @@ angular.module('statistics').service('StatisticsService', ['$filter', 'ListServi
             resolve(yearSummary);
         });
     };
-    
+
     this.buildEpisodeSummaries = function(array) {
         return $q(function(resolve, reject) {
             angular.forEach(array, function(item) {
@@ -77,9 +77,9 @@ angular.module('statistics').service('StatisticsService', ['$filter', 'ListServi
             resolve(array);
         });
     };
-    
+
     this.getModeMap = function(array, attr, ignore) {
-        var modeMap = {}, 
+        var modeMap = {},
             max = {
                 count: 0,
                 value: ''
@@ -100,7 +100,23 @@ angular.module('statistics').service('StatisticsService', ['$filter', 'ListServi
             }
         }
 //        console.log(max);
-        return max;        
+        return max;
     };
-    
+
+    this.buildToptenStatistics = function(obj, arrayOfArrays) {
+      return $q(function(resolve, reject) {
+        angular.forEach(arrayOfArrays, function(array) {
+          var type = array[0].type, listType = type + 'List', len = array.length;
+          obj[type].listCount = len;
+          for(var i = 0; i < len; i++) {
+            var itemLen = array[i][listType].length;
+            for(var j = 0; j < itemLen; j++) {
+              obj[type].items.push(array[i][listType][j]);
+            }
+          }
+        });
+        resolve(obj);
+      });
+    };
+
 }]);

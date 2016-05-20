@@ -4,19 +4,19 @@
 angular.module('ratings').controller('RatingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'ListService', 'NotificationFactory', 'StatisticsService', 'spinnerService',
 	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, ListService, NotificationFactory, StatisticsService, spinnerService) {
 		$scope.authentication = Authentication;
-        
+
         // If user is not signed in then redirect back to signin.
 		if (!$scope.authentication.user) $location.path('/signin');
-        
+
         $scope.go = function(id) {
             $location.path('/mangaitems/' + id);
         };
-        
+
         $scope.view = 'Anime';
         //paging variables.
         $scope.pageConfig = {
             currentPage: 0,
-            pageSize: 50
+            pageSize: 20
         };
         $scope.sortType = 'rating';
         $scope.sortReverse = true;
@@ -28,7 +28,7 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
             $scope.overStar = value;
             $scope.percent = 100 * (value / $scope.maxRating);
         };
-        
+
         function getItems(view) {
             if (view === 'Anime') {
                 spinnerService.loading('rating', Animeitems.query().$promise.then(function(result) {
@@ -42,11 +42,11 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
             $scope.viewItem = undefined;
 //            console.log(view, $scope.items);
         }
-        
+
         $scope.find = function(view) {
             getItems(view);
         };
-        
+
         //Needed to catch 'Character' setting and skip it.
         $scope.$watch('view', function(newValue) {
             if ($scope.view !== undefined) {
@@ -58,7 +58,7 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
                 }
             }
         });
-        
+
         //apply new score.
         $scope.itemScore = function(item, score) {
             if (item.rating !== score) {
@@ -70,26 +70,26 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
                 }, function(errorResponse) {
                     $scope.error = errorResponse.data.message;
                     NotificationFactory.error('Error!', 'Your change failed!');
-                }); 
+                });
 //                console.log('update');
             }
             return false;
         };
-        
+
         /** Episode rating functions below here.
-         */        
+         */
         $scope.viewEpisodeRatings = function(item) {
             $scope.viewItem = ($scope.viewItem !== item) ? item : undefined;
-            $scope.isEqual = ($scope.viewItem === item) ? true : false; 
+            $scope.isEqual = ($scope.viewItem === item) ? true : false;
             $scope.search = ($scope.viewItem === item) ? item.title : '';
             if ($scope.viewItem !== undefined) {
-                spinnerService.loading('summary', 
+                spinnerService.loading('summary',
                                        StatisticsService.buildSummaryFunctions($scope.viewItem.meta.history).then(function(result) {
                     $scope.summaryFunctions = result;
                 }));
             }
         };
-        
+
         $scope.episodeScore = function(finished) {
 //            console.log('finished: ', finished, $scope.viewItem.meta.history);
             if (finished) {
@@ -104,10 +104,10 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
                 }, function(errorResponse) {
                     $scope.error = errorResponse.data.message;
                     NotificationFactory.error('Error!', 'Your change failed!');
-                }); 
+                });
             }
         };
-        
-        
+
+
     }
 ]);

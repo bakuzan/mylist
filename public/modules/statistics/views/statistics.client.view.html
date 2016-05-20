@@ -1,4 +1,4 @@
-<section data-ng-controller="StatisticsController" data-ng-init="find(view)" data-ng-show="authentication.user">
+<section data-ng-controller="StatisticsController as ctrl" data-ng-init="find(view)" data-ng-show="ctrl.authentication.user">
     <span keycuts></span>
     <header class="fixed-header width-100 secondary-background padding-10" style="top: 50px; left: 0">
         <div class="view-controls absolute position-right" style="min-width: 368px">
@@ -427,12 +427,12 @@
     <section class="col-lg-12 col-md-12 col-sm-12 relative stat-view" style="top: 100px" ng-show="view === 'Topten'" loading-spinner name="topten" size="fullscreen">
       <aside class="col-lg-12 col-md-12 col-sm-12 primary-background">
         <div class="text-center font-18 bold">
-          <span ng-style="{ color: colours.red }" ng-bind="toptens.anime.length + ' anime '"></span>-
-          <span ng-style="{ color: colours.green }" ng-bind="toptens.manga.length + ' manga '"></span>-
-          <span ng-style="{ color: colours.blue }" ng-bind="toptens.character.length + ' character '"></span>
+          <span ng-style="{ color: colours.red }" ng-bind="toptens.anime.listCount + ' anime '"></span>-
+          <span ng-style="{ color: colours.green }" ng-bind="toptens.manga.listCount + ' manga '"></span>-
+          <span ng-style="{ color: colours.blue }" ng-bind="toptens.character.listCount + ' character '"></span>
         </div>
       </aside>
-      <div tab-container class="width-100">
+      <div tab-container ng-model="toptens.type" class="width-100">
         <article tab-view heading="anime">
         <!--
           on list vs. on items ?

@@ -86,6 +86,8 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
 								$scope.gender[1].colour = $scope.colours.green;
 								$scope.gender[2].colour = $scope.colours.blue;
 						});
+					} else if (view ==='Topten') {
+						console.log('topten stat process: ', items);
 					}
 				}
 
@@ -146,8 +148,12 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
 									return StatisticsService.buildToptenStatistics($scope.toptens, result);
 	              }).then(function(result) {
 									$scope.toptens = result;
+									getItemStatistics(view, result[$scope.toptens.type].items);
 									console.log('topten arrays: ', $scope.toptens);
 								}));
+							} else {
+								getItemStatistics(view, $scope.toptens[$scope.toptens.type].items);
+								console.log('from cache - topten');
 							}
             }
 						console.log('dataStore check: ', ctrl.dataStore);
@@ -155,6 +161,9 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         ctrl.find = function(view) {
             getItems(view);
         };
+				ctrl.getToptenItemStatistics = function(view, toptenType) {
+					getItemStatistics(view, $scope.toptens[toptenType].items);
+				};
 
         //Builds ratings aggregates.
         function getSummaryFunctions(array) {

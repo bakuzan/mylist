@@ -432,7 +432,7 @@
           <span ng-style="{ color: colours.blue }" ng-bind="toptens.character.listCount + ' character '"></span>
         </div>
       </aside>
-      <div tab-container ng-model="toptens.type" class="width-100">
+      <div tab-container ng-model="toptens.type" ng-change="ctrl.getToptenItemStatistics(view, toptens.type)" class="width-100">
         <article tab-view heading="anime">
         <!--
           on list vs. on items ?

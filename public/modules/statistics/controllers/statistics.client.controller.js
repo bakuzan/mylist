@@ -152,7 +152,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             }
 						console.log('dataStore check: ', ctrl.dataStore);
         }
-        $scope.find = function(view) {
+        ctrl.find = function(view) {
             getItems(view);
         };
 
@@ -171,9 +171,11 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                     );
                 }
             } else {
+							if(array[0].meta.episodeSummaryFunctions === undefined) { //If the first item has it already, they all do and this is pointless.
                 spinnerService.loading('detail', StatisticsService.buildEpisodeSummaries(array).then(function(result) {
                         console.log(array);
                 }));
+							}
             }
 //            console.log(array, $scope.historyDetails);
         }
@@ -184,7 +186,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             }
         });
 
-        $scope.historyDetail = function(year, division, divisionText, summaryType) {
+        ctrl.historyDetail = function(year, division, divisionText, summaryType) {
             if ($scope.detail.year === year && $scope.detail.divisionText === divisionText) {
                 $scope.detail.isVisible = !$scope.detail.isVisible;
             } else {
@@ -197,7 +199,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             }
         };
 
-        $scope.tableDetail = function(type, name) {
+        ctrl.tableDetail = function(type, name) {
             if ($scope.tableDetail[type] === name) {
                 $scope.filterConfig.search[type] = '';
                 $scope.filterConfig.show[type] = false;
@@ -218,7 +220,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
          *  to populate the new season attrs. that will work with the new
          *  filters in the hopes accuracy and speed will increase.
          */
-        $scope.generateSeasons = function() {
+        ctrl.generateSeasons = function() {
             if ($scope.view === 'Anime') {
                 var array = ItemService.setSeason($scope.items, $scope.detailSeasonYear, $scope.detailSeason);
                 angular.forEach(array, function(item) {

@@ -1,8 +1,8 @@
-<section data-ng-controller="StatisticsController as ctrl" data-ng-init="find(view)" data-ng-show="ctrl.authentication.user">
+<section data-ng-controller="StatisticsController as ctrl" data-ng-init="ctrl.find(view)" data-ng-show="ctrl.authentication.user">
     <span keycuts></span>
     <header class="fixed-header width-100 secondary-background padding-10" style="top: 50px; left: 0">
         <div class="view-controls absolute position-right" style="min-width: 368px">
-            <div tab-container ng-model="view" ng-change="find(view)">
+            <div tab-container ng-model="view" ng-change="ctrl.find(view)">
                 <div tab-view heading="Anime"></div>
                 <div tab-view heading="Manga"></div>
                 <div tab-view heading="Character"></div>
@@ -48,11 +48,11 @@
                             <tbody>
                                 <tr ng-repeat="year in historyDetails[detail.history][detail.history] | orderBy: '-year'">
                                     <th ng-class="(detail.isEpisodeRatings) ? '' : 'clickable'"
-                                        ng-click="(detail.isEpisodeRatings) ? '' : historyDetail(year.year, '', '', detail.history)">
+                                        ng-click="(detail.isEpisodeRatings) ? '' : ctrl.historyDetail(year.year, '', '', detail.history)">
                                         <span>{{year.year}}</span>
                                     </th>
                                     <td ng-repeat="part in year[detail.history]"
-                                        ng-click="historyDetail(year.year, part[detail.history==='months' ? 'number' : 'text'], part.text)"
+                                        ng-click="ctrl.historyDetail(year.year, part[detail.history==='months' ? 'number' : 'text'], part.text)"
                                         hover-data="{{part.count}} {{detail.history === 'months' ? 'completed' : 'watched' }} {{part.text}} {{year.year}}.">
                                         <span class="stat-month-box" ng-style="{'opacity': part.count / historyDetails[detail.history].max }"></span>
                                     </td>
@@ -256,7 +256,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr class="stat-table-row clickable" ng-repeat="stat in statTags | orderBy: filterConfig.sort.tag.type:filterConfig.sort.tag.reverse | filter: {tag: filterConfig.search.tag }:tableDetail.isEqual" ng-click="tableDetail('tag', stat.tag);">
+                      <tr class="stat-table-row clickable" ng-repeat="stat in statTags | orderBy: filterConfig.sort.tag.type:filterConfig.sort.tag.reverse | filter: {tag: filterConfig.search.tag }:tableDetail.isEqual" ng-click="ctrl.tableDetail('tag', stat.tag);">
                         <td class="text-right">{{$index+1}}</td>
                         <td>{{stat.tag}}</td>
                         <td class="text-right">{{stat.count}}</td>
@@ -341,7 +341,7 @@
                           </tr>
                       </thead>
                       <tbody>
-                          <tr class="stat-table-row clickable" ng-repeat="stat in statSeries | orderBy: filterConfig.sort.series.type:filterConfig.sort.series.reverse | filter: {name: filterConfig.search.series }" ng-click="tableDetail('series', stat.name);">
+                          <tr class="stat-table-row clickable" ng-repeat="stat in statSeries | orderBy: filterConfig.sort.series.type:filterConfig.sort.series.reverse | filter: {name: filterConfig.search.series }" ng-click="ctrl.tableDetail('series', stat.name);">
                               <td class="text-right">{{$index+1}}</td>
                               <td>{{stat.name}}</td>
                               <td class="text-right">{{stat.count}}</td>
@@ -399,7 +399,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="stat-table-row clickable" ng-repeat="stat in voiceActors | orderBy: filterConfig.sort.voice.type:filterConfig.sort.voice.reverse | filter: {name: filterConfig.search.voice }" ng-click="tableDetail('voice', stat.name);" >
+                                <tr class="stat-table-row clickable" ng-repeat="stat in voiceActors | orderBy: filterConfig.sort.voice.type:filterConfig.sort.voice.reverse | filter: {name: filterConfig.search.voice }" ng-click="ctrl.tableDetail('voice', stat.name);" >
                                     <td class="text-right">{{$index+1}}</td>
                                     <td>{{stat.name}}</td>
                                     <td class="text-right">{{stat.count}}</td>

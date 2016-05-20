@@ -145,7 +145,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
 	                return ListService.groupItemsByProperties(result, ['type']);
 	              }).then(function(result) {
 									ctrl.dataStore.toptens = result;
-									return StatisticsService.buildToptenStatistics($scope.toptens, result);
+									return StatisticsService.buildToptenDataStructure($scope.toptens, result);
 	              }).then(function(result) {
 									$scope.toptens = result;
 									getItemStatistics(view, result[$scope.toptens.type].items);

@@ -103,7 +103,7 @@ angular.module('statistics').service('StatisticsService', ['$filter', 'ListServi
         return max;
     };
 
-    this.buildToptenStatistics = function(obj, arrayOfArrays) {
+    this.buildToptenDataStructure = function(obj, arrayOfArrays) {
       return $q(function(resolve, reject) {
         angular.forEach(arrayOfArrays, function(array) {
           var type = array[0].type, listType = type + 'List', len = array.length;

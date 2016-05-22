@@ -90,7 +90,13 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
 								$scope.gender[2].colour = $scope.colours.blue;
 						});
 					} else if (view ==='Topten') {
-						$scope.toptens.deatil.items = StatisticsService.buildToptenModeList(items, $scope.toptens.type);
+						StatisticsService.buildToptenModeList(items, $scope.toptens.type).then(function(result) {
+							$scope.toptens.detail.items = result.sort(function(a, b) {
+								if(a.count < b.count) return 1;
+								if(a.count > b.count) return -1;
+																			return 0;
+							});
+						});
 						console.log('topten stat process: ', items, $scope.toptens);
 					}
 				}

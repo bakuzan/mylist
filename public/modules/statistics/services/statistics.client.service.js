@@ -104,14 +104,16 @@ angular.module('statistics').service('StatisticsService', ['$filter', 'ListServi
     };
 
     this.occuranceCounter = function(array, attr) {
-      var occuranceCounter = [];
-      ListService.groupItemsByProperties(array, attr).then(function(result) {
-        for(var i = 0, len = result.length; i < len; i++) {
-          occuranceCounter.push({
-            value: attr,
-            count: result[i].length
-          });
-        }
+      return $q(function(resolve, reject) {
+        var occuranceCounter = [];
+        ListService.groupItemsByProperties(array, [attr]).then(function(result) {
+          for(var i = 0, len = result.length; i < len; i++) {
+            occuranceCounter.push({
+              value: result[i][0][attr],
+              count: result[i].length
+            });
+          }
+        });
         resolve(occuranceCounter);
       });
     };

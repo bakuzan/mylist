@@ -119,7 +119,7 @@
 
 .stat-tag-table, .stat-media-table, .stat-tag-detail-table {
     thead {
-        background-color: $brand-secondary;   
+        background-color: $brand-secondary;
     }
 }
 
@@ -145,4 +145,19 @@
 
 .stat-detail {
     background-color: $brand-primary;
+}
+
+/** Season classes for yearly separations.
+ */
+.Winter-background {
+ background-color: #31b0d5;
+}
+.Spring-background {
+ background-color: #449d44;
+}
+.Summer-background {
+ background-color: #FF4500;
+}
+.Fall-background {
+ background-color: #c9302c;
 }

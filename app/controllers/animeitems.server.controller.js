@@ -153,8 +153,8 @@ exports.animeitemByID = function(req, res, next, id) {
 	Animeitem.findById(id).populate('user', 'displayName').populate('manga', 'title').exec(function(err, animeitem) {
 		if (err) return next(err);
 		if (! animeitem) return next(new Error('Failed to load Animeitem ' + id));
-		var baseUrl = 'C:/Users/steven.walsh/Documents/MISC/',
-				seriesName = animeitem.title.toLowerCase().replace(/ /g, '-'),
+		var baseUrl = 'C:/Users/Steven/Videos/',
+				seriesName = animeitem.title.toLowerCase().replace(/\(.+?\)/g, '').replace(/[^a-z0-9+]+/gi, '-'),
 				location = baseUrl + seriesName,
 				index = 0;
 		fs.readdir(location, function (err, files) {

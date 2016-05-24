@@ -48,13 +48,22 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                     type: 'count',
                     reverse: true
                 },
+								topten: {
+									type: 'count',
+									reverse: true
+								}
             },
             search: {
                 tag: '',
                 tagDetail: '',
                 series: '',
-                voice: ''
-            }
+                voice: '',
+								topten: ''
+            },
+						topten: {
+							isRanked: false,
+							isFavourite: false
+						}
         };
         $scope.overview = {}; //holds summary/overview details.
         $scope.gender = {}; //holds gender summary details.
@@ -172,7 +181,21 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             getItems(view);
         };
 				ctrl.getToptenItemStatistics = function(view, toptenType) {
-					getItemStatistics(view, $scope.toptens[toptenType].items);
+					var filteredItems = [];
+					for(var i = 0; i < 3; i++) {
+						if(ctrl.dataStore.toptens[i][0].type === toptenType) {
+							filteredItems = ctrl.dataStore.toptens[i];
+							return;
+						}
+					}
+					if($scope.filterConfig.topten.isRanked) filteredItems = filter(filteredItems, { isRanked: true });
+					if($scope.filterConfig.topten.isFavourite) filteredItems = filter(filteredItems, { isFavourite: true });
+
+					StatisticsService.buildToptenDataStructure($scope.toptens[toptenType], filteredItems).then(function(result) {
+						$scope.toptens[toptenType] = result;
+						console.log('topten data structure - result: ', result, $scope.toptens);
+						getItemStatistics(view, result);
+					});
 				};
 
         //Builds ratings aggregates.

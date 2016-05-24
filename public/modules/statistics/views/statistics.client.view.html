@@ -438,12 +438,52 @@
         <div tab-view heading="manga"></div>
         <div tab-view heading="character"></div>
       </div>
-      <article>
-        <ul>
-          <li ng-repeat="item in toptens.detail.items">
-            <span>{{item.value}}</span>-<span>{{item.count}}</span>
-          </li>
-        </ul>
+      <article class="margin-top-10">
+        <div class="row-container padding-5">
+          <div class="margin-left-15">
+            <input type="checkbox" class="phantom-control" ng-model="filterConfig.topten.isRanked" ng-change="ctrl.getToptenItemStatistics(view, toptens.type)" />
+            <span class="display-inline-block font-18 padding-left-5">is ranked</span>
+          </div>
+          <div class="margin-left-15">
+            <input type="checkbox" class="phantom-control" ng-model="filterConfig.topten.isFavourite" ng-change="ctrl.getToptenItemStatistics(view, toptens.type)" />
+            <span class="display-inline-block font-18 padding-left-5">is favourite</span>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 margin-top-10">
+          <div class="input-group">
+            <div class="input-group-addon">
+              <i class="fa fa-search"></i>
+            </div>
+            <input type="text" ng-model="filterConfig.search.topten" placeholder="search items" class="form-control">
+          </div>
+          <table class="col-lg-12 col-md-12 col-sm-12 stat-tag-table table table-bordered">
+            <thead>
+              <tr>
+                <td class="text-right">#</td>
+                <td>
+                  <a href="" ng-click="filterConfig.sort.topten.type = 'value'; filterConfig.sort.topten.reverse = !filterConfig.sort.topten.reverse "
+                     ng-bind="(toptens.type === 'character') ? 'Name' : 'Title'">
+                  </a>
+                  <i ng-show="filterConfig.sort.topten.type == 'value'" class="fa" ng-class="filterConfig.sort.topten.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                </td>
+                <td class="text-right">
+                  <a href="" ng-click="filterConfig.sort.topten.type = 'count'; filterConfig.sort.topten.reverse = !filterConfig.sort.topten.reverse ">
+                   Count
+                  </a>
+                  <i ng-show="filterConfig.sort.topten.type == 'count'" class="fa" ng-class="filterConfig.sort.topten.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                </td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="stat-table-row clickable"
+                  ng-repeat="item in toptens.detail.items | orderBy: filterConfig.sort.topten.type:filterConfig.sort.topten.reverse | filter: { value: filterConfig.search.topten }">
+                <td class="text-right">{{$index+1}}</td>
+                <td>{{item.value}}</td>
+                <td class="text-right">{{item.count}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </article>
     </section>
 </section>

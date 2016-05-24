@@ -611,4 +611,7 @@
   -ms-transform: translateY(-50%);
   transform: translateY(-50%); }
 
+.row-container > * {
+  display: inline-block; }
+
 /*# sourceMappingURL=box-model.css.map */

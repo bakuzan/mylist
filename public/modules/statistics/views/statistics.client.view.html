@@ -47,8 +47,7 @@
                             </thead>
                             <tbody>
                                 <tr ng-repeat="year in historyDetails[detail.history][detail.history] | orderBy: '-year'">
-                                    <th ng-class="(detail.isEpisodeRatings) ? '' : 'clickable'"
-                                        ng-click="(detail.isEpisodeRatings) ? '' : ctrl.historyDetail(year.year, '', '', detail.history)">
+                                    <th class="cursor-pointer" ng-click="ctrl.historyDetail(year.year, '', '', detail.history)">
                                         <span>{{year.year}}</span>
                                     </th>
                                     <td ng-repeat="part in year[detail.history]"
@@ -61,8 +60,7 @@
                         </table>
                     </div><!-- HISTORY PANEL END -->
                     <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="detail.isVisible"  loading-spinner name="detail">
-                        <div class="col-lg-12 col-md-12 col-sm-12 margin-top-10"
-                             ng-show="(detail.summary.isVisible && detailItems.length > 1) && detail.isEpisodeRatings === false">
+                        <div class="col-lg-12 col-md-12 col-sm-12 margin-top-10" ng-show="(detail.summary.isVisible && detailItems.length > 1)">
                             <table class="col-lg-12 col-md-12 col-sm-12">
                                 <thead>
                                     <th>{{detail.year}}</th>

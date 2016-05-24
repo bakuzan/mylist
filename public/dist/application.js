@@ -263,6 +263,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.find = function() {
             Animeitems.query().$promise.then(function(result) {
 							$scope.animeitems = result;
+							$scope.filterConfig.statTags = ItemService.buildStatTags(result, 0);
 						});
         };
 
@@ -3553,14 +3554,6 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             $scope.newTag = '';
         };
 
-        $scope.$watchCollection('mangaitems', function() {
-            if ($scope.mangaitems!==undefined) {
-//                console.log($scope.mangaitems);
-                $scope.filterConfig.areTagless = ListService.checkForTagless($scope.mangaitems);
-                $scope.filterConfig.statTags = ItemService.buildStatTags($scope.mangaitems, 0);
-            }
-        });
-
         // Create new Mangaitem
 		$scope.create = function() {
 
@@ -3638,6 +3631,8 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		$scope.find = function() {
             spinnerService.loading('manga', Mangaitems.query().$promise.then(function(result) {
                 $scope.mangaitems = result;
+								$scope.filterConfig.areTagless = ListService.checkForTagless(result);
+								$scope.filterConfig.statTags = ItemService.buildStatTags(result, 0);
             }));
 		};
 

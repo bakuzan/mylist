@@ -131,6 +131,7 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
         $scope.find = function() {
             Animeitems.query().$promise.then(function(result) {
 							$scope.animeitems = result;
+							$scope.filterConfig.statTags = ItemService.buildStatTags(result, 0);
 						});
         };
 

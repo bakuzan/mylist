@@ -3,7 +3,8 @@
 // Statistics controller
 angular.module('statistics').controller('StatisticsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'Characters', 'Toptens', 'ListService', 'ItemService', 'CharacterService', 'StatisticsService', '$filter', 'spinnerService',
 	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, Characters, Toptens, ListService, ItemService, CharacterService, StatisticsService, $filter, spinnerService) {
-		var ctrl = this;
+		var ctrl = this,
+				filter = $filter('filter');
 		ctrl.authentication = Authentication;
 		ctrl.dataStore = { anime: [], manga: [], character: [], toptens: [] };
 
@@ -181,21 +182,26 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             getItems(view);
         };
 				ctrl.getToptenItemStatistics = function(view, toptenType) {
+					console.log('get topten stats: ', toptenType);
 					var filteredItems = [];
 					for(var i = 0; i < 3; i++) {
 						if(ctrl.dataStore.toptens[i][0].type === toptenType) {
 							filteredItems = ctrl.dataStore.toptens[i];
-							return;
+							break;
 						}
 					}
 					if($scope.filterConfig.topten.isRanked) filteredItems = filter(filteredItems, { isRanked: true });
 					if($scope.filterConfig.topten.isFavourite) filteredItems = filter(filteredItems, { isFavourite: true });
-
-					StatisticsService.buildToptenDataStructure($scope.toptens[toptenType], filteredItems).then(function(result) {
-						$scope.toptens[toptenType] = result;
-						console.log('topten data structure - result: ', result, $scope.toptens);
-						getItemStatistics(view, result);
-					});
+					console.log('post filtering: ', filteredItems);
+					if(filteredItems.length > 0) {
+						StatisticsService.buildToptenDataStructure($scope.toptens[toptenType], [filteredItems]).then(function(result) {
+							$scope.toptens[toptenType] = result;
+							console.log('topten data structure - result: ', result, $scope.toptens);
+							getItemStatistics(view, result);
+						});
+					} else {
+						$scope.toptens.detail.items = filteredItems;
+					}
 				};
 
         //Builds ratings aggregates.

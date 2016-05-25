@@ -440,7 +440,13 @@
       </div>
       <article class="margin-top-10">
         <div class="col-lg-6 col-md-6 col-sm-12 margin-top-10">
-          <div class="row-container padding-5 clearfix">
+          <header class="stat-header">
+            <h3>Items in lists</h3>
+            <span class="stat-summary-info float-right">
+                <small class="accent-text" ng-bind="toptens[toptens.type].listCount + ' source lists.'"></small>
+            </span>
+          </header>
+          <div class="row-container text-right padding-5">
             <div class="margin-left-15">
               <input type="checkbox" class="phantom-control" ng-model="filterConfig.topten.isRanked" ng-change="ctrl.getToptenItemStatistics(view, toptens.type)" />
               <span class="display-inline-block font-18 padding-left-5">is ranked</span>
@@ -449,15 +455,12 @@
               <input type="checkbox" class="phantom-control" ng-model="filterConfig.topten.isFavourite" ng-change="ctrl.getToptenItemStatistics(view, toptens.type)" />
               <span class="display-inline-block font-18 padding-left-5">is favourite</span>
             </div>
-            <div class="float-right">
-              <p class="font-18" ng-bind="toptens[toptens.type].listCount + ' source lists.'"></p>
-            </div>
           </div>
           <div class="input-group">
             <div class="input-group-addon">
               <i class="fa fa-search"></i>
             </div>
-            <input type="text" ng-model="filterConfig.search.topten" placeholder="search items" class="form-control">
+            <input type="text" ng-model="filterConfig.search.topten" placeholder="search items in lists" class="form-control">
           </div>
           <table class="col-lg-12 col-md-12 col-sm-12 stat-tag-table table table-bordered">
             <thead>

@@ -4273,9 +4273,10 @@ angular.module('statistics').config(['$stateProvider', '$urlRouterProvider',
 // Statistics controller
 angular.module('statistics').controller('StatisticsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'Characters', 'Toptens', 'ListService', 'ItemService', 'CharacterService', 'StatisticsService', '$filter', 'spinnerService',
 	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, Characters, Toptens, ListService, ItemService, CharacterService, StatisticsService, $filter, spinnerService) {
-		var ctrl = this;
+		var ctrl = this,
+				filter = $filter('filter');
 		ctrl.authentication = Authentication;
-		ctrl.dataStore = { anime: [], manga: [], character: [], toptens: [] };
+		ctrl.dataStore = { anime: [], manga: [], character: [], toptens: { anime: {}, manga: {}, character: {} } };
 
         $scope.view = 'Anime';
         $scope.detail = {
@@ -4318,13 +4319,22 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
                     type: 'count',
                     reverse: true
                 },
+								topten: {
+									type: 'count',
+									reverse: true
+								}
             },
             search: {
                 tag: '',
                 tagDetail: '',
                 series: '',
-                voice: ''
-            }
+                voice: '',
+								topten: ''
+            },
+						topten: {
+							isRanked: false,
+							isFavourite: false
+						}
         };
         $scope.overview = {}; //holds summary/overview details.
         $scope.gender = {}; //holds gender summary details.
@@ -4420,11 +4430,15 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
 									console.log('from cache - character');
 								}
             } else if (view === 'Topten') {
-							if (ctrl.dataStore.toptens.length === 0) {
+							if (ctrl.dataStore.toptens.anime.totalListCount === undefined) {
 	              spinnerService.loading('topten', Toptens.query().$promise.then(function(result) {
 	                return ListService.groupItemsByProperties(result, ['type']);
 	              }).then(function(result) {
-									ctrl.dataStore.toptens = result;
+									for(var i = 0, type = ''; i < 3; i++) {
+										type = result[i][0].type;
+										ctrl.dataStore.toptens[type].items = result[i];
+										ctrl.dataStore.toptens[type].totalListCount = result[i].length;
+									}
 									return StatisticsService.buildToptenDataStructure($scope.toptens, result);
 	              }).then(function(result) {
 									$scope.toptens = result;
@@ -4442,7 +4456,22 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             getItems(view);
         };
 				ctrl.getToptenItemStatistics = function(view, toptenType) {
-					getItemStatistics(view, $scope.toptens[toptenType].items);
+					console.log('get topten stats: ', toptenType);
+					var filteredItems = ctrl.dataStore.toptens[toptenType].items;
+					if($scope.filterConfig.topten.isRanked) filteredItems = filter(filteredItems, { isRanked: true });
+					if($scope.filterConfig.topten.isFavourite) filteredItems = filter(filteredItems, { isFavourite: true });
+					console.log('post filtering: ', filteredItems);
+					if(filteredItems.length > 0) {
+						$scope.toptens[toptenType].items = []; //clear items so you won't get repeats.
+						StatisticsService.buildToptenDataStructure($scope.toptens, [filteredItems]).then(function(result) {
+							$scope.toptens = result;
+							console.log('topten data structure - result: ', result, $scope.toptens);
+							getItemStatistics(view, result[toptenType].items);
+						});
+					} else {
+						$scope.toptens[toptenType].listCount = 0;
+						$scope.toptens.detail.items = filteredItems;
+					}
 				};
 
         //Builds ratings aggregates.
@@ -4468,7 +4497,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             }
 //            console.log(array, $scope.historyDetails);
         }
-        $scope.$watchGroup(['detail.history', 'detail.year', 'detail.division', 'detail.isEpisodeRatings'], function(newValues) {
+        $scope.$watchGroup(['detail.history', 'detail.year', 'detail.division', 'detail.isEpisodeRatings'], function(newValues, oldValues) {
             if (newValues !== undefined) {
                 var filtered = $filter('statisticsDetailFilter')($scope.items, newValues[0], newValues[1], newValues[2]);
                 getSummaryFunctions(filtered);

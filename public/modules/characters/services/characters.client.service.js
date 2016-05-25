@@ -11,6 +11,63 @@ angular.module('characters').factory('Characters', ['$resource',
 		});
 	}
 ])
+.service('TagService', ['NotificationFactory', function(NotificationFactory) {
+		var service = {};
+
+		//Add newTag to tagArray
+		service.addTag = function(tagArray, newTag) {
+		    if (newTag!=='' && newTag!==undefined) {
+		        var i = 0, alreadyAdded = false;
+		        if (tagArray.length > 0) {
+		            while(i < tagArray.length) {
+		                if (tagArray[i].text === newTag) {
+		                    alreadyAdded = true;
+		                }
+		                i++;
+		            }
+		            //if not in array add it.
+		            if (alreadyAdded === false) {
+		                tagArray.push({ text: newTag });
+		            }
+		        } else {
+		            tagArray.push({ text: newTag });
+		        }
+		    }
+		    return tagArray;
+		};
+
+		//Drop tag with text = text, from tagArray
+		service.dropTag = function(tagArray, text) {
+			 //are you sure option...
+			NotificationFactory.confirmation(function() {
+				var i = tagArray.length;
+				while(i--) {
+					if(tagArray[i].text === text) {
+						tagArray.splice(i, 1);
+						return tagArray;
+					}
+				}
+				NotificationFactory.warning('Dropped!', 'Tag was successfully dropped');
+			});
+		};
+
+		//Remove tag from item.
+		service.removeTag = function(item, text) {
+			//are you sure option...
+			NotificationFactory.confirmation(function() {
+				var i = item.tags.length;
+				while(i--) {
+					if(item.tags[i].text === text) {
+						item.tags.splice(i, 1);
+						return item;
+					}
+				}
+			});
+			NotificationFactory.warning('Deleted!', 'Tag was successfully deleted');
+		};
+
+		return service;
+}])
 .service('CharacterService', ['$q', function($q) {
 
     //build the character gender distribution.

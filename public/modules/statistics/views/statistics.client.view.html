@@ -428,9 +428,9 @@
     <section class="col-lg-12 col-md-12 col-sm-12 relative stat-view" style="top: 100px" ng-show="view === 'Topten'" loading-spinner name="topten" size="fullscreen">
       <aside class="col-lg-12 col-md-12 col-sm-12 primary-background">
         <div class="text-center font-18 bold">
-          <span ng-style="{ color: colours.red }" ng-bind="toptens.anime.listCount + ' anime '"></span>-
-          <span ng-style="{ color: colours.green }" ng-bind="toptens.manga.listCount + ' manga '"></span>-
-          <span ng-style="{ color: colours.blue }" ng-bind="toptens.character.listCount + ' character '"></span>
+          <span ng-style="{ color: colours.red }" ng-bind="ctrl.dataStore.toptens.anime.totalListCount + ' anime '"></span>-
+          <span ng-style="{ color: colours.green }" ng-bind="ctrl.dataStore.toptens.manga.totalListCount + ' manga '"></span>-
+          <span ng-style="{ color: colours.blue }" ng-bind="ctrl.dataStore.toptens.character.totalListCount + ' character '"></span>
         </div>
       </aside>
       <div tab-container ng-model="toptens.type" ng-change="ctrl.getToptenItemStatistics(view, toptens.type)" class="width-100">
@@ -439,17 +439,20 @@
         <div tab-view heading="character"></div>
       </div>
       <article class="margin-top-10">
-        <div class="row-container padding-5">
-          <div class="margin-left-15">
-            <input type="checkbox" class="phantom-control" ng-model="filterConfig.topten.isRanked" ng-change="ctrl.getToptenItemStatistics(view, toptens.type)" />
-            <span class="display-inline-block font-18 padding-left-5">is ranked</span>
-          </div>
-          <div class="margin-left-15">
-            <input type="checkbox" class="phantom-control" ng-model="filterConfig.topten.isFavourite" ng-change="ctrl.getToptenItemStatistics(view, toptens.type)" />
-            <span class="display-inline-block font-18 padding-left-5">is favourite</span>
-          </div>
-        </div>
         <div class="col-lg-6 col-md-6 col-sm-12 margin-top-10">
+          <div class="row-container padding-5 clearfix">
+            <div class="margin-left-15">
+              <input type="checkbox" class="phantom-control" ng-model="filterConfig.topten.isRanked" ng-change="ctrl.getToptenItemStatistics(view, toptens.type)" />
+              <span class="display-inline-block font-18 padding-left-5">is ranked</span>
+            </div>
+            <div class="margin-left-15">
+              <input type="checkbox" class="phantom-control" ng-model="filterConfig.topten.isFavourite" ng-change="ctrl.getToptenItemStatistics(view, toptens.type)" />
+              <span class="display-inline-block font-18 padding-left-5">is favourite</span>
+            </div>
+            <div class="float-right">
+              <p class="font-18" ng-bind="toptens[toptens.type].listCount + ' source lists.'"></p>
+            </div>
+          </div>
           <div class="input-group">
             <div class="input-group-addon">
               <i class="fa fa-search"></i>

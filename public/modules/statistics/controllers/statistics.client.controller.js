@@ -6,7 +6,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
 		var ctrl = this,
 				filter = $filter('filter');
 		ctrl.authentication = Authentication;
-		ctrl.dataStore = { anime: [], manga: [], character: [], toptens: [] };
+		ctrl.dataStore = { anime: [], manga: [], character: [], toptens: { anime: {}, manga: {}, character: {} } };
 
         $scope.view = 'Anime';
         $scope.detail = {
@@ -160,11 +160,15 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
 									console.log('from cache - character');
 								}
             } else if (view === 'Topten') {
-							if (ctrl.dataStore.toptens.length === 0) {
+							if (ctrl.dataStore.toptens.anime.totalListCount === undefined) {
 	              spinnerService.loading('topten', Toptens.query().$promise.then(function(result) {
 	                return ListService.groupItemsByProperties(result, ['type']);
 	              }).then(function(result) {
-									ctrl.dataStore.toptens = result;
+									for(var i = 0, type = ''; i < 3; i++) {
+										type = result[i][0].type;
+										ctrl.dataStore.toptens[type].items = result[i];
+										ctrl.dataStore.toptens[type].totalListCount = result[i].length;
+									}
 									return StatisticsService.buildToptenDataStructure($scope.toptens, result);
 	              }).then(function(result) {
 									$scope.toptens = result;
@@ -183,23 +187,19 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
         };
 				ctrl.getToptenItemStatistics = function(view, toptenType) {
 					console.log('get topten stats: ', toptenType);
-					var filteredItems = [];
-					for(var i = 0; i < 3; i++) {
-						if(ctrl.dataStore.toptens[i][0].type === toptenType) {
-							filteredItems = ctrl.dataStore.toptens[i];
-							break;
-						}
-					}
+					var filteredItems = ctrl.dataStore.toptens[toptenType].items;
 					if($scope.filterConfig.topten.isRanked) filteredItems = filter(filteredItems, { isRanked: true });
 					if($scope.filterConfig.topten.isFavourite) filteredItems = filter(filteredItems, { isFavourite: true });
 					console.log('post filtering: ', filteredItems);
 					if(filteredItems.length > 0) {
-						StatisticsService.buildToptenDataStructure($scope.toptens[toptenType], [filteredItems]).then(function(result) {
-							$scope.toptens[toptenType] = result;
+						$scope.toptens[toptenType].items = []; //clear items so you won't get repeats.
+						StatisticsService.buildToptenDataStructure($scope.toptens, [filteredItems]).then(function(result) {
+							$scope.toptens = result;
 							console.log('topten data structure - result: ', result, $scope.toptens);
-							getItemStatistics(view, result);
+							getItemStatistics(view, result[toptenType].items);
 						});
 					} else {
+						$scope.toptens[toptenType].listCount = 0;
 						$scope.toptens.detail.items = filteredItems;
 					}
 				};

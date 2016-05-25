@@ -24,8 +24,8 @@
                                 History
                             </h3>
                             <div tab-container ng-model="detail.history" style="width: 250px">
-                                <div tab-view heading="months" ng-click="detail.isVisible=false; detail.isEpisodeRatings=false"></div>
-                                <div tab-view heading="seasons" ng-click="detail.isVisible=false" disabled="view === 'Manga'"></div>
+                                <div tab-view heading="months"></div>
+                                <div tab-view heading="seasons" disabled="view === 'Manga'"></div>
                             </div>
                             <div class="margin-auto padding-left-15" ng-show="detail.history === 'seasons'">
                                 <input type="checkbox" class="phantom-control" ng-model="detail.isEpisodeRatings" />
@@ -64,8 +64,8 @@
                             <table class="col-lg-12 col-md-12 col-sm-12">
                                 <thead>
                                     <th>{{detail.year}}</th>
-                                    <th class="text-right padding-right-10" ng-repeat="item in commonArrays[detail.summary.type]"
-                                        ng-class="(detail.summary.type === 'seasons') ? item.text + '-background white-text' : ''">
+                                    <th class="text-right" ng-repeat="item in commonArrays[detail.summary.type]"
+                                        ng-class="(detail.summary.type === 'seasons') ? item.text + '-background white-text padding-right-10' : ''">
                                       {{ detail.summary.type === 'months' ? item.text.substring(0,3) : item.text }}
                                     </th>
                                 </thead>

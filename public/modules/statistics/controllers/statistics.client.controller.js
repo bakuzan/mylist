@@ -227,7 +227,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             }
 //            console.log(array, $scope.historyDetails);
         }
-        $scope.$watchGroup(['detail.history', 'detail.year', 'detail.division', 'detail.isEpisodeRatings'], function(newValues) {
+        $scope.$watchGroup(['detail.history', 'detail.year', 'detail.division', 'detail.isEpisodeRatings'], function(newValues, oldValues) {
             if (newValues !== undefined) {
                 var filtered = $filter('statisticsDetailFilter')($scope.items, newValues[0], newValues[1], newValues[2]);
                 getSummaryFunctions(filtered);

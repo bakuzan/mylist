@@ -49,10 +49,6 @@
             var time = new Date().getHours();
             if (time > 20 || time < 8) {
                 localStorage.setItem('theme', JSON.stringify('dist/main-night.min.css'));
-//            } else if (time > 17) {
-//                localStorage.setItem('theme', JSON.stringify('dist/main-purple.min.css'));
-//            } else if (time > 9) {
-//                localStorage.setItem('theme', JSON.stringify('dist/main-day.min.css'));
             } else if (time > 8) {
                 localStorage.setItem('theme', JSON.stringify('dist/main-day.min.css'));
             }

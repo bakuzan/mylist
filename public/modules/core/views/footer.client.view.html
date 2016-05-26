@@ -4,7 +4,7 @@
         <small>2.0.0</small><br/>
         <small>swalsh</small><br/>
         <select class="phantom-control" ng-model="footer.theme"
-                ng-options="option.url as option.name for option in footer.styles | orderBy: 'name' track by option.name" ng-change="footer.changeTheme()">
+                ng-options="option.url as option.name for option in footer.styles | orderBy: 'name'" ng-change="footer.changeTheme()">
         </select>
         <input type="checkbox" class="phantom-control" ng-model="footer.timedTheme" ng-change="footer.changeTheme()">
     </footer>

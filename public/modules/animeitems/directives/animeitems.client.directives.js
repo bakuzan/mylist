@@ -120,30 +120,23 @@ angular.module('animeitems').directive('fileModel', ['$parse', function ($parse)
         link: function(scope, elem, attrs) {
             scope.filterConfig.searchTags = '';
             scope.passTag = function(tag) {
-                if (scope.filterConfig.searchTags.indexOf(tag) === -1) {
-                    scope.filterConfig.searchTags += tag + ',';
-                    scope.filterConfig.tagsForFilter = scope.filterConfig.searchTags.substring(0, scope.filterConfig.searchTags.length - 1).split(',');
-                }
+              if (scope.filterConfig.searchTags.indexOf(tag) === -1) {
+                  scope.filterConfig.searchTags += tag + ',';
+                  scope.filterConfig.tagsForFilter = scope.filterConfig.searchTags.substring(0, scope.filterConfig.searchTags.length - 1).split(',');
+              }
             };
             //rating 'tooltip' function
             scope.hoveringOver = function(value) {
-                scope.filterConfig.ratingActions.overStar = value;
-                scope.filterConfig.ratingActions.percent = 100 * (value / scope.filterConfig.ratingActions.maxRating);
+              scope.filterConfig.ratingActions.overStar = value;
+              scope.filterConfig.ratingActions.percent = 100 * (value / scope.filterConfig.ratingActions.maxRating);
             };
 
             scope.itemsAvailable = function() {
-              scope.$parent.itemsAvailable();
+              scope.filterConfig.getItemsAvailable();
             };
 
-            scope.$watch('$parent.isList', function(newValue) {
-                if (newValue !== undefined) {
-                    scope.isList = newValue;
-                }
-            });
-
             scope.collapseFilters = function() {
-//                console.log('collapse filters');
-                scope.filterConfig.expandFilters = false;
+              scope.filterConfig.expandFilters = false;
             };
 
         }

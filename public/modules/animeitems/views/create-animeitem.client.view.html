@@ -71,7 +71,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : animeForm.manga.$invalid && !animeForm.manga.$pristine }">
                     <label for="manga" class="col-md-2 control-label">Manga?</label>
                     <div class="col-md-6">
-                        <select class="form-control" data-ng-options="manga.title for manga in mangaitems | orderBy: 'title'" data-ng-model="ctrl.manga" id="manga" name="manga">
+                        <select class="form-control" data-ng-options="manga.title for manga in ctrl.mangaitems | orderBy: 'title' track by manga._id" data-ng-model="ctrl.manga" id="manga" name="manga">
                             <option value="">-- Link to a manga --</option>
                         </select>
                     </div>

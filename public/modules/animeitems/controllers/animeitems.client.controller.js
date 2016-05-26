@@ -143,54 +143,54 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
 	    });
 		};
 
-        // Find list of mangaitems for dropdown.
-        ctrl.findManga = function() {
-            ctrl.mangaitems = Mangaitems.query();
-        };
+    // Find list of mangaitems for dropdown.
+    ctrl.findManga = function() {
+        ctrl.mangaitems = Mangaitems.query();
+    };
 
-        //image upload
-        ctrl.uploadFile = function(){
-            ctrl.imgPath = '/modules/animeitems/img/' + ctrl.myFile.name;
-            fileUpload.uploadFileToUrl(ctrl.myFile, '/fileUploadAnime');
-        };
+    //image upload
+    ctrl.uploadFile = function(){
+        ctrl.imgPath = '/modules/animeitems/img/' + ctrl.myFile.name;
+        fileUpload.uploadFileToUrl(ctrl.myFile, '/fileUploadAnime');
+    };
 
-        //latest date display format.
-        ctrl.latestDate = function(latest, updated) {
-            return ItemService.latestDate(latest, updated);
-        };
+    //latest date display format.
+    ctrl.latestDate = function(latest, updated) {
+        return ItemService.latestDate(latest, updated);
+    };
 
-        ctrl.deleteHistory = function(item, history) {
-            //are you sure option...
-            NotificationFactory.confirmation(function() {
-                ctrl.animeitem = ItemService.deleteHistory(item, history);
-                ctrl.update();
-            });
-        };
+    ctrl.deleteHistory = function(item, history) {
+        //are you sure option...
+        NotificationFactory.confirmation(function() {
+            ctrl.animeitem = ItemService.deleteHistory(item, history);
+            ctrl.update();
+        });
+    };
 
 		/** Find a list of Animeitems for values:
          *  (0) returns only ongoing series. (1) returns all series.
          */
 		function getAnime(value) {
-            spinnerService.loading('anime', Animeitems.query({ status: value }).$promise.then(function(result) {
-                ctrl.animeitems = result;
-								ctrl.filterConfig.areTagless = ListService.checkForTagless(result);
-								ctrl.filterConfig.statTags = ItemService.buildStatTags(result, 0);
-            }));
+	    spinnerService.loading('anime', Animeitems.query({ status: value }).$promise.then(function(result) {
+	        ctrl.animeitems = result;
+					ctrl.filterConfig.areTagless = ListService.checkForTagless(result);
+					ctrl.filterConfig.statTags = ItemService.buildStatTags(result, 0);
+	    }));
 		}
 
-        //Set defaults on requery and "neutralise" the other search variable.
-        ctrl.itemsAvailable = function() {
-            ctrl.animeitems = undefined;
-            if (ctrl.filterConfig.ongoingList === true) {
-                ctrl.filterConfig.search.onHold = false;
-                ctrl.filterConfig.search.status = '';
-                getAnime(0);
-            } else {
-                ctrl.filterConfig.search.onHold = '';
-                ctrl.filterConfig.search.status = false;
-                getAnime(1);
-            }
-        };
+    //Set defaults on requery and "neutralise" the other search variable.
+    ctrl.filterConfig.getItemsAvailable = function() {
+        ctrl.animeitems = undefined;
+        if (ctrl.filterConfig.ongoingList === true) {
+            ctrl.filterConfig.search.onHold = false;
+            ctrl.filterConfig.search.status = '';
+            getAnime(0);
+        } else {
+            ctrl.filterConfig.search.onHold = '';
+            ctrl.filterConfig.search.status = false;
+            getAnime(1);
+        }
+    };
 
 	}
 ]);

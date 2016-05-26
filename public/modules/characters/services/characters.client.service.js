@@ -11,7 +11,7 @@ angular.module('characters').factory('Characters', ['$resource',
 		});
 	}
 ])
-.service('TagService', ['NotificationFactory', function(NotificationFactory) {
+.service('TagService', ['$rootScope', 'NotificationFactory', function($rootScope, NotificationFactory) {
 		var service = {};
 
 		//Add newTag to tagArray
@@ -33,37 +33,23 @@ angular.module('characters').factory('Characters', ['$resource',
 		            tagArray.push({ text: newTag });
 		        }
 		    }
-		    return tagArray;
 		};
 
 		//Drop tag with text = text, from tagArray
 		service.dropTag = function(tagArray, text) {
 			 //are you sure option...
 			NotificationFactory.confirmation(function() {
-				var i = tagArray.length;
-				while(i--) {
-					if(tagArray[i].text === text) {
-						tagArray.splice(i, 1);
-						return tagArray;
+				$rootScope.$apply(function() {
+					var i = tagArray.length;
+					while(i--) {
+						if(tagArray[i].text === text) {
+							tagArray.splice(i, 1);
+							NotificationFactory.warning('Dropped!', 'Tag was successfully dropped');
+							break;
+						}
 					}
-				}
-				NotificationFactory.warning('Dropped!', 'Tag was successfully dropped');
+				});
 			});
-		};
-
-		//Remove tag from item.
-		service.removeTag = function(item, text) {
-			//are you sure option...
-			NotificationFactory.confirmation(function() {
-				var i = item.tags.length;
-				while(i--) {
-					if(item.tags[i].text === text) {
-						item.tags.splice(i, 1);
-						return item;
-					}
-				}
-			});
-			NotificationFactory.warning('Deleted!', 'Tag was successfully deleted');
 		};
 
 		return service;

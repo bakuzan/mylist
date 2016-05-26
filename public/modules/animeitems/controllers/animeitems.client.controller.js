@@ -51,17 +51,18 @@ angular.module('animeitems').controller('AnimeitemsController', ['$scope', '$sta
     ctrl.trustAsResourceUrl = function(url) {
         return $sce.trustAsResourceUrl(url);
     };
-
-    //for adding/removing tags.
+    //For adding new tags.
     ctrl.addTag = function () {
-        ctrl.tagArray = TagService.addTag(ctrl.tagArray, ctrl.newTag);
-        ctrl.newTag = '';
+			TagService.addTag(ctrl.tagArray, ctrl.newTag);
+      ctrl.newTag = '';
     };
+		//Drop tag for new tags.
 		ctrl.dropTag = function(text) {
-			ctrl.tagArray = TagService.dropTag(ctrl.tagArray, text);
+			TagService.dropTag(ctrl.tagArray, text);
 		};
+		//Drop tag for animeitem tags.
 		ctrl.removeTag = function(text) {
-			ctrl.animeitem.tags = TagService.dropTag(ctrl.animeitem.tags, text);
+			TagService.dropTag(ctrl.animeitem.tags, text);
 		};
 
 		// Create new Animeitem

@@ -1,14 +1,14 @@
-<section data-ng-controller="CharactersController" data-ng-show="authentication.user" data-ng-init="find(); findAnime(); findManga();">
+<section data-ng-controller="CharactersController as ctrl" data-ng-show="ctrl.authentication.user" data-ng-init="ctrl.find(); ctrl.findAnime(); ctrl.findManga();">
     <div class="page-header">
         <h1>New Character</h1>
     </div>
     <div class="col-md-12">
-        <form name="characterForm" class="form-horizontal" data-ng-submit="create()" novalidate>
+        <form name="characterForm" class="form-horizontal" data-ng-submit="ctrl.create()" novalidate>
             <fieldset>
                 <div class="form-group" ng-class="{ 'has-error' : characterForm.name.$invalid && !characterForm.name.$pristine }">
                     <label for="name" class="col-md-2 control-label">Name</label>
                     <div class="col-md-6">
-                        <input type="text" class="form-control" data-ng-model="name" id="name" name="name" placeholder="Name" required>
+                        <input type="text" class="form-control" data-ng-model="ctrl.name" id="name" name="name" placeholder="Name" required>
                     </div>
                     <div class="col-md-4">
 						<p ng-show="characterForm.name.$invalid && !characterForm.name.$pristine" class="help-block" >The name is required.</p>
@@ -18,16 +18,16 @@
                 <div class="form-group">
                     <label for="image" class="col-md-2 control-label">Image</label>
                     <div class="col-md-6">
-                        <input type="file" class="form-control" file-model="myFile" accept="image/png, image/jpeg">
+                        <input type="file" class="form-control" file-model="ctrl.myFile" accept="image/png, image/jpeg">
                     </div>
                     <div class="col-md-4 form-group">
-                        <a class="btn btn-primary" data-ng-click="uploadFile()" data-ng-disabled="myFile==='' || myFile===null || myFile===undefined">Upload File</a>
+                        <a class="btn btn-primary" data-ng-click="ctrl.uploadFile()" data-ng-disabled="ctrl.myFile==='' || ctrl.myFile===null || ctrl.myFile===undefined">Upload File</a>
                     </div>
                 </div>
                 <div class="form-group" ng-class="{ 'has-error' : characterForm.anime.$invalid && !characterForm.anime.$pristine }">
                     <label for="anime" class="col-md-2 control-label">Anime</label>
                     <div class="col-md-6">
-                        <select class="form-control" data-ng-options="anime.title for anime in animeitems | orderBy: 'title'" data-ng-model="anime" id="anime" name="anime">
+                        <select class="form-control" data-ng-options="anime.title for anime in ctrl.animeitems | orderBy: 'title' track by anime._id" data-ng-model="ctrl.anime" id="anime" name="anime">
                             <option value="">-- Link to an anime --</option>
                         </select>
                     </div>
@@ -39,7 +39,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : characterForm.manga.$invalid && !characterForm.manga.$pristine }">
                     <label for="manga" class="col-md-2 control-label">Manga</label>
                     <div class="col-md-6">
-                        <select class="form-control" data-ng-options="manga.title for manga in mangaitems | orderBy: 'title'" data-ng-model="manga" id="manga" name="manga">
+                        <select class="form-control" data-ng-options="manga.title for manga in ctrl.mangaitems | orderBy: 'title' track by manga._id" data-ng-model="ctrl.manga" id="manga" name="manga">
                             <option value="">-- Link to a manga --</option>
                         </select>
                     </div>
@@ -51,7 +51,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : characterForm.voice.$invalid && !characterForm.voice.$pristine }">
                     <label for="voice" class="col-md-2 control-label">Voice</label>
                     <div class="col-md-6">
-                        <input type="text" class="form-control" data-ng-model="voice" id="voice" name="voice" placeholder="Voice" uib-typeahead="voice.name for voice in filterConfig.voiceActors | filter: $viewValue " required>
+                        <input type="text" class="form-control" data-ng-model="ctrl.voice" id="voice" name="voice" placeholder="Voice" uib-typeahead="voice.name for voice in ctrl.filterConfig.voiceActors | filter: $viewValue" required>
                     </div>
                     <div class="col-md-4">
 						<p ng-show="characterForm.voice.$invalid && !characterForm.voice.$pristine" class="help-block" >The voice is required.</p>
@@ -61,27 +61,27 @@
                 <div class="form-group" ng-class="{ 'has-error' : characterForm.tags.$invalid && !characterForm.tags.$pristine }">
                     <label for="tags" class="col-md-2 control-label">Tags</label>
                     <div class="col-md-6">
-                        <input type="text" class="form-control" data-ng-model="newTag" enter-tag="addTag()" id="tags" name="tags" placeholder="tags..." uib-typeahead="stat.tag for stat in filterConfig.statTags | filter: $viewValue">
+                        <input type="text" class="form-control" data-ng-model="ctrl.newTag" enter-tag="ctrl.addTag()" id="tags" name="tags" placeholder="tags..." uib-typeahead="stat.tag for stat in ctrl.filterConfig.statTags | filter: $viewValue | limitTo: 10">
                     </div>
                     <div class="col-md-4 form-group">
-                        <a class="btn btn-primary" data-ng-click="addTag()" data-ng-disabled="newTag==='' || newTag===null || newTag===undefined">Add Tag</a>
+                        <a class="btn btn-primary" data-ng-click="ctrl.addTag()" data-ng-disabled="ctrl.newTag==='' || ctrl.newTag===null || ctrl.newTag===undefined">Add Tag</a>
                     </div>
                 </div>
                 <div class="form-group">
                     <ul class="tag-list col-md-12">
-                        <li class="tag-bubble col-md-2" ng-repeat="tag in tagArray track by $index">
+                        <li class="tag-bubble col-md-2" ng-repeat="tag in ctrl.tagArray track by $index">
                             {{tag.text}}
-                            <a class="bin-style clickable pull-right" aria-hidden="true" drop-tag="{{tag.text}}"><i class="fa fa-trash-o"></i></a>
+                            <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="dropTag(tag.text)"><i class="fa fa-trash-o"></i></a>
                         </li>
                     </ul>
                 </div>
-                
+
                 <div class="form-group">
                     <input type="submit" class="btn btn-default" ng-disabled="characterForm.$invalid">&nbsp; - &nbsp;<a href="/#!/characters">Back</a>
                 </div>
-				<div data-ng-show="error" class="text-danger">
-					<strong data-ng-bind="error"></strong>
-				</div>
+      		<div data-ng-show="ctrl.error" class="text-danger">
+      			<strong data-ng-bind="ctrl.error"></strong>
+      		</div>
             </fieldset>
         </form>
     </div>

@@ -25,7 +25,8 @@ angular.module('characters').directive('characterBack', function(){
       replace: true,
       scope: {
           slides: '=?',
-          interval: '=?'
+          interval: '=?',
+          filterConfig: '=?'
       },
       templateUrl: '/modules/characters/templates/slider.html',
       link: function(scope, elem, attrs) {
@@ -34,12 +35,12 @@ angular.module('characters').directive('characterBack', function(){
           scope.repeater = scope.slides === undefined ? false : true; //is there a collection to iterate through?
           scope.interval = scope.interval === undefined ? 3000 : scope.interval; //is there a custom interval?
           scope.isFullscreen = false;
-          
+
           //allow retreival of local resource
           scope.trustAsResourceUrl = function(url) {
               return $sce.trustAsResourceUrl(url);
           };
-          
+
           //if no collection, make a dummy collection to cycle throught the children.
           if (!scope.repeater) {
             scope.slides = []; //used to allow cycling.
@@ -82,10 +83,10 @@ angular.module('characters').directive('characterBack', function(){
                   scope.currentIndex = scope.filteredSlides.length - 1;
               }
           };
-          
+
           scope.$watch('currentIndex', function() {
 //              console.log('index', scope.currentIndex, 'filtered slides ', scope.filteredSlides);
-              if (scope.currentIndex > -1) {
+              if (scope.currentIndex > -1 && scope.filteredSlides.length > 0) {
                     scope.filteredSlides.forEach(function(slide) {
                         slide.visible = false; // make every slide invisible
                         slide.locked = false; // make every slide unlocked
@@ -93,7 +94,7 @@ angular.module('characters').directive('characterBack', function(){
                     scope.filteredSlides[scope.currentIndex].visible = true; // make the current slide visible
               }
           });
-          
+
           autoSlide = function() {
               timer = $timeout(function() {
                   scope.next();
@@ -104,7 +105,7 @@ angular.module('characters').directive('characterBack', function(){
           scope.$on('$destroy', function() {
               $timeout.cancel(timer); // when the scope is destroyed, cancel the timer
           });
-          
+
           //Stop timer on enter.
           scope.enter = function() {
 //              console.log('entered');
@@ -121,43 +122,43 @@ angular.module('characters').directive('characterBack', function(){
 //                  console.log('restarted');
               }
           };
-          
+
           //Fullscreen capability
           scope.toggleFullscreen = function() {
               scope.isFullscreen = !scope.isFullscreen;
           };
-          
+
           /** FILTERS
            *    Code below here will allow the slides to be affected by the character filters.
            *    Note: the interval is removed and replaced to avoid the auto-slide fouling the
            *            change over up.
            */
-          scope.$watch('$parent.filterConfig.search', function(newValue) {
-              if (scope.$parent.filterConfig.search !== undefined) {
+          scope.$watch('filterConfig.search', function(newValue) {
+              if (scope.filterConfig.search !== undefined) {
                   var temp = scope.interval;
                   scope.interval = null;
                   scope.search = newValue;
                   scope.interval = temp;
               }
           });
-          scope.$watch('$parent.filterConfig.media', function(newValue) {
-              if (scope.$parent.filterConfig.media !== undefined) {
+          scope.$watch('filterConfig.media', function(newValue) {
+              if (scope.filterConfig.media !== undefined) {
                   var temp = scope.interval;
                   scope.interval = null;
                   scope.media = newValue;
                   scope.interval = temp;
               }
           });
-          scope.$watch('$parent.filterConfig.seriesFilter', function(newValue) {
-              if (scope.$parent.filterConfig.seriesFilter !== undefined) {
+          scope.$watch('filterConfig.seriesFilter', function(newValue) {
+              if (scope.filterConfig.seriesFilter !== undefined) {
                   var temp = scope.interval;
                   scope.interval = null;
                   scope.seriesFilter = newValue;
                   scope.interval = temp;
               }
           });
-          scope.$watch('$parent.filterConfig.searchTags', function(newValue) {
-              if (scope.$parent.filterConfig.media !== undefined) {
+          scope.$watch('filterConfig.searchTags', function(newValue) {
+              if (scope.filterConfig.media !== undefined) {
                   var temp = scope.interval;
                   scope.interval = null;
                   scope.searchTags = newValue;
@@ -166,7 +167,7 @@ angular.module('characters').directive('characterBack', function(){
           });
       }
   };
-    
+
 }])
 .directive('enterTag', function () {
     return {
@@ -194,13 +195,13 @@ angular.module('characters').directive('characterBack', function(){
             });
         });
     };
-}) 
+})
 .directive('deleteSearchTag', function() {
     return {
         restrict: 'A',
         link: function(scope, element, attrs) {
             element.bind('click', function(event) {
-                scope.$apply(function() { 
+                scope.$apply(function() {
                     var tag = attrs.deleteSearchTag;
                     var index = scope.filterConfig.tagsForFilter.indexOf(tag);
 //                    console.log(tag, index);
@@ -214,7 +215,7 @@ angular.module('characters').directive('characterBack', function(){
 })
 .directive('dropTag', ['NotificationFactory', function(NotificationFactory) {
     return function(scope, element, attrs) {
-        element.bind('click', function(event) {    
+        element.bind('click', function(event) {
             var text = attrs.dropTag;
              //are you sure option...
             NotificationFactory.confirmation(function() {

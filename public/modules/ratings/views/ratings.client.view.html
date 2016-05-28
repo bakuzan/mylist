@@ -93,7 +93,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr ng-repeat="episode in viewItem.meta.history">
+                  <tr ng-repeat="episode in viewItem.meta.history | orderBy: '-value'">
                     <td class="text-center">
                       <span ng-bind="episode.value"></span>
                     </td>

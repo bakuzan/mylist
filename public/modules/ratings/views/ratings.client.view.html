@@ -1,5 +1,4 @@
-<section data-ng-controller="RatingsController" data-ng-init="findItems()" data-ng-show="authentication.user">
-    <span keycuts></span>
+<section data-ng-controller="RatingsController" data-ng-init="findItems()" data-ng-show="authentication.user" keycuts>
     <div class="fixed-header width-95 secondary-background">
         <div class="view-controls absolute position-right" style="min-width: 165px">
             <div tab-container ng-model="view">
@@ -76,37 +75,45 @@
                 </tbody>
             </table>
         </div>
-        <div class="fixed position-left margin-top-25" style="top: 200px; width: 100vw"
-             ng-show="viewItem !== undefined && search === viewItem.title">
-            <h4 class="margin-left-50"><a href="/#!/{{view.toLowerCase()}}items/{{viewItem._id}}" class="clickable">{{viewItem.title}}</a> {{viewItem.rating === 0 ? '' : '- ' + viewItem.rating}}</h4>
-            <div class="table-horizontal-container">
-                <table class="table-horizontal-scroll">
-                    <tbody>
-                        <tr>
-                            <th>Episode</th>
-                            <td class="text-center" ng-repeat="episode in viewItem.meta.history">
-                                <span class="display-block">{{episode.value}}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Ratings</th>
-                            <td ng-repeat="episode in viewItem.meta.history">
-                                <input type="number" class="phantom-control width-100 text-center" min="0" max="{{::maxRating}}"
-                                       ng-model="episode.rating" ng-blur="episodeScore(true)" enter-tag="episodeScore(true)" />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div loading-spinner name="summary">
-                <table class="col-lg-2 col-md-2 col-sm-2  margin-left-50 margin-top-10 margin-bottom-10">
-                    <tbody>
-                        <tr ng-repeat="item in summaryFunctions">
-                            <th>{{item.metric}}</th><td>{{item.value}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
     </div>
+    <section class="padding-10 margin-top-25" ng-show="viewItem !== undefined && search === viewItem.title">
+        <header>
+          <h4>
+            <a href="/#!/{{view.toLowerCase()}}items/{{viewItem._id}}" class="clickable" ng-bind="viewItem.title"></a>
+            {{viewItem.rating === 0 ? '' : '- ' + viewItem.rating}}
+          </h4>
+        </header>
+        <div class="row-container">
+          <div class="vertical-scroll overflow-auto-hover">
+              <table class="inner-vertical-scroll">
+                <thead>
+                  <tr>
+                    <th style="width: 100px">Episode</th>
+                    <th style="width: 100px">Ratings</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="episode in viewItem.meta.history">
+                    <td class="text-center">
+                      <span ng-bind="episode.value"></span>
+                    </td>
+                    <td>
+                        <input type="number" class="phantom-control width-100 text-center" min="0" max="{{::maxRating}}"
+                               ng-model="episode.rating" ng-blur="episodeScore(true)" enter-tag="episodeScore(true)" />
+                    </td>
+                  </tr>
+                  </tbody>
+              </table>
+          </div>
+          <div class="absolute position-right width-30" loading-spinner name="summary">
+              <table class="col-lg-6 col-md-6 col-sm-6 margin-10" id="anime-episode-ratings">
+                  <tbody>
+                      <tr ng-repeat="item in summaryFunctions">
+                          <th>{{item.metric}}</th><td>{{item.value}}</td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+        </div>
+    </section>
 </section>

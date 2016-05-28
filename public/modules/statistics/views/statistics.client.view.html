@@ -107,13 +107,13 @@
                                     <tr ng-repeat="item in (detailItems = (items | statisticsDetailFilter: detail.history:detail.year:detail.division | orderBy: filterConfig.sort.episodeRating.type:filterConfig.sort.episodeRating.reverse))"
                                         ng-class="(detail.summary.type === 'seasons') ? item.season.season + '-background white-text' : ''">
                                         <td class="no-wrap overflow-hidden" ng-class="(detail.isEpisodeRatings) ? '' : 'width-75'">
-                                            <a href="/#!/{{view.toLowerCase()}}items/{{item._id}}"><span>{{item.title}}</span></a>
+                                            <a href="/#!/{{view.toLowerCase()}}items/{{item._id}}" ng-bind="item.title"></a>
                                         </td>
                                         <td>
-                                            <span>{{item.rating}}</span>
+                                            <span ng-bind="item.rating"></span>
                                         </td>
                                         <td ng-repeat="episode in item.meta.episodeSummaryFunctions" ng-if="detail.isEpisodeRatings">
-                                            <span>{{episode.value}}</span>
+                                            <span ng-bind="episode.value"></span>
                                         </td>
                                     </tr>
                                 </tbody>

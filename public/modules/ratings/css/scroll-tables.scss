@@ -1,3 +1,18 @@
+/** Vertical Table **/
+
+.vertical-scroll {
+    max-height: 250px;
+    overflow: hidden;
+}
+
+.inner-vertical-scroll {
+    max-height: 250px;
+    -ms-overflow-style: scrollbar;
+    overflow-y: auto;
+}
+
+/** Horizontal Table **/
+
 .table-horizontal-container {
     height: 60px;
     width: 93%;

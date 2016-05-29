@@ -28,7 +28,13 @@
         <i class="fa fa-trash-o"></i>
     </a>
     <strong class="taskDate complete-{{taskItem.complete}}">
-        <span hover-data="{{taskItem.date | date: 'dd MMM yyyy' }}"><i class="fa fa-calendar"></i></span>
+        <span hover-data="{{taskItem.date | date: 'dd MMM yyyy' }}" pass-click="task-item-date-input">
+          <input type="date"
+                 ng-model="taskItem.date"
+                 ng-change="ctrl.updateTask(taskItem)"
+                 format-date id="task-item-date-input" class="phantom-control" style="width: 1px" />
+          <i class="fa fa-calendar"></i>
+        </span>
         <span ng-hide="taskItem.daily">
             <span ng-if="taskItem.complete">{{taskItem.day}}</span>
             <select ng-if="!taskItem.complete" class="phantom-control transform-uppercase" style="width: 75px" ng-model="taskItem.day"

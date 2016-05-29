@@ -246,4 +246,17 @@ angular.module('tasks')
     replace: true,
     templateUrl: 'modules/tasks/templates/task-item.html'
   };
+})
+.directive('passClick', function() {
+  return {
+    restrict: 'A',
+    link: function(scope, element, attrs) {
+      var passTo = document.getElementById(attrs.passClick);
+      element.bind('click', function(event) {
+        console.log('pass click to: ', attrs.passClick, passTo);
+        passTo.focus();
+        passTo.click();
+      });
+    }
+  };
 });

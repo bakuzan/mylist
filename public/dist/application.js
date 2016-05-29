@@ -635,17 +635,15 @@ angular.module('animeitems')
     return function(array, year, type) {
         if (array !== undefined) {
             return array.filter(function(item) {
-                if (item.end !== undefined && item.end !== null) {
-                    if (type === 'months') {
-                        if (item.end.substring(0,4) === year) {
-                            return item;
-                        }
-                    } else if (type === 'seasons') {
-                        if (item.season.year === year) {
-                            return item;
-                        }
-                    }
-                }
+              if (type === 'months' && item.end !== undefined && item.end !== null) {
+                  if (item.end.substring(0,4) === year) {
+                      return item;
+                  }
+              } else if (type === 'seasons') {
+                  if (item.season.year === year) {
+                      return item;
+                  }
+              }
             });
         }
     };
@@ -4291,6 +4289,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             },
             isEpisodeRatings: false
         };
+				$scope.tableDetail = {};
         $scope.commonArrays = ListService.getCommonArrays('statistics');
         $scope.filterConfig = {
             show: {
@@ -5480,6 +5479,19 @@ angular.module('tasks')
     restrict: 'A',
     replace: true,
     templateUrl: 'modules/tasks/templates/task-item.html'
+  };
+})
+.directive('passClick', function() {
+  return {
+    restrict: 'A',
+    link: function(scope, element, attrs) {
+      var passTo = document.getElementById(attrs.passClick);
+      element.bind('click', function(event) {
+        console.log('pass click to: ', attrs.passClick, passTo);
+        passTo.focus();
+        passTo.click();
+      });
+    }
   };
 });
 

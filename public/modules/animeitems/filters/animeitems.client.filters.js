@@ -99,17 +99,15 @@ angular.module('animeitems')
     return function(array, year, type) {
         if (array !== undefined) {
             return array.filter(function(item) {
-                if (item.end !== undefined && item.end !== null) {
-                    if (type === 'months') {
-                        if (item.end.substring(0,4) === year) {
-                            return item;
-                        }
-                    } else if (type === 'seasons') {
-                        if (item.season.year === year) {
-                            return item;
-                        }
-                    }
-                }
+              if (type === 'months' && item.end !== undefined && item.end !== null) {
+                  if (item.end.substring(0,4) === year) {
+                      return item;
+                  }
+              } else if (type === 'seasons') {
+                  if (item.season.year === year) {
+                      return item;
+                  }
+              }
             });
         }
     };

@@ -21,6 +21,7 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             },
             isEpisodeRatings: false
         };
+				$scope.tableDetail = {};
         $scope.commonArrays = ListService.getCommonArrays('statistics');
         $scope.filterConfig = {
             show: {

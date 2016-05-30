@@ -79,20 +79,28 @@ angular.module('tasks').factory('Tasks', ['$resource',
 			 };
 
 			 //Remove a task.
-				obj.removeTask = function(task, tasks) {
-					//console.log('launch');
-					NotificationFactory.confirmation(function remove() {
-	          if ( task ) {
-	              task.$remove();
-	              for (var i in tasks) {
-	                  if (tasks[i] === task) {
-	                      tasks.splice(i, 1);
-	                  }
-	              }
-								NotificationFactory.warning('Deleted!', 'Task was successfully deleted.');
-	          }
-					});
+				obj.removeTask = function(task, tasks, userCheck) {
+					if(userCheck) {
+						//console.log('launch');
+						NotificationFactory.confirmation(function remove() {
+		          removeTaskProcess(task, tasks);
+						});
+					} else {
+						removeTaskProcess(task, tasks);
+					}
 				};
+
+				function removeTaskProcess(task, tasks) {
+					if ( task ) {
+							task.$remove();
+							for (var i in tasks) {
+									if (tasks[i] === task) {
+											tasks.splice(i, 1);
+									}
+							}
+							NotificationFactory.warning('Deleted!', 'Task was successfully deleted.');
+					}
+				}
 
 				//Linked manga need special options dialog.
 				function launchMangaUpdateDialog(task, checklistIndex) {

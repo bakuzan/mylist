@@ -42,7 +42,7 @@ angular.module('tasks').controller('ScheduleCalendarTaskController', ['$scope', 
 		ctrl.init();
 
 		ctrl.removeTask = function(task) {
-			TaskFactory.removeTask(task, ctrl.events);
+			TaskFactory.removeTask(task, ctrl.events, true);
 		};
 		//Update task.
 		ctrl.updateTask = function(task) {

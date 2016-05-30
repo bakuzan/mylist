@@ -78,7 +78,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
 
 		// Remove existing Task
 		ctrl.removeTask = function(task) {
-			TaskFactory.removeTask(task, $scope.tasks);
+			TaskFactory.removeTask(task, $scope.tasks, true);
 		};
 		//Update task.
 		ctrl.updateTask = function(task) {

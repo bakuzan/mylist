@@ -28,11 +28,17 @@
         <i class="fa fa-trash-o"></i>
     </a>
     <strong class="taskDate complete-{{taskItem.complete}}">
-        <span hover-data="{{taskItem.date | date: 'dd MMM yyyy' }}" pass-click="task-item-date-input">
+        <span hover-data="{{taskItem.date | date: 'dd MMM yyyy' }}" pass-click="date-input-{{taskItem.meta.uniqueDescription}}">
           <input type="date"
+                 uib-datepicker-popup=""
                  ng-model="taskItem.date"
+                 is-open="opened"
+                 datepicker-append-to-body="true"
+                 datepicker-options="ctrl.dateOptions"
+                 show-button-bar="false"
+                 ng-click="opened=!opened"
                  ng-change="ctrl.updateTask(taskItem)"
-                 format-date id="task-item-date-input" class="phantom-control" style="width: 1px" />
+                 format-date id="date-input-{{taskItem.meta.uniqueDescription}}" class="phantom-control" />
           <i class="fa fa-calendar"></i>
         </span>
         <span ng-hide="taskItem.daily">

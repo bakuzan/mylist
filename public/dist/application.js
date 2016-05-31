@@ -2602,37 +2602,36 @@ angular.module('core').filter('dayFilter', function() {
                     }
                     return false;
                 }
-                //console.log(item.date);
+
                 var day = new Date().getDay(),
-                diff = new Date().getDate() - day + (day === 0 ? 0:7);
-                var temp = new Date();
-                var wkEnd = new Date(temp.setDate(diff));
-                var currentWkEnd = wkEnd.toISOString().substring(0,10);
-    //            console.log('day: ' + day);
-    //            console.log('date: ' + $scope.today.getDate());
-    //            console.log('diff: ' + diff);
-    //              console.log('wk-end: ' + currentWkEnd); // 0123-56-89
+                    diff = new Date().getDate() - day + (day === 0 ? 0:7),
+                    temp = new Date(),
+                    wkEnd = new Date(temp.setDate(diff)),
+                    currentWkEnd = wkEnd.toISOString().substring(0,10),
+                    iDate = new Date(item.date).toISOString(),
+                    itemDate = { year: iDate.substr(0,4), month: iDate.substr(5,2), day: iDate.substr(8,2) },
+                    currentDate = { year: currentWkEnd.substr(0,4), month: currentWkEnd.substr(5,2), day: currentWkEnd.substr(8,2) };
 
                 if (datesSelected === false) {
-                    if (item.date.substr(0,4) < currentWkEnd.substr(0,4)) {
+                    if (itemDate.year < currentDate.year) {
                         return item;
-                    } else if (item.date.substr(0,4) === currentWkEnd.substr(0,4)) {
-                        if (item.date.substr(5,2) < currentWkEnd.substr(5,2)) {
+                    } else if (itemDate.year === currentDate.year) {
+                        if (itemDate.month < currentDate.month) {
                             return item;
-                        } else if (item.date.substr(5,2) === currentWkEnd.substr(5,2)) {
-                            if (item.date.substr(8,2) <= currentWkEnd.substr(8,2)) {
+                        } else if (itemDate.month === currentDate.month) {
+                            if (itemDate.day <= currentDate.day) {
                                 return item;
                             }
                         }
                     }
                 } else if (datesSelected === true) {
-                    if (item.date.substr(0,4) > currentWkEnd.substr(0,4)) {
+                    if (itemDate.year > currentDate.year) {
                         return item;
-                    } else if (item.date.substr(0,4) === currentWkEnd.substr(0,4)) {
-                        if (item.date.substr(5,2) > currentWkEnd.substr(5,2)) {
+                    } else if (itemDate.year === currentDate.year) {
+                        if (itemDate.month > currentDate.month) {
                             return item;
-                        } else if (item.date.substr(5,2) === currentWkEnd.substr(5,2)) {
-                            if (item.date.substr(8,2) > currentWkEnd.substr(8,2)) {
+                        } else if (itemDate.month === currentDate.month) {
+                            if (itemDate.day > currentDate.day) {
                                 return item;
                             }
                         }
@@ -5040,6 +5039,13 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
       },
       datesSelected: false
     };
+    ctrl.dateOptions = {
+      dateDisabled: false,
+      formatYear: 'yy',
+      maxDate: new Date(2020, 5, 22),
+      minDate: new Date(),
+      startingDay: 1
+    };
 
     ctrl.tabFilter = function(tabName) {
         $scope.filterConfig.search.day = tabName;
@@ -5485,9 +5491,8 @@ angular.module('tasks')
   return {
     restrict: 'A',
     link: function(scope, element, attrs) {
-      var passTo = document.getElementById(attrs.passClick);
       element.bind('click', function(event) {
-        console.log('pass click to: ', attrs.passClick, passTo);
+        var passTo = document.getElementById(attrs.passClick);
         passTo.focus();
         passTo.click();
       });

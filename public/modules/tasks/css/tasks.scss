@@ -38,3 +38,10 @@
   background: $brand-primary;
   color: $brand-accent;
 }
+
+/* Hiding the task item datepicker input element
+*/
+
+input[id^='date-input-'] {
+  width: 0;
+}

@@ -251,9 +251,8 @@ angular.module('tasks')
   return {
     restrict: 'A',
     link: function(scope, element, attrs) {
-      var passTo = document.getElementById(attrs.passClick);
       element.bind('click', function(event) {
-        console.log('pass click to: ', attrs.passClick, passTo);
+        var passTo = document.getElementById(attrs.passClick);
         passTo.focus();
         passTo.click();
       });

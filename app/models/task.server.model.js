@@ -28,7 +28,7 @@ var TaskSchema = new Schema({
 		type: String,
 		default: '',
 		required: 'Please fill Task description',
-        lowercase: true,
+		lowercase: true,
 		trim: true
 	},
     link: {
@@ -111,6 +111,17 @@ var TaskSchema = new Schema({
 		type: Schema.ObjectId,
 		ref: 'User'
 	}
+}, {
+	toObject: {
+		virtuals: true
+	},
+	toJSON: {
+		virtuals: true
+	}
+});
+
+TaskSchema.virtual('meta.uniqueDescription').get(function() {
+	return this.description.replace(/ /g, '');
 });
 
 mongoose.model('Task', TaskSchema);

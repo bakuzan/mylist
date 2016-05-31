@@ -26,6 +26,13 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
       },
       datesSelected: false
     };
+    ctrl.dateOptions = {
+      dateDisabled: false,
+      formatYear: 'yy',
+      maxDate: new Date(2020, 5, 22),
+      minDate: new Date(),
+      startingDay: 1
+    };
 
     ctrl.tabFilter = function(tabName) {
         $scope.filterConfig.search.day = tabName;

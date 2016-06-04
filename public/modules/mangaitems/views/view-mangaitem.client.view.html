@@ -1,49 +1,49 @@
-<section data-ng-controller="MangaitemsController" data-ng-init="findOne()" data-ng-show="authentication.user">
+<section data-ng-controller="MangaitemsController as ctrl" data-ng-init="ctrl.findOne()" data-ng-show="ctrl.authentication.user">
 	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 page-header">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 pull-left">
-                <img ng-src="{{trustAsResourceUrl(mangaitem.image)}}" height="100%" width="100%"/>
+                <img ng-src="{{ctrl.trustAsResourceUrl(ctrl.mangaitem.image)}}" height="100%" width="100%"/>
             </div>
             <div class="col-lg-9 col-md-9 col-sm-6 col-xs-6">
-                <div class="pull-right" data-ng-show="((authentication.user) && (authentication.user._id == mangaitem.user._id))">
+                <div class="pull-right" data-ng-show="((ctrl.authentication.user) && (authentication.user._id == ctrl.mangaitem.user._id))">
 		          <a class="btn btn-accent" href="/#!/mangaitems">
 			         <i class="glyphicon glyphicon-chevron-left"></i>
 		          </a>
-                  <a class="btn btn-primary" href="/#!/mangaitems/{{mangaitem._id}}/edit">
+                  <a class="btn btn-primary" href="/#!/mangaitems/{{ctrl.mangaitem._id}}/edit">
 			         <i class="glyphicon glyphicon-edit"></i>
 		          </a>
-		          <a class="btn btn-danger" data-ng-click="remove();">
+		          <a class="btn btn-danger" data-ng-click="ctrl.remove();">
 			         <i class="glyphicon glyphicon-trash"></i>
 		          </a>
 	            </div>
-                <h1 data-ng-bind="mangaitem.title"></h1>
-                <span class="glyphicon glyphicon-book" data-ng-show="mangaitem.hardcopy"></span> <span class="text-muted" data-ng-show="mangaitem.status">(Completed)</span> <span class="text-muted" data-ng-show="mangaitem.reReading">(Reading)</span>
-                <h3>Chapter </h3><span data-ng-bind="mangaitem.chapters"></span>/<span data-ng-bind="mangaitem.finalChapter"></span>
-                <h3>Volume </h3><span data-ng-bind="mangaitem.volumes"></span>/<span data-ng-bind="mangaitem.finalVolume"></span>
+                <h1 data-ng-bind="ctrl.mangaitem.title"></h1>
+                <span class="glyphicon glyphicon-book" data-ng-show="ctrl.mangaitem.hardcopy"></span> <span class="text-muted" data-ng-show="ctrl.mangaitem.status">(Completed)</span> <span class="text-muted" data-ng-show="ctrl.mangaitem.reReading">(Reading)</span>
+                <h3>Chapter </h3><span data-ng-bind="ctrl.mangaitem.chapters"></span>/<span data-ng-bind="ctrl.mangaitem.finalChapter"></span>
+                <h3>Volume </h3><span data-ng-bind="ctrl.mangaitem.volumes"></span>/<span data-ng-bind="ctrl.mangaitem.finalVolume"></span>
                 <div class="related-media accent-alter-text">
-                    <p data-ng-show="mangaitem.anime!==null">Related anime: <a href="/#!/animeitems/{{mangaitem.anime._id}}">{{mangaitem.anime.title}}</a></p>
+                    <p data-ng-show="ctrl.mangaitem.anime!==null">Related anime: <a href="/#!/animeitems/{{ctrl.mangaitem.anime._id}}">{{ctrl.mangaitem.anime.title}}</a></p>
                 </div>
                 <div class="col-lg-9 col-md-9 col-sm-12 item-tags">
-                    <span class="col-lg-3 col-md-3 col-sm-3 tag-bubble" ng-repeat="tag in mangaitem.tags">{{tag.text}}</span>
+                    <span class="col-lg-3 col-md-3 col-sm-3 tag-bubble" ng-repeat="tag in ctrl.mangaitem.tags">{{tag.text}}</span>
                 </div>
             </div>
         </div>
         <div class="text-right">
-            <span class="accent-alter-text" data-ng-show="mangaitem.status">Re-read count: {{ mangaitem.reReadCount }}</span>
+            <span class="accent-alter-text" data-ng-show="ctrl.mangaitem.status">Re-read count: {{ ctrl.mangaitem.reReadCount }}</span>
         </div>
         <div class="text-right">
-            <em class="accent-alter-text" data-ng-show="mangaitem.rating==0">No rating</em>
-            <uib-rating data-ng-model="mangaitem.rating" class="view-item-rating-stars" data-ng-show="mangaitem.rating!==0" readonly="true" max="filterConfig.ratingActions.maxRating" id="rating" name="rating"></uib-rating>
+            <em class="accent-alter-text" data-ng-show="ctrl.mangaitem.rating==0">No rating</em>
+            <uib-rating data-ng-model="ctrl.mangaitem.rating" class="view-item-rating-stars" data-ng-show="ctrl.mangaitem.rating!==0" readonly="true" max="ctrl.filterConfig.ratingActions.maxRating" id="rating" name="rating"></uib-rating>
         </div>
 	</div>
 	<small>
 		<em class="accent-alter-text">
 			Start
-			<span data-ng-bind="mangaitem.start | date:'yyyy-MMM-dd'"></span><br/>
+			<span data-ng-bind="ctrl.mangaitem.start | date:'yyyy-MMM-dd'"></span><br/>
             End
-			<span data-ng-bind="mangaitem.end | date:'yyyy-MMM-dd'"></span><br/>
+			<span data-ng-bind="ctrl.mangaitem.end | date:'yyyy-MMM-dd'"></span><br/>
 			Latest
-			<span data-ng-bind="mangaitem.latest | date:'yyyy-MMM-dd'"></span>
+			<span data-ng-bind="ctrl.mangaitem.latest | date:'yyyy-MMM-dd'"></span>
 		</em>
 	</small>
 </section>

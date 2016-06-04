@@ -1,92 +1,92 @@
-<section data-ng-controller="AnimeitemsController" data-ng-init="findOne()" data-ng-show="authentication.user">
+<section data-ng-controller="AnimeitemsController as ctrl" data-ng-init="ctrl.findOne()" data-ng-show="ctrl.authentication.user">
 	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 page-header">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 pull-left">
-                <img ng-src="{{trustAsResourceUrl(animeitem.image)}}" height="100%" width="100%"/>
+                <img ng-src="{{ctrl.trustAsResourceUrl(ctrl.animeitem.image)}}" height="100%" width="100%"/>
             </div>
             <div class="col-lg-9 col-md-9 col-sm-6 col-xs-6">
-                <div class="pull-right" data-ng-show="((authentication.user) && (authentication.user._id == animeitem.user._id))">
+                <div class="pull-right" data-ng-show="((ctrl.authentication.user) && (ctrl.authentication.user._id == ctrl.animeitem.user._id))">
                     <a class="btn btn-accent" href="/#!/animeitems">
                         <i class="glyphicon glyphicon-chevron-left"></i>
                     </a>
-                    <a class="btn btn-success" href="/#!/animeitems/watch/{{animeitem._id}}" ng-if="animeitem.video.files.length > 0">
+                    <a class="btn btn-success" href="/#!/animeitems/watch/{{ctrl.animeitem._id}}" ng-if="ctrl.animeitem.video.files.length > 0">
                         <i class="fa fa-film"></i>
                     </a>
-                    <a class="btn btn-primary" href="/#!/animeitems/{{animeitem._id}}/edit">
+                    <a class="btn btn-primary" href="/#!/animeitems/{{ctrl.animeitem._id}}/edit">
                         <i class="glyphicon glyphicon-edit"></i>
                     </a>
-                    <a class="btn btn-danger" data-ng-click="remove();">
+                    <a class="btn btn-danger" data-ng-click="ctrl.remove()">
                         <i class="glyphicon glyphicon-trash"></i>
                     </a>
                 </div>
-                <h1 data-ng-bind="animeitem.title"></h1>
-                <span class="glyphicon glyphicon-cd" data-ng-show="animeitem.disc"></span> <span class="text-muted" data-ng-show="animeitem.status">(Completed)</span> <span class="text-muted" data-ng-show="animeitem.reWatching">(Watching)</span>
-                <h3>Episode </h3><span data-ng-bind="animeitem.episodes"></span>/<span data-ng-bind="animeitem.finalEpisode"></span>
+                <h1 data-ng-bind="ctrl.animeitem.title"></h1>
+                <span class="glyphicon glyphicon-cd" data-ng-show="ctrl.animeitem.disc"></span> <span class="text-muted" data-ng-show="ctrl.animeitem.status">(Completed)</span> <span class="text-muted" data-ng-show="ctrl.animeitem.reWatching">(Watching)</span>
+                <h3>Episode </h3><span data-ng-bind="ctrl.animeitem.episodes"></span>/<span data-ng-bind="ctrl.animeitem.finalEpisode"></span>
                 <div class="related-media accent-alter-text">
-                    <p data-ng-show="animeitem.manga!==null">Related manga: <a href="/#!/mangaitems/{{animeitem.manga._id}}">{{animeitem.manga.title}}</a></p>
+                    <p data-ng-show="ctrl.animeitem.manga!==null">Related manga: <a href="/#!/mangaitems/{{animeitem.manga._id}}">{{ctrl.animeitem.manga.title}}</a></p>
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12 item-tags">
-                    <span class="col-lg-3 col-md-3 col-sm-3 tag-bubble" ng-repeat="tag in animeitem.tags">{{tag.text}}</span>
+                    <span class="col-lg-3 col-md-3 col-sm-3 tag-bubble" ng-repeat="tag in ctrl.animeitem.tags">{{tag.text}}</span>
                 </div>
             </div>
         </div>
         <div class="text-right">
-            <span class="accent-alter-text" data-ng-show="animeitem.status">{{ animeitem.reWatchCount }} rewatches</span>
+            <span class="accent-alter-text" data-ng-show="ctrl.animeitem.status">{{ ctrl.animeitem.reWatchCount }} rewatches</span>
         </div>
         <div class="text-right">
-            <em class="accent-alter-text" data-ng-show="animeitem.rating==0">No rating</em>
-            <uib-rating data-ng-model="animeitem.rating" class="view-item-rating-stars" data-ng-show="animeitem.rating!==0" read-only="true" max="filterConfig.ratingActions.maxRating" id="rating" name="rating"></uib-rating>
+            <em class="accent-alter-text" data-ng-show="ctrl.animeitem.rating==0">No rating</em>
+            <uib-rating data-ng-model="ctrl.animeitem.rating" class="view-item-rating-stars" data-ng-show="ctrl.animeitem.rating!==0" read-only="true" max="ctrl.filterConfig.ratingActions.maxRating" id="rating" name="rating"></uib-rating>
         </div>
 	</div>
 	<small class="width-100">
 		<em class="accent-alter-text">
 			Start
-			<span data-ng-bind="animeitem.start | date:'yyyy-MMM-dd'"></span><br/>
+			<span data-ng-bind="ctrl.animeitem.start | date:'yyyy-MMM-dd'"></span><br/>
             End
-			<span data-ng-bind="animeitem.end | date:'yyyy-MMM-dd'"></span><br/>
+			<span data-ng-bind="ctrl.animeitem.end | date:'yyyy-MMM-dd'"></span><br/>
 			Latest
-			<span data-ng-bind="animeitem.latest | date:'yyyy-MMM-dd'"></span><br/>
-			<span data-ng-bind="animeitem.season.season"></span>&nbsp;<span ng-bind="animeitem.season.year"></span>
+			<span data-ng-bind="ctrl.animeitem.latest | date:'yyyy-MMM-dd'"></span><br/>
+			<span data-ng-bind="ctrl.animeitem.season.season"></span>&nbsp;<span ng-bind="ctrl.animeitem.season.year"></span>
 		</em>
 	</small>
 	<section class="col-lg-12 col-md-12 col-sm-12" style="top: -85px">
 		<article class="relative width-50 margin-left-auto">
 			<header>
-				<h3 ng-if="animeitem.meta.history.length > 0" class="margin-5">Episode history</h3>
-				<h6 ng-if="animeitem.meta.history.length === 0">No recorded history.</h6>
+				<h3 ng-if="ctrl.animeitem.meta.history.length > 0" class="margin-5">Episode history</h3>
+				<h6 ng-if="ctrl.animeitem.meta.history.length === 0">No recorded history.</h6>
 			</header>
 			<div class="overflow-auto-hover" style="height: 33vh">
-				<table ng-if="animeitem.meta.history.length > 0" id="anime-episode-history-table">
-					<thead ng-init="filterConfig.sortType = 'value'; filterConfig.sortReverse = true">
+				<table ng-if="ctrl.animeitem.meta.history.length > 0" id="anime-episode-history-table">
+					<thead ng-init="ctrl.filterConfig.sortType = 'value'; ctrl.filterConfig.sortReverse = true">
 						<tr>
 							<th>
-									<a href="" ng-click="filterConfig.sortType = 'value'; filterConfig.sortReverse = !filterConfig.sortReverse ">
+									<a href="" ng-click="ctrl.filterConfig.sortType = 'value'; ctrl.filterConfig.sortReverse = !ctrl.filterConfig.sortReverse ">
 										 #
 									</a>
-									<i ng-show="filterConfig.sortType == 'value'" class="fa" ng-class="filterConfig.sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+									<i ng-show="ctrl.filterConfig.sortType == 'value'" class="fa" ng-class="ctrl.filterConfig.sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
 							</th>
 							<th colspan="2">
-									<a href="" ng-click="filterConfig.sortType = 'rating'; filterConfig.sortReverse = !filterConfig.sortReverse ">
+									<a href="" ng-click="ctrl.filterConfig.sortType = 'rating'; ctrl.filterConfig.sortReverse = !ctrl.filterConfig.sortReverse ">
 										 Rating
 									</a>
-									<i ng-show="filterConfig.sortType == 'rating'" class="fa" ng-class="filterConfig.sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+									<i ng-show="ctrl.filterConfig.sortType == 'rating'" class="fa" ng-class="ctrl.filterConfig.sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
 							</th>
 							<th>
-									<a href="" ng-click="filterConfig.sortType = 'date'; filterConfig.sortReverse = !filterConfig.sortReverse ">
+									<a href="" ng-click="ctrl.filterConfig.sortType = 'date'; ctrl.filterConfig.sortReverse = !ctrl.filterConfig.sortReverse ">
 										 Watched
 									</a>
-									<i ng-show="filterConfig.sortType == 'date'" class="fa" ng-class="filterConfig.sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+									<i ng-show="ctrl.filterConfig.sortType == 'date'" class="fa" ng-class="ctrl.filterConfig.sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
 							</th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="history in animeitem.meta.history | orderBy: filterConfig.sortType:filterConfig.sortReverse">
+						<tr ng-repeat="history in ctrl.animeitem.meta.history | orderBy: ctrl.filterConfig.sortType:ctrl.filterConfig.sortReverse track by history.value">
 							<td>{{history.value | numberFixedLen: 3}}</td>
-							<td><uib-rating ng-model="history.rating" class="view-item-rating-stars" read-only="true" max="filterConfig.ratingActions.maxRating"></uib-rating></td>
+							<td><uib-rating ng-model="history.rating" class="view-item-rating-stars" read-only="true" max="ctrl.filterConfig.ratingActions.maxRating"></uib-rating></td>
 							<td class="text-right">{{history.rating}}</td>
 							<td>{{history.date | date : 'dd-MM-yyyy HH:mm'}}</td>
-							<td><a class="bin-style clickable" style="position: relative" aria-hidden="true" ng-click="deleteHistory(animeitem, history)"><i class="fa fa-trash-o"></i></a></td>
+							<td><a class="bin-style clickable" style="position: relative" aria-hidden="true" ng-click="ctrl.deleteHistory(ctrl.animeitem, history)"><i class="fa fa-trash-o"></i></a></td>
 						</tr>
 					</tbody>
 				</table>

@@ -1,14 +1,14 @@
-<section data-ng-controller="MangaitemsController" data-ng-show="authentication.user" data-ng-init="find(); findAnime();">
+<section data-ng-controller="MangaitemsController as ctrl" data-ng-show="ctrl.authentication.user" data-ng-init="ctrl.find(); ctrl.findAnime();">
     <div class="page-header">
         <h1>New Manga</h1>
     </div>
     <div class="col-md-12">
-        <form name="mangaForm" class="form-horizontal" data-ng-submit="create()" novalidate>
+        <form name="mangaForm" class="form-horizontal" data-ng-submit="ctrl.create()" novalidate>
             <fieldset>
                 <div class="form-group" ng-class="{ 'has-error' : mangaForm.title.$invalid && !mangaForm.title.$pristine }">
                     <label for="title" class="col-md-2 control-label">Title</label>
                     <div class="col-md-6">
-                        <input type="text" class="form-control" data-ng-model="title" id="title" name="title" placeholder="Title" required>
+                        <input type="text" class="form-control" data-ng-model="ctrl.title" id="title" name="title" placeholder="Title" required>
                     </div>
                     <div class="col-md-4">
 						<p ng-show="mangaForm.title.$invalid && !mangaForm.title.$pristine" class="help-block" >The Title is required.</p>
@@ -18,7 +18,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : mangaForm.chapters.$invalid && !mangaForm.chapters.$pristine }">
                     <label for="chapters" class="col-md-2 control-label">Chapters</label>
                     <div class="col-md-6">
-                        <input type="number" class="form-control" data-ng-model="chapters" id="chapters" name="chapters" placeholder="0" required>
+                        <input type="number" class="form-control" data-ng-model="ctrl.chapters" id="chapters" name="chapters" placeholder="0" required>
                     </div>
                     <div class="col-md-4">
 						<p ng-show="mangaForm.chapters.$invalid && !mangaForm.chapters.$pristine" class="help-block" >Chapters is a whole number and is required.</p>
@@ -29,7 +29,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : mangaForm.volumes.$invalid && !mangaForm.volumes.$pristine }">
                     <label for="volumes" class="col-md-2 control-label">Volumes</label>
                     <div class="col-md-6">
-                        <input type="number" class="form-control" data-ng-model="volumes" id="volumes" name="volumes" placeholder="0" required>
+                        <input type="number" class="form-control" data-ng-model="ctrl.volumes" id="volumes" name="volumes" placeholder="0" required>
                     </div>
                     <div class="col-md-4">
 						<p ng-show="mangaForm.volumes.$invalid && !mangaForm.volumes.$pristine" class="help-block" >Volumes is a number and is required.</p>
@@ -40,7 +40,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : mangaForm.start.$invalid && !mangaForm.start.$pristine }">
                     <label for="start" class="col-md-2 control-label">Start</label>
                     <div class="col-md-6">
-                        <input type="date" class="form-control" data-ng-model="start" id="start" name="start" placeholder="" required>
+                        <input type="date" class="form-control" data-ng-model="ctrl.start" id="start" name="start" placeholder="" required>
                     </div>
                     <div class="col-md-4">
 						<p ng-show="mangaForm.start.$invalid && !mangaForm.start.$pristine" class="help-block" >Start date is required.</p>
@@ -50,7 +50,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : mangaForm.latest.$invalid && !mangaForm.latest.$pristine }">
                     <label for="latest" class="col-md-2 control-label">Latest</label>
                     <div class="col-md-6">
-                        <input type="date" class="form-control" data-ng-model="latest" id="latest" name="latest" placeholder="" required>
+                        <input type="date" class="form-control" data-ng-model="ctrl.latest" id="latest" name="latest" placeholder="" required>
                     </div>
                     <div class="col-md-4">
 						<p ng-show="mangaForm.latest.$invalid && !mangaForm.latest.$pristine" class="help-block" >Latest date is required.</p>
@@ -66,13 +66,13 @@
                 <div class="form-group">
                     <label for="hardcopy" class="col-md-2 control-label">Hardcopy?</label>
                     <div class="col-md-6">
-                        <input type="checkbox" class="form-control" data-ng-model="hardcopy" id="hardcopy" name="hardcopy">
+                        <input type="checkbox" class="form-control" data-ng-model="ctrl.hardcopy" id="hardcopy" name="hardcopy">
                     </div>
                 </div>
                 <div class="form-group" ng-class="{ 'has-error' : mangaForm.anime.$invalid && !mangaForm.anime.$pristine }">
                     <label for="anime" class="col-md-2 control-label">Anime</label>
                     <div class="col-md-6">
-                        <select class="form-control" data-ng-options="anime.title for anime in animeitems | orderBy: 'title'" data-ng-model="anime" id="anime" name="anime">
+                        <select class="form-control" data-ng-options="anime.title for anime in ctrl.animeitems | orderBy: 'title'" data-ng-model="ctrl.anime" id="anime" name="anime">
                             <option value="">-- Link to an anime --</option>
                         </select>
                     </div>
@@ -84,7 +84,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : mangaForm.finalChapter.$invalid && !mangaForm.finalChapter.$pristine }">
                     <label for="finalChapter" class="col-md-2 control-label">Final chapter</label>
                     <div class="col-md-6">
-                        <input type="number" class="form-control" data-ng-model="finalChapter" id="finalChapter" name="finalChapter" placeholder="0">
+                        <input type="number" class="form-control" data-ng-model="ctrl.finalChapter" id="finalChapter" name="finalChapter" placeholder="0">
                     </div>
                     <div class="col-md-4">
                         <!--<p ng-show="isNumber(mangaForm.chapters)" class="help-block">Chapter number should be a full number.</p>-->
@@ -94,7 +94,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : mangaForm.finalVolume.$invalid && !mangaForm.finalVolume.$pristine }">
                     <label for="finalVolume" class="col-md-2 control-label">Final volume</label>
                     <div class="col-md-6">
-                        <input type="number" class="form-control" data-ng-model="finalVolume" id="finalVolume" name="finalVolume" placeholder="0">
+                        <input type="number" class="form-control" data-ng-model="ctrl.finalVolume" id="finalVolume" name="finalVolume" placeholder="0">
                     </div>
                     <div class="col-md-4">
                         <!--<p ng-show="isNumber(mangaForm.volumes)" class="help-block">Volume number should be a full number.</p>-->
@@ -104,25 +104,25 @@
                 <div class="form-group" ng-class="{ 'has-error' : mangaForm.tags.$invalid && !mangaForm.tags.$pristine }">
                     <label for="tags" class="col-md-2 control-label">Tags</label>
                     <div class="col-md-6">
-                        <input type="text" class="form-control" data-ng-model="newTag" enter-tag="addTag()" id="tags" name="tags" placeholder="tags..." uib-typeahead="stat.tag for stat in filterConfig.statTags | filter: $viewValue">
+                        <input type="text" class="form-control" data-ng-model="ctrl.newTag" enter-tag="addTag()" id="tags" name="tags" placeholder="tags..." uib-typeahead="stat.tag for stat in ctrl.filterConfig.statTags | filter: $viewValue">
                     </div>
                     <div class="col-md-4 form-group">
-                        <a class="btn btn-primary" data-ng-click="addTag()" data-ng-disabled="newTag==='' || newTag===null || newTag===undefined">Add Tag</a>
+                        <a class="btn btn-primary" data-ng-click="addTag()" data-ng-disabled="ctrl.newTag==='' || ctrl.newTag===null || ctrl.newTag===undefined">Add Tag</a>
                     </div>
                 </div>
                 <div class="form-group">
                     <ul class="tag-list col-md-12">
-                        <li class="tag-bubble col-md-2" ng-repeat="tag in tagArray track by $index">
+                        <li class="tag-bubble col-md-2" ng-repeat="tag in ctrl.tagArray track by $index">
                             {{tag.text}}
-                            <a class="bin-style clickable pull-right" aria-hidden="true" drop-tag="{{tag.text}}"><i class="fa fa-trash-o"></i></a>
+                            <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="ctrl.drop-tag(tag.text)"><i class="fa fa-trash-o"></i></a>
                         </li>
                     </ul>
                 </div>
                 <div class="form-group">
                     <input type="submit" class="btn btn-default" ng-disabled="mangaForm.$invalid">&nbsp; - &nbsp;<a href="/#!/mangaitems">Back</a>
                 </div>
-				<div data-ng-show="error" class="text-danger">
-					<strong data-ng-bind="error"></strong>
+				<div data-ng-show="ctrl.error" class="text-danger">
+					<strong data-ng-bind="ctrl.error"></strong>
 				</div>
             </fieldset>
         </form>

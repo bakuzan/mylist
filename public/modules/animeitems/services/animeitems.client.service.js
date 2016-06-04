@@ -224,27 +224,6 @@ angular.module('animeitems').factory('Animeitems', ['$resource',
             return selectListOptions;
         };
 
-        this.addTag = function(tagArray, newTag) {
-            if (newTag!=='' && newTag!==undefined) {
-                var i = 0, alreadyAdded = false;
-                if (tagArray.length > 0) {
-                    while(i < tagArray.length) {
-                        if (tagArray[i].text === newTag) {
-                            alreadyAdded = true;
-                        }
-                        i++;
-                    }
-                    //if not in array add it.
-                    if (alreadyAdded === false) {
-                        tagArray.push({ text: newTag });
-                    }
-                } else {
-                    tagArray.push({ text: newTag });
-                }
-            }
-            return tagArray;
-        };
-
         this.concatenateTagArrays = function(itemTags, tagArray) {
             if (itemTags.length > 0) {
                 var i = 0, alreadyAdded = false;

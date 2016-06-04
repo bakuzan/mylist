@@ -1,17 +1,17 @@
-<section data-ng-controller="MangaitemsController" data-ng-init="find()" data-ng-show="authentication.user">
+<section data-ng-controller="MangaitemsController as ctrl" data-ng-init="ctrl.find()" data-ng-show="ctrl.authentication.user">
     <span keycuts></span>
     <div class="fixed-header">
         <h1>Manga list <button class="btn btn-primary show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</button></h1>
     </div>
     <div class="container">
         <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }">
-            <div list-filters filter-config="filterConfig" items="mangaitems" page="whichController"></div>
+            <div list-filters filter-config="ctrl.filterConfig" items="ctrl.mangaitems" page="ctrl.whichController"></div>
         </div>
         <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
         <div class="col-lg-8 col-md-6 col-sm-6 item-list-container" loading-spinner name="manga" size="fullscreen">
-            <div page-controls page-config="pageConfig" showing-count="filterConfig.showingCount"></div>
+            <div page-controls page-config="ctrl.pageConfig" showing-count="ctrl.filterConfig.showingCount"></div>
             <div class="list-group col-lg-12 col-md-12 col-sm-12">
-                <div data-ng-repeat="mangaitem in mangaitems | orderBy: filterConfig.sortType:filterConfig.sortReverse | filter: filterConfig.search | ratingFilter: filterConfig.ratingLevel | tagFilter: filterConfig.searchTags:filterConfig.taglessItem | startFrom: pageConfig.currentPage*pageConfig.pageSize | limitTo: pageConfig.pageSize" list-back="{{trustAsResourceUrl(mangaitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12">
+                <div data-ng-repeat="mangaitem in ctrl.mangaitems | orderBy: ctrl.filterConfig.sortType:ctrl.filterConfig.sortReverse | filter: ctrl.filterConfig.search | ratingFilter: ctrl.filterConfig.ratingLevel | tagFilter: ctrl.filterConfig.searchTags:ctrl.filterConfig.taglessItem | startFrom: ctrl.pageConfig.currentPage*ctrl.pageConfig.pageSize | limitTo: ctrl.pageConfig.pageSize track by mangaitem._id" list-back="{{ctrl.trustAsResourceUrl(mangaitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12">
 			<div class="view-item-top">
             <small class="list-group-item-text">
                 <time ng-if="mangaitem.latest.substring(0,10)===mangaitem.meta.updated.substring(0,10)" title="{{mangaitem.meta.updated | date: 'yyyy-MMM-dd HH:mm'}}" ng-bind="latestDate(mangaitem.latest, mangaitem.meta.updated)"></time>
@@ -31,7 +31,7 @@
                 <div class="item-detail">
                     <p>
                         <em class="text-muted" data-ng-if="mangaitem.rating==0">No rating.</em>
-                        <uib-rating data-ng-if="mangaitem.rating!=0" data-ng-model="mangaitem.rating" class="list-item-rating-stars" readonly="true" max="filterConfig.ratingActions.maxRating" id="rating" name="rating"></uib-rating>
+                        <uib-rating data-ng-if="mangaitem.rating!=0" data-ng-model="mangaitem.rating" class="list-item-rating-stars" readonly="true" max="ctrl.filterConfig.ratingActions.maxRating" id="rating" name="rating"></uib-rating>
                     </p>
                     <p ng-if="mangaitem.reReadCount!=0">{{mangaitem.reReadCount}} re-reads.</p>
                 </div>
@@ -42,7 +42,7 @@
                     </small>
                 </div>
                 <a class="clickable" ng-click="viewItemHistory = true;" ignore-here="true">View history</a>
-                <div class="item-actions" data-ng-show="((authentication.user) && (authentication.user._id == mangaitem.user._id))">
+                <div class="item-actions" data-ng-show="((ctrl.authentication.user) && (ctrl.authentication.user._id == mangaitem.user._id))">
                     <a class="btn btn-accent" href="/#!/mangaitems/{{mangaitem._id}}">
                         <i class="fa fa-eye"></i>
                     </a>
@@ -57,7 +57,7 @@
                         <div ng-if="viewItem.meta.history.length === 0">No recorded history.</div>
                         <div class="item-history-list" ng-if="viewItem.meta.history.length > 0">
                             <div class="item-history mt" ng-repeat="history in viewItem.meta.history | orderBy: '-value'">
-                                <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="deleteHistory(viewItem, history)"><i class="fa fa-trash-o"></i></a>
+                                <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="ctrl.deleteHistory(viewItem, history)"><i class="fa fa-trash-o"></i></a>
                                 <span>{{history.date | date : 'dd-MM-yyyy HH:mm'}}</span><span> - Chapter {{history.value}}</span>
                             </div>
                         </div>

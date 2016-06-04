@@ -3,18 +3,16 @@
 // Mangaitems controller
 angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'MangaFactory', 'spinnerService',
 	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, MangaFactory, spinnerService) {
-		$scope.authentication = Authentication;
+		var ctrl = this;
+		ctrl.authentication = Authentication;
 
-        // If user is not signed in then redirect back to signin.
-		if (!$scope.authentication.user) $location.path('/signin');
-
-        $scope.whichController = 'mangaitem';
+        ctrl.whichController = 'mangaitem';
         //paging variables.
-        $scope.pageConfig = {
+        ctrl.pageConfig = {
             currentPage: 0,
             pageSize: 10
         };
-        $scope.filterConfig = {
+        ctrl.filterConfig = {
             showingCount: 0,
             sortType: '',
             sortReverse: true,
@@ -28,38 +26,38 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
             tagsForFilter: [],
             taglessItem: false,
             areTagless: false,
-            selectListOptions: ListService.getSelectListOptions($scope.whichController),
+            selectListOptions: ListService.getSelectListOptions(ctrl.whichController),
             statTags: []
         };
 
         /** today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
          *      AND chapter/volume/start/latest auto-pop in create.
          */
-        $scope.itemUpdate = new Date();
-        $scope.start = $scope.itemUpdate;
-        $scope.latest = $scope.itemUpdate;
-        $scope.chapters = 0;
-        $scope.volumes = 0;
-        $scope.finalNumbers = false; //default show status of final number fields in edit view.
-        $scope.imgPath = ''; //image path
-        $scope.tagArray = []; // holding tags pre-submit
-        $scope.tagArrayRemove = [];
-        $scope.usedTags = []; //for typeahead array.
+        ctrl.itemUpdate = new Date();
+        ctrl.start = ctrl.itemUpdate;
+        ctrl.latest = ctrl.itemUpdate;
+        ctrl.chapters = 0;
+        ctrl.volumes = 0;
+        ctrl.finalNumbers = false; //default show status of final number fields in edit view.
+        ctrl.imgPath = ''; //image path
+        ctrl.tagArray = []; // holding tags pre-submit
+        ctrl.tagArrayRemove = [];
+        ctrl.usedTags = []; //for typeahead array.
 
         //allow retreival of local resource
-        $scope.trustAsResourceUrl = function(url) {
+        ctrl.trustAsResourceUrl = function(url) {
             return $sce.trustAsResourceUrl(url);
         };
 
         //for adding/removing tags.
-        $scope.addTag = function () {
-//            console.log($scope.newTag);
-            $scope.tagArray = ListService.addTag($scope.tagArray, $scope.newTag);
-            $scope.newTag = '';
+        ctrl.addTag = function () {
+//            console.log(ctrl.newTag);
+            ctrl.tagArray = ListService.addTag(ctrl.tagArray, ctrl.newTag);
+            ctrl.newTag = '';
         };
 
         // Create new Mangaitem
-		$scope.create = function() {
+		ctrl.create = function() {
 
             var mangaitem = new Mangaitems();
             //Handle situation if objects not selected.
@@ -74,42 +72,35 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                     finalVolume: this.finalVolume,
                     hardcopy: this.hardcopy,
                     anime: this.anime!==undefined && this.anime!==null ? this.anime._id : this.anime,
-                    tags: $scope.tagArray,
+                    tags: ctrl.tagArray,
                     user: this.user
 			     });
 
 			// Redirect after save
 			mangaitem.$save(function(response) {
 				$location.path('/mangaitems/' + response._id);
-                NotificationFactory.success('Saved!', 'Manga was saved successfully');
-				// Clear form fields
-				$scope.title = '';
-                $scope.chapters = '';
-                $scope.volumes = '';
-                $scope.start = '';
-                $scope.latest = '';
-                $scope.status = '';
-                $scope.tags = '';
+				NotificationFactory.success('Saved!', 'Manga was saved successfully');
+
 			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
+				ctrl.error = errorResponse.data.message;
                 NotificationFactory.error('Error!', errorResponse.data.message);
 			});
 		};
 
 		// Remove existing Mangaitem
-		$scope.remove = function(mangaitem) {
+		ctrl.remove = function(mangaitem) {
             //are you sure option...
             NotificationFactory.confirmation(function() {
                 if ( mangaitem ) {
                     mangaitem.$remove();
 
-                    for (var i in $scope.mangaitems) {
-                        if ($scope.mangaitems [i] === mangaitem) {
-                            $scope.mangaitems.splice(i, 1);
+                    for (var i in ctrl.mangaitems) {
+                        if (ctrl.mangaitems [i] === mangaitem) {
+                            ctrl.mangaitems.splice(i, 1);
                         }
                     }
                 } else {
-                    $scope.mangaitem.$remove(function() {
+                    ctrl.mangaitem.$remove(function() {
                         $location.path('/mangaitems');
                     });
                 }
@@ -118,57 +109,57 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 		};
 
 		// Update existing Mangaitem
-		$scope.update = function() {
-			var mangaitem = $scope.mangaitem;
-            $scope.mangaitem = undefined;
-            MangaFactory.update(mangaitem, $scope.tagArray, $scope.updateHistory, $scope.imgPath);
+		ctrl.update = function() {
+			var mangaitem = ctrl.mangaitem;
+            ctrl.mangaitem = undefined;
+            MangaFactory.update(mangaitem, ctrl.tagArray, ctrl.updateHistory, ctrl.imgPath);
 		};
-        $scope.tickOff = function(item) {
+        ctrl.tickOff = function(item) {
             item.chapters += 1;
             item.latest = new Date(); //update latest.
-            $scope.updateHistory = true; //add to history.
-            $scope.mangaitem = item;
-            $scope.update();
+            ctrl.updateHistory = true; //add to history.
+            ctrl.mangaitem = item;
+            ctrl.update();
         };
 
 		// Find a list of Mangaitems
-		$scope.find = function() {
+		ctrl.find = function() {
             spinnerService.loading('manga', Mangaitems.query().$promise.then(function(result) {
-                $scope.mangaitems = result;
-								$scope.filterConfig.areTagless = ListService.checkForTagless(result);
-								$scope.filterConfig.statTags = ItemService.buildStatTags(result, 0);
+                ctrl.mangaitems = result;
+								ctrl.filterConfig.areTagless = ListService.checkForTagless(result);
+								ctrl.filterConfig.statTags = ItemService.buildStatTags(result, 0);
             }));
 		};
 
 		// Find existing Mangaitem
-		$scope.findOne = function() {
+		ctrl.findOne = function() {
             Mangaitems.get({ mangaitemId: $stateParams.mangaitemId }).$promise.then(function(result) {
-                $scope.mangaitem = result;
-                //            console.log($scope.mangaitem);
+                ctrl.mangaitem = result;
+                //            console.log(ctrl.mangaitem);
             });
 		};
 
         // Find a list of Animeitems for dropdowns.
-		$scope.findAnime = function() {
-			$scope.animeitems = Animeitems.query();
+		ctrl.findAnime = function() {
+			ctrl.animeitems = Animeitems.query();
 		};
 
         //image upload
-        $scope.uploadFile = function(){
-            $scope.imgPath = '/modules/mangaitems/img/' + $scope.myFile.name;
-            fileUpload.uploadFileToUrl($scope.myFile, '/fileUpload');
+        ctrl.uploadFile = function(){
+            ctrl.imgPath = '/modules/mangaitems/img/' + ctrl.myFile.name;
+            fileUpload.uploadFileToUrl(ctrl.myFile, '/fileUpload');
         };
 
         //latest date display format.
-        $scope.latestDate = function(latest, updated) {
+        ctrl.latestDate = function(latest, updated) {
             return ItemService.latestDate(latest, updated);
         };
 
-        $scope.deleteHistory = function(item, history) {
+        ctrl.deleteHistory = function(item, history) {
             //are you sure option...
            NotificationFactory.confirmation(function() {
-                $scope.mangaitem = ItemService.deleteHistory(item, history);
-                $scope.update();
+                ctrl.mangaitem = ItemService.deleteHistory(item, history);
+                ctrl.update();
             });
         };
 	}

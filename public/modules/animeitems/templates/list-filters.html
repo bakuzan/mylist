@@ -35,7 +35,7 @@
                     </li>
                 </ul>
            </div>
-            <div class="input-group mt" ng-hide="isList === 'slider' || page === 'topten'">
+            <div class="input-group mt" ng-hide="filterConfig.isList === 'slider' || page === 'topten'">
               <div class="input-group-addon">
                   <i class="fa fa-sort"></i>
               </div>
@@ -45,7 +45,7 @@
                         ng-options="so.v as so.n for so in filterConfig.selectListOptions.sortOptions">
                 </select>
             </div>
-            <div class="input-group mt clickable" ng-hide="isList === 'slider'" ng-click="filterConfig.sortReverse = !filterConfig.sortReverse">
+            <div class="input-group mt clickable" ng-hide="filterConfig.isList === 'slider'" ng-click="filterConfig.sortReverse = !filterConfig.sortReverse">
               <div class="input-group-addon">
                   <i class="fa" ng-class="sortReverse ? 'fa-sort-amount-desc' : 'fa-sort-amount-asc' "></i>
               </div>

@@ -1,19 +1,18 @@
-<section data-ng-controller="StatisticsController as ctrl" data-ng-init="ctrl.find(view)" data-ng-show="ctrl.authentication.user">
-    <span keycuts></span>
+<section data-ng-controller="StatisticsController as ctrl" data-ng-init="ctrl.find(ctrl.view)" data-ng-show="ctrl.authentication.user" keycuts>
     <header class="fixed-header width-100 secondary-background padding-10" style="top: 50px; left: 0">
         <div class="view-controls absolute position-right" style="min-width: 368px">
-            <div tab-container ng-model="view" ng-change="ctrl.find(view)">
+            <div tab-container ng-model="ctrl.view" ng-change="ctrl.find(ctrl.view)">
                 <div tab-view heading="Anime"></div>
                 <div tab-view heading="Manga"></div>
                 <div tab-view heading="Character"></div>
                 <div tab-view heading="Topten"></div>
             </div>
         </div>
-        <h1>{{view}} statistics</h1>
+        <h1>{{ctrl.view}} statistics</h1>
     </header>
-    <section class="col-lg-12 col-md-12 col-sm-12 relative" style="top: 100px" ng-hide="view !== 'Anime' && view !== 'Manga'" loading-spinner name="items" size="fullscreen">
+    <section class="col-lg-12 col-md-12 col-sm-12 relative" style="top: 100px" ng-hide="ctrl.view !== 'Anime' && ctrl.view !== 'Manga'" loading-spinner name="items" size="fullscreen">
         <aside class="col-lg-12 col-md-12 col-sm-12 stat-overview">
-                <span class="accent-text">{{overview.ongoing}} in progress</span> - <span class="green-text">{{overview.completed}}  completed</span>
+                <span class="accent-text">{{ctrl.overview.ongoing}} in progress</span> - <span class="green-text">{{ctrl.overview.completed}}  completed</span>
         </aside>
         <div tab-container class="width-100">
             <div tab-view heading="history">
@@ -23,12 +22,12 @@
                             <h3>
                                 History
                             </h3>
-                            <div tab-container ng-model="detail.history" style="width: 250px">
+                            <div tab-container ng-model="ctrl.detail.history" ng-change="ctrl.getFilteredItems(true)" style="width: 250px">
                                 <div tab-view heading="months"></div>
-                                <div tab-view heading="seasons" disabled="view === 'Manga'"></div>
+                                <div tab-view heading="seasons" disabled="ctrl.view === 'Manga'"></div>
                             </div>
-                            <div class="margin-auto padding-left-15" ng-show="detail.history === 'seasons'">
-                                <input type="checkbox" class="phantom-control" ng-model="detail.isEpisodeRatings" />
+                            <div class="margin-auto padding-left-15" ng-show="ctrl.detail.history === 'seasons'">
+                                <input type="checkbox" class="phantom-control" ng-model="ctrl.detail.isEpisodeRatings" ng-change="ctrl.getFilteredItems()" />
                                 <span class="display-inline-block font-18 padding-left-5">
                                     use episode ratings
                                 </span>
@@ -40,37 +39,37 @@
                             <thead>
                                 <tr>
                                     <th></th>
-                                    <th class="text-center" ng-class="(detail.history === 'months') ? 'stat-month-header' : 'stat-season-header'" ng-repeat="header in commonArrays[detail.history]">
-                                        {{detail.history === 'months' ? header.text.substring(0,3) : header.text }}
+                                    <th class="text-center" ng-class="(ctrl.detail.history === 'months') ? 'stat-month-header' : 'stat-season-header'" ng-repeat="header in ctrl.commonArrays[ctrl.detail.history]">
+                                        {{ctrl.detail.history === 'months' ? header.text.substring(0,3) : header.text }}
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="year in historyDetails[detail.history][detail.history] | orderBy: '-year'">
-                                    <th class="cursor-pointer" ng-click="ctrl.historyDetail(year.year, '', '', detail.history)">
+                                <tr ng-repeat="year in ctrl.historyDetails[ctrl.detail.history][ctrl.detail.history] | orderBy: '-year'">
+                                    <th class="cursor-pointer" ng-click="ctrl.historyDetail(year.year, '', '', ctrl.detail.history)">
                                         <span>{{year.year}}</span>
                                     </th>
-                                    <td ng-repeat="part in year[detail.history]"
-                                        ng-click="ctrl.historyDetail(year.year, part[detail.history==='months' ? 'number' : 'text'], part.text)"
-                                        hover-data="{{part.count}} {{detail.history === 'months' ? 'completed' : 'watched' }} {{part.text}} {{year.year}}.">
-                                        <span class="stat-month-box" ng-style="{'opacity': part.count / historyDetails[detail.history].max }"></span>
+                                    <td ng-repeat="part in year[ctrl.detail.history]"
+                                        ng-click="ctrl.historyDetail(year.year, part[ctrl.detail.history==='months' ? 'number' : 'text'], part.text)"
+                                        hover-data="{{part.count}} {{ctrl.detail.history === 'months' ? 'completed' : 'watched' }} {{part.text}} {{year.year}}.">
+                                        <span class="stat-month-box" ng-style="{'opacity': part.count / ctrl.historyDetails[ctrl.detail.history].max }"></span>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div><!-- HISTORY PANEL END -->
-                    <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="detail.isVisible"  loading-spinner name="detail">
-                        <div class="col-lg-12 col-md-12 col-sm-12 margin-top-10" ng-show="(detail.summary.isVisible && detailItems.length > 1)">
+                    <div class="col-lg-12 col-md-12 col-sm-12 stat-month-detail" ng-show="ctrl.detail.isVisible"  loading-spinner name="detail">
+                        <div class="col-lg-12 col-md-12 col-sm-12 margin-top-10" ng-show="(ctrl.detail.summary.isVisible && detailItems.length > 1)">
                             <table class="col-lg-12 col-md-12 col-sm-12">
                                 <thead>
-                                    <th>{{detail.year}}</th>
-                                    <th class="text-right" ng-repeat="item in commonArrays[detail.summary.type]"
-                                        ng-class="(detail.summary.type === 'seasons') ? item.text + '-background white-text padding-right-10' : ''">
-                                      {{ detail.summary.type === 'months' ? item.text.substring(0,3) : item.text }}
+                                    <th>{{ctrl.detail.year}}</th>
+                                    <th class="text-right" ng-repeat="item in ctrl.commonArrays[ctrl.detail.summary.type]"
+                                        ng-class="(ctrl.detail.summary.type === 'seasons') ? item.text + '-background white-text padding-right-10' : ''">
+                                      {{ ctrl.detail.summary.type === 'months' ? item.text.substring(0,3) : item.text }}
                                     </th>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="item in historyDetails.yearSummary">
+                                    <tr ng-repeat="item in ctrl.historyDetails.yearSummary">
                                         <th>{{item.metric}}</th>
                                         <td class="text-right" ng-repeat="value in item.values">{{value.value}}</td>
                                     </tr>
@@ -78,41 +77,41 @@
                             </table>
                         </div>
                         <div class="stat-detail padding-bottom-15"
-                             ng-class="(detail.isEpisodeRatings) ? 'col-lg-12 col-md-12 col-sm-12' : 'col-lg-8 col-md-8 col-sm-8'">
+                             ng-class="(ctrl.detail.isEpisodeRatings) ? 'col-lg-12 col-md-12 col-sm-12' : 'col-lg-8 col-md-8 col-sm-8'">
                             <div class="stat-detail-header">
-                                <h3>{{detailItems.length}} {{detail.history === 'months' ? 'Completed' : 'Watched' }} {{detail.divisionText}} {{detail.year}}</h3>
+                                <h3>{{detailItems.length}} {{ctrl.detail.history === 'months' ? 'Completed' : 'Watched' }} {{ctrl.detail.divisionText}} {{ctrl.detail.year}}</h3>
                             </div>
                             <table class="col-lg-12 col-md-12 col-sm-12 stat-detail-list">
                                 <thead>
                                   <th>
-                                      <a href="" ng-click="filterConfig.sort.episodeRating.type = 'title'; filterConfig.sort.episodeRating.reverse = !filterConfig.sort.episodeRating.reverse ">
+                                      <a href="" ng-click="ctrl.filterConfig.sort.episodeRating.type = 'title'; ctrl.filterConfig.sort.episodeRating.reverse = !ctrl.filterConfig.sort.episodeRating.reverse ">
                                          Title
                                       </a>
-                                      <i ng-show="filterConfig.sort.episodeRating.type == 'title'" class="fa" ng-class="filterConfig.sort.episodeRating.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                                      <i ng-show="ctrl.filterConfig.sort.episodeRating.type == 'title'" class="fa" ng-class="ctrl.filterConfig.sort.episodeRating.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                                   </th>
                                   <th>
-                                      <a href="" ng-click="filterConfig.sort.episodeRating.type = 'rating'; filterConfig.sort.episodeRating.reverse = !filterConfig.sort.episodeRating.reverse ">
+                                      <a href="" ng-click="ctrl.filterConfig.sort.episodeRating.type = 'rating'; ctrl.filterConfig.sort.episodeRating.reverse = !ctrl.filterConfig.sort.episodeRating.reverse ">
                                          Rating
                                       </a>
-                                      <i ng-show="filterConfig.sort.episodeRating.type == 'rating'" class="fa" ng-class="filterConfig.sort.episodeRating.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                                      <i ng-show="ctrl.filterConfig.sort.episodeRating.type == 'rating'" class="fa" ng-class="ctrl.filterConfig.sort.episodeRating.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                                   </th>
-                                  <th ng-repeat="metric in commonArrays.summaryFunctions" ng-if="detail.isEpisodeRatings">
-                                    <a href="" ng-click="filterConfig.sort.episodeRating.type = 'meta.episodeSummaryFunctions[{{$index}}].value'; filterConfig.sort.episodeRating.reverse = !filterConfig.sort.episodeRating.reverse ">
+                                  <th ng-repeat="metric in ctrl.commonArrays.summaryFunctions" ng-if="ctrl.detail.isEpisodeRatings">
+                                    <a href="" ng-click="ctrl.filterConfig.sort.episodeRating.type = 'meta.episodeSummaryFunctions[{{$index}}].value'; ctrl.filterConfig.sort.episodeRating.reverse = !ctrl.filterConfig.sort.episodeRating.reverse ">
                                        {{metric.name}}
                                     </a>
-                                    <i ng-show="filterConfig.sort.episodeRating.type === 'meta.episodeSummaryFunctions[{{$index}}].value'" class="fa" ng-class="filterConfig.sort.episodeRating.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                                    <i ng-show="ctrl.filterConfig.sort.episodeRating.type === 'meta.episodeSummaryFunctions[{{$index}}].value'" class="fa" ng-class="ctrl.filterConfig.sort.episodeRating.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                                   </th>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="item in (detailItems = (items | statisticsDetailFilter: detail.history:detail.year:detail.division | orderBy: filterConfig.sort.episodeRating.type:filterConfig.sort.episodeRating.reverse))"
-                                        ng-class="(detail.summary.type === 'seasons') ? item.season.season + '-background white-text' : ''">
-                                        <td class="no-wrap overflow-hidden" ng-class="(detail.isEpisodeRatings) ? '' : 'width-75'">
-                                            <a href="/#!/{{view.toLowerCase()}}items/{{item._id}}" ng-bind="item.title"></a>
+                                    <tr ng-repeat="item in (detailItems = (ctrl.items | statisticsDetailFilter: ctrl.detail.history:ctrl.detail.year:ctrl.detail.division | orderBy: ctrl.filterConfig.sort.episodeRating.type:ctrl.filterConfig.sort.episodeRating.reverse))"
+                                        ng-class="(ctrl.detail.summary.type === 'seasons') ? item.season.season + '-background white-text' : ''">
+                                        <td class="no-wrap overflow-hidden" ng-class="(ctrl.detail.isEpisodeRatings) ? '' : 'width-75'">
+                                            <a href="/#!/{{ctrl.view.toLowerCase()}}items/{{item._id}}" ng-bind="item.title"></a>
                                         </td>
                                         <td>
                                             <span ng-bind="item.rating"></span>
                                         </td>
-                                        <td ng-repeat="episode in item.meta.episodeSummaryFunctions" ng-if="detail.isEpisodeRatings">
+                                        <td ng-repeat="episode in item.meta.episodeSummaryFunctions" ng-if="ctrl.detail.isEpisodeRatings">
                                             <span ng-bind="episode.value"></span>
                                         </td>
                                     </tr>
@@ -120,10 +119,10 @@
                             </table>
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-4 margin-top-55 margin-bottom-20"
-                             ng-show="detailItems.length > 0 && detail.isEpisodeRatings === false">
+                             ng-show="detailItems.length > 0 && ctrl.detail.isEpisodeRatings === false">
                             <table class="col-lg-12 col-md-12 col-sm-12">
                                 <tbody>
-                                    <tr ng-repeat="item in historyDetails.summaryFunctions">
+                                    <tr ng-repeat="item in ctrl.historyDetails.summaryFunctions">
                                         <th>{{item.metric}}</th><td>{{item.value}}</td>
                                     </tr>
                                 </tbody>
@@ -135,12 +134,12 @@
             <div tab-view heading="ratings">
                 <div class="col-lg-12 col-md-12 col-sm-12 stat-rating-panel">
                 <div class="stat-header">
-                    <h3> Ratings</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{ratingValues.averageRating | number: 2}} average rating.</small></span>
+                    <h3> Ratings</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{ctrl.ratingValues.averageRating | number: 2}} average rating.</small></span>
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12">
                     <table class="col-lg-12 col-md-12 col-sm-12 stat-rating-table">
                         <tbody>
-                            <tr ng-repeat="rating in ratingsDistribution">
+                            <tr ng-repeat="rating in ctrl.ratingsDistribution">
                                 <th class="col-lg-1 col-md-1 col-sm-1 text-right mb"><span>{{rating.number}}</span></th>
                                 <td class="col-lg-11 col-md-11 col-sm-11 col-xs-11 stat-rating-box">
                                   <div percentage-bar-container>
@@ -159,47 +158,47 @@
             <div tab-view heading="tags">
                 <div class="col-lg-12 col-md-12 col-sm-12 stat-tag-panel">
                 <div class="stat-header">
-                    <h3> Tags</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{statTags.length}} unique tags.</small></span>
+                    <h3> Tags</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{ctrl.statTags.length}} unique tags.</small></span>
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12">
                     <div class="input-group">
                         <div class="input-group-addon">
                             <i class="fa fa-search"></i>
                         </div>
-                        <input type="text" ng-model="filterConfig.search.tag" placeholder="search tags" class="form-control">
+                        <input type="text" ng-model="ctrl.filterConfig.search.tag" placeholder="search tags" class="form-control">
                     </div>
                     <table class="col-lg-12 col-md-12 col-sm-12 stat-tag-table table table-bordered">
                         <thead>
                             <tr>
                                 <td class="text-right">#</td>
                                 <td>
-                                    <a href="" ng-click="filterConfig.sort.tag.type = 'tag'; filterConfig.sort.tag.reverse = !filterConfig.sort.tag.reverse ">
+                                    <a href="" ng-click="ctrl.filterConfig.sort.tag.type = 'tag'; ctrl.filterConfig.sort.tag.reverse = !ctrl.filterConfig.sort.tag.reverse ">
                                        Tag
                                     </a>
-                                    <i ng-show="filterConfig.sort.tag.type == 'tag'" class="fa" ng-class="filterConfig.sort.tag.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                                    <i ng-show="ctrl.filterConfig.sort.tag.type == 'tag'" class="fa" ng-class="ctrl.filterConfig.sort.tag.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                                 </td>
                                 <td class="text-right">
-                                    <a href="" ng-click="filterConfig.sort.tag.type = 'count'; filterConfig.sort.tag.reverse = !filterConfig.sort.tag.reverse ">
+                                    <a href="" ng-click="ctrl.filterConfig.sort.tag.type = 'count'; ctrl.filterConfig.sort.tag.reverse = !ctrl.filterConfig.sort.tag.reverse ">
                                        Count
                                     </a>
-                                    <i ng-show="filterConfig.sort.tag.type == 'count'" class="fa" ng-class="filterConfig.sort.tag.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                                    <i ng-show="ctrl.filterConfig.sort.tag.type == 'count'" class="fa" ng-class="ctrl.filterConfig.sort.tag.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                                 </td>
                                 <td class="text-right">
-                                    <a href="" ng-click="filterConfig.sort.tag.type = 'ratingAvg'; filterConfig.sort.tag.reverse = !filterConfig.sort.tag.reverse ">
+                                    <a href="" ng-click="ctrl.filterConfig.sort.tag.type = 'ratingAvg'; ctrl.filterConfig.sort.tag.reverse = !ctrl.filterConfig.sort.tag.reverse ">
                                        Rating (Avg.)
                                     </a>
-                                    <i ng-show="filterConfig.sort.tag.type == 'ratingAvg'" class="fa" ng-class="filterConfig.sort.tag.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                                    <i ng-show="ctrl.filterConfig.sort.tag.type == 'ratingAvg'" class="fa" ng-class="ctrl.filterConfig.sort.tag.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                                 </td>
                                 <td class="text-right">
-                                    <a href="" ng-click="filterConfig.sort.tag.type = 'ratingWeighted'; filterConfig.sort.tag.reverse = !filterConfig.sort.tag.reverse ">
+                                    <a href="" ng-click="ctrl.filterConfig.sort.tag.type = 'ratingWeighted'; ctrl.filterConfig.sort.tag.reverse = !ctrl.filterConfig.sort.tag.reverse ">
                                        Rating (WAvg.)
                                     </a>
-                                    <i ng-show="filterConfig.sort.tag.type == 'ratingWeighted'" class="fa" ng-class="filterConfig.sort.tag.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                                    <i ng-show="ctrl.filterConfig.sort.tag.type == 'ratingWeighted'" class="fa" ng-class="ctrl.filterConfig.sort.tag.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                                 </td>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="stat in statTags | orderBy: filterConfig.sort.tag.type:filterConfig.sort.tag.reverse | filter: { tag: filterConfig.search.tag }">
+                            <tr ng-repeat="stat in ctrl.statTags | orderBy: ctrl.filterConfig.sort.tag.type:ctrl.filterConfig.sort.tag.reverse | filter: { tag: ctrl.filterConfig.search.tag }">
                                 <td class="text-right">{{$index+1}}</td>
                                 <td>{{stat.tag}}</td>
                                 <td class="text-right">{{stat.count}}</td>
@@ -213,11 +212,11 @@
             </div>
         </div>
     </section>
-    <section class="col-lg-12 col-md-12 col-sm-12 relative stat-view" style="top: 100px" ng-show="view === 'Character'" loading-spinner name="character" size="fullscreen">
+    <section class="col-lg-12 col-md-12 col-sm-12 relative stat-view" style="top: 100px" ng-show="ctrl.view === 'Character'" loading-spinner name="character" size="fullscreen">
         <aside class="col-lg-12 col-md-12 col-sm-12 stat-gender-panel primary-background">
             <div class="stat-gender-progress-container">
                 <div percentage-bar-container>
-                    <div ng-repeat="sex in gender" percentage-bar percentage="{{sex.percentage}}"
+                    <div ng-repeat="sex in ctrl.gender" percentage-bar percentage="{{sex.percentage}}"
                          display="{{sex.percentage | number: 2}}{{::sex.text}}"
                          colour="{{sex.colour}}" type="white-text"
                          hover-data="{{sex.percentage | number: 2}}{{::sex.text}}"></div>
@@ -229,35 +228,35 @@
             <div class="col-lg-12 col-md-12 col-sm-12 stat-tag-panel">
               <div class="col-lg-6 col-md-6 col-sm-6 stat-tag-main">
                 <div class="stat-header">
-                  <h3> Tags</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{statTags.length}} unique tags.</small></span>
+                  <h3> Tags</h3><span class="stat-summary-info pull-right"><small class="accent-text">&nbsp;{{ctrl.statTags.length}} unique tags.</small></span>
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12">
                   <div class="input-group">
                     <div class="input-group-addon">
                       <i class="fa fa-search"></i>
                     </div>
-                    <input type="text" ng-model="filterConfig.search.tag" placeholder="search tags" class="form-control" ng-disabled="tableDetail.isEqual">
+                    <input type="text" ng-model="ctrl.filterConfig.search.tag" placeholder="search tags" class="form-control" ng-disabled="ctrl.tableDetails.isEqual">
                   </div>
                   <table class="col-lg-12 col-md-12 col-sm-12 stat-tag-table table table-bordered">
                     <thead>
                       <tr>
                         <td class="text-right">#</td>
                         <td>
-                          <a href="" ng-click="filterConfig.sort.tag.type = 'tag'; filterConfig.sort.tag.reverse = !filterConfig.sort.tag.reverse ">
+                          <a href="" ng-click="ctrl.filterConfig.sort.tag.type = 'tag'; ctrl.filterConfig.sort.tag.reverse = !ctrl.filterConfig.sort.tag.reverse ">
   					               Tag
   					              </a>
-                          <i ng-show="filterConfig.sort.tag.type == 'tag'" class="fa" ng-class="filterConfig.sort.tag.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                          <i ng-show="ctrl.filterConfig.sort.tag.type == 'tag'" class="fa" ng-class="ctrl.filterConfig.sort.tag.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                         </td>
                         <td class="text-right">
-                          <a href="" ng-click="filterConfig.sort.tag.type = 'count'; filterConfig.sort.tag.reverse = !filterConfig.sort.tag.reverse ">
+                          <a href="" ng-click="ctrl.filterConfig.sort.tag.type = 'count'; ctrl.filterConfig.sort.tag.reverse = !ctrl.filterConfig.sort.tag.reverse ">
   					               Count
   					              </a>
-                          <i ng-show="filterConfig.sort.tag.type == 'count'" class="fa" ng-class="filterConfig.sort.tag.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                          <i ng-show="ctrl.filterConfig.sort.tag.type == 'count'" class="fa" ng-class="ctrl.filterConfig.sort.tag.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                         </td>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr class="stat-table-row clickable" ng-repeat="stat in statTags | orderBy: filterConfig.sort.tag.type:filterConfig.sort.tag.reverse | filter: {tag: filterConfig.search.tag }:tableDetail.isEqual" ng-click="ctrl.tableDetail('tag', stat.tag);">
+                      <tr class="stat-table-row clickable" ng-repeat="stat in ctrl.statTags | orderBy: ctrl.filterConfig.sort.tag.type:ctrl.filterConfig.sort.tag.reverse | filter: {tag: ctrl.filterConfig.search.tag }:ctrl.tableDetails.isEqual" ng-click="ctrl.tableDetail('tag', stat.tag);">
                         <td class="text-right">{{$index+1}}</td>
                         <td>{{stat.tag}}</td>
                         <td class="text-right">{{stat.count}}</td>
@@ -266,37 +265,37 @@
                   </table>
                 </div>
               </div>
-              <div class="col-lg-6 col-md-6 col-sm-6 stat-tag-detail" ng-show="filterConfig.show.tag">
+              <div class="col-lg-6 col-md-6 col-sm-6 stat-tag-detail" ng-show="ctrl.filterConfig.show.tag">
                 <div class="col-lg-12 col-md-12 col-sm-12">
                   <div class="stat-header">
-                      <h3>Tags appearing with {{tableDetail.tag}}</h3>
+                      <h3>Tags appearing with {{ctrl.tableDetails.tag}}</h3>
                   </div>
                   <div class="input-group">
                       <div class="input-group-addon">
                           <i class="fa fa-search"></i>
                       </div>
-                      <input type="text" ng-model="filterConfig.search.tagDetail" placeholder="search related tags" class="form-control">
+                      <input type="text" ng-model="ctrl.filterConfig.search.tagDetail" placeholder="search related tags" class="form-control">
                   </div>
                   <table class="col-lg-12 col-md-12 col-sm-12 stat-tag-detail-table table table-bordered">
                       <thead>
                           <tr>
                               <td class="text-right">#</td>
                               <td>
-                                  <a href="" ng-click="filterConfig.sort.tagDetail.type = 'name'; filterConfig.sort.tagDetail.reverse = !filterConfig.sort.tagDetail.reverse ">
+                                  <a href="" ng-click="ctrl.filterConfig.sort.tag.detail.type = 'name'; ctrl.filterConfig.sort.tag.detail.reverse = !ctrl.filterConfig.sort.tag.detail.reverse ">
                                      Tag
                                   </a>
-                                  <i ng-show="filterConfig.sort.tagDetail.type == 'name'" class="fa" ng-class="filterConfig.sort.tagDetail.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                                  <i ng-show="ctrl.filterConfig.sort.tag.detail.type == 'name'" class="fa" ng-class="ctrl.filterConfig.sort.tag.detail.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                               </td>
                               <td class="text-right">
-                                  <a href="" ng-click="filterConfig.sort.tagDetail.type = 'count'; filterConfig.sort.tagDetail.reverse = !filterConfig.sort.tagDetail.reverse ">
+                                  <a href="" ng-click="ctrl.filterConfig.sort.tag.detail.type = 'count'; ctrl.filterConfig.sort.tag.detail.reverse = !ctrl.filterConfig.sort.tag.detail.reverse ">
                                      Count
                                   </a>
-                                  <i ng-show="filterConfig.sort.tagDetail.type == 'count'" class="fa" ng-class="filterConfig.sort.tagDetail.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                                  <i ng-show="ctrl.filterConfig.sort.tag.detail.type == 'count'" class="fa" ng-class="ctrl.filterConfig.sort.tag.detail.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                               </td>
                           </tr>
                       </thead>
                       <tbody>
-                          <tr ng-repeat="stat in tagDetailResult | orderBy: filterConfig.sort.tagDetail.type:filterConfig.sort.tagDetail.reverse | filter: {name: filterConfig.search.tagDetail }">
+                          <tr ng-repeat="stat in ctrl.tagDetailResult | orderBy: ctrl.filterConfig.sort.tag.detail.type:ctrl.filterConfig.sort.tag.detail.reverse | filter: {name: ctrl.filterConfig.search.tagDetail }">
                               <td class="text-right">{{$index+1}}</td>
                               <td>{{stat.name}}</td>
                               <td class="text-right">{{stat.count}}</td>
@@ -313,7 +312,7 @@
                       <div class="stat-header">
                           <h3> Series</h3>
                           <span class="stat-summary-info pull-right">
-                              <small class="accent-text">&nbsp;{{statSeries.length}} unique series.</small>
+                              <small class="accent-text">&nbsp;{{ctrl.statSeries.length}} unique series.</small>
                           </span>
                       </div>
                   <div class="col-lg-12 col-md-12 col-sm-12">
@@ -321,28 +320,28 @@
                       <div class="input-group-addon">
                           <i class="fa fa-search"></i>
                       </div>
-                      <input type="text" ng-model="filterConfig.search.series" placeholder="search series" class="form-control">
+                      <input type="text" ng-model="ctrl.filterConfig.search.series" placeholder="search series" class="form-control">
                   </div>
                   <table class="col-lg-12 col-md-12 col-sm-12 stat-media-table table table-bordered">
                       <thead>
                           <tr>
                               <td class="text-right">#</td>
                               <td>
-                                  <a href="" ng-click="filterConfig.sort.series.type = 'name'; filterConfig.sort.series.reverse = !filterConfig.sort.series.reverse ">
+                                  <a href="" ng-click="ctrl.filterConfig.sort.series.type = 'name'; ctrl.filterConfig.sort.series.reverse = !ctrl.filterConfig.sort.series.reverse ">
                                      Series
                                   </a>
-                                  <i ng-show="filterConfig.sort.series.type == 'name'" class="fa" ng-class="filterConfig.sort.series.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                                  <i ng-show="ctrl.filterConfig.sort.series.type == 'name'" class="fa" ng-class="ctrl.filterConfig.sort.series.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                               </td>
                               <td class="text-right">
-                                  <a href="" ng-click="filterConfig.sort.series.type = 'count'; filterConfig.sort.series.reverse = !filterConfig.sort.series.reverse ">
+                                  <a href="" ng-click="ctrl.filterConfig.sort.series.type = 'count'; ctrl.filterConfig.sort.series.reverse = !ctrl.filterConfig.sort.series.reverse ">
                                      Count
                                   </a>
-                                  <i ng-show="filterConfig.sort.series.type == 'count'" class="fa" ng-class="filterConfig.sort.series.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                                  <i ng-show="ctrl.filterConfig.sort.series.type == 'count'" class="fa" ng-class="ctrl.filterConfig.sort.series.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                               </td>
                           </tr>
                       </thead>
                       <tbody>
-                          <tr class="stat-table-row clickable" ng-repeat="stat in statSeries | orderBy: filterConfig.sort.series.type:filterConfig.sort.series.reverse | filter: {name: filterConfig.search.series }" ng-click="ctrl.tableDetail('series', stat.name);">
+                          <tr class="stat-table-row clickable" ng-repeat="stat in ctrl.statSeries | orderBy: ctrl.filterConfig.sort.series.type:ctrl.filterConfig.sort.series.reverse | filter: {name: ctrl.filterConfig.search.series }" ng-click="ctrl.tableDetail('series', stat.name);">
                               <td class="text-right">{{$index+1}}</td>
                               <td>{{stat.name}}</td>
                               <td class="text-right">{{stat.count}}</td>
@@ -351,13 +350,13 @@
                   </table>
               </div>
               </div><!-- SERIES PANEL END -->
-                  <div class="col-lg-6 col-md-6 col-sm-6 stat-media-detail" ng-show="filterConfig.show.series">
+                  <div class="col-lg-6 col-md-6 col-sm-6 stat-media-detail" ng-show="ctrl.filterConfig.show.series">
                       <div class="col-lg-12 col-md-12 col-sm-12 stat-detail">
                           <div class="stat-detail-header">
-                              <h3>Characters in {{tableDetail.series}}</h3>
+                              <h3>Characters in {{ctrl.tableDetails.series}}</h3>
                           </div>
                           <ul class="col-lg-12 col-md-12 col-sm-12 statMediaDetailList">
-                              <li ng-repeat="item in items | orderBy: 'name' | seriesDetailFilter: tableDetail.series">
+                              <li ng-repeat="item in ctrl.items | orderBy: 'name' | seriesDetailFilter: ctrl.tableDetails.series">
                                   <a href="/#!/characters/{{item._id}}"><span>{{item.name}}</span></a>
                               </li>
                           </ul>
@@ -371,7 +370,7 @@
                     <div class="stat-header">
                         <h3> Voice Actors</h3>
                         <span class="stat-summary-info pull-right">
-                            <small class="accent-text">&nbsp;{{voiceActors.length}} voices.</small>
+                            <small class="accent-text">&nbsp;{{ctrl.voiceActors.length}} voices.</small>
                         </span>
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12">
@@ -379,28 +378,28 @@
                             <div class="input-group-addon">
                                 <i class="fa fa-search"></i>
                             </div>
-                            <input type="text" ng-model="filterConfig.search.voice" placeholder="search voices" class="form-control">
+                            <input type="text" ng-model="ctrl.filterConfig.search.voice" placeholder="search voices" class="form-control">
                         </div>
                         <table class="col-lg-12 col-md-12 col-sm-12 stat-voice-table table table-bordered">
                             <thead>
                                 <tr>
                                     <td class="text-right">#</td>
                                     <td>
-                                        <a href="" ng-click="filterConfig.sort.voice.type = 'name'; filterConfig.sort.voice.reverse = !filterConfig.sort.voice.reverse ">
+                                        <a href="" ng-click="ctrl.filterConfig.sort.voice.type = 'name'; ctrl.filterConfig.sort.voice.reverse = !ctrl.filterConfig.sort.voice.reverse ">
                                            Voice
                                        </a>
-                                        <i ng-show="filterConfig.sort.voice.type == 'name'" class="fa" ng-class="filterConfig.sort.voice.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                                        <i ng-show="ctrl.filterConfig.sort.voice.type == 'name'" class="fa" ng-class="ctrl.filterConfig.sort.voice.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                                     </td>
                                     <td class="text-right">
-                                        <a href="" ng-click="filterConfig.sort.voice.type = 'count'; filterConfig.sort.voice.reverse = !filterConfig.sort.voice.reverse ">
+                                        <a href="" ng-click="ctrl.filterConfig.sort.voice.type = 'count'; ctrl.filterConfig.sort.voice.reverse = !ctrl.filterConfig.sort.voice.reverse ">
                                            Count
                                        </a>
-                                        <i ng-show="filterConfig.sort.voice.type == 'count'" class="fa" ng-class="filterConfig.sort.voice.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                                        <i ng-show="ctrl.filterConfig.sort.voice.type == 'count'" class="fa" ng-class="ctrl.filterConfig.sort.voice.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                                     </td>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="stat-table-row clickable" ng-repeat="stat in voiceActors | orderBy: filterConfig.sort.voice.type:filterConfig.sort.voice.reverse | filter: {name: filterConfig.search.voice }" ng-click="ctrl.tableDetail('voice', stat.name);" >
+                                <tr class="stat-table-row clickable" ng-repeat="stat in ctrl.voiceActors | orderBy: ctrl.filterConfig.sort.voice.type:ctrl.filterConfig.sort.voice.reverse | filter: {name: ctrl.filterConfig.search.voice }" ng-click="ctrl.tableDetail('voice', stat.name);" >
                                     <td class="text-right">{{$index+1}}</td>
                                     <td>{{stat.name}}</td>
                                     <td class="text-right">{{stat.count}}</td>
@@ -409,13 +408,13 @@
                         </table>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-6 stat-voice-detail" ng-show="filterConfig.show.voice">
+                <div class="col-lg-6 col-md-6 col-sm-6 stat-voice-detail" ng-show="ctrl.filterConfig.show.voice">
                     <div class="col-lg-12 col-md-12 col-sm-12 stat-detail">
                     <div class="stat-detail-header">
-                        <h3>Characters voiced by {{tableDetail.voice}}</h3>
+                        <h3>Characters voiced by {{ctrl.tableDetails.voice}}</h3>
                     </div>
                     <ul class="col-lg-12 col-md-12 col-sm-12 stat-voice-detail-list">
-                        <li ng-repeat="item in items | orderBy: 'name' | filter: {voice: tableDetail.voice}">
+                        <li ng-repeat="item in ctrl.items | orderBy: 'name' | filter: {voice: ctrl.tableDetails.voice}">
                             <a href="/#!/characters/{{item._id}}"><span>{{item.name}}</span></a>
                         </li>
                     </ul>
@@ -425,15 +424,15 @@
             </div>
         </div>
     </section>
-    <section class="col-lg-12 col-md-12 col-sm-12 relative stat-view" style="top: 100px" ng-show="view === 'Topten'" loading-spinner name="topten" size="fullscreen">
+    <section class="col-lg-12 col-md-12 col-sm-12 relative stat-view" style="top: 100px" ng-show="ctrl.view === 'Topten'" loading-spinner name="topten" size="fullscreen">
       <aside class="col-lg-12 col-md-12 col-sm-12 primary-background">
         <div class="text-center font-18 bold">
-          <span ng-style="{ color: colours.red }" ng-bind="ctrl.dataStore.toptens.anime.totalListCount + ' anime '"></span>-
-          <span ng-style="{ color: colours.green }" ng-bind="ctrl.dataStore.toptens.manga.totalListCount + ' manga '"></span>-
-          <span ng-style="{ color: colours.blue }" ng-bind="ctrl.dataStore.toptens.character.totalListCount + ' character '"></span>
+          <span ng-style="{ color: ctrl.colours.red }" ng-bind="ctrl.dataStore.toptens.anime.totalListCount + ' anime '"></span>-
+          <span ng-style="{ color: ctrl.colours.green }" ng-bind="ctrl.dataStore.toptens.manga.totalListCount + ' manga '"></span>-
+          <span ng-style="{ color: ctrl.colours.blue }" ng-bind="ctrl.dataStore.toptens.character.totalListCount + ' character '"></span>
         </div>
       </aside>
-      <div tab-container ng-model="toptens.type" ng-change="ctrl.getToptenItemStatistics(view, toptens.type)" class="width-100">
+      <div tab-container ng-model="ctrl.toptens.type" ng-change="ctrl.getToptenItemStatistics(ctrl.view, ctrl.toptens.type)" class="width-100">
         <div tab-view heading="anime"></div>
         <div tab-view heading="manga"></div>
         <div tab-view heading="character"></div>
@@ -443,16 +442,18 @@
           <header class="stat-header">
             <h3>Items in lists</h3>
             <span class="stat-summary-info float-right">
-                <small class="accent-text" ng-bind="toptens[toptens.type].listCount + ' source lists.'"></small>
+                <small class="accent-text" ng-bind="ctrl.toptens[ctrl.toptens.type].listCount + ' source lists.'"></small>
             </span>
           </header>
           <div class="row-container text-right padding-5">
             <div class="margin-left-15">
-              <input type="checkbox" class="phantom-control" ng-model="filterConfig.topten.isRanked" ng-change="ctrl.getToptenItemStatistics(view, toptens.type)" />
+              <input type="checkbox" class="phantom-control" ng-model="ctrl.filterConfig.topten.isRanked"
+                     ng-change="ctrl.getToptenItemStatistics(ctrl.view, ctrl.toptens.type)" />
               <span class="display-inline-block font-18 padding-left-5">is ranked</span>
             </div>
             <div class="margin-left-15">
-              <input type="checkbox" class="phantom-control" ng-model="filterConfig.topten.isFavourite" ng-change="ctrl.getToptenItemStatistics(view, toptens.type)" />
+              <input type="checkbox" class="phantom-control" ng-model="ctrl.filterConfig.topten.isFavourite"
+                     ng-change="ctrl.getToptenItemStatistics(ctrl.view, ctrl.toptens.type)" />
               <span class="display-inline-block font-18 padding-left-5">is favourite</span>
             </div>
           </div>
@@ -460,36 +461,36 @@
             <div class="input-group-addon">
               <i class="fa fa-search"></i>
             </div>
-            <input type="text" ng-model="filterConfig.search.topten" placeholder="search items in lists" class="form-control">
+            <input type="text" ng-model="ctrl.filterConfig.search.topten" placeholder="search items in lists" class="form-control">
           </div>
           <table class="col-lg-12 col-md-12 col-sm-12 stat-tag-table table table-bordered">
             <thead>
               <tr>
                 <td class="text-right">#</td>
                 <td>
-                  <a href="" ng-click="filterConfig.sort.topten.type = 'value'; filterConfig.sort.topten.reverse = !filterConfig.sort.topten.reverse "
+                  <a href="" ng-click="ctrl.filterConfig.sort.topten.type = 'value'; ctrl.filterConfig.sort.topten.reverse = !ctrl.filterConfig.sort.topten.reverse "
                      ng-bind="(toptens.type === 'character') ? 'Name' : 'Title'">
                   </a>
-                  <i ng-show="filterConfig.sort.topten.type == 'value'" class="fa" ng-class="filterConfig.sort.topten.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                  <i ng-show="ctrl.filterConfig.sort.topten.type == 'value'" class="fa" ng-class="ctrl.filterConfig.sort.topten.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                 </td>
                 <td class="text-right">
-                  <a href="" ng-click="filterConfig.sort.topten.type = 'count'; filterConfig.sort.topten.reverse = !filterConfig.sort.topten.reverse ">
+                  <a href="" ng-click="ctrl.filterConfig.sort.topten.type = 'count'; ctrl.filterConfig.sort.topten.reverse = !ctrl.filterConfig.sort.topten.reverse ">
                    Count
                   </a>
-                  <i ng-show="filterConfig.sort.topten.type == 'count'" class="fa" ng-class="filterConfig.sort.topten.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                  <i ng-show="ctrl.filterConfig.sort.topten.type == 'count'" class="fa" ng-class="ctrl.filterConfig.sort.topten.reverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
                 </td>
               </tr>
             </thead>
             <tbody>
               <tr class="stat-table-row clickable"
-                  ng-repeat="item in toptens.detail.items | orderBy: filterConfig.sort.topten.type:filterConfig.sort.topten.reverse | filter: { value: filterConfig.search.topten }">
+                  ng-repeat="item in ctrl.toptens.detail.items | orderBy: ctrl.filterConfig.sort.topten.type:ctrl.filterConfig.sort.topten.reverse | filter: { value: ctrl.filterConfig.search.topten }">
                 <td class="text-right">{{$index+1}}</td>
                 <td>{{item.value}}</td>
                 <td class="text-right">{{item.count}}</td>
               </tr>
             </tbody>
           </table>
-          <div ng-if="toptens.detail.items.length === 0">
+          <div ng-if="ctrl.toptens.detail.items.length === 0">
             <p>There are no items that match your criteria.</p>
           </div>
         </div>

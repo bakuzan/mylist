@@ -211,11 +211,13 @@ angular.module('statistics').controller('StatisticsController', ['$scope', '$sta
             if (!$scope.detail.isEpisodeRatings) {
                 spinnerService.loading('detail', StatisticsService.buildSummaryFunctions(array).then(function(result) {
                     $scope.historyDetails.summaryFunctions = result;
+										console.log('got summary functions: ', $scope.detail, $scope.historyDetails);
                 }));
                 if ($scope.detail.summary.isVisible === true) {
                     spinnerService.loading('detail',
                         StatisticsService.buildYearSummary(array, $scope.detail.year, $scope.detail.summary.type).then(function(result) {
                             $scope.historyDetails.yearSummary = result;
+														console.log('got year summary: ', $scope.detail, $scope.historyDetails);
                         })
                     );
                 }

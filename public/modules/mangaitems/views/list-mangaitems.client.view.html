@@ -19,7 +19,7 @@
 			</small>
 			<h4 class="list-group-item-heading clickable" ng-click="viewItem===mangaitem ? viewItem='' : viewItem=mangaitem" data-ng-bind="mangaitem.title"></h4>
             <p class="list-group-item-text">
-                <a class="clickable decoration-none" ng-if="!mangaitem.status" ng-click="tickOff(mangaitem)"><i class="fa fa-plus-square"></i> </a>
+                <a class="clickable decoration-none" ng-if="!mangaitem.status" ng-click="ctrl.tickOff(mangaitem)"><i class="fa fa-plus-square"></i> </a>
                 <span data-ng-bind="mangaitem.chapters"></span><span ng-if="mangaitem.finalChapter!==0">/{{mangaitem.finalChapter}}</span> Chapters,
                 <span data-ng-bind="mangaitem.volumes"></span><span ng-if="mangaitem.finalVolume!==0">/{{mangaitem.finalVolume}}</span> Volumes
                 <span class="item-icons green-text" ng-if="mangaitem.status===true"><i class="fa fa-check"></i></span>

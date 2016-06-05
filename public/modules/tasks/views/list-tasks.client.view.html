@@ -6,42 +6,41 @@
                     <i class="fa fa-refresh animate-spin-hover font-20"></i>
                 </span>
             </span>
-            Week Beginning {{ ::ctrl.weekBeginning() | dateSuffix }}
+            Week Beginning <span ng-bind="ctrl.weekBeginning() | dateSuffix"></span>
             <button class="btn btn-primary show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</button>
         </h3>
     </div>
-    <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }" ng-show="(filterConfig.view === 'list')">
-        <a class="menu-header-bar clickable margin-bottom-10" ng-click="newTask.isAddTask = !newTask.isAddTask;">
-            <i class="fa" ng-class="(newTask.isAddTask === false) ? 'fa-plus-square' : 'fa-minus-square'"></i> Add task
+    <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }" ng-show="(ctrl.filterConfig.view === 'list')">
+        <a class="menu-header-bar clickable margin-bottom-10" ng-click="ctrl.createTask()">
+            <i class="fa fa-plus-square"></i> Add task
         </a>
-        <div task-create create="newTask" ng-show="newTask.isAddTask" ng-class="(newTask.isAddTask) ? 'active' : ''"></div>
-        <div list-filters filter-config="filterConfig" items="tasks" page="whichController"></div>
+        <div list-filters filter-config="ctrl.filterConfig" items="ctrl.tasks" page="ctrl.whichController"></div>
     </div>
     <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
-    <div class="item-list-container" loading-spinner name="tasks" size="fullscreen" ng-class="(filterConfig.view === 'list') ? 'col-lg-8 col-md-6 col-sm-6' : 'col-lg-12 col-md-12 col-sm-12'">
-      <div tab-container ng-model="filterConfig.view">
+    <div class="item-list-container" loading-spinner name="tasks" size="fullscreen" ng-class="(ctrl.filterConfig.view === 'list') ? 'col-lg-8 col-md-6 col-sm-6' : 'col-lg-12 col-md-12 col-sm-12'">
+      <div tab-container ng-model="ctrl.filterConfig.view">
         <div tab-view heading="list">
             <div class="tab-filter-container width-100 margin-top-40" id="task-tab-filter-container" sticky>
                 <div id="task-tab-filter-inner-container">
-                    <div class="relative tab-filter clickable" ng-class="(filterConfig.search.day === '') ? 'tab-in' : 'tab-out' ">
+                    <div class="relative tab-filter clickable" ng-class="(ctrl.filterConfig.search.day === '') ? 'tab-in' : 'tab-out' ">
                         <label class="width-100 clickable text-center" ng-click="ctrl.tabFilter('')">ALL</label>
                     </div>
-                    <div class="relative tab-filter clickable" ng-class="(filterConfig.search.day === day.name) ? 'tab-in' : 'tab-out' "
-                          ng-repeat="day in commonArrays.days">
-                        <label class="width-100 clickable text-center" ng-click="ctrl.tabFilter(day.name)">{{::day.name}}</label>
+                    <div class="relative tab-filter clickable" ng-class="(ctrl.filterConfig.search.day === day.name) ? 'tab-in' : 'tab-out' "
+                          ng-repeat="day in ctrl.commonArrays.days">
+                        <label class="width-100 clickable text-center" ng-click="ctrl.tabFilter(day.name)" ng-bind="::day.name"></label>
                     </div>
                 </div>
             </div>
             <ul class="taskList col-lg-12 col-md-12 col-sm-12">
-                <div ng-if="filterConfig.showingCount === 0" class="relative width-100 margin-top-20 text-center">
+                <div ng-if="ctrl.filterConfig.showingCount === 0" class="relative width-100 margin-top-20 text-center">
                     <p class="relative width-100">No items were found using your selection criteria.</p>
                 </div>
-                <li task-item-model ng-repeat="taskItem in tasks | orderBy: '-date' | filter: filterConfig.search | calendarFilter:filterConfig.datesSelected">
+                <li task-item-model ng-repeat="taskItem in ctrl.tasks | orderBy: '-date' | filter: ctrl.filterConfig.search | calendarFilter:ctrl.filterConfig.datesSelected">
                 </li>
             </ul>
         </div>
         <div tab-view heading="calendar">
-          <div class="margin-top-15" schedule-calendar events="tasks"></div>
+          <div class="margin-top-15" schedule-calendar events="ctrl.tasks"></div>
         </div>
       </div>
     </div>

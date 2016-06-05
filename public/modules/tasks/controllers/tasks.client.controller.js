@@ -1,21 +1,26 @@
+(function() {
 'use strict';
 
-// Tasks controller
-angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory', 'spinnerService', '$uibModal', 'moment',
-	function($scope, $rootScope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory, spinnerService, $uibModal, moment) {
-		var ctrl = this;
-		$scope.authentication = Authentication;
-		$rootScope.commonArrays = ListService.getCommonArrays();
-    $scope.whichController = 'task';
-    var today = new Date(),
-        day = today.getDay();
+	// Tasks controller
+	angular.module('tasks').controller('TasksController', TasksController);
+	TasksController.$inject =  ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory', 'spinnerService', '$uibModal', 'moment'];
 
-    //paging variables.
-    $scope.pageConfig = {
-        currentPage: 0,
-        pageSize: 10
-    };
-    $scope.filterConfig = {
+	function TasksController($scope, $rootScope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory, spinnerService, $uibModal, moment) {
+		var ctrl = this,
+				today = new Date(),
+				day = today.getDay();
+		ctrl.authentication = Authentication;
+		ctrl.commonArrays = ListService.getCommonArrays();
+		ctrl.create = create;
+		ctrl.createTask = createTask;
+		ctrl.dateOptions = {
+			dateDisabled: false,
+			formatYear: 'yy',
+			maxDate: new Date(2020, 5, 22),
+			minDate: new Date(),
+			startingDay: 1
+		};
+		ctrl.filterConfig = {
 			view: 'list',
       showingCount: 0,
       sortType: '',
@@ -26,103 +31,128 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
       },
       datesSelected: false
     };
-    ctrl.dateOptions = {
-      dateDisabled: false,
-      formatYear: 'yy',
-      maxDate: new Date(2020, 5, 22),
-      minDate: new Date(),
-      startingDay: 1
+		ctrl.insertChecklistItem = insertChecklistItem;
+    ctrl.pageConfig = {
+        currentPage: 0,
+        pageSize: 10
     };
+		ctrl.refreshItems = refreshItems;
+		ctrl.removeTask = removeTask;
+		ctrl.setTabFilterDay = setTabFilterDay;
+		ctrl.tabFilter = tabFilter;
+		ctrl.tickOff = tickOff;
+		ctrl.tickOffChecklist = tickOffChecklist;
+		ctrl.updateTask = updateTask;
+		ctrl.weekBeginning = weekBeginning;
+		ctrl.whichController = 'task';
 
-    ctrl.tabFilter = function(tabName) {
-        $scope.filterConfig.search.day = tabName;
-    };
+    function tabFilter(tabName) {
+        ctrl.filterConfig.search.day = tabName;
+    }
 
-    ctrl.weekBeginning = function() {
+    function weekBeginning() {
         return TaskFactory.getWeekBeginning();
-    };
+    }
+
+		function createTask() {
+			var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: '/modules/tasks/views/create-task.client.view.html',
+        controller: 'CreateTaskController as taskCreate',
+        size: 'lg',
+				resolve: {
+					data: function () {
+						return { commonArrays: ctrl.commonArrays };	
+					}
+				}
+      }).result.then(function(result) {
+        console.log('closed create task: ', result);
+				ctrl.newTask = result;
+				ctrl.create();
+      });
+		}
 
 		// Create new Task
-		$scope.create = function() {
+		function create() {
 //            console.log(this.newTask);
-                // Create new Task object
-                var task = new Tasks ({
-                    description: this.newTask.description,
-                    link: {
-                        linked: this.newTask.link.linked,
-                        type: (this.newTask.link.linked === false) ? ''      :
-                              (this.newTask.category === 'Watch')  ? 'anime' :
-                                                                     'manga' ,
-                        anime: (this.newTask.link.anime === undefined) ? undefined : this.newTask.link.anime._id ,
-                        manga: (this.newTask.link.manga === undefined) ? undefined : this.newTask.link.manga._id
-                    },
-                    day: this.newTask.daily === true ? 'Any' : this.newTask.day,
-                    date: this.newTask.date === '' ? new Date() : this.newTask.date,
-                    repeat: (this.newTask.link.linked === false) ? this.newTask.repeat                     :
-                            (this.newTask.category === 'Watch')  ? this.newTask.link.anime.finalEpisode    :
-                                                                   1    ,
-                    completeTimes: (this.newTask.link.linked === false) ? 0                                     :
-                                   (this.newTask.category === 'Watch')  ? this.newTask.link.anime.episodes      :
-                                                                          0      ,
-                    updateCheck: new Date().getDay() === 1 ? true : false,
-                    complete: false,
-                    category: this.newTask.category === '' ? 'Other' : this.newTask.category,
-                    daily: this.newTask.daily,
-                    checklist: this.newTask.checklist,
-                    checklistItems: this.newTask.checklistItems
-                });
+      // Create new Task object
+      var task = new Tasks ({
+          description: ctrl.newTask.description,
+          link: {
+              linked: ctrl.newTask.link.linked,
+              type: (ctrl.newTask.link.linked === false) ? ''      :
+                    (ctrl.newTask.category === 'Watch')  ? 'anime' :
+                                                           'manga' ,
+              anime: (ctrl.newTask.link.anime === undefined) ? undefined : ctrl.newTask.link.anime._id ,
+              manga: (ctrl.newTask.link.manga === undefined) ? undefined : ctrl.newTask.link.manga._id
+          },
+          day: ctrl.newTask.daily === true ? 'Any' : ctrl.newTask.day,
+          date: ctrl.newTask.date === '' ? new Date() : ctrl.newTask.date,
+          repeat: (ctrl.newTask.link.linked === false) ? ctrl.newTask.repeat                     :
+                  (ctrl.newTask.category === 'Watch')  ? ctrl.newTask.link.anime.finalEpisode    :
+                                                         1    ,
+          completeTimes: (ctrl.newTask.link.linked === false) ? 0                                     :
+                         (ctrl.newTask.category === 'Watch')  ? ctrl.newTask.link.anime.episodes      :
+                                                                0      ,
+          updateCheck: new Date().getDay() === 1 ? true : false,
+          complete: false,
+          category: ctrl.newTask.category === '' ? 'Other' : ctrl.newTask.category,
+          daily: ctrl.newTask.daily,
+          checklist: ctrl.newTask.checklist,
+          checklistItems: ctrl.newTask.checklistItems
+      });
 //			// Redirect after save
 			task.$save(function(response) {
 				$location.path('tasks');
                 NotificationFactory.success('Saved!', 'New Task was successfully saved!');
                 find();
 			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
+				ctrl.error = errorResponse.data.message;
         console.log(errorResponse);
         NotificationFactory.error('Error!', 'New Task failed to save!');
 			});
-		};
+		}
 
 		// Remove existing Task
-		ctrl.removeTask = function(task) {
-			TaskFactory.removeTask(task, $scope.tasks, true);
-		};
+		function removeTask(task) {
+			TaskFactory.removeTask(task, ctrl.tasks, true);
+		}
 		//Update task.
-		ctrl.updateTask = function(task) {
+		function updateTask(task) {
 				TaskFactory.updateTask(task);
-		};
+		}
     //Add new checklist item.
-    ctrl.insertChecklistItem = function (task, newChecklistItem) {
+    function insertChecklistItem(task, newChecklistItem) {
         TaskFactory.insertChecklistItem(task, newChecklistItem);
-    };
+    }
 		//Tick off a task.
-		ctrl.tickOff = function(task) {
+		function tickOff(task) {
 		    TaskFactory.tickOff(task).then(function(result) {
 					// console.log('update task res - tickOff: ', result);
 					if(result.refresh) find();
 				});
-		};
+		}
     //Tick of a checklist item.
-    ctrl.tickOffChecklist = function(task, index) {
+		function tickOffChecklist(task, index) {
         TaskFactory.tickOffChecklist(task, index).then(function(result) {
 					// console.log('update task res - tickOffChecklist: ', result);
 					if(result.refresh) find();
 				});
-    };
+    }
 
     //Defaults the tab filter to the current day of the week.
     function setTabFilterDay(day) {
         var index = day === 0 ? 7 : day; //Adjust for Sunday.
-        $scope.filterConfig.search.day = $scope.commonArrays.days[index].name;
-        console.log(day, $scope.filterConfig.search.day);
+        ctrl.filterConfig.search.day = ctrl.commonArrays.days[index].name;
+        console.log(day, ctrl.filterConfig.search.day);
     }
-    setTabFilterDay(day);
+    ctrl.setTabFilterDay(day);
 
     //check things
     function checkStatus() {
         if (day === 1) {
             console.log('monday', day);
-            angular.forEach($scope.tasks, function (task) {
+            angular.forEach(ctrl.tasks, function (task) {
                 //has it been updated today?
                 if(task.updateCheck === false) {
                     console.log('updating - ', task.description);
@@ -136,7 +166,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
                             TaskFactory.updateTask(task);
                         } else if (task.completeTimes === task.repeat) {
                             console.log('complete - delete', task.description);
-                            TaskFactory.removeTask(task, $scope.tasks);
+                            TaskFactory.removeTask(task, ctrl.tasks);
                         }
                     } else if (task.link.type === 'anime') {
                         console.log('linked');
@@ -148,14 +178,14 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
                             TaskFactory.updateTask(task);
                         } else if (task.link[type][parts.single] === task.link[type][parts.all]) {
                             console.log('linked complete - delete', task.description);
-                            TaskFactory.removeTask(task, $scope.tasks);
+                            TaskFactory.removeTask(task, ctrl.tasks);
                         }
                     }
                 }
             });
         } else {
             console.log('not monday', day);
-            angular.forEach($scope.tasks, function (task) {
+            angular.forEach(ctrl.tasks, function (task) {
                 var change = task.updateCheck === false ? false : true;
                 task.updateCheck = false;
                 //is it a daily task?
@@ -174,7 +204,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
                         }
                     } else if (task.completeTimes === task.repeat) {
                         console.log('complete - delete', task.description);
-                        TaskFactory.removeTask(task, $scope.tasks);
+                        TaskFactory.removeTask(task, ctrl.tasks);
                     }
                 } else if ((task.daily === false) && change) {
                     console.log('weekly update: ', task.description);
@@ -188,16 +218,17 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
 		// Find a list of Tasks
 		function find(check) {
 	    spinnerService.loading('tasks', Tasks.query().$promise.then(function(result) {
-	        $scope.tasks = result;
+	        ctrl.tasks = result;
 	        if (check === true) checkStatus();
 	    }));
 		}
 		find(true);
 
-		ctrl.refreshItems = function() {
+		function refreshItems() {
 			find();
       NotificationFactory.warning('Refreshed!', 'Task list refreshed!');
-		};
+		}
 
 	}
-]);
+
+})();

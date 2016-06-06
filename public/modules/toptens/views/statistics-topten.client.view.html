@@ -28,22 +28,22 @@
         </div>
     </div>
     <div tab-view heading="statistics" class="height-90 margin-5">
-        <div class="height-40 margin-top-5 overflow-auto-hover" ng-if="ctrl.toptenInfo..tags.length > 0">
+        <div class="height-40 margin-top-5 overflow-auto-hover" ng-if="ctrl.toptenInfo.tags.length > 0">
           <label class="absolute width-50 primary-background">Tags</label>
           <table class="width-40 margin-top-20">
             <tbody>
-              <tr ng-repeat="tag in ctrl.toptenInfo..tags | orderBy: '-count'">
+              <tr ng-repeat="tag in ctrl.toptenInfo.tags | orderBy: '-count'">
                 <td>{{tag.tag}}</td>
                 <td>{{tag.count}}</td>
               </tr>
             </tbody>
           </table>
         </div>
-        <div class="height-40 margin-top-5 overflow-auto-hover" ng-if="ctrl.toptenInfo..series.length > 0">
+        <div class="height-40 margin-top-5 overflow-auto-hover" ng-if="ctrl.toptenInfo.series.length > 0">
           <label class="absolute width-50 primary-background">Series</label>
           <table class="width-40 margin-top-20">
             <tbody>
-              <tr ng-repeat="series in ctrl.toptenInfo..series | orderBy: '-count'">
+              <tr ng-repeat="series in ctrl.toptenInfo.series | orderBy: '-count'">
                 <td>{{series.name}}</td>
                 <td>{{series.count}}</td>
               </tr>

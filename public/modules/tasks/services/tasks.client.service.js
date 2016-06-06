@@ -46,7 +46,7 @@ angular.module('tasks').factory('Tasks', ['$resource',
                 data.volumes = volumes;
                 data.latest = new Date();
                 MangaFactory.update(data, undefined, true, undefined);
-								resolve('manga updated');
+								resolve(data);
             });
 					});
         };
@@ -114,33 +114,18 @@ angular.module('tasks').factory('Tasks', ['$resource',
 		          	return { item: angular.copy(task), itemOriginal: task };
 							}
 						}
-					}).result.then(function(result) {
-						task = result;
-						if(checklistIndex === undefined) {
-							task.completeTimes += 1;
-							task.complete = true;
-						} else {
-							task.checklistItems[checklistIndex].complete = true;
-							if(ListService.findWithAttr(task.checklistItems, 'complete', false) === -1) {
-								task.completeTimes += 1;
-                task.complete = true;
-							}
-						}
-						obj.updateMangaitem(task, task.link.manga.chapters, task.link.manga.volumes).then(function() {
-							return obj.updateTask(task, true);
-						});
 					});
+					return modalInstance;
 				}
 
 				//Completes a task.
 				obj.tickOff = function(task) {
 					return $q(function(resolve, reject) {
-						var isLinked = false;
+						var isLinked = task.link.linked;
 				    //Is it linked?
-				    if (task.link.linked === false) {
+				    if (!isLinked) {
 				        task.completeTimes += 1;
-				    } else if (task.link.linked === true) {
-				        isLinked = true;
+				    } else if (isLinked) {
 				        /** Anime or manga?
 				         *   Update the item value AND the complete/repeat values.
 				         */
@@ -150,17 +135,28 @@ angular.module('tasks').factory('Tasks', ['$resource',
 				            obj.updateAnimeitem(task);
 				        } else if (task.link.type === 'manga') {
 									  task.complete = false;
-				            launchMangaUpdateDialog(task).then(function (result) {
-											console.log('manga update diaog result: ', result);
-											resolve(result);
+				            var dialog = launchMangaUpdateDialog(task);
+										dialog.result.then(function(result) {
+											task = result;
+											task.completeTimes += 1;
+											task.complete = true;
+											obj.updateMangaitem(task, task.link.manga.chapters, task.link.manga.volumes).then(function(result) {
+												console.log('updated manga: ', result);
+												return obj.updateTask(task, true);
+											}).then(function(result) {
+												console.log('update manga into update task: ', result);
+												resolve(result);
+											});
 										});
 				        }
 				    }
-				    //console.log('tickoff: ', task);
-				    obj.updateTask(task, isLinked).then(function(result) {
-							console.log('update task resolve: ', result);
-							resolve(result);
-						});
+						if(!isLinked || (isLinked && task.link.type === 'anime')) {
+					    //console.log('tickoff: ', task);
+					    obj.updateTask(task, isLinked).then(function(result) {
+								console.log('update task resolve: ', result);
+								resolve(result);
+							});
+						}
 					});
 				};
 
@@ -171,21 +167,33 @@ angular.module('tasks').factory('Tasks', ['$resource',
 						var isLinked = task.link.linked;
 						if (isLinked && task.link.type === 'manga') {
 								task.checklistItems[index].complete = false;
-								launchMangaUpdateDialog(task, index).then(function (result) {
-									console.log('manga update diaog result: ', result);
-									resolve(result);
+								var dialog = launchMangaUpdateDialog(task, index);
+								dialog.result.then(function(result) {
+									task = result;
+									task.checklistItems[index].complete = true;
+									if(ListService.findWithAttr(task.checklistItems, 'complete', false) === -1) {
+										task.completeTimes += 1;
+			              task.complete = true;
+									}
+									obj.updateMangaitem(task, task.link.manga.chapters, task.link.manga.volumes).then(function(result) {
+										console.log('updated manga: ', result);
+										return obj.updateTask(task, true);
+									}).then(function(result) {
+										console.log('update manga into update task: ', result);
+										resolve(result);
+									});
 								});
+						} else if(!isLinked) {
+							if(ListService.findWithAttr(task.checklistItems, 'complete', false) === -1) {
+								task.completeTimes += 1;
+								task.complete = true;
+							}
+							//console.log('tickoff checklist: ', task);
+					    obj.updateTask(task, isLinked).then(function(result) {
+								console.log('update task resolve: ', result);
+								resolve(result);
+							});
 						}
-
-						if(ListService.findWithAttr(task.checklistItems, 'complete', false) === -1) {
-							task.completeTimes += 1;
-							task.complete = true;
-						}
-						//console.log('tickoff checklist: ', task);
-				    obj.updateTask(task, isLinked).then(function(result) {
-							//console.log('update task resolve: ', result);
-							resolve(result);
-						});
 					});
 				};
 

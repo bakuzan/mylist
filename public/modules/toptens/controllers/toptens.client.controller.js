@@ -17,7 +17,7 @@
 				tagsForFilter: [],
 				taglessItem: false,
 				areTagless: false,
-				selectListOptions: ListService.getSelectListOptions(ctrl.whichController),
+				selectListOptions: {},
 				commonArrays: ListService.getCommonArrays()
 		};
 		ctrl.find = find;
@@ -57,10 +57,11 @@
 
 		// Find a list of Toptens
 		function find() {
-            spinnerService.loading('topten', Toptens.query().$promise.then(function(result) {
-                ctrl.toptens = result;
-            }));
-//            console.log(ctrl.toptens);
+			ctrl.filterConfig.selectListOptions = ListService.getSelectListOptions(ctrl.whichController);
+	    spinnerService.loading('topten', Toptens.query().$promise.then(function(result) {
+	        ctrl.toptens = result;
+	    }));
+			console.log(ctrl.toptens);
 		}
 
 		// Find existing Topten

@@ -22,7 +22,7 @@
                                 <input type="text" id="description" class="form-control" ng-model="ctrl.topten.description" />
                             </div>
                         </div>
-                        <div class="form-group" ng-if="isCreate">
+                        <div class="form-group" ng-if="ctrl.isCreate">
                             <label for="type" class="col-lg-3 col-md-3 col-sm-3 control-label">Type</label>
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <select class="form-control" ng-model="ctrl.topten.type"
@@ -147,7 +147,7 @@
                               <div ng-repeat="item in ctrl.stepConfig.listGen.displayList track by item._id" class="relative width-100"
                                    ng-click="ctrl.swappingItems($index)" ng-class="{ selected: $index === ctrl.stepConfig.swapping.one }">
                                   <i class="fa fa-trophy trophy-{{$index + 1}}" ng-if="ctrl.topten.isRanked"></i>
-                                  <div class="display-inline-block" ng-style="{ 'height' : imgSize.height, 'width' : imgSize.width }">
+                                  <div class="display-inline-block" ng-style="{ 'height' : ctrl.imgSize.height, 'width' : ctrl.imgSize.width }">
                                       <img ng-src="{{item.image}}" style="height: 100%" />
                                   </div>
                                   <span>{{item[ctrl.stepConfig.listGen.typeDisplay]}}</span>

@@ -3229,8 +3229,8 @@ angular.module('mangaitems').config(['$stateProvider',
 'use strict';
 
 // Mangaitems controller
-angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'MangaFactory', 'spinnerService',
-	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, MangaFactory, spinnerService) {
+angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'MangaFactory', 'spinnerService', 'TagService',
+	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, MangaFactory, spinnerService, TagService) {
 		var ctrl = this;
 		ctrl.authentication = Authentication;
 
@@ -3276,13 +3276,20 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
         ctrl.trustAsResourceUrl = function(url) {
             return $sce.trustAsResourceUrl(url);
         };
+				//For adding new tags.
+		    ctrl.addTag = function () {
+					TagService.addTag(ctrl.tagArray, ctrl.newTag);
+		      ctrl.newTag = '';
+		    };
+				//Drop tag for new tags.
+				ctrl.dropTag = function(text) {
+					TagService.dropTag(ctrl.tagArray, text);
+				};
+				//Drop tag for animeitem tags.
+				ctrl.removeTag = function(text) {
+					TagService.dropTag(ctrl.mangaitem.tags, text);
+				};
 
-        //for adding/removing tags.
-        ctrl.addTag = function () {
-//            console.log(ctrl.newTag);
-            ctrl.tagArray = ListService.addTag(ctrl.tagArray, ctrl.newTag);
-            ctrl.newTag = '';
-        };
 
         // Create new Mangaitem
 		ctrl.create = function() {

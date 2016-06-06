@@ -104,17 +104,17 @@
                 <div class="form-group" ng-class="{ 'has-error' : mangaForm.tags.$invalid && !mangaForm.tags.$pristine }">
                     <label for="tags" class="col-md-2 control-label">Tags</label>
                     <div class="col-md-6">
-                        <input type="text" class="form-control" data-ng-model="ctrl.newTag" enter-tag="addTag()" id="tags" name="tags" placeholder="tags..." uib-typeahead="stat.tag for stat in ctrl.filterConfig.statTags | filter: $viewValue">
+                        <input type="text" class="form-control" data-ng-model="ctrl.newTag" enter-tag="ctrl.addTag()" id="tags" name="tags" placeholder="tags..." uib-typeahead="stat.tag for stat in ctrl.filterConfig.statTags | filter: $viewValue">
                     </div>
                     <div class="col-md-4 form-group">
-                        <a class="btn btn-primary" data-ng-click="addTag()" data-ng-disabled="ctrl.newTag==='' || ctrl.newTag===null || ctrl.newTag===undefined">Add Tag</a>
+                        <a class="btn btn-primary" data-ng-click="ctrl.addTag()" data-ng-disabled="ctrl.newTag==='' || ctrl.newTag===null || ctrl.newTag===undefined">Add Tag</a>
                     </div>
                 </div>
                 <div class="form-group">
                     <ul class="tag-list col-md-12">
                         <li class="tag-bubble col-md-2" ng-repeat="tag in ctrl.tagArray track by $index">
                             {{tag.text}}
-                            <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="ctrl.drop-tag(tag.text)"><i class="fa fa-trash-o"></i></a>
+                            <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="ctrl.dropTag(tag.text)"><i class="fa fa-trash-o"></i></a>
                         </li>
                     </ul>
                 </div>

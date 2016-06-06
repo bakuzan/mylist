@@ -28,143 +28,162 @@ angular.module('characters').directive('characterBack', function(){
           interval: '=?',
           filterConfig: '=?'
       },
+      bindToController: true,
+      controllerAs: 'sliderController',
       templateUrl: '/modules/characters/templates/slider.html',
-      link: function(scope, elem, attrs) {
-          var timer, autoSlide, length = elem[0].childElementCount - 1;
-          scope.currentIndex = -1; //pre-first slide to stop 'cannot assign to undefined' error.
-          scope.repeater = scope.slides === undefined ? false : true; //is there a collection to iterate through?
-          scope.interval = scope.interval === undefined ? 3000 : scope.interval; //is there a custom interval?
-          scope.isFullscreen = false;
+      controller: function($scope) {
+        var self = this;
+        console.log('slider ctrl: ', $scope);
+        self.currentIndex = -1; //pre-first slide to stop 'cannot assign to undefined' error.
+        self.enter = enter;
+        self.goToSlide = goToSlide;
+        self.leave = leave;
+        self.next = next;
+        self.prev = prev;
+        self.toggleFullscreen = toggleFullscreen;
+        self.trustAsResourceUrl = trustAsResourceUrl;
 
-          //allow retreival of local resource
-          scope.trustAsResourceUrl = function(url) {
-              return $sce.trustAsResourceUrl(url);
-          };
+        scope.repeater = scope.slides === undefined ? false : true; //is there a collection to iterate through?
+        scope.interval = scope.interval === undefined ? 3000 : scope.interval; //is there a custom interval?
+        scope.isFullscreen = false;
 
-          //if no collection, make a dummy collection to cycle throught the children.
-          if (!scope.repeater) {
-            scope.slides = []; //used to allow cycling.
-            for(var i = 0; i < length; i++) {
-                scope.slides.push({ index: i });
-            }
+
+        //allow retreival of local resource
+        function trustAsResourceUrl(url) {
+            return $sce.trustAsResourceUrl(url);
+        }
+
+        //if no collection, make a dummy collection to cycle throught the children.
+        if (!scope.repeater) {
+          scope.slides = []; //used to allow cycling.
+          for(var i = 0; i < length; i++) {
+              scope.slides.push({ index: i });
           }
-          scope.goToSlide = function(slide) {
+        }
+        function goToSlide(slide) {
 //              console.log('go to', slide);
-              if (scope.currentIndex !== slide) {
-                  //reached end of slides?
-                  if (slide !== scope.filteredSlides.length) {
-                    scope.currentIndex = slide;
-                  } else {
-                    scope.currentIndex = 0;
-                  }
-              } else {
-                  if (scope.filteredSlides[scope.currentIndex].locked) {
-                    //unlock, i.e start timer.
-                    scope.filteredSlides[scope.currentIndex].locked = false;
-                      autoSlide();
-                  } else {
-                    //lock, i.e. cancel timer.
-                    scope.filteredSlides[scope.currentIndex].locked = true;
-                    $timeout.cancel(timer);
-                  }
-              }
-          };
-          scope.next = function() {
-              if (scope.currentIndex < scope.filteredSlides.length - 1) {
-                  scope.currentIndex += 1;
-              } else {
+            if (scope.currentIndex !== slide) {
+                //reached end of slides?
+                if (slide !== scope.filteredSlides.length) {
+                  scope.currentIndex = slide;
+                } else {
                   scope.currentIndex = 0;
-              }
-          };
-          scope.prev = function() {
-              if (scope.currentIndex > 0) {
-                  scope.currentIndex -= 1;
-              } else {
-                  scope.currentIndex = scope.filteredSlides.length - 1;
-              }
-          };
+                }
+            } else {
+                if (scope.filteredSlides[scope.currentIndex].locked) {
+                  //unlock, i.e start timer.
+                  scope.filteredSlides[scope.currentIndex].locked = false;
+                    autoSlide();
+                } else {
+                  //lock, i.e. cancel timer.
+                  scope.filteredSlides[scope.currentIndex].locked = true;
+                  $timeout.cancel(timer);
+                }
+            }
+        }
 
-          scope.$watch('currentIndex', function() {
+        function next() {
+            if (scope.currentIndex < scope.filteredSlides.length - 1) {
+                scope.currentIndex += 1;
+            } else {
+                scope.currentIndex = 0;
+            }
+        }
+
+        function prev() {
+            if (scope.currentIndex > 0) {
+                scope.currentIndex -= 1;
+            } else {
+                scope.currentIndex = scope.filteredSlides.length - 1;
+            }
+        }
+
+        $scope.$watch('currentIndex', function() {
 //              console.log('index', scope.currentIndex, 'filtered slides ', scope.filteredSlides);
-              if (scope.currentIndex > -1 && scope.filteredSlides.length > 0) {
-                    scope.filteredSlides.forEach(function(slide) {
-                        slide.visible = false; // make every slide invisible
-                        slide.locked = false; // make every slide unlocked
-                    });
-                    scope.filteredSlides[scope.currentIndex].visible = true; // make the current slide visible
-              }
-          });
+            if (scope.currentIndex > -1 && scope.filteredSlides.length > 0) {
+                  scope.filteredSlides.forEach(function(slide) {
+                      slide.visible = false; // make every slide invisible
+                      slide.locked = false; // make every slide unlocked
+                  });
+                  scope.filteredSlides[scope.currentIndex].visible = true; // make the current slide visible
+            }
+        });
 
-          autoSlide = function() {
-              timer = $timeout(function() {
-                  scope.next();
-                  timer = $timeout(autoSlide, scope.interval);
-              }, scope.interval);
-          };
-          autoSlide();
-          scope.$on('$destroy', function() {
-              $timeout.cancel(timer); // when the scope is destroyed, cancel the timer
-          });
-
-          //Stop timer on enter.
-          scope.enter = function() {
-//              console.log('entered');
-              if (scope.filteredSlides[scope.currentIndex].locked !== true) {
-                $timeout.cancel(timer);
-//                  console.log('cancelled');
-              }
-          };
-          //Restart timer on leave.
-          scope.leave = function() {
-//              console.log('left');
-              if (scope.filteredSlides[scope.currentIndex].locked !== true) {
+        autoSlide = function() {
+            timer = $timeout(function() {
+                scope.next();
                 timer = $timeout(autoSlide, scope.interval);
+            }, scope.interval);
+        };
+        autoSlide();
+        scope.$on('$destroy', function() {
+            $timeout.cancel(timer); // when the scope is destroyed, cancel the timer
+        });
+
+        //Stop timer on enter.
+        function enter() {
+//              console.log('entered');
+            if (scope.filteredSlides[scope.currentIndex].locked !== true) {
+              $timeout.cancel(timer);
+//                  console.log('cancelled');
+            }
+        }
+        //Restart timer on leave.
+        function leave() {
+//              console.log('left');
+            if (scope.filteredSlides[scope.currentIndex].locked !== true) {
+              timer = $timeout(autoSlide, scope.interval);
 //                  console.log('restarted');
-              }
-          };
+            }
+        }
 
-          //Fullscreen capability
-          scope.toggleFullscreen = function() {
-              scope.isFullscreen = !scope.isFullscreen;
-          };
+        //Fullscreen capability
+        function toggleFullscreen() {
+            scope.isFullscreen = !scope.isFullscreen;
+        }
 
-          /** FILTERS
-           *    Code below here will allow the slides to be affected by the character filters.
-           *    Note: the interval is removed and replaced to avoid the auto-slide fouling the
-           *            change over up.
-           */
-          scope.$watch('filterConfig.search', function(newValue) {
-              if (scope.filterConfig.search !== undefined) {
-                  var temp = scope.interval;
-                  scope.interval = null;
-                  scope.search = newValue;
-                  scope.interval = temp;
-              }
-          });
-          scope.$watch('filterConfig.media', function(newValue) {
-              if (scope.filterConfig.media !== undefined) {
-                  var temp = scope.interval;
-                  scope.interval = null;
-                  scope.media = newValue;
-                  scope.interval = temp;
-              }
-          });
-          scope.$watch('filterConfig.seriesFilter', function(newValue) {
-              if (scope.filterConfig.seriesFilter !== undefined) {
-                  var temp = scope.interval;
-                  scope.interval = null;
-                  scope.seriesFilter = newValue;
-                  scope.interval = temp;
-              }
-          });
-          scope.$watch('filterConfig.searchTags', function(newValue) {
-              if (scope.filterConfig.media !== undefined) {
-                  var temp = scope.interval;
-                  scope.interval = null;
-                  scope.searchTags = newValue;
-                  scope.interval = temp;
-              }
-          });
+        /** FILTERS
+         *    Code below here will allow the slides to be affected by the character filters.
+         *    Note: the interval is removed and replaced to avoid the auto-slide fouling the
+         *            change over up.
+         */
+        $scope.$watch('filterConfig.search', function(newValue) {
+            if (scope.filterConfig.search !== undefined) {
+                var temp = scope.interval;
+                scope.interval = null;
+                scope.search = newValue;
+                scope.interval = temp;
+            }
+        });
+        $scope.$watch('filterConfig.media', function(newValue) {
+            if (scope.filterConfig.media !== undefined) {
+                var temp = scope.interval;
+                scope.interval = null;
+                scope.media = newValue;
+                scope.interval = temp;
+            }
+        });
+        $scope.$watch('filterConfig.seriesFilter', function(newValue) {
+            if (scope.filterConfig.seriesFilter !== undefined) {
+                var temp = scope.interval;
+                scope.interval = null;
+                scope.seriesFilter = newValue;
+                scope.interval = temp;
+            }
+        });
+        $scope.$watch('filterConfig.searchTags', function(newValue) {
+            if (scope.filterConfig.media !== undefined) {
+                var temp = scope.interval;
+                scope.interval = null;
+                scope.searchTags = newValue;
+                scope.interval = temp;
+            }
+        });
+
+      },
+      link: function(scope, elem, attrs, sliderController) {
+          var timer, autoSlide, length = elem[0].childElementCount - 1;
+
       }
   };
 

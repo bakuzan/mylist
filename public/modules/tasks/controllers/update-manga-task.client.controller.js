@@ -1,22 +1,27 @@
-'use strict';
+(function() {
+	'use strict';
 
-// Tasks controller
-angular.module('tasks').controller('UpdateMangaTaskController', ['$scope', '$uibModalInstance', 'data',
-	function($scope, $uibModalInstance, data) {
+	angular.module('tasks').controller('UpdateMangaTaskController', UpdateMangaTaskController);
+	UpdateMangaTaskController.$inject = ['$scope', '$uibModalInstance', 'data'];
+
+	function UpdateMangaTaskController($scope, $uibModalInstance, data) {
     var ctrl = this;
+		ctrl.cancel = cancel;
     ctrl.item = data.item;
     ctrl.stepConfig = {
         currentStep: 1,
         stepCount: 1
     };
+		ctrl.submit = submit;
     console.log('update linked manga item: ', ctrl.item);
 
-    ctrl.submit = function () {
+    function submit() {
       $uibModalInstance.close(ctrl.item);
-    };
+    }
 
-    ctrl.cancel = function () {
+    function cancel() {
       $uibModalInstance.dismiss('cancel');
-    };
+    }
 	}
-]);
+
+})();

@@ -7,8 +7,19 @@
 function CreateTaskController($scope, data, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory, spinnerService, $uibModalInstance, Animeitems, Mangaitems) {
   var ctrl = this,
       newTaskModel = {};
+  ctrl.addChecklistItem = addChecklistItem;
+  ctrl.backStep = backStep;
+  ctrl.cancel = cancel;
   ctrl.commonArrays = data.commonArrays;
-  
+  ctrl.create = create;
+  ctrl.dropChecklistItem = dropChecklistItem;
+  ctrl.stepConfig = {
+      currentStep: 1,
+      stepCount: 2
+  };
+  ctrl.submit = submit;
+  ctrl.takeStep = takeStep;
+
   function setNewTask() {
       ctrl.newTask = {
           description: '',
@@ -30,13 +41,10 @@ function CreateTaskController($scope, data, $stateParams, $location, Authenticat
   }
   setNewTask();
   angular.copy(ctrl.newTask, newTaskModel);
-  ctrl.stepConfig = {
-      currentStep: 1,
-      stepCount: 2
-  };
+
 
   //for adding/removing options.
-  ctrl.addChecklistItem = function () {
+  function addChecklistItem() {
           if (ctrl.newTask.checklistItem!=='' && ctrl.newTask.checklistItem!==undefined) {
               var i = 0;
               var alreadyAdded = false;
@@ -56,8 +64,8 @@ function CreateTaskController($scope, data, $stateParams, $location, Authenticat
               }
           }
           ctrl.newTask.checklistItem = '';
-  };
-  ctrl.dropChecklistItem = function(text) {
+  }
+  function dropChecklistItem(text) {
       var deletingItem = ctrl.newTask.checklistItems;
       ctrl.newTask.checklistItems = [];
       //update the task.
@@ -66,25 +74,66 @@ function CreateTaskController($scope, data, $stateParams, $location, Authenticat
               ctrl.newTask.checklistItems.push(item);
           }
       });
-  };
+  }
 
-  ctrl.backStep = function(step) {
+  // Create new Task
+  function create() {
+//            console.log(this.newTask);
+    // Create new Task object
+    var task = new Tasks ({
+        description: ctrl.newTask.description,
+        link: {
+            linked: ctrl.newTask.link.linked,
+            type: (ctrl.newTask.link.linked === false) ? ''      :
+                  (ctrl.newTask.category === 'Watch')  ? 'anime' :
+                                                         'manga' ,
+            anime: (ctrl.newTask.link.anime === undefined) ? undefined : ctrl.newTask.link.anime._id ,
+            manga: (ctrl.newTask.link.manga === undefined) ? undefined : ctrl.newTask.link.manga._id
+        },
+        day: ctrl.newTask.daily === true ? 'Any' : ctrl.newTask.day,
+        date: ctrl.newTask.date === '' ? new Date() : ctrl.newTask.date,
+        repeat: (ctrl.newTask.link.linked === false) ? ctrl.newTask.repeat                     :
+                (ctrl.newTask.category === 'Watch')  ? ctrl.newTask.link.anime.finalEpisode    :
+                                                       1    ,
+        completeTimes: (ctrl.newTask.link.linked === false) ? 0                                     :
+                       (ctrl.newTask.category === 'Watch')  ? ctrl.newTask.link.anime.episodes      :
+                                                              0      ,
+        updateCheck: new Date().getDay() === 1 ? true : false,
+        complete: false,
+        category: ctrl.newTask.category === '' ? 'Other' : ctrl.newTask.category,
+        daily: ctrl.newTask.daily,
+        checklist: ctrl.newTask.checklist,
+        checklistItems: ctrl.newTask.checklistItems
+    });
+//			// Redirect after save
+    task.$save(function(response) {
+      $location.path('tasks');
+      NotificationFactory.success('Saved!', 'New Task was successfully saved!');
+    }, function(errorResponse) {
+      ctrl.error = errorResponse.data.message;
+      console.log(errorResponse);
+      NotificationFactory.error('Error!', 'New Task failed to save!');
+    });
+  }
+
+  function backStep(step) {
       ctrl.stepConfig.currentStep -= 1;
-  };
-  ctrl.takeStep = function(step) {
+  }
+  function takeStep(step) {
       var check = process(step);
       if (check.valid) {
           ctrl.stepConfig.currentStep += 1;
       } else {
           NotificationFactory.popup('Attention!', check.message, 'warning');
       }
-  };
-  ctrl.submit = function() {
-    $uibModalInstance.close(ctrl.newTask);
-  };
-  ctrl.cancel = function() {
+  }
+  function submit() {
+    ctrl.create();
+    $uibModalInstance.close();
+  }
+  function cancel() {
     $uibModalInstance.dismiss();
-  };
+  }
 
   function process(step) {
       switch(step) {

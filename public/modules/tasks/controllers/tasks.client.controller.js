@@ -3,15 +3,14 @@
 
 	// Tasks controller
 	angular.module('tasks').controller('TasksController', TasksController);
-	TasksController.$inject =  ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory', 'spinnerService', '$uibModal', 'moment'];
+	TasksController.$inject =  ['$scope', '$timeout', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory', 'spinnerService', '$uibModal', 'moment'];
 
-	function TasksController($scope, $rootScope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory, spinnerService, $uibModal, moment) {
+	function TasksController($scope, $timeout, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory, spinnerService, $uibModal, moment) {
 		var ctrl = this,
 				today = new Date(),
 				day = today.getDay();
 		ctrl.authentication = Authentication;
 		ctrl.commonArrays = ListService.getCommonArrays();
-		ctrl.create = create;
 		ctrl.createTask = createTask;
 		ctrl.dateOptions = {
 			dateDisabled: false,
@@ -62,55 +61,13 @@
         size: 'lg',
 				resolve: {
 					data: function () {
-						return { commonArrays: ctrl.commonArrays };	
+						return { commonArrays: ctrl.commonArrays };
 					}
 				}
       }).result.then(function(result) {
         console.log('closed create task: ', result);
-				ctrl.newTask = result;
-				ctrl.create();
+				find();
       });
-		}
-
-		// Create new Task
-		function create() {
-//            console.log(this.newTask);
-      // Create new Task object
-      var task = new Tasks ({
-          description: ctrl.newTask.description,
-          link: {
-              linked: ctrl.newTask.link.linked,
-              type: (ctrl.newTask.link.linked === false) ? ''      :
-                    (ctrl.newTask.category === 'Watch')  ? 'anime' :
-                                                           'manga' ,
-              anime: (ctrl.newTask.link.anime === undefined) ? undefined : ctrl.newTask.link.anime._id ,
-              manga: (ctrl.newTask.link.manga === undefined) ? undefined : ctrl.newTask.link.manga._id
-          },
-          day: ctrl.newTask.daily === true ? 'Any' : ctrl.newTask.day,
-          date: ctrl.newTask.date === '' ? new Date() : ctrl.newTask.date,
-          repeat: (ctrl.newTask.link.linked === false) ? ctrl.newTask.repeat                     :
-                  (ctrl.newTask.category === 'Watch')  ? ctrl.newTask.link.anime.finalEpisode    :
-                                                         1    ,
-          completeTimes: (ctrl.newTask.link.linked === false) ? 0                                     :
-                         (ctrl.newTask.category === 'Watch')  ? ctrl.newTask.link.anime.episodes      :
-                                                                0      ,
-          updateCheck: new Date().getDay() === 1 ? true : false,
-          complete: false,
-          category: ctrl.newTask.category === '' ? 'Other' : ctrl.newTask.category,
-          daily: ctrl.newTask.daily,
-          checklist: ctrl.newTask.checklist,
-          checklistItems: ctrl.newTask.checklistItems
-      });
-//			// Redirect after save
-			task.$save(function(response) {
-				$location.path('tasks');
-                NotificationFactory.success('Saved!', 'New Task was successfully saved!');
-                find();
-			}, function(errorResponse) {
-				ctrl.error = errorResponse.data.message;
-        console.log(errorResponse);
-        NotificationFactory.error('Error!', 'New Task failed to save!');
-			});
 		}
 
 		// Remove existing Task
@@ -217,10 +174,13 @@
 
 		// Find a list of Tasks
 		function find(check) {
-	    spinnerService.loading('tasks', Tasks.query().$promise.then(function(result) {
-	        ctrl.tasks = result;
-	        if (check === true) checkStatus();
-	    }));
+			$timeout(function () {
+		    spinnerService.loading('tasks', Tasks.query().$promise.then(function(result) {
+					console.log('found! : ', result);
+		        ctrl.tasks = result;
+		        if (check === true) checkStatus();
+		    }));
+			}, 250);
 		}
 		find(true);
 

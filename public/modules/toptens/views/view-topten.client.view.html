@@ -1,32 +1,32 @@
-<section data-ng-controller="ToptensController" data-ng-init="findOne()">
+<section data-ng-controller="ToptensController as ctrl" data-ng-init="ctrl.findOne()">
 	<div class="page-header margin-top-0">
-        <div class="pull-right margin-top-25" data-ng-show="((authentication.user) && (authentication.user._id == topten.user._id))">
+        <div class="pull-right margin-top-25" data-ng-show="((ctrl.authentication.user) && (ctrl.authentication.user._id == ctrl.topten.user._id))">
             <a class="btn btn-accent" href="/#!/toptens">
                 <i class="glyphicon glyphicon-chevron-left"></i>
             </a>
-            <a class="btn btn-primary" href="/#!/toptens/{{topten._id}}/edit">
+            <a class="btn btn-primary" href="/#!/toptens/{{ctrl.topten._id}}/edit">
                 <i class="glyphicon glyphicon-edit"></i>
             </a>
-            <a class="btn btn-danger" data-ng-click="remove();">
+            <a class="btn btn-danger" data-ng-click="ctrl.remove()">
                 <i class="glyphicon glyphicon-trash"></i>
             </a>
         </div>
-		<h1 class="display-inline-block" data-ng-bind="topten.name"></h1><span class="item-icons padding-10" ng-if="::topten.isFavourite"><i class="fa fa-star fa-2x" style="color: gold"></i></span>
-        <h4 ng-bind="topten.description"></h4>
+		<h1 class="display-inline-block" data-ng-bind="ctrl.topten.name"></h1><span class="item-icons padding-10" ng-if="::ctrl.topten.isFavourite"><i class="fa fa-star fa-2x" style="color: gold"></i></span>
+        <h4 ng-bind="ctrl.topten.description"></h4>
         <small>
             <em class="text-muted">
                 Created
-                <span data-ng-bind="topten.meta.created | date: 'dd MMM yyyy HH:mm'"></span><br/>
+                <span data-ng-bind="ctrl.topten.meta.created | date: 'dd MMM yyyy HH:mm'"></span><br/>
                 Updated
-                <span data-ng-bind="topten.meta.updated | date: 'dd MMM yyyy HH:mm'"></span>
+                <span data-ng-bind="ctrl.topten.meta.updated | date: 'dd MMM yyyy HH:mm'"></span>
             </em>
         </small>
 	</div>
     <div class="relative col-lg-12 col-md-12 col-sm-12">
         <div horizontal-list>
-            <div horizontal-list-item ng-repeat="item in topten[topten.type + 'List'] track by item._id">
-                <a href="/#!/{{topten.type}}{{viewConfig.linkSuffix}}/{{item._id}}">
-										<i class="fa fa-trophy trophy-{{::$index + 1}}" ng-if="::topten.isRanked"></i>
+            <div horizontal-list-item ng-repeat="item in ctrl.topten[ctrl.topten.type + 'List'] track by item._id">
+                <a href="/#!/{{ctrl.topten.type}}{{viewConfig.linkSuffix}}/{{item._id}}">
+										<i class="fa fa-trophy trophy-{{::$index + 1}}" ng-if="::ctrl.topten.isRanked"></i>
                     <h4 class="display-inline-block margin-0" ng-bind="item[viewConfig.displayType]"></h4>
                 </a>
                 <div class="height-90">
@@ -36,6 +36,6 @@
         </div>
 		</div>
 		<div class=" col-lg-12 col-md-12 col-sm-12 margin-top-5">
-			<button class="btn btn-primary cursor-pointer" ng-click="openListStats()">Examine list</button>
+			<button class="btn btn-primary cursor-pointer" ng-click="ctrl.openListStats()">Examine list</button>
 		</div>
 </section>

@@ -1,45 +1,45 @@
-<section data-ng-controller="CreateToptenController">
+<section data-ng-controller="CreateToptenController as ctrl">
     <div class="page-header">
         <h1>
-            List creation - {{stepConfig.stepHeaders[stepConfig.currentStep - 1].text}}
+            List creation - {{ctrl.stepConfig.stepHeaders[ctrl.stepConfig.currentStep - 1].text}}
             <a class="float-right hover-data-bottom" hover-data="cancel" href="/#!/toptens"><i class="fa fa-close"></i></a>
         </h1>
     </div>
     <div class="col-lg-12 col-md-12 col-sm-12">
         <form class="form-horizontal" name="toptenForm" novalidate>
             <fieldset>
-                <div steps step-config="stepConfig">
+                <div steps step-config="ctrl.stepConfig">
                     <div one-step>
                         <div class="form-group">
                             <label for="name" class="col-lg-3 col-md-3 col-sm-3 control-label">Name</label>
                             <div class="col-lg-6 col-md-6 col-sm-6">
-                                <input type="text" id="name" class="form-control" ng-model="topten.name" />
+                                <input type="text" id="name" class="form-control" ng-model="ctrl.topten.name" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="description" class="col-lg-3 col-md-3 col-sm-3 control-label">Description</label>
                             <div class="col-lg-6 col-md-6 col-sm-6">
-                                <input type="text" id="description" class="form-control" ng-model="topten.description" />
+                                <input type="text" id="description" class="form-control" ng-model="ctrl.topten.description" />
                             </div>
                         </div>
                         <div class="form-group" ng-if="isCreate">
                             <label for="type" class="col-lg-3 col-md-3 col-sm-3 control-label">Type</label>
                             <div class="col-lg-6 col-md-6 col-sm-6">
-                                <select class="form-control" ng-model="topten.type"
-                                        ng-options="option.name as option.name for option in commonArrays.itemTypes">
+                                <select class="form-control" ng-model="ctrl.topten.type"
+                                        ng-options="option.name as option.name for option in ctrl.commonArrays.itemTypes">
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="isFavourite" class="col-lg-3 col-md-3 col-sm-3 control-label">Is favourite?</label>
                             <div class="col-lg-6 col-md-6 col-sm-6">
-                                <input type="checkbox" id="isFavourite" class="phantom-control font-20" ng-model="topten.isFavourite" />
+                                <input type="checkbox" id="isFavourite" class="phantom-control font-20" ng-model="ctrl.topten.isFavourite" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="isRanked" class="col-lg-3 col-md-3 col-sm-3 control-label">Is ranked?</label>
                             <div class="col-lg-6 col-md-6 col-sm-6">
-                                <input type="checkbox" id="isRanked" class="phantom-control font-20" ng-model="topten.isRanked" />
+                                <input type="checkbox" id="isRanked" class="phantom-control font-20" ng-model="ctrl.topten.isRanked" />
                             </div>
                         </div>
                     </div>
@@ -47,25 +47,25 @@
                         <div class="form-group">
                             <label for="limit" class="col-lg-3 col-md-3 col-sm-3 control-label">Limit</label>
                             <div class="col-lg-6 col-md-6 col-sm-6">
-                                <input type="number" id="limit" class="form-control" ng-min="{{stepConfig.limitMin}}" ng-model="topten.conditions.limit" />
+                                <input type="number" id="limit" class="form-control" ng-min="{{ctrl.stepConfig.limitMin}}" ng-model="ctrl.topten.conditions.limit" />
                             </div>
                         </div>
                         <div tab-container class="width-100 height-90">
-                          <div tab-view heading="series" disabled="topten.type !== 'character'" class="height-75">
+                          <div tab-view heading="series" disabled="ctrl.topten.type !== 'character'" class="height-75">
                             <div class="form-group">
                                 <label for="series" class="col-lg-3 col-md-3 col-sm-3 control-label">Restrict by series</label>
                                 <div class="col-lg-6 col-md-6 col-sm-6">
-                                    <input type="text" id="series" class="form-control" ng-model="stepConfig.listGen.seriesLimit"
-                                           uib-typeahead="item as item.name for item in stepConfig.listGen.series | filter: { name: $viewValue } | limitTo: 5"
-                                           typeahead-on-select="pushCondition('series', stepConfig.listGen.seriesLimit)"/>
+                                    <input type="text" id="series" class="form-control" ng-model="ctrl.stepConfig.listGen.seriesLimit"
+                                           uib-typeahead="item as item.name for item in ctrl.stepConfig.listGen.series | filter: { name: $viewValue } | limitTo: 5"
+                                           typeahead-on-select="ctrl.pushCondition('series', ctrl.stepConfig.listGen.seriesLimit)"/>
                                 </div>
                             </div>
                             <div class="height-75">
                                 <label for="series-list" class="col-lg-3 col-md-3 col-sm-3 control-label">Series</label>
                                 <div class="col-lg-6 col-md-6 col-sm-6 height-95 overflow-auto-hover">
-                                    <div ng-repeat="item in topten.conditions.series track by item._id">
+                                    <div ng-repeat="item in ctrl.topten.conditions.series track by item._id">
                                         <span>{{item.name}}</span>
-                                        <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="removeCondition('series', item)">
+                                        <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="ctrl.removeCondition('series', item)">
                                             <i class="fa fa-trash-o"></i>
                                         </a>
                                     </div>
@@ -76,37 +76,37 @@
                             <div class="form-group">
                                 <label for="tag" class="col-lg-3 col-md-3 col-sm-3 control-label">Restrict by tag</label>
                                 <div class="col-lg-6 col-md-6 col-sm-6">
-                                    <input type="text" id="tag" class="form-control" ng-model="stepConfig.listGen.tagLimit"
-                                           uib-typeahead="item as item.tag for item in stepConfig.listGen.tags | filter: { tag: $viewValue } | limitTo: 5"
-                                           typeahead-on-select="pushCondition('tag', stepConfig.listGen.tagLimit)"/>
+                                    <input type="text" id="tag" class="form-control" ng-model="ctrl.stepConfig.listGen.tagLimit"
+                                           uib-typeahead="item as item.tag for item in ctrl.stepConfig.listGen.tags | filter: { tag: $viewValue } | limitTo: 5"
+                                           typeahead-on-select="ctrl.pushCondition('tag', ctrl.stepConfig.listGen.tagLimit)"/>
                                 </div>
                             </div>
                             <div class="height-75">
                                 <label for="tag-list" class="col-lg-3 col-md-3 col-sm-3 control-label">Tags</label>
                                 <div class="col-lg-6 col-md-6 col-sm-6 height-95 overflow-auto-hover">
-                                    <div ng-repeat="item in topten.conditions.tags track by item.tag">
+                                    <div ng-repeat="item in ctrl.topten.conditions.tags track by item.tag">
                                         <span>{{item.tag}}</span>
-                                        <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="removeCondition('tag', item)">
+                                        <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="ctrl.removeCondition('tag', item)">
                                             <i class="fa fa-trash-o"></i>
                                         </a>
                                     </div>
                                 </div>
                             </div>
                           </div>
-                          <div tab-view heading="date" disabled="topten.type === 'manga'" class="height-75">
+                          <div tab-view heading="date" disabled="ctrl.topten.type === 'manga'" class="height-75">
                             <div class="form-group margin-top-25">
                                 <label for="season" class="col-lg-2 col-md-2 col-sm-2 control-label">Restrict by release</label>
                                 <div class="col-lg-6 col-md-6 col-sm-6">
-                                    <select class="form-control" ng-options="option.text as option.text for option in commonArrays.seasons" ng-model="topten.conditions.season" id="season" name="season">
+                                    <select class="form-control" ng-options="option.text as option.text for option in ctrl.commonArrays.seasons" ng-model="ctrl.topten.conditions.season" id="season" name="season">
                                         <option value="">No Season</option>
                                     </select>
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-4">
-                                    <select class="form-control" ng-options="option.year as option.year for option in years" ng-model="topten.conditions.year" id="year" name="year">
+                                    <select class="form-control" ng-options="option.year as option.year for option in ctrl.years" ng-model="ctrl.topten.conditions.year" id="year" name="year">
                                         <option value="">No Year</option>
                                     </select>
                                 </div>
-                                <div class="col-lg-12 col-md-12 col-sm-12" ng-if="topten.type === 'character'">
+                                <div class="col-lg-12 col-md-12 col-sm-12" ng-if="ctrl.topten.type === 'character'">
                                   <p class="padding-10 margin-10">* Character choice will be restricted to characters whose linked anime aired during the applied filter.</p>
                                 </div>
                             </div>
@@ -115,43 +115,43 @@
                     </div>
                     <div one-step>
                         <div class="form-group">
-                            <label for="list-item" class="col-lg-3 col-md-3 col-sm-3 control-label">Select {{topten.type}}</label>
+                            <label for="list-item" class="col-lg-3 col-md-3 col-sm-3 control-label">Select {{ctrl.topten.type}}</label>
                             <div class="col-lg-6 col-md-6 col-sm-6">
-                                <input type="text" id="list" class="form-control" ng-model="stepConfig.listGen.toptenItem"
-                                       uib-typeahead="item as item[stepConfig.listGen.typeDisplay] for item in stepConfig.listGen.items | toptenFilter:stepConfig.listGen.typeDisplay:$viewValue | limitTo: 10"
-                                       typeahead-on-select="pushItem(stepConfig.listGen.toptenItem)">
+                                <input type="text" id="list" class="form-control" ng-model="ctrl.stepConfig.listGen.toptenItem"
+                                       uib-typeahead="item as item[ctrl.stepConfig.listGen.typeDisplay] for item in ctrl.stepConfig.listGen.items | toptenFilter:ctrl.stepConfig.listGen.typeDisplay:$viewValue | limitTo: 10"
+                                       typeahead-on-select="ctrl.pushItem(ctrl.stepConfig.listGen.toptenItem)">
                             </div>
                         </div>
                         <div class="height-90">
                           <div class="col-lg-3 col-md-3 col-sm-3 height-90">
                             <label for="list" class="control-label">List</label>
                             <div class="height-90 overflow-auto-hover">
-                              <p ng-if="topten.conditions.limit !== null" class="bold">Limit:
-                                <span>{{topten.conditions.limit}}</span>
+                              <p ng-if="ctrl.topten.conditions.limit !== null" class="bold">Limit:
+                                <span>{{ctrl.topten.conditions.limit}}</span>
                               </p>
-                              <p ng-if="topten.conditions.series.length > 0" class="bold">Series:
-                                <p ng-repeat="item in topten.conditions.series">{{item.name}}</p>
+                              <p ng-if="ctrl.topten.conditions.series.length > 0" class="bold">Series:
+                                <p ng-repeat="item in ctrl.topten.conditions.series">{{item.name}}</p>
                               </p>
-                              <p ng-if="topten.conditions.tags.length > 0" class="bold">Tags:
-                                <p ng-repeat="item in topten.conditions.tags">{{item.tag}}</p>
+                              <p ng-if="ctrl.topten.conditions.tags.length > 0" class="bold">Tags:
+                                <p ng-repeat="item in ctrl.topten.conditions.tags">{{item.tag}}</p>
                               </p>
-                              <p ng-if="topten.conditions.season" class="bold">Season:
-                                <p ng-bind="topten.conditions.season"></p>
+                              <p ng-if="ctrl.topten.conditions.season" class="bold">Season:
+                                <p ng-bind="ctrl.topten.conditions.season"></p>
                               </p>
-                              <p ng-if="topten.conditions.year" class="bold">Year:
-                                <p ng-bind="topten.conditions.year"></p>
+                              <p ng-if="ctrl.topten.conditions.year" class="bold">Year:
+                                <p ng-bind="ctrl.topten.conditions.year"></p>
                               </p>
                             </div>
                           </div>
                           <div class="col-lg-6 col-md-6 col-sm-6 height-90 overflow-auto-hover">
-                              <div ng-repeat="item in stepConfig.listGen.displayList track by item._id" class="relative width-100"
-                                   ng-click="swappingItems($index)" ng-class="{ selected: $index === stepConfig.swapping.one }">
-                                  <i class="fa fa-trophy trophy-{{$index + 1}}" ng-if="topten.isRanked"></i>
+                              <div ng-repeat="item in ctrl.stepConfig.listGen.displayList track by item._id" class="relative width-100"
+                                   ng-click="ctrl.swappingItems($index)" ng-class="{ selected: $index === ctrl.stepConfig.swapping.one }">
+                                  <i class="fa fa-trophy trophy-{{$index + 1}}" ng-if="ctrl.topten.isRanked"></i>
                                   <div class="display-inline-block" ng-style="{ 'height' : imgSize.height, 'width' : imgSize.width }">
                                       <img ng-src="{{item.image}}" style="height: 100%" />
                                   </div>
-                                  <span>{{item[stepConfig.listGen.typeDisplay]}}</span>
-                                  <a class="absolute position-right bin-style clickable" aria-hidden="true" ng-click="removeItem(item)">
+                                  <span>{{item[ctrl.stepConfig.listGen.typeDisplay]}}</span>
+                                  <a class="absolute position-right bin-style clickable" aria-hidden="true" ng-click="ctrl.removeItem(item)">
                                       <i class="fa fa-trash-o"></i>
                                   </a>
                               </div>
@@ -161,13 +161,13 @@
                 </div>
                 <div step-controls>
                     <button class="btn btn-primary width-50"
-                            ng-click="cancel()" ng-show="stepConfig.currentStep === 1">CANCEL</button>
+                            ng-click="ctrl.cancel()" ng-show="ctrl.stepConfig.currentStep === 1">CANCEL</button>
                     <button class="btn btn-primary width-50"
-                            ng-click="takeStep(stepConfig.currentStep, false)" ng-show="stepConfig.currentStep !== 1">BACK</button>
+                            ng-click="ctrl.takeStep(ctrl.stepConfig.currentStep, false)" ng-show="ctrl.stepConfig.currentStep !== 1">BACK</button>
                     <button class="btn btn-primary width-50"
-                            ng-click="takeStep(stepConfig.currentStep, true)" ng-show="stepConfig.currentStep !== stepConfig.stepCount">NEXT</button>
+                            ng-click="ctrl.takeStep(ctrl.stepConfig.currentStep, true)" ng-show="ctrl.stepConfig.currentStep !== ctrl.stepConfig.stepCount">NEXT</button>
                     <button class="btn btn-primary width-50"
-                            ng-click="(isCreate) ? create() : update()" ng-show="stepConfig.currentStep === stepConfig.stepCount"
+                            ng-click="(ctrl.isCreate) ? ctrl.create() : ctrl.update()" ng-show="ctrl.stepConfig.currentStep === ctrl.stepConfig.stepCount"
                             ng-disabled="toptenForm.$invalid">SAVE</button>
                 </div>
             </fieldset>

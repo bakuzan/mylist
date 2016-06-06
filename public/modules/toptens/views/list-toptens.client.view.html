@@ -1,16 +1,16 @@
-<section data-ng-controller="ToptensController" data-ng-init="find()" data-ng-show="authentication.user">
+<section data-ng-controller="ToptensController as ctrl" data-ng-init="ctrl.find()" data-ng-show="ctrl.authentication.user">
     <div class="fixed-header">
         <h1>Topten lists <button class="btn btn-primary show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</button></h1>
     </div>
     <div class="container">
         <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }">
-            <div list-filters filter-config="filterConfig" items="toptens" page="whichController"></div>
+            <div list-filters filter-config="ctrl.filterConfig" items="ctrl.toptens" page="ctrl.whichController"></div>
         </div>
         <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
         <div class="col-lg-8 col-md-6 col-sm-6 item-list-container" loading-spinner name="topten" size="fullscreen">
-            <div page-controls page-config="pageConfig" showing-count="filterConfig.showingCount"></div>
+            <div page-controls page-config="ctrl.pageConfig" showing-count="ctrl.filterConfig.showingCount"></div>
             <div class="list-group col-lg-12 col-md-12 col-sm-12">
-                <div data-ng-repeat="item in toptens | orderBy: filterConfig.sortType:filterConfig.sortReverse | filter: filterConfig.search | startFrom: pageConfig.currentPage*pageConfig.pageSize | limitTo: pageConfig.pageSize" class="list-group-item col-lg-12 col-md-12 col-sm-12">
+                <div data-ng-repeat="item in ctrl.toptens | orderBy: ctrl.filterConfig.sortType:ctrl.filterConfig.sortReverse | filter: ctrl.filterConfig.search | startFrom: ctrl.pageConfig.currentPage*ctrl.pageConfig.pageSize | limitTo: ctrl.pageConfig.pageSize" class="list-group-item col-lg-12 col-md-12 col-sm-12">
                     <div class="view-item-top">
                         <h4 class="list-group-item-heading clickable display-inline-block" ng-click="(viewItem === item) ? viewItem='' : viewItem=item" data-ng-bind="item.name"></h4>
                         <span class="item-icons" ng-if="::item.isRanked"><i class="fa fa-trophy trophy-5"></i></span>
@@ -20,7 +20,7 @@
                         </p>
                     </div>
                     <div class="view-item-detail" ng-show="viewItem === item">
-                        <div class="item-actions" data-ng-show="((authentication.user) && (authentication.user._id == item.user._id))">
+                        <div class="item-actions" data-ng-show="((ctrl.authentication.user) && (ctrl.authentication.user._id == item.user._id))">
                             <a class="btn btn-accent" href="/#!/toptens/{{item._id}}">
                                 <i class="fa fa-eye"></i>
                             </a>

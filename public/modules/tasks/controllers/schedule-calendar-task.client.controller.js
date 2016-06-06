@@ -1,19 +1,29 @@
-'use strict';
+(function() {
+	'use strict';
+	angular.module('tasks').controller('ScheduleCalendarTaskController', ScheduleCalendarTaskController);
+	ScheduleCalendarTaskController.$inject = ['$scope', '$uibModalInstance', 'moment', 'data', 'ListService', 'TaskFactory'];
 
-// Tasks controller
-angular.module('tasks').controller('ScheduleCalendarTaskController', ['$scope', '$uibModalInstance', 'moment', 'data', 'ListService', 'TaskFactory',
-	function($scope, $uibModalInstance, moment, data, ListService, TaskFactory) {
-    var ctrl = this, refresh = false;
-		ctrl.today = new Date();
+	function ScheduleCalendarTaskController($scope, $uibModalInstance, moment, data, ListService, TaskFactory) {
+    var ctrl = this,
+				refresh = false,
+				timeDiff = Math.abs(new Date(data.date).getTime() - new Date().getTime());
+
+		ctrl.cancel = cancel;
     ctrl.date = new Date(data.date);
-		var timeDiff = Math.abs(ctrl.date.getTime() - ctrl.today.getTime());
-		ctrl.daysFromToday = Math.ceil(timeDiff / (1000 * 3600 * 24));
 		ctrl.day = ctrl.date.getDay() > 0 ? ctrl.date.getDay() - 1 : 6;
 		ctrl.days = data.days;
+		ctrl.daysFromToday = Math.ceil(timeDiff / (1000 * 3600 * 24));
     ctrl.events = [];
+		ctrl.init = init;
+		ctrl.insertChecklistItem = insertChecklistItem;
+		ctrl.removeTask = removeTask;
+		ctrl.tickOff = tickOff;
+		ctrl.tickOffChecklist = tickOffChecklist;
+		ctrl.today = new Date();
+		ctrl.updateTask = updateTask;
 		console.log('data: ', data, 'days: ', ctrl.days, ctrl.day, ctrl.date);
 
-		ctrl.init = function() {
+		function init() {
 			var weekEnds = new Date(ListService.weekEndingForDate(ctrl.date));
 			angular.forEach(data.events, function(event) {
 				if(new Date(event.date) < weekEnds && ((event.day.substring(0, 3) === ctrl.days[ctrl.day].text) || (event.day === 'Any'))) {
@@ -38,37 +48,37 @@ angular.module('tasks').controller('ScheduleCalendarTaskController', ['$scope', 
 				return aDate < bDate ? 1 :
 							 aDate > bDate ? -1 : 0;
 			});
-		};
+		}
 		ctrl.init();
 
-		ctrl.removeTask = function(task) {
+		function removeTask(task) {
 			TaskFactory.removeTask(task, ctrl.events, true);
-		};
+		}
 		//Update task.
-		ctrl.updateTask = function(task) {
+		function updateTask(task) {
 				TaskFactory.updateTask(task);
-		};
+		}
     //Add new checklist item.
-    ctrl.insertChecklistItem = function (task, newChecklistItem) {
+    function insertChecklistItem(task, newChecklistItem) {
         TaskFactory.insertChecklistItem(task, newChecklistItem);
-    };
+    }
 		//Tick off a task.
-		ctrl.tickOff = function(task) {
+		function tickOff(task) {
 		    TaskFactory.tickOff(task).then(function(result) {
 					// console.log('update task res - tickOff: ', result);
 					refresh = result.refresh;
 				});
-		};
+		}
     //Tick of a checklist item.
-    ctrl.tickOffChecklist = function(task, index) {
+    function tickOffChecklist(task, index) {
         TaskFactory.tickOffChecklist(task, index).then(function(result) {
 					// console.log('update task res - tickOffChecklist: ', result);
 					refresh = result.refresh;
 				});
-    };
+    }
 
-    ctrl.cancel = function () {
+    function cancel() {
       $uibModalInstance.close(refresh);
-    };
-
-	}]);
+    }
+	}
+})();

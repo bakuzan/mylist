@@ -67,7 +67,7 @@ angular.module('tasks').factory('Tasks', ['$resource',
 						task.$update(function() {
 							NotificationFactory.success('Saved!', 'Task was successfully updated!');
 						  //Refresh items if the callee wasn't checkStatus.
-						  //console.log('update + refresh items');
+						  console.log('update, refresh items ? ', refresh);
 						  resolve({ refresh: refresh });
 						}, function(errorResponse) {
 							var errorMessage = errorResponse.data.message;
@@ -114,8 +114,7 @@ angular.module('tasks').factory('Tasks', ['$resource',
 		          	return { item: angular.copy(task), itemOriginal: task };
 							}
 						}
-					});
-					modalInstance.result.then(function(result) {
+					}).result.then(function(result) {
 						task = result;
 						if(checklistIndex === undefined) {
 							task.completeTimes += 1;
@@ -151,16 +150,15 @@ angular.module('tasks').factory('Tasks', ['$resource',
 				            obj.updateAnimeitem(task);
 				        } else if (task.link.type === 'manga') {
 									  task.complete = false;
-				            launchMangaUpdateDialog(task).then(function(result) {
-											//console.log('update task resolve: ', result);
-											return result;
+				            launchMangaUpdateDialog(task).then(function (result) {
+											console.log('manga update diaog result: ', result);
+											resolve(result);
 										});
-										return;
 				        }
 				    }
 				    //console.log('tickoff: ', task);
 				    obj.updateTask(task, isLinked).then(function(result) {
-							//console.log('update task resolve: ', result);
+							console.log('update task resolve: ', result);
 							resolve(result);
 						});
 					});
@@ -173,11 +171,10 @@ angular.module('tasks').factory('Tasks', ['$resource',
 						var isLinked = task.link.linked;
 						if (isLinked && task.link.type === 'manga') {
 								task.checklistItems[index].complete = false;
-								launchMangaUpdateDialog(task, index).then(function(result) {
-									//console.log('update task resolve: ', result);
-									return result;
+								launchMangaUpdateDialog(task, index).then(function (result) {
+									console.log('manga update diaog result: ', result);
+									resolve(result);
 								});
-								return;
 						}
 
 						if(ListService.findWithAttr(task.checklistItems, 'complete', false) === -1) {

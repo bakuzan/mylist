@@ -1,5 +1,5 @@
-<div ng-class="(isFullscreen) ? 'slider-full-screen' : ''">
-    <ul class="slider" ng-mouseenter="sliderController.enter()" ng-mouseleave="sliderControllerleave()" >
+<div ng-class="(sliderController.isFullscreen) ? 'slider-full-screen' : ''">
+    <ul class="slider" ng-mouseenter="sliderController.enter()" ng-mouseleave="sliderController.leave()" >
         <li class="slide"
             ng-repeat="slide in (filteredSlides =  (sliderController.slides | filter: sliderController.filterConfig.search | mediaFilter: sliderController.filterConfig.media | seriesFilter:sliderController.filterConfig.seriesFilter | tagFilter: sliderController.filterConfig.searchTags:sliderController.filterConfig.taglessItem))"
             ng-show="slide.visible"
@@ -18,7 +18,7 @@
         </a>
     </ul>
     <ul class="slider-indicators">
-        <li ng-repeat="slide in sliderController.slides | filter: sliderController.filterConfig.search | mediaFilter: sliderController.filterConfig.media | seriesFilter:sliderController.filterConfig.seriesFilter | tagFilter: sliderController.filterConfig.searchTags:sliderController.filterConfig.taglessItem" 
+        <li ng-repeat="slide in sliderController.slides | filter: sliderController.filterConfig.search | mediaFilter: sliderController.filterConfig.media | seriesFilter:sliderController.filterConfig.seriesFilter | tagFilter: sliderController.filterConfig.searchTags:sliderController.filterConfig.taglessItem"
             ng-click="sliderController.goToSlide($index)"
             class="indicator"
             ng-class="{ 'active' : slide.visible, 'locked' : slide.locked }">

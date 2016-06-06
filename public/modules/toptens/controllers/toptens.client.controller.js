@@ -77,7 +77,7 @@
 			var modalInstance = $uibModal.open({
 				animation: true,
       	templateUrl: '/modules/toptens/views/statistics-topten.client.view.html',
-      	controller: 'statisticsTopten as ctrl',
+      	controller: 'StatisticsTopten as ctrl',
       	size: 'lg',
       	resolve: {
         	list: function () {

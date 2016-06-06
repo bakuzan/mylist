@@ -1,9 +1,9 @@
 (function() {
   'use strict';
-  angular.module('toptens').controller('statisticsTopten', statisticsTopten);
-  statisticsTopten.$inject = ['$scope','$uibModalInstance','list', 'CharacterService'];
+  angular.module('toptens').controller('StatisticsTopten', StatisticsTopten);
+  StatisticsTopten.$inject = ['$scope','$uibModalInstance','list', 'CharacterService'];
 
-   function statisticsTopten($scope, $uibModalInstance, list, CharacterService) {
+   function StatisticsTopten($scope, $uibModalInstance, list, CharacterService) {
      var ctrl = this;
 
      ctrl.cancel = cancel;

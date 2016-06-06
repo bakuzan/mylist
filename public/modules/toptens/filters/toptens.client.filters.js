@@ -1,7 +1,9 @@
-'use strict';
+(function() {
+  'use strict';
+  angular.module('toptens')
+  .filter('toptenFilter', toptenFilter);
 
-angular.module('toptens')
-.filter('toptenFilter', function() {
+  function toptenFilter() {
     return function(array, displayType, value) {
         if(array !== undefined) {
             return array.filter(function(item) {
@@ -11,4 +13,5 @@ angular.module('toptens')
             });
         }
     };
-});
+  }
+})();

@@ -25,9 +25,9 @@
     <div class="relative col-lg-12 col-md-12 col-sm-12">
         <div horizontal-list>
             <div horizontal-list-item ng-repeat="item in ctrl.topten[ctrl.topten.type + 'List'] track by item._id">
-                <a href="/#!/{{ctrl.topten.type}}{{viewConfig.linkSuffix}}/{{item._id}}">
+                <a href="/#!/{{ctrl.topten.type}}{{ctrl.viewConfig.linkSuffix}}/{{item._id}}">
 										<i class="fa fa-trophy trophy-{{::$index + 1}}" ng-if="::ctrl.topten.isRanked"></i>
-                    <h4 class="display-inline-block margin-0" ng-bind="item[viewConfig.displayType]"></h4>
+                    <h4 class="display-inline-block margin-0" ng-bind="item[ctrl.viewConfig.displayType]"></h4>
                 </a>
                 <div class="height-90">
                     <img ng-src="{{item.image}}" class="height-100">

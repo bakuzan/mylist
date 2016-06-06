@@ -8,6 +8,7 @@
 		var ctrl = this;
 
 		ctrl.authentication = Authentication;
+		ctrl.changeTheme = changeTheme;
 		ctrl.isActive = isActive;
 		ctrl.isCollapsed = false;
 		ctrl.isTimedTheme = localStorage.getItem('timedTheme');

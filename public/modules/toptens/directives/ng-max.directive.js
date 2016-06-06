@@ -8,18 +8,16 @@
           restrict: 'A',
           require: 'ngModel',
           link: function(scope, elem, attr, ctrl) {
-            var isEmpty = isEmpty,
-                maxValidator = maxValidator;
 
               scope.$watch(attr.ngMax, function(){
                   if (ctrl.$isDirty) ctrl.$setViewValue(ctrl.$viewValue);
               });
 
-              function isEmpty(value) {
+              var isEmpty = function(value) {
                  return angular.isUndefined(value) || value === '' || value === null;
-              }
+              };
 
-              function maxValidator(value) {
+              var maxValidator = function(value) {
                 var max = scope.$eval(attr.ngMax) || Infinity;
                 if (!isEmpty(value) && value > max) {
                   ctrl.$setValidity('ngMax', false);
@@ -28,7 +26,7 @@
                   ctrl.$setValidity('ngMax', true);
                   return value;
                 }
-              }
+              };
 
               ctrl.$parsers.push(maxValidator);
               ctrl.$formatters.push(maxValidator);

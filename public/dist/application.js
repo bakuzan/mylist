@@ -2134,60 +2134,47 @@ angular.module('characters').factory('Characters', ['$resource',
 
 }]);
 
-'use strict';
 
-// Setting up route
-angular.module('core').config(['$stateProvider', '$urlRouterProvider',
-	function($stateProvider, $urlRouterProvider) {
-		// Redirect to home view when route not found
-		$urlRouterProvider.otherwise('/signin');
+(function() {
+	'use strict';
+	angular.module('core').controller('HeaderController', HeaderController);
+	HeaderController.$inject = ['$scope', 'Authentication', 'Menus', '$location'];
 
-		// Home state routing
-//		$stateProvider
-//        .state('home', {
-//			url: '/',
-//			templateUrl: 'modules/core/views/home.client.view.html'
-//		});
-	}
-]);
-'use strict';
-
-angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus', '$location',
-	function($scope, Authentication, Menus, $location) {
+	function HeaderController($scope, Authentication, Menus, $location) {
 		var ctrl = this;
+
 		ctrl.authentication = Authentication;
-
+		ctrl.changeTheme = changeTheme;
+		ctrl.isActive = isActive;
 		ctrl.isCollapsed = false;
+		ctrl.isTimedTheme = localStorage.getItem('timedTheme');
 		ctrl.menu = Menus.getMenu('topbar');
+		ctrl.saved = localStorage.getItem('theme');
+		ctrl.styles = [
+        { name: 'Day', url: 'dist/main-day.min.css' },
+        { name: 'Night', url: 'dist/main-night.min.css' }
+    ];
+		ctrl.theme = (localStorage.getItem('theme')!==null) ? JSON.parse(ctrl.saved) : 'dist/main-night.min.css';
+		ctrl.timedTheme = (localStorage.getItem('timedTheme')!==null) ? JSON.parse(ctrl.isTimedTheme) : false;
+		ctrl.toggleCollapsibleMenu = toggleCollapsibleMenu;
 
-		ctrl.toggleCollapsibleMenu = function() {
+		localStorage.setItem('theme', JSON.stringify(ctrl.theme));
+  	localStorage.setItem('timedTheme', JSON.stringify(ctrl.timedTheme));
+
+		function toggleCollapsibleMenu() {
 			ctrl.isCollapsed = !ctrl.isCollapsed;
-		};
+		}
 
 		// Collapsing the menu after navigation
 		$scope.$on('$stateChangeSuccess', function() {
 			ctrl.isCollapsed = false;
 		});
 
-    ctrl.isActive = function (viewLocation) {
+    function isActive(viewLocation) {
         return viewLocation === $location.path();
-    };
+    }
 
-    ctrl.saved = localStorage.getItem('theme');
-    ctrl.theme = (localStorage.getItem('theme')!==null) ? JSON.parse(ctrl.saved) : 'dist/main-night.min.css';
-    localStorage.setItem('theme', JSON.stringify(ctrl.theme));
-
-    ctrl.isTimedTheme = localStorage.getItem('timedTheme');
-    ctrl.timedTheme = (localStorage.getItem('timedTheme')!==null) ? JSON.parse(ctrl.isTimedTheme) : false;
-    localStorage.setItem('timedTheme', JSON.stringify(ctrl.timedTheme));
-
-    //user-selected style options/defaults.
-    ctrl.styles = [
-        { name: 'Day', url: 'dist/main-day.min.css' },
-        { name: 'Night', url: 'dist/main-night.min.css' }
-    ];
-
-    ctrl.changeTheme = function() {
+    function changeTheme() {
         localStorage.setItem('timedTheme', JSON.stringify(ctrl.timedTheme));
         var timeOfDayTheme = localStorage.getItem('timedTheme');
         if (timeOfDayTheme === 'false') {
@@ -2204,282 +2191,11 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
         link = document.getElementById('app-theme');
         link.href = storedValue.substr(1, storedValue.lastIndexOf('\"') - 1); //remove quotes for whatever reason.
         ctrl.theme = storedValue.substr(1, storedValue.lastIndexOf('\"') - 1); //remove quotes for whatever reason. //set the dropdown to the correct value;
-    };
+    }
 
 	}
-]);
+})();
 
-'use strict';
-
-
-angular.module('core').controller('HomeController', ['$scope', '$rootScope', 'Authentication', '$window', '$location', 'Animeitems', 'Mangaitems', '$filter', 'NotificationFactory',
-	function($scope, $rootScope, Authentication, $window, $location, Animeitems, Mangaitems, $filter, NotificationFactory) {
-		// This provides Authentication context.
-		$scope.authentication = Authentication;
-        
-        //forces page to scroll top on load.
-        $rootScope.$on('$viewContentLoaded', function(){ window.scrollTo(0, 0); });
-        
-        // If user is not signed in then redirect back to signin.
-		if (!$scope.authentication.user) $location.path('/signin');
-    
-    $scope.isAddTask = false;
-    $scope.today = new Date();
-    $scope.datesSelected = 'current';
-    $scope.saved = localStorage.getItem('taskItems');
-    $scope.taskItem = (localStorage.getItem('taskItems')!==null) ? 
-    JSON.parse($scope.saved) : [ {description: 'Why not add a task?', date: $scope.today.toISOString().substring(0,10), complete: false}];
-    localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
-    
-    $scope.newTask = null;
-    $scope.newTaskDate = null;
-    $scope.categories = [
-        {name: 'Watch'},
-        {name: 'Read'},
-        {name: 'Play'},
-        {name: 'Other'}
-    ];
-    $scope.newTaskCategory = $scope.categories;
-    $scope.days = [
-        {name: 'Any'},
-        {name: 'Monday'},
-        {name: 'Tuesday'},
-        {name: 'Wednesday'},
-        {name: 'Thursday'},
-        {name: 'Friday'},
-        {name: 'Saturday'},
-        {name: 'Sunday'}
-    ];
-    $scope.newTaskDay = $scope.days;
-    
-    //get monday!
-    $scope.weekBeginning = function() {
-        var day = $scope.today.getDay(),
-        diff = $scope.today.getDate() - day + (day === 0 ? -6:1); // adjust when day is sunday
-        var wkBeg = new Date();
-        return new Date(wkBeg.setDate(diff));
-    };
-        
-    //check things
-    $scope.checkStatus = function() {
-        //var day = new Date('2015-05-04').getDay();
-        var day = $scope.today.getDay();
-        //console.log(day);
-        console.log($scope.taskItem);
-        //Is it monday?
-        if (day===1) {
-            var refreshItems = $scope.taskItem;
-            $scope.taskItem = [];
-            angular.forEach(refreshItems, function (taskItem) {
-                    //has it been updated today?
-                    if(taskItem.updated===false) {
-                        //has it reached the necessary number of repeats?
-                        if(taskItem.completeTimes!==taskItem.repeat) {
-                            taskItem.complete = false;
-                            taskItem.updated = true;
-                            $scope.taskItem.push(taskItem);
-//                            console.log('updated set to true');
-                        }
-                    } else {
-                        $scope.taskItem.push(taskItem);
-//                        console.log('updated already true');
-                    }
-            });
-            localStorage.setItem('taskItems', JSON.stringify($scope.taskItem)); 
-        
-        } else {
-            var updated = $scope.taskItem;
-            $scope.taskItem = [];
-            angular.forEach(updated, function (taskItem) {
-                    taskItem.updated = false;
-                    //is it a daily task?
-                    if (taskItem.daily===true) {
-                        //has it reached the necessary number of repeats?
-                        if(taskItem.completeTimes!==taskItem.repeat) {
-                            var today = $scope.today.getDate();
-                            //has it been refreshed today?
-                            if (taskItem.dailyRefresh!==today) {
-                                taskItem.complete = false;
-                                taskItem.dailyRefresh = today;
-                                $scope.taskItem.push(taskItem);
-                            } else { 
-                                //already refreshed today.
-                                $scope.taskItem.push(taskItem);
-                            }
-                        } else {
-                            //daily task completed, keep pushing - monday will kill it.
-                            $scope.taskItem.push(taskItem);
-                        }
-                    } else {
-                        //not daily task, so push.
-                        $scope.taskItem.push(taskItem);
-                    }
-                });
-//            console.log('updated set to false');
-            localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
-        }
-    };
-    $scope.optionArray = [];
-    //for adding/removing options.
-    $scope.addOption = function () {
-            if ($scope.newOption!=='' && $scope.newOption!==undefined) {
-                var i = 0;
-                var alreadyAdded = false;
-                if ($scope.optionArray.length > 0) {
-                    while(i < $scope.optionArray.length) {
-                        if ($scope.optionArray[i].text === $scope.newOption) {
-                            alreadyAdded = true;
-                        }
-                        i++;
-                    }
-                    //if not in array add it.
-                    if (alreadyAdded === false) {
-                        $scope.optionArray.push({ text: $scope.newOption, complete: false });
-                    }
-                } else {
-                    $scope.optionArray.push({ text: $scope.newOption, complete: false });
-                }
-            }
-            $scope.newOption = '';
-    };
-    $scope.dropOption = function(text) {
-        var deletingItem = $scope.optionArray;
-        $scope.optionArray = [];
-        //update the task.
-        angular.forEach(deletingItem, function(item) {
-            if (item.text !== text) {
-                $scope.optionArray.push(item);
-            }
-        });
-    };
-        
-    $scope.addNew = function () {
-        //console.log($scope.newTaskDay.name);
-        if ($scope.newTaskDay.name === null || $scope.newTaskDay.name === '' || $scope.newTaskDay.name === undefined) {
-            $scope.newTaskDay.name = 'Any';
-        }
-        if ($scope.newTaskCategory.name === null || $scope.newTaskCategory.name === '' || $scope.newTaskCategory.name === undefined) {
-            $scope.newTaskCategory.name = 'Other';
-        }
-        if ($scope.newTaskDate === null || $scope.newTaskDate === '' || $scope.newTaskDate === undefined) {
-            $scope.newTaskDate = $scope.today.toISOString().substring(0,10); // 'yyyy-MM-dd'
-        }
-        //not allowed to be tied to a day if a daily task -- daily takes precedence.
-        if ($scope.newTaskDaily === true) {
-            $scope.newTaskDay.name = 'Any';
-        }
-        //if is a checklist, cannot be daily and only repeats once.
-        if ($scope.newTaskChecklist === true) {
-            $scope.newTaskDaily = false;
-            $scope.newTaskRepeat = 1;
-        } else {
-            $scope.optionArray = [];
-        }
-        
-        //if created on a monday set updated=true - without this task could be deleted/un-completed by the check status method.
-        var day = $scope.today.getDay(); //new Date('2015-05-04').getDay();
-        $scope.taskItem.push({
-            description: $scope.newTask,
-            day: $scope.newTaskDay.name,
-            date: $scope.newTaskDate,
-            repeat: $scope.newTaskRepeat,
-            completeTimes: 0,
-            updated: day === 1 ? true : false,
-            complete: false,
-            category: $scope.newTaskCategory.name,
-            daily: $scope.newTaskDaily,
-            dailyRefresh: $scope.today.getDate(),
-            checklist: $scope.newTaskChecklist,
-            checklistOptions: $scope.optionArray
-        });
-        $scope.newTask = '';
-        $scope.newTaskDay = $scope.days;
-        $scope.newTaskDate = '';
-        $scope.newTaskCategory = $scope.categories;
-        $scope.newTaskRepeat = '';
-        $scope.newTaskDaily = false;
-        $scope.newTaskChecklist = false;
-        $scope.optionArray = [];
-        localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
-        NotificationFactory.success('Saved!', 'Task was saved successfully');
-    };
-    $scope.deleteTask = function (description) {
-        //are you sure option...
-       NotificationFactory.confirmation(function() {
-            var deletingItem = $scope.taskItem;
-            $scope.taskItem = [];
-            //update the complete task.
-            angular.forEach(deletingItem, function (taskItem) {
-                if (taskItem.description !== description) {
-                    $scope.taskItem.push(taskItem);
-                }
-            });
-            localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
-            NotificationFactory.warning('Deleted!', 'Task was successfully deleted');
-        });
-    };
-    
-    $scope.save = function (description) {
-        //update the complete task.
-        angular.forEach($scope.taskItem, function (taskItem) {
-            if (taskItem.description === description && taskItem.complete === true) {
-                taskItem.completeTimes += 1;
-            }
-        });
-        localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
-    };
-        
-    $scope.tickOff = function(itemText, optionText) {
-        //update the option for the task.
-        angular.forEach($scope.taskItem, function (taskItem) {
-            if (taskItem.description === itemText) {
-                var i = 0;
-                var optionsCompleted = 0;
-                while(i < taskItem.checklistOptions.length) {
-                    if (taskItem.checklistOptions[i].text === optionText) {
-                        taskItem.checklistOptions[i].complete = true;
-                    }
-                    if (taskItem.checklistOptions[i].complete === true) {
-                        optionsCompleted += 1;
-                    }
-                    i++;
-                }
-                //if all options complete, complete the task.
-                if (taskItem.checklistOptions.length === optionsCompleted) {
-                    taskItem.completeTimes += 1;
-                    taskItem.complete = true;
-                }
-            }
-        });
-        localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
-    };
-    $scope.insertOption = function (description, newOption) {
-        if (newOption!=='' && newOption!==undefined) {
-            var i = 0, alreadyAdded = false;
-            //find the item and insert the option.
-            angular.forEach($scope.taskItem, function (taskItem) {
-                if (taskItem.description === description) {
-                    while(i < taskItem.checklistOptions.length) {
-                        if (taskItem.checklistOptions[i].text === newOption) {
-                            alreadyAdded = true;
-                        }
-                        i++;
-                    }
-                    //if not in array add it.
-                    if (alreadyAdded === false) {
-                        taskItem.checklistOptions.push({ text: newOption, complete: false });
-                    }
-                }
-            });
-            localStorage.setItem('taskItems', JSON.stringify($scope.taskItem));
-             if (alreadyAdded === true) {
-                 NotificationFactory.popup('Option already exists.', 'Please re-name and try again.', 'error');
-             }
-        }
-    };
-
-	}
-]);
 'use strict';
 
 angular.module('core').directive('myProgress', function() {
@@ -4940,22 +4656,202 @@ angular.module('tasks').config(['$stateProvider',
 		});
 	}
 ]);
-'use strict';
+(function() {
+  'use strict';
 
-// Tasks controller
-angular.module('tasks').controller('ScheduleCalendarTaskController', ['$scope', '$uibModalInstance', 'moment', 'data', 'ListService', 'TaskFactory',
-	function($scope, $uibModalInstance, moment, data, ListService, TaskFactory) {
-    var ctrl = this, refresh = false;
-		ctrl.today = new Date();
+  angular.module('tasks').controller('CreateTaskController', CreateTaskController);
+  CreateTaskController.$inject =  ['$scope', 'data', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory', 'spinnerService', '$uibModalInstance', 'Animeitems', 'Mangaitems'];
+
+function CreateTaskController($scope, data, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory, spinnerService, $uibModalInstance, Animeitems, Mangaitems) {
+  var ctrl = this,
+      newTaskModel = {};
+  ctrl.addChecklistItem = addChecklistItem;
+  ctrl.backStep = backStep;
+  ctrl.cancel = cancel;
+  ctrl.commonArrays = data.commonArrays;
+  ctrl.create = create;
+  ctrl.dropChecklistItem = dropChecklistItem;
+  ctrl.stepConfig = {
+      currentStep: 1,
+      stepCount: 2
+  };
+  ctrl.submit = submit;
+  ctrl.takeStep = takeStep;
+
+  function setNewTask() {
+      ctrl.newTask = {
+          description: '',
+          link: {
+              linked: false,
+              type: '',
+              anime: undefined,
+              manga: undefined
+          },
+          day: '',
+          date: new Date(),
+          repeat: 0,
+          category: '',
+          daily: false,
+          checklist: false,
+          checklistItems: [],
+          isAddTask: false
+      };
+  }
+  setNewTask();
+  angular.copy(ctrl.newTask, newTaskModel);
+
+
+  //for adding/removing options.
+  function addChecklistItem() {
+          if (ctrl.newTask.checklistItem!=='' && ctrl.newTask.checklistItem!==undefined) {
+              var i = 0;
+              var alreadyAdded = false;
+              if (ctrl.newTask.checklistItems.length > 0) {
+                  while(i < ctrl.newTask.checklistItems.length) {
+                      if (ctrl.newTask.checklistItems[i].text === ctrl.newTask.checklistItem) {
+                          alreadyAdded = true;
+                      }
+                      i++;
+                  }
+                  //if not in array add it.
+                  if (alreadyAdded === false) {
+                      ctrl.newTask.checklistItems.push({ text: ctrl.newTask.checklistItem, complete: false });
+                  }
+              } else {
+                  ctrl.newTask.checklistItems.push({ text: ctrl.newTask.checklistItem, complete: false });
+              }
+          }
+          ctrl.newTask.checklistItem = '';
+  }
+  function dropChecklistItem(text) {
+      var deletingItem = ctrl.newTask.checklistItems;
+      ctrl.newTask.checklistItems = [];
+      //update the task.
+      angular.forEach(deletingItem, function(item) {
+          if (item.text !== text) {
+              ctrl.newTask.checklistItems.push(item);
+          }
+      });
+  }
+
+  // Create new Task
+  function create() {
+//            console.log(this.newTask);
+    // Create new Task object
+    var task = new Tasks ({
+        description: ctrl.newTask.description,
+        link: {
+            linked: ctrl.newTask.link.linked,
+            type: (ctrl.newTask.link.linked === false) ? ''      :
+                  (ctrl.newTask.category === 'Watch')  ? 'anime' :
+                                                         'manga' ,
+            anime: (ctrl.newTask.link.anime === undefined) ? undefined : ctrl.newTask.link.anime._id ,
+            manga: (ctrl.newTask.link.manga === undefined) ? undefined : ctrl.newTask.link.manga._id
+        },
+        day: ctrl.newTask.daily === true ? 'Any' : ctrl.newTask.day,
+        date: ctrl.newTask.date === '' ? new Date() : ctrl.newTask.date,
+        repeat: (ctrl.newTask.link.linked === false) ? ctrl.newTask.repeat                     :
+                (ctrl.newTask.category === 'Watch')  ? ctrl.newTask.link.anime.finalEpisode    :
+                                                       1    ,
+        completeTimes: (ctrl.newTask.link.linked === false) ? 0                                     :
+                       (ctrl.newTask.category === 'Watch')  ? ctrl.newTask.link.anime.episodes      :
+                                                              0      ,
+        updateCheck: new Date().getDay() === 1 ? true : false,
+        complete: false,
+        category: ctrl.newTask.category === '' ? 'Other' : ctrl.newTask.category,
+        daily: ctrl.newTask.daily,
+        checklist: ctrl.newTask.checklist,
+        checklistItems: ctrl.newTask.checklistItems
+    });
+//			// Redirect after save
+    task.$save(function(response) {
+      $location.path('tasks');
+      NotificationFactory.success('Saved!', 'New Task was successfully saved!');
+    }, function(errorResponse) {
+      ctrl.error = errorResponse.data.message;
+      console.log(errorResponse);
+      NotificationFactory.error('Error!', 'New Task failed to save!');
+    });
+  }
+
+  function backStep(step) {
+      ctrl.stepConfig.currentStep -= 1;
+  }
+  function takeStep(step) {
+      var check = process(step);
+      if (check.valid) {
+          ctrl.stepConfig.currentStep += 1;
+      } else {
+          NotificationFactory.popup('Attention!', check.message, 'warning');
+      }
+  }
+  function submit() {
+    ctrl.create();
+    $uibModalInstance.close();
+  }
+  function cancel() {
+    $uibModalInstance.dismiss();
+  }
+
+  function process(step) {
+      switch(step) {
+          case 1:
+              if (ctrl.newTask.link.linked === true) {
+                  var category = ctrl.newTask.category;
+                  if (category === 'Watch') {
+                      ctrl.linkItems = Animeitems.query({
+                          status: 0
+                      });
+                      ctrl.linkType = 'anime';
+                      ctrl.newTask.checklistItems = [];
+                      ctrl.newTask.checklist = false;
+                  } else if (category === 'Read') {
+                      ctrl.linkItems = Mangaitems.query({
+                          status: 0
+                      });
+                      ctrl.linkType = 'manga';
+                  } else {
+                      return { valid: false, message: 'Category must be either Watch or Read for linked items!' };
+                  }
+              } else {
+                  //Ensure that stuff is cleared when not linked.
+                  ctrl.linkType = '';
+                  ctrl.newTask.link.anime = undefined;
+                  ctrl.newTask.link.manga = undefined;
+              }
+              return { valid: true };
+      }
+  }
+}
+
+})();
+
+(function() {
+	'use strict';
+	angular.module('tasks').controller('ScheduleCalendarTaskController', ScheduleCalendarTaskController);
+	ScheduleCalendarTaskController.$inject = ['$scope', '$uibModalInstance', 'moment', 'data', 'ListService', 'TaskFactory'];
+
+	function ScheduleCalendarTaskController($scope, $uibModalInstance, moment, data, ListService, TaskFactory) {
+    var ctrl = this,
+				refresh = false,
+				timeDiff = Math.abs(new Date(data.date).getTime() - new Date().getTime());
+
+		ctrl.cancel = cancel;
     ctrl.date = new Date(data.date);
-		var timeDiff = Math.abs(ctrl.date.getTime() - ctrl.today.getTime());
-		ctrl.daysFromToday = Math.ceil(timeDiff / (1000 * 3600 * 24));
 		ctrl.day = ctrl.date.getDay() > 0 ? ctrl.date.getDay() - 1 : 6;
 		ctrl.days = data.days;
+		ctrl.daysFromToday = Math.ceil(timeDiff / (1000 * 3600 * 24));
     ctrl.events = [];
+		ctrl.init = init;
+		ctrl.insertChecklistItem = insertChecklistItem;
+		ctrl.removeTask = removeTask;
+		ctrl.tickOff = tickOff;
+		ctrl.tickOffChecklist = tickOffChecklist;
+		ctrl.today = new Date();
+		ctrl.updateTask = updateTask;
 		console.log('data: ', data, 'days: ', ctrl.days, ctrl.day, ctrl.date);
 
-		ctrl.init = function() {
+		function init() {
 			var weekEnds = new Date(ListService.weekEndingForDate(ctrl.date));
 			angular.forEach(data.events, function(event) {
 				if(new Date(event.date) < weekEnds && ((event.day.substring(0, 3) === ctrl.days[ctrl.day].text) || (event.day === 'Any'))) {
@@ -4980,59 +4876,63 @@ angular.module('tasks').controller('ScheduleCalendarTaskController', ['$scope', 
 				return aDate < bDate ? 1 :
 							 aDate > bDate ? -1 : 0;
 			});
-		};
+		}
 		ctrl.init();
 
-		ctrl.removeTask = function(task) {
+		function removeTask(task) {
 			TaskFactory.removeTask(task, ctrl.events, true);
-		};
+		}
 		//Update task.
-		ctrl.updateTask = function(task) {
+		function updateTask(task) {
 				TaskFactory.updateTask(task);
-		};
+		}
     //Add new checklist item.
-    ctrl.insertChecklistItem = function (task, newChecklistItem) {
+    function insertChecklistItem(task, newChecklistItem) {
         TaskFactory.insertChecklistItem(task, newChecklistItem);
-    };
+    }
 		//Tick off a task.
-		ctrl.tickOff = function(task) {
+		function tickOff(task) {
 		    TaskFactory.tickOff(task).then(function(result) {
 					// console.log('update task res - tickOff: ', result);
 					refresh = result.refresh;
 				});
-		};
+		}
     //Tick of a checklist item.
-    ctrl.tickOffChecklist = function(task, index) {
+    function tickOffChecklist(task, index) {
         TaskFactory.tickOffChecklist(task, index).then(function(result) {
 					// console.log('update task res - tickOffChecklist: ', result);
 					refresh = result.refresh;
 				});
-    };
+    }
 
-    ctrl.cancel = function () {
+    function cancel() {
       $uibModalInstance.close(refresh);
-    };
+    }
+	}
+})();
 
-	}]);
-
+(function() {
 'use strict';
 
-// Tasks controller
-angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory', 'spinnerService', '$uibModal', 'moment',
-	function($scope, $rootScope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory, spinnerService, $uibModal, moment) {
-		var ctrl = this;
-		$scope.authentication = Authentication;
-		$rootScope.commonArrays = ListService.getCommonArrays();
-    $scope.whichController = 'task';
-    var today = new Date(),
-        day = today.getDay();
+	// Tasks controller
+	angular.module('tasks').controller('TasksController', TasksController);
+	TasksController.$inject =  ['$scope', '$timeout', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory', 'spinnerService', '$uibModal', 'moment'];
 
-    //paging variables.
-    $scope.pageConfig = {
-        currentPage: 0,
-        pageSize: 10
-    };
-    $scope.filterConfig = {
+	function TasksController($scope, $timeout, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory, spinnerService, $uibModal, moment) {
+		var ctrl = this,
+				today = new Date(),
+				day = today.getDay();
+		ctrl.authentication = Authentication;
+		ctrl.commonArrays = ListService.getCommonArrays();
+		ctrl.createTask = createTask;
+		ctrl.dateOptions = {
+			dateDisabled: false,
+			formatYear: 'yy',
+			maxDate: new Date(2020, 5, 22),
+			minDate: new Date(),
+			startingDay: 1
+		};
+		ctrl.filterConfig = {
 			view: 'list',
       showingCount: 0,
       sortType: '',
@@ -5043,103 +4943,86 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
       },
       datesSelected: false
     };
-    ctrl.dateOptions = {
-      dateDisabled: false,
-      formatYear: 'yy',
-      maxDate: new Date(2020, 5, 22),
-      minDate: new Date(),
-      startingDay: 1
+		ctrl.insertChecklistItem = insertChecklistItem;
+    ctrl.pageConfig = {
+        currentPage: 0,
+        pageSize: 10
     };
+		ctrl.refreshItems = refreshItems;
+		ctrl.removeTask = removeTask;
+		ctrl.setTabFilterDay = setTabFilterDay;
+		ctrl.tabFilter = tabFilter;
+		ctrl.tickOff = tickOff;
+		ctrl.tickOffChecklist = tickOffChecklist;
+		ctrl.updateTask = updateTask;
+		ctrl.weekBeginning = weekBeginning;
+		ctrl.whichController = 'task';
 
-    ctrl.tabFilter = function(tabName) {
-        $scope.filterConfig.search.day = tabName;
-    };
+    function tabFilter(tabName) {
+        ctrl.filterConfig.search.day = tabName;
+    }
 
-    ctrl.weekBeginning = function() {
+    function weekBeginning() {
         return TaskFactory.getWeekBeginning();
-    };
+    }
 
-		// Create new Task
-		$scope.create = function() {
-//            console.log(this.newTask);
-                // Create new Task object
-                var task = new Tasks ({
-                    description: this.newTask.description,
-                    link: {
-                        linked: this.newTask.link.linked,
-                        type: (this.newTask.link.linked === false) ? ''      :
-                              (this.newTask.category === 'Watch')  ? 'anime' :
-                                                                     'manga' ,
-                        anime: (this.newTask.link.anime === undefined) ? undefined : this.newTask.link.anime._id ,
-                        manga: (this.newTask.link.manga === undefined) ? undefined : this.newTask.link.manga._id
-                    },
-                    day: this.newTask.daily === true ? 'Any' : this.newTask.day,
-                    date: this.newTask.date === '' ? new Date() : this.newTask.date,
-                    repeat: (this.newTask.link.linked === false) ? this.newTask.repeat                     :
-                            (this.newTask.category === 'Watch')  ? this.newTask.link.anime.finalEpisode    :
-                                                                   1    ,
-                    completeTimes: (this.newTask.link.linked === false) ? 0                                     :
-                                   (this.newTask.category === 'Watch')  ? this.newTask.link.anime.episodes      :
-                                                                          0      ,
-                    updateCheck: new Date().getDay() === 1 ? true : false,
-                    complete: false,
-                    category: this.newTask.category === '' ? 'Other' : this.newTask.category,
-                    daily: this.newTask.daily,
-                    checklist: this.newTask.checklist,
-                    checklistItems: this.newTask.checklistItems
-                });
-//			// Redirect after save
-			task.$save(function(response) {
-				$location.path('tasks');
-                NotificationFactory.success('Saved!', 'New Task was successfully saved!');
-                find();
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-        console.log(errorResponse);
-        NotificationFactory.error('Error!', 'New Task failed to save!');
-			});
-		};
+		function createTask() {
+			var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: '/modules/tasks/views/create-task.client.view.html',
+        controller: 'CreateTaskController as taskCreate',
+        size: 'lg',
+				resolve: {
+					data: function () {
+						return { commonArrays: ctrl.commonArrays };
+					}
+				}
+      }).result.then(function(result) {
+        console.log('closed create task: ', result);
+				find();
+      });
+		}
 
 		// Remove existing Task
-		ctrl.removeTask = function(task) {
-			TaskFactory.removeTask(task, $scope.tasks, true);
-		};
+		function removeTask(task) {
+			TaskFactory.removeTask(task, ctrl.tasks, true);
+		}
 		//Update task.
-		ctrl.updateTask = function(task) {
+		function updateTask(task) {
 				TaskFactory.updateTask(task);
-		};
+		}
     //Add new checklist item.
-    ctrl.insertChecklistItem = function (task, newChecklistItem) {
+    function insertChecklistItem(task, newChecklistItem) {
         TaskFactory.insertChecklistItem(task, newChecklistItem);
-    };
+    }
 		//Tick off a task.
-		ctrl.tickOff = function(task) {
+		function tickOff(task) {
 		    TaskFactory.tickOff(task).then(function(result) {
 					// console.log('update task res - tickOff: ', result);
 					if(result.refresh) find();
 				});
-		};
+		}
     //Tick of a checklist item.
-    ctrl.tickOffChecklist = function(task, index) {
+		function tickOffChecklist(task, index) {
         TaskFactory.tickOffChecklist(task, index).then(function(result) {
 					// console.log('update task res - tickOffChecklist: ', result);
 					if(result.refresh) find();
 				});
-    };
+    }
 
     //Defaults the tab filter to the current day of the week.
     function setTabFilterDay(day) {
         var index = day === 0 ? 7 : day; //Adjust for Sunday.
-        $scope.filterConfig.search.day = $scope.commonArrays.days[index].name;
-        console.log(day, $scope.filterConfig.search.day);
+        ctrl.filterConfig.search.day = ctrl.commonArrays.days[index].name;
+        console.log(day, ctrl.filterConfig.search.day);
     }
-    setTabFilterDay(day);
+    ctrl.setTabFilterDay(day);
 
     //check things
     function checkStatus() {
         if (day === 1) {
             console.log('monday', day);
-            angular.forEach($scope.tasks, function (task) {
+            angular.forEach(ctrl.tasks, function (task) {
                 //has it been updated today?
                 if(task.updateCheck === false) {
                     console.log('updating - ', task.description);
@@ -5153,7 +5036,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
                             TaskFactory.updateTask(task);
                         } else if (task.completeTimes === task.repeat) {
                             console.log('complete - delete', task.description);
-                            TaskFactory.removeTask(task, $scope.tasks);
+                            TaskFactory.removeTask(task, ctrl.tasks);
                         }
                     } else if (task.link.type === 'anime') {
                         console.log('linked');
@@ -5165,14 +5048,14 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
                             TaskFactory.updateTask(task);
                         } else if (task.link[type][parts.single] === task.link[type][parts.all]) {
                             console.log('linked complete - delete', task.description);
-                            TaskFactory.removeTask(task, $scope.tasks);
+                            TaskFactory.removeTask(task, ctrl.tasks);
                         }
                     }
                 }
             });
         } else {
             console.log('not monday', day);
-            angular.forEach($scope.tasks, function (task) {
+            angular.forEach(ctrl.tasks, function (task) {
                 var change = task.updateCheck === false ? false : true;
                 task.updateCheck = false;
                 //is it a daily task?
@@ -5191,7 +5074,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
                         }
                     } else if (task.completeTimes === task.repeat) {
                         console.log('complete - delete', task.description);
-                        TaskFactory.removeTask(task, $scope.tasks);
+                        TaskFactory.removeTask(task, ctrl.tasks);
                     }
                 } else if ((task.daily === false) && change) {
                     console.log('weekly update: ', task.description);
@@ -5204,173 +5087,59 @@ angular.module('tasks').controller('TasksController', ['$scope', '$rootScope', '
 
 		// Find a list of Tasks
 		function find(check) {
-	    spinnerService.loading('tasks', Tasks.query().$promise.then(function(result) {
-	        $scope.tasks = result;
-	        if (check === true) checkStatus();
-	    }));
+			$timeout(function () {
+		    spinnerService.loading('tasks', Tasks.query().$promise.then(function(result) {
+					console.log('found! : ', result);
+		        ctrl.tasks = result;
+		        if (check === true) checkStatus();
+		    }));
+			}, 250);
 		}
 		find(true);
 
-		ctrl.refreshItems = function() {
+		function refreshItems() {
 			find();
       NotificationFactory.warning('Refreshed!', 'Task list refreshed!');
-		};
+		}
 
 	}
-]);
 
-'use strict';
+})();
 
-// Tasks controller
-angular.module('tasks').controller('UpdateMangaTaskController', ['$scope', '$uibModalInstance', 'data',
-	function($scope, $uibModalInstance, data) {
+(function() {
+	'use strict';
+
+	angular.module('tasks').controller('UpdateMangaTaskController', UpdateMangaTaskController);
+	UpdateMangaTaskController.$inject = ['$scope', '$uibModalInstance', 'data'];
+
+	function UpdateMangaTaskController($scope, $uibModalInstance, data) {
     var ctrl = this;
+		ctrl.cancel = cancel;
     ctrl.item = data.item;
     ctrl.stepConfig = {
         currentStep: 1,
         stepCount: 1
     };
+		ctrl.submit = submit;
     console.log('update linked manga item: ', ctrl.item);
 
-    ctrl.submit = function () {
+    function submit() {
       $uibModalInstance.close(ctrl.item);
-    };
-
-    ctrl.cancel = function () {
-      $uibModalInstance.dismiss('cancel');
-    };
-	}
-]);
-
-'use strict';
-
-angular.module('tasks')
-.directive('taskCreate', ['ListService', 'NotificationFactory', 'Animeitems', 'Mangaitems', function (ListService, NotificationFactory, Animeitems, Mangaitems) {
-    return {
-        restrict: 'A',
-        replace: true,
-        templateUrl: '/modules/tasks/views/create-task.client.view.html',
-        link: function (scope, element, attrs) {
-            var newTaskModel = {};
-            function setNewTask() {
-                scope.newTask = {
-                    description: '',
-                    link: {
-                        linked: false,
-                        type: '',
-                        anime: undefined,
-                        manga: undefined
-                    },
-                    day: '',
-                    date: new Date(),
-                    repeat: 0,
-                    category: '',
-                    daily: false,
-                    checklist: false,
-                    checklistItems: [],
-                    isAddTask: false
-                };
-            }
-            setNewTask();
-            angular.copy(scope.newTask, newTaskModel);
-            scope.stepConfig = {
-                currentStep: 1,
-                stepCount: 2
-            };
-
-            //for adding/removing options.
-            scope.addChecklistItem = function () {
-                    if (scope.newTask.checklistItem!=='' && scope.newTask.checklistItem!==undefined) {
-                        var i = 0;
-                        var alreadyAdded = false;
-                        if (scope.newTask.checklistItems.length > 0) {
-                            while(i < scope.newTask.checklistItems.length) {
-                                if (scope.newTask.checklistItems[i].text === scope.newTask.checklistItem) {
-                                    alreadyAdded = true;
-                                }
-                                i++;
-                            }
-                            //if not in array add it.
-                            if (alreadyAdded === false) {
-                                scope.newTask.checklistItems.push({ text: scope.newTask.checklistItem, complete: false });
-                            }
-                        } else {
-                            scope.newTask.checklistItems.push({ text: scope.newTask.checklistItem, complete: false });
-                        }
-                    }
-                    scope.newTask.checklistItem = '';
-            };
-            scope.dropChecklistItem = function(text) {
-                var deletingItem = scope.newTask.checklistItems;
-                scope.newTask.checklistItems = [];
-                //update the task.
-                angular.forEach(deletingItem, function(item) {
-                    if (item.text !== text) {
-                        scope.newTask.checklistItems.push(item);
-                    }
-                });
-            };
-
-            scope.backStep = function(step) {
-                scope.stepConfig.currentStep -= 1;
-            };
-            scope.takeStep = function(step) {
-                var check = process(step);
-                if (check.valid) {
-                    scope.stepConfig.currentStep += 1;
-                } else {
-                    NotificationFactory.popup('Attention!', check.message, 'warning');
-                }
-            };
-            scope.cancel = function() {
-                scope.stepConfig.currentStep = 1;
-                angular.copy(newTaskModel, scope.newTask);
-                scope.scheduleForm.$setPristine();
-            };
-
-            function process(step) {
-                switch(step) {
-                    case 1:
-                        if (scope.newTask.link.linked === true) {
-                            var category = scope.newTask.category;
-                            if (category === 'Watch') {
-                                scope.linkItems = Animeitems.query({
-                                    status: 0
-                                });
-                                scope.linkType = 'anime';
-                                scope.newTask.checklistItems = [];
-                                scope.newTask.checklist = false;
-                            } else if (category === 'Read') {
-                                scope.linkItems = Mangaitems.query({
-                                    status: 0
-                                });
-                                scope.linkType = 'manga';
-                            } else {
-                                return { valid: false, message: 'Category must be either Watch or Read for linked items!' };
-                            }
-                        } else {
-                            //Ensure that stuff is cleared when not linked.
-                            scope.linkType = '';
-                            scope.newTask.link.anime = undefined;
-                            scope.newTask.link.manga = undefined;
-                        }
-                        return { valid: true };
-                }
-            }
-
-        }
-    };
-}])
-.directive('shadowModel', function() {
-  return {
-    scope: true,
-    link: function(scope, el, att) {
-      console.log('shadow: ', scope);
-      scope[att.shadow] = angular.copy(scope[att.shadow]);
     }
-  };
-})
-.directive('loseInterest', function ($document, $window) {
+
+    function cancel() {
+      $uibModalInstance.dismiss('cancel');
+    }
+	}
+
+})();
+
+(function() {
+  'use strict';
+  angular.module('tasks')
+  .directive('loseInterest', loseInterest);
+
+   function loseInterest($document, $window) {
     return {
         restrict: 'A',
         link: function (scope, element, attrs) {
@@ -5391,336 +5160,395 @@ angular.module('tasks')
             });
         }
     };
-})
-.directive('scheduleCalendar', ['$uibModal', 'moment', 'ListService', function($uibModal, moment, ListService) {
-
-  function _removeTime(date) {
-    return date.day(1).hour(12).minute(0).second(0).millisecond(0);
   }
 
-  function _buildMonth(scope, start, month) {
-       scope.weeks = [];
-       var done = false, date = moment(start), monthIndex = date.month(), count = 0;
-       while (!done) {
-         var days = _buildWeek(moment(date), month);
-         if(ListService.findWithAttr(days, 'isCurrentMonth', true) > -1) {
-           scope.weeks.push({ days: days });
-         }
-           date.add(1, 'w');
-           done = count++ > 2 && monthIndex !== date.month();
-           monthIndex = date.month();
-       }
-   }
+})();
 
-   function _buildWeek(date, month) {
-       var days = [];
-       for (var i = 0; i < 7; i++) {
-           days.push({
-               name: date.format('dd').substring(0, 1),
-               number: date.date(),
-               isCurrentMonth: date.month() === month.month(),
-               isToday: date.isSame(new Date(), 'day'),
-               date: date
-           });
-           date = moment(date);
-           date.add(1, 'd');
-       }
-       return days;
-   }
+(function() {
+  'use strict';
+  angular.module('tasks')
+  .directive('scheduleCalendar', scheduleCalendar);
+  scheduleCalendar.$inject = ['$uibModal', 'moment', 'ListService'];
 
-   function _displayEvents(events, date, days) {
-     var modalInstance = $uibModal.open({
-       animation: true,
-       templateUrl: '/modules/tasks/views/schedule-calendar-task.client.view.html',
-       controller: 'ScheduleCalendarTaskController as ctrl',
-       size: 'lg',
-       resolve: {
-         data: function () {
-           return { events: events, date: date, days: days };
-         }
-       }
-     }).result.then(function(result) {
-       console.log('closed - require refresh: ', result);
-     });
-   }
+   function scheduleCalendar($uibModal, moment, ListService) {
 
-  return {
-       restrict: 'A',
-       templateUrl: 'modules/tasks/templates/schedule-calendar.html',
-       scope: {
-         events: '='
-       },
-       link: function(scope) {
-           scope.days = [{ text: 'Mon' }, { text: 'Tue' }, { text: 'Wed' }, { text: 'Thu' }, { text: 'Fri' }, { text: 'Sat' }, { text: 'Sun' }];
-           scope.selected = moment(new Date());
-           scope.month = moment(scope.selected);
-
-           var start = moment(_removeTime(angular.copy(scope.selected)));
-           start.date(-6);
-           _removeTime(start.day(0));
-
-           _buildMonth(scope, start, scope.month);
-
-           scope.select = function(day) {
-             if(scope.selected === day.date){
-               _displayEvents(scope.events, day.date, scope.days);
-             }
-             scope.selected = day.date;
-           };
-
-           scope.next = function() {
-               var next = moment(scope.month);
-               _removeTime(next.month(next.month()+1).date(0));
-               scope.month.month(scope.month.month()+1);
-               _buildMonth(scope, next, scope.month);
-           };
-
-           scope.previous = function() {
-               var previous = moment(scope.month);
-               _removeTime(previous.month(previous.month()-1).date(0));
-               scope.month.month(scope.month.month()-1);
-               _buildMonth(scope, previous, scope.month);
-           };
-       }
-   };
-}])
-.directive('taskItemModel', function() {
-  return {
-    restrict: 'A',
-    replace: true,
-    templateUrl: 'modules/tasks/templates/task-item.html'
-  };
-})
-.directive('passClick', function() {
-  return {
-    restrict: 'A',
-    link: function(scope, element, attrs) {
-      element.bind('click', function(event) {
-        var passTo = document.getElementById(attrs.passClick);
-        passTo.focus();
-        passTo.click();
-      });
+    function _removeTime(date) {
+      return date.day(1).hour(12).minute(0).second(0).millisecond(0);
     }
-  };
-});
 
-'use strict';
+    function _buildMonth(scope, start, month) {
+         scope.weeks = [];
+         var done = false, date = moment(start), monthIndex = date.month(), count = 0;
+         while (!done) {
+           var days = _buildWeek(moment(date), month);
+           if(ListService.findWithAttr(days, 'isCurrentMonth', true) > -1) {
+             scope.weeks.push({ days: days });
+           }
+             date.add(1, 'w');
+             done = count++ > 2 && monthIndex !== date.month();
+             monthIndex = date.month();
+         }
+     }
 
-//Tasks service used to communicate Tasks REST endpoints
-angular.module('tasks').factory('Tasks', ['$resource',
-	function($resource) {
-		return $resource('tasks/:taskId', { taskId: '@_id'
-		}, {
-			update: {
-				method: 'PUT'
-			}
-		});
-	}
-])
-.factory('TaskFactory', ['$q', 'Animeitems', 'Mangaitems', 'AnimeFactory', 'MangaFactory', 'NotificationFactory', 'ListService', '$uibModal',
-	function($q, Animeitems, Mangaitems, AnimeFactory, MangaFactory, NotificationFactory, ListService, $uibModal) {
-    var obj = {};
+     function _buildWeek(date, month) {
+         var days = [];
+         for (var i = 0; i < 7; i++) {
+             days.push({
+                 name: date.format('dd').substring(0, 1),
+                 number: date.date(),
+                 isCurrentMonth: date.month() === month.month(),
+                 isToday: date.isSame(new Date(), 'day'),
+                 date: date
+             });
+             date = moment(date);
+             date.add(1, 'd');
+         }
+         return days;
+     }
 
-        obj.getWeekBeginning = function() {
-            var newDate = new Date(),
-                day = newDate.getDay(),
-                diff = newDate.getDate() - day + (day === 0 ? -6:1); // adjust when day is sunday
-            var wkBeg = new Date();
-            return new Date(wkBeg.setDate(diff));
-        };
+     function _displayEvents(events, date, days) {
+       var modalInstance = $uibModal.open({
+         animation: true,
+         templateUrl: '/modules/tasks/views/schedule-calendar-task.client.view.html',
+         controller: 'ScheduleCalendarTaskController as ctrl',
+         size: 'lg',
+         resolve: {
+           data: function () {
+             return { events: events, date: date, days: days };
+           }
+         }
+       }).result.then(function(result) {
+         console.log('closed - require refresh: ', result);
+       });
+     }
 
-        obj.updateAnimeitem = function(task) {
-            var query = Animeitems.get({
-							animeitemId: task.link.anime._id
-						});
-            query.$promise.then(function(data) {
-                //console.log(data);
-                data.episodes += 1;
-                data.latest = new Date();
-                AnimeFactory.update(data, undefined, true, undefined);
-            });
-        };
+    return {
+         restrict: 'A',
+         templateUrl: 'modules/tasks/templates/schedule-calendar.html',
+         scope: {
+           events: '='
+         },
+         link: function(scope) {
+             scope.days = [{ text: 'Mon' }, { text: 'Tue' }, { text: 'Wed' }, { text: 'Thu' }, { text: 'Fri' }, { text: 'Sat' }, { text: 'Sun' }];
+             scope.selected = moment(new Date());
+             scope.month = moment(scope.selected);
 
-        obj.updateMangaitem = function(task, chapters, volumes) {
-					return $q(function(resolve, reject) {
-            var query = Mangaitems.get({
-							mangaitemId: task.link.manga._id
-						});
-            query.$promise.then(function(data) {
-                //console.log(data);
-                data.chapters = chapters;
-                data.volumes = volumes;
-                data.latest = new Date();
-                MangaFactory.update(data, undefined, true, undefined);
-								resolve('manga updated');
-            });
-					});
-        };
+             var start = moment(_removeTime(angular.copy(scope.selected)));
+             start.date(-6);
+             _removeTime(start.day(0));
 
-				/** Task Update,Edit,Delete and other functions below here.
-				 */
+             _buildMonth(scope, start, scope.month);
 
-			 // Update existing Task
-			 obj.updateTask = function(task, refresh) {
-				 return $q(function(resolve, reject) {
-					 //console.log('update');
-					 if (task.link.anime) {
-						 task.link.anime = task.link.anime._id;
-					 } else if (task.link.manga) {
-						 task.link.manga = task.link.manga._id;
-					 }
+             scope.select = function(day) {
+               if(scope.selected === day.date){
+                 _displayEvents(scope.events, day.date, scope.days);
+               }
+               scope.selected = day.date;
+             };
 
-						task.$update(function() {
-							NotificationFactory.success('Saved!', 'Task was successfully updated!');
-						  //Refresh items if the callee wasn't checkStatus.
-						  //console.log('update + refresh items');
-						  resolve({ refresh: refresh });
-						}, function(errorResponse) {
-							var errorMessage = errorResponse.data.message;
-							reject(errorMessage);
-						  //console.log(errorResponse);
-						  NotificationFactory.error('Error!', 'Task failed to save!');
-						});
-					});
-			 };
+             scope.next = function() {
+                 var next = moment(scope.month);
+                 _removeTime(next.month(next.month()+1).date(0));
+                 scope.month.month(scope.month.month()+1);
+                 _buildMonth(scope, next, scope.month);
+             };
 
-			 //Remove a task.
-				obj.removeTask = function(task, tasks, userCheck) {
-					if(userCheck) {
-						//console.log('launch');
-						NotificationFactory.confirmation(function remove() {
-		          removeTaskProcess(task, tasks);
-						});
-					} else {
-						removeTaskProcess(task, tasks);
-					}
-				};
+             scope.previous = function() {
+                 var previous = moment(scope.month);
+                 _removeTime(previous.month(previous.month()-1).date(0));
+                 scope.month.month(scope.month.month()-1);
+                 _buildMonth(scope, previous, scope.month);
+             };
+         }
+     };
+  }
 
-				function removeTaskProcess(task, tasks) {
-					if ( task ) {
-							task.$remove();
-							for (var i in tasks) {
-									if (tasks[i] === task) {
-											tasks.splice(i, 1);
-									}
-							}
-							NotificationFactory.warning('Deleted!', 'Task was successfully deleted.');
-					}
+})();
+
+(function() {
+  'use strict';
+  angular.module('tasks')
+  .directive('shadowModel', shadowModel);
+
+   function shadowModel() {
+    return {
+      scope: true,
+      link: function(scope, el, att) {
+        console.log('shadow: ', scope);
+        scope[att.shadow] = angular.copy(scope[att.shadow]);
+      }
+    };
+  }
+
+})();
+
+(function() {
+  'use strict';
+  angular.module('tasks')
+  .directive('taskItemModel', taskItemModel);
+
+  function taskItemModel() {
+    return {
+      restrict: 'A',
+      replace: true,
+      templateUrl: 'modules/tasks/templates/task-item.html'
+    };
+  }
+
+})();
+
+(function() {
+  'use strict';
+  angular.module('tasks')
+  .directive('passClick', passClick);
+
+  function passClick() {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        element.bind('click', function(event) {
+          var passTo = document.getElementById(attrs.passClick);
+          passTo.focus();
+          passTo.click();
+        });
+      }
+    };
+  }
+
+})();
+
+(function() {
+  'use strict';
+  angular.module('tasks').factory('TaskFactory', TaskFactory);
+  TaskFactory.$inject = ['$q', 'Animeitems', 'Mangaitems', 'AnimeFactory', 'MangaFactory', 'NotificationFactory', 'ListService', '$uibModal'];
+
+    function TaskFactory($q, Animeitems, Mangaitems, AnimeFactory, MangaFactory, NotificationFactory, ListService, $uibModal) {
+      var obj = {};
+
+          obj.getWeekBeginning = function() {
+              var newDate = new Date(),
+                  day = newDate.getDay(),
+                  diff = newDate.getDate() - day + (day === 0 ? -6:1); // adjust when day is sunday
+              var wkBeg = new Date();
+              return new Date(wkBeg.setDate(diff));
+          };
+
+          obj.updateAnimeitem = function(task) {
+              var query = Animeitems.get({
+  							animeitemId: task.link.anime._id
+  						});
+              query.$promise.then(function(data) {
+                  //console.log(data);
+                  data.episodes += 1;
+                  data.latest = new Date();
+                  AnimeFactory.update(data, undefined, true, undefined);
+              });
+          };
+
+          obj.updateMangaitem = function(task, chapters, volumes) {
+  					return $q(function(resolve, reject) {
+              var query = Mangaitems.get({
+  							mangaitemId: task.link.manga._id
+  						});
+              query.$promise.then(function(data) {
+                  //console.log(data);
+                  data.chapters = chapters;
+                  data.volumes = volumes;
+                  data.latest = new Date();
+                  MangaFactory.update(data, undefined, true, undefined);
+  								resolve(data);
+              });
+  					});
+          };
+
+  				/** Task Update,Edit,Delete and other functions below here.
+  				 */
+
+  			 // Update existing Task
+  			 obj.updateTask = function(task, refresh) {
+  				 return $q(function(resolve, reject) {
+  					 //console.log('update');
+  					 if (task.link.anime) {
+  						 task.link.anime = task.link.anime._id;
+  					 } else if (task.link.manga) {
+  						 task.link.manga = task.link.manga._id;
+  					 }
+
+  						task.$update(function() {
+  							NotificationFactory.success('Saved!', 'Task was successfully updated!');
+  						  //Refresh items if the callee wasn't checkStatus.
+  						  console.log('update, refresh items ? ', refresh);
+  						  resolve({ refresh: refresh });
+  						}, function(errorResponse) {
+  							var errorMessage = errorResponse.data.message;
+  							reject(errorMessage);
+  						  //console.log(errorResponse);
+  						  NotificationFactory.error('Error!', 'Task failed to save!');
+  						});
+  					});
+  			 };
+
+  			 //Remove a task.
+  				obj.removeTask = function(task, tasks, userCheck) {
+  					if(userCheck) {
+  						//console.log('launch');
+  						NotificationFactory.confirmation(function remove() {
+  		          removeTaskProcess(task, tasks);
+  						});
+  					} else {
+  						removeTaskProcess(task, tasks);
+  					}
+  				};
+
+  				function removeTaskProcess(task, tasks) {
+  					if ( task ) {
+  							task.$remove();
+  							for (var i in tasks) {
+  									if (tasks[i] === task) {
+  											tasks.splice(i, 1);
+  									}
+  							}
+  							NotificationFactory.warning('Deleted!', 'Task was successfully deleted.');
+  					}
+  				}
+
+  				//Linked manga need special options dialog.
+  				function launchMangaUpdateDialog(task, checklistIndex) {
+  					var modalInstance = $uibModal.open({
+  						animation: true,
+  		      	templateUrl: '/modules/tasks/views/update-manga-task.client.view.html',
+  		      	controller: 'UpdateMangaTaskController as ctrl',
+  		      	size: 'lg',
+  		      	resolve: {
+  		        	data: function () {
+  		          	return { item: angular.copy(task), itemOriginal: task };
+  							}
+  						}
+  					});
+  					return modalInstance;
+  				}
+
+  				//Completes a task.
+  				obj.tickOff = function(task) {
+  					return $q(function(resolve, reject) {
+  						var isLinked = task.link.linked;
+  				    //Is it linked?
+  				    if (!isLinked) {
+  				        task.completeTimes += 1;
+  				    } else if (isLinked) {
+  				        /** Anime or manga?
+  				         *   Update the item value AND the complete/repeat values.
+  				         */
+  				        if (task.link.type === 'anime') {
+  				            task.completeTimes = task.link.anime.episodes + 1;
+  				            task.repeat = task.link.anime.finalEpisode;
+  				            obj.updateAnimeitem(task);
+  				        } else if (task.link.type === 'manga') {
+  									  task.complete = false;
+  				            var dialog = launchMangaUpdateDialog(task);
+  										dialog.result.then(function(result) {
+  											task = result;
+  											task.completeTimes += 1;
+  											task.complete = true;
+  											obj.updateMangaitem(task, task.link.manga.chapters, task.link.manga.volumes).then(function(result) {
+  												console.log('updated manga: ', result);
+  												return obj.updateTask(task, true);
+  											}).then(function(result) {
+  												console.log('update manga into update task: ', result);
+  												resolve(result);
+  											});
+  										});
+  				        }
+  				    }
+  						if(!isLinked || (isLinked && task.link.type === 'anime')) {
+  					    //console.log('tickoff: ', task);
+  					    obj.updateTask(task, isLinked).then(function(result) {
+  								console.log('update task resolve: ', result);
+  								resolve(result);
+  							});
+  						}
+  					});
+  				};
+
+  				//Completes a checklist item.
+  				obj.tickOffChecklist = function(task, index) {
+  					return $q(function(resolve, reject) {
+  						//update the option for the task.
+  						var isLinked = task.link.linked;
+  						if (isLinked && task.link.type === 'manga') {
+  								task.checklistItems[index].complete = false;
+  								var dialog = launchMangaUpdateDialog(task, index);
+  								dialog.result.then(function(result) {
+  									task = result;
+  									task.checklistItems[index].complete = true;
+  									if(ListService.findWithAttr(task.checklistItems, 'complete', false) === -1) {
+  										task.completeTimes += 1;
+  			              task.complete = true;
+  									}
+  									obj.updateMangaitem(task, task.link.manga.chapters, task.link.manga.volumes).then(function(result) {
+  										console.log('updated manga: ', result);
+  										return obj.updateTask(task, true);
+  									}).then(function(result) {
+  										console.log('update manga into update task: ', result);
+  										resolve(result);
+  									});
+  								});
+  						} else if(!isLinked) {
+  							if(ListService.findWithAttr(task.checklistItems, 'complete', false) === -1) {
+  								task.completeTimes += 1;
+  								task.complete = true;
+  							}
+  							//console.log('tickoff checklist: ', task);
+  					    obj.updateTask(task, isLinked).then(function(result) {
+  								console.log('update task resolve: ', result);
+  								resolve(result);
+  							});
+  						}
+  					});
+  				};
+
+  				//Add additional items to a checklist.
+  				obj.insertChecklistItem = function(task, newChecklistItem) {
+  					if (newChecklistItem!=='' && newChecklistItem!==undefined) {
+  							var alreadyAdded = false;
+  							//find the item and insert the option.
+  							angular.forEach(task.checklistItems, function (item) {
+  									if (item === newChecklistItem) {
+  											alreadyAdded = true;
+  									}
+  							});
+
+  							//if not in array add it.
+  							if (alreadyAdded === false) {
+  									task.checklistItems.push({ text: newChecklistItem, complete: false });
+  							} else if (alreadyAdded === true) {
+  									NotificationFactory.popup('Option already exists.', 'Please re-name and try again.', 'error');
+  							}
+  					}
+  					this.updateTask(task);
+  				};
+
+      return obj;
+  }
+
+})();
+
+(function() {
+	'use strict';
+	//Tasks service used to communicate Tasks REST endpoints
+	angular.module('tasks').factory('Tasks', Tasks);
+	Tasks.$inject = ['$resource'];
+
+		function Tasks($resource) {
+			return $resource('tasks/:taskId', { taskId: '@_id'
+			}, {
+				update: {
+					method: 'PUT'
 				}
+			});
+		}
 
-				//Linked manga need special options dialog.
-				function launchMangaUpdateDialog(task, checklistIndex) {
-					var modalInstance = $uibModal.open({
-						animation: true,
-		      	templateUrl: '/modules/tasks/views/update-manga-task.client.view.html',
-		      	controller: 'UpdateMangaTaskController as ctrl',
-		      	size: 'lg',
-		      	resolve: {
-		        	data: function () {
-		          	return { item: angular.copy(task), itemOriginal: task };
-							}
-						}
-					});
-					modalInstance.result.then(function(result) {
-						task = result;
-						if(checklistIndex === undefined) {
-							task.completeTimes += 1;
-							task.complete = true;
-						} else {
-							task.checklistItems[checklistIndex].complete = true;
-							if(ListService.findWithAttr(task.checklistItems, 'complete', false) === -1) {
-								task.completeTimes += 1;
-                task.complete = true;
-							}
-						}
-						obj.updateMangaitem(task, task.link.manga.chapters, task.link.manga.volumes).then(function() {
-							return obj.updateTask(task, true);
-						});
-					});
-				}
-
-				//Completes a task.
-				obj.tickOff = function(task) {
-					return $q(function(resolve, reject) {
-						var isLinked = false;
-				    //Is it linked?
-				    if (task.link.linked === false) {
-				        task.completeTimes += 1;
-				    } else if (task.link.linked === true) {
-				        isLinked = true;
-				        /** Anime or manga?
-				         *   Update the item value AND the complete/repeat values.
-				         */
-				        if (task.link.type === 'anime') {
-				            task.completeTimes = task.link.anime.episodes + 1;
-				            task.repeat = task.link.anime.finalEpisode;
-				            obj.updateAnimeitem(task);
-				        } else if (task.link.type === 'manga') {
-									  task.complete = false;
-				            launchMangaUpdateDialog(task).then(function(result) {
-											//console.log('update task resolve: ', result);
-											return result;
-										});
-										return;
-				        }
-				    }
-				    //console.log('tickoff: ', task);
-				    obj.updateTask(task, isLinked).then(function(result) {
-							//console.log('update task resolve: ', result);
-							resolve(result);
-						});
-					});
-				};
-
-				//Completes a checklist item.
-				obj.tickOffChecklist = function(task, index) {
-					return $q(function(resolve, reject) {
-						//update the option for the task.
-						var isLinked = task.link.linked;
-						if (isLinked && task.link.type === 'manga') {
-								task.checklistItems[index].complete = false;
-								launchMangaUpdateDialog(task, index).then(function(result) {
-									//console.log('update task resolve: ', result);
-									return result;
-								});
-								return;
-						}
-
-						if(ListService.findWithAttr(task.checklistItems, 'complete', false) === -1) {
-							task.completeTimes += 1;
-							task.complete = true;
-						}
-						//console.log('tickoff checklist: ', task);
-				    obj.updateTask(task, isLinked).then(function(result) {
-							//console.log('update task resolve: ', result);
-							resolve(result);
-						});
-					});
-				};
-
-				//Add additional items to a checklist.
-				obj.insertChecklistItem = function(task, newChecklistItem) {
-					if (newChecklistItem!=='' && newChecklistItem!==undefined) {
-							var alreadyAdded = false;
-							//find the item and insert the option.
-							angular.forEach(task.checklistItems, function (item) {
-									if (item === newChecklistItem) {
-											alreadyAdded = true;
-									}
-							});
-
-							//if not in array add it.
-							if (alreadyAdded === false) {
-									task.checklistItems.push({ text: newChecklistItem, complete: false });
-							} else if (alreadyAdded === true) {
-									NotificationFactory.popup('Option already exists.', 'Please re-name and try again.', 'error');
-							}
-					}
-					this.updateTask(task);
-				};
-
-    return obj;
-}]);
+})();
 
 'use strict';
 
@@ -5758,767 +5586,852 @@ angular.module('toptens').config(['$stateProvider',
 		});
 	}
 ]);
-'use strict';
+(function() {
+	'use strict';
+	angular.module('toptens').controller('CreateToptenController', CreateToptenController);
+	CreateToptenController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Toptens', 'ListService', 'Animeitems', 'Mangaitems', 'Characters', 'NotificationFactory', 'CharacterService', 'ItemService', '$filter'];
 
-// Toptens controller
-angular.module('toptens').controller('CreateToptenController', ['$scope', '$stateParams', '$location', 'Authentication', 'Toptens', 'ListService', 'Animeitems', 'Mangaitems', 'Characters', 'NotificationFactory', 'CharacterService', 'ItemService', '$filter',
-	function($scope, $stateParams, $location, Authentication, Toptens, ListService, Animeitems, Mangaitems, Characters, NotificationFactory, CharacterService, ItemService, $filter) {
-		$scope.authentication = Authentication;
+	function CreateToptenController($scope, $stateParams, $location, Authentication, Toptens, ListService, Animeitems, Mangaitems, Characters, NotificationFactory, CharacterService, ItemService, $filter) {
+		var ctrl = this,
+				toptenCopy = {
+	        name: '',
+	        description: '',
+	        type: '',
+	        isFavourite: false,
+	        isRanked: false,
+	        animeList: [],
+	        mangaList: [],
+	        characterList: [],
+	        conditions: {
+	            limit: null,
+	            series: [],
+	            tags: [],
+							season: null,
+							year: null
+	        }
+				};
 
-        $scope.stepConfig = {
-            steps: [1,2,3,4,5,6,7,8,9,10],
-            stepHeaders: [
-                { text: 'Select attributes' },
-                { text: 'Set conditions' },
-                { text: 'Populate list' }
-            ],
-            currentStep: 1,
-            stepCount: 3,
-            listGen: {
-                itemsCached: [],
-                items: [],
-                displayList: [],
-                seriesList: [],
-                typeDisplay: '',
-                toptenItem: '',
-                seriesLimit: '',
-                tagLimit: '',
-                series: [],
-                tags: []
-            },
-            limitMin: 0,
-						swapping: {
-							one: '',
-							two: ''
-						}
-        };
-        var toptenCopy = {
-            name: '',
-            description: '',
-            type: '',
-            isFavourite: false,
-            isRanked: false,
-            animeList: [],
-            mangaList: [],
-            characterList: [],
-            conditions: {
-                limit: null,
-                series: [],
-                tags: [],
-								season: null,
-								year: null
-            }
-        };
-        $scope.topten = {};
-        angular.copy(toptenCopy, $scope.topten);
-        $scope.commonArrays = ListService.getCommonArrays();
-				$scope.years = [];
-        $scope.isCreate = true;
-        $scope.imgSize = {
-            height: '50px',
-            width: '100px'
-        };
-
+		ctrl.authentication = Authentication;
+		ctrl.cancel = cancel;
+		ctrl.create = create;
+		ctrl.commonArrays = ListService.getCommonArrays();
+		ctrl.imgSize = {
+				height: '50px',
+				width: '100px'
+		};
+		ctrl.isCreate = true;
+		ctrl.pushCondition = pushCondition;
+		ctrl.pushItem = pushItem;
+		ctrl.removeCondition = removeCondition;
+		ctrl.removeItem = removeItem;
+    ctrl.stepConfig = {
+        steps: [1,2,3,4,5,6,7,8,9,10],
+        stepHeaders: [
+            { text: 'Select attributes' },
+            { text: 'Set conditions' },
+            { text: 'Populate list' }
+        ],
+        currentStep: 1,
+        stepCount: 3,
+        listGen: {
+            itemsCached: [],
+            items: [],
+            displayList: [],
+            seriesList: [],
+            typeDisplay: '',
+            toptenItem: '',
+            seriesLimit: '',
+            tagLimit: '',
+            series: [],
+            tags: []
+        },
+        limitMin: 0,
+				swapping: {
+					one: '',
+					two: ''
+				}
+    };
+		ctrl.swappingItems = swappingItems;
+		ctrl.takeStep = takeStep;
+    ctrl.topten = {};
+    angular.copy(toptenCopy, ctrl.topten);
+		ctrl.update = update;
+		ctrl.years = [];
 		// Create new Topten
-		$scope.create = function() {
-            // console.log($scope.topten, this.topten);
+		function create() {
+            // console.log(ctrl.topten, ctrl.topten);
 			// Create new Topten object
-            var topten = new Toptens();
+			var topten = new Toptens();
 			topten = new Toptens ({
-				name: this.topten.name,
-                description: this.topten.description,
-                type: this.topten.type,
-                isFavourite: this.topten.isFavourite,
-                isRanked: this.topten.isRanked,
-                animeList: this.topten.animeList.length > 0 ? this.topten.animeList : null,
-                characterList: this.topten.characterList.length > 0 ? this.topten.characterList : null,
-                mangaList: this.topten.mangaList.length > 0 ? this.topten.mangaList : null,
+				name: ctrl.topten.name,
+                description: ctrl.topten.description,
+                type: ctrl.topten.type,
+                isFavourite: ctrl.topten.isFavourite,
+                isRanked: ctrl.topten.isRanked,
+                animeList: ctrl.topten.animeList.length > 0 ? ctrl.topten.animeList : null,
+                characterList: ctrl.topten.characterList.length > 0 ? ctrl.topten.characterList : null,
+                mangaList: ctrl.topten.mangaList.length > 0 ? ctrl.topten.mangaList : null,
                 conditions: {
-                    limit: this.topten.conditions.limit,
-                    series: this.topten.conditions.series,
-                    tags: this.topten.conditions.tags,
-										season: this.topten.conditions.season,
-										year: this.topten.conditions.year,
+                    limit: ctrl.topten.conditions.limit,
+                    series: ctrl.topten.conditions.series,
+                    tags: ctrl.topten.conditions.tags,
+										season: ctrl.topten.conditions.season,
+										year: ctrl.topten.conditions.year,
                 }
 			});
 
 			// Redirect after save
 			topten.$save(function(response) {
 				$location.path('toptens/' + response._id);
-                NotificationFactory.success('Saved!', 'New List was successfully saved!');
+				NotificationFactory.success('Saved!', 'New List was successfully saved!');
 				// Clear form fields
-				angular.copy(toptenCopy, $scope.topten);
+				angular.copy(toptenCopy, ctrl.topten);
 			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-                NotificationFactory.error('Error!', 'Something went wrong!');
+				ctrl.error = errorResponse.data.message;
+				NotificationFactory.error('Error!', 'Something went wrong!');
 			});
-		};
+		}
 
 		// Update existing Topten
-		$scope.update = function() {
-			var topten = $scope.topten;
+		function update() {
+			var topten = ctrl.topten;
 
 			topten.$update(function() {
 				$location.path('toptens/' + topten._id);
                 NotificationFactory.success('Updated!', 'List update was successful!');
 			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
+				ctrl.error = errorResponse.data.message;
                 NotificationFactory.error('Error!', 'Something went wrong!');
 			});
-		};
+		}
 
-        function typeSetItemPopulate() {
-            var type = ListService.manipulateString($scope.topten.type, 'upper', true);
-            switch(type) {
-                case 'Anime':
-                    Animeitems.query().$promise.then(function(result) {
-                        $scope.stepConfig.listGen.items = result;
-                        $scope.stepConfig.listGen.typeDisplay = 'title';
-                        $scope.stepConfig.listGen.tags = CharacterService.buildCharacterTags(result);
-												$scope.years = ItemService.endingYears(result);
-                    });
-                    break;
-                case 'Manga':
-                    Mangaitems.query().$promise.then(function(result) {
-                        $scope.stepConfig.listGen.items = result;
-                        $scope.stepConfig.listGen.typeDisplay = 'title';
-                        $scope.stepConfig.listGen.tags = CharacterService.buildCharacterTags(result);
-                    });
-                    break;
-                case 'Character':
-                    Characters.query().$promise.then(function(result) {
-                        $scope.stepConfig.listGen.items = result;
-                        $scope.stepConfig.listGen.typeDisplay = 'name';
-                        $scope.stepConfig.listGen.tags = CharacterService.buildCharacterTags(result);
-                        $scope.stepConfig.listGen.series = CharacterService.buildSeriesList(result);
-												var getYears = [];
-												angular.forEach(result, function (item) {
-													if(item.anime) {
-														getYears.push(item.anime);
-													}
-												});
-												$scope.years = ItemService.endingYears(getYears);
-                    });
-                    break;
-            }
-            // console.log('type set: ', $scope.stepConfig.listGen);
-					}
-
-        //Processing on step submits.
-        function process(number, direction, callback) {
-            // console.log(number, direction);
-            switch(number) {
-                case 1:
-                    if ($scope.topten.type !== '' && $scope.isCreate) {
-                        typeSetItemPopulate();
-                        callback();
-                    } else if ($scope.topten.type !== '' && !$scope.isCreate) {
-                        if ($scope.stepConfig.listGen.displayList.length < 1) {
-                            angular.forEach($scope.topten[$scope.topten.type + 'List'], function(item) {
-                                var index = ListService.findWithAttr($scope.stepConfig.listGen.items, '_id', item._id);
-                                $scope.stepConfig.listGen.displayList.push($scope.stepConfig.listGen.items[index]);
-                            });
-                            $scope.stepConfig.limitMin = $scope.stepConfig.listGen.displayList.length;
-                        }
-                        callback();
-                    } else if ($scope.topten.type === '') {
-                        NotificationFactory.popup('Invalid form', 'You MUST select a type to continue.', 'error');
-                    }
-                    break;
-
-                case 2:
-										if(direction) {
-											var i = 0, j = 0, length;
-	                    angular.copy($scope.stepConfig.listGen.items, $scope.stepConfig.listGen.itemsCached);
-	                    // console.log('pre conditions: ', $scope.stepConfig.listGen.items.length, $scope.stepConfig.listGen.itemsCached.length);
-
-											if($scope.topten.type === 'anime') {
-												if($scope.topten.conditions.season) {
-													if($scope.topten.conditions.year) {
-														$scope.stepConfig.listGen.items = $filter('season')($scope.stepConfig.listGen.items, $scope.topten.conditions.year, $scope.topten.conditions.season);
-													} else {
-														NotificationFactory.popup('Invalid form', 'A year MUST be selected when selecting a season.', 'error');
-														break;
-													}
-												} else {
-													if($scope.topten.conditions.year) {
-														$scope.stepConfig.listGen.items = $filter('filter')($scope.stepConfig.listGen.items, { season: { year: $scope.topten.conditions.year } });
-													}
-												}
-											} else if($scope.topten.type === 'character') {
-												if($scope.topten.conditions.season) {
-													if($scope.topten.conditions.year) {
-														$scope.stepConfig.listGen.items = $filter('seasonForCharacterAnime')($scope.stepConfig.listGen.items, $scope.topten.conditions.year, $scope.topten.conditions.season);
-													} else {
-														NotificationFactory.popup('Invalid form', 'A year MUST be selected when selecting a season.', 'error');
-														break;
-													}
-												} else {
-													if($scope.topten.conditions.year) {
-														$scope.stepConfig.listGen.items = $filter('filter')($scope.stepConfig.listGen.items, { anime: { season: { year: $scope.topten.conditions.year } } });
-													}
-												}
-											}
-
-	                    if($scope.topten.conditions.series.length > 0) {
-	                        i = $scope.stepConfig.listGen.items.length;
-	                        while(i--) {
-	                            var remove = true,
-																	attr = ($scope.stepConfig.listGen.items[i].anime !== null) ? 'anime' :
-																				 ($scope.stepConfig.listGen.items[i].anime !== null) ? 'manga' :
-																				 																											 null;
-															length = $scope.topten.conditions.series.length;
-														//  console.log('tag while: ', i, length, attr);
-	                            if(attr !== null) {
-																// console.log('tag item: ', $scope.stepConfig.listGen.items[i]);
-																for(j = 0; j < length; j++) {
-																	var series = $scope.topten.conditions.series[j];
-																	// console.log($scope.stepConfig.listGen.items[i][attr].title, series.name, $scope.stepConfig.listGen.items[i][attr].title.indexOf(series.name));
-	                                if($scope.stepConfig.listGen.items[i][attr].title.indexOf(series.name) > -1) {
-	                                    remove = false;
-	                                }
-																}
-	                              if(remove) {
-																	// console.log('remove as remove: ' + remove);
-	                                  $scope.stepConfig.listGen.items.splice(i, 1);
-	                              }
-	                            } else {
-																// console.log('straight remove');
-																$scope.stepConfig.listGen.items.splice(i, 1);
-	                            }
-	                        }
-	                    }
-
-	                    if($scope.topten.conditions.tags.length > 0) {
-	                        i = $scope.stepConfig.listGen.items.length;
-	                        while(i--) {
-	                            var count = 0;
-															length = $scope.topten.conditions.tags.length;
-																	// console.log('tag while: ', i, length);
-															if($scope.stepConfig.listGen.items[i].tags.length > 0) {
-																// console.log('tag item: ', $scope.stepConfig.listGen.items[i].tags);
-																for(j = 0; j < length; j++) {
-																	var tag = $scope.topten.conditions.tags[j];
-																	// console.log('tag round: ' + i + '-' + j, $scope.stepConfig.listGen.items[i].tags, tag.tag, ListService.findWithAttr($scope.stepConfig.listGen.items[i].tags, 'text', tag.tag));
-			                                if(ListService.findWithAttr($scope.stepConfig.listGen.items[i].tags, 'text', tag.tag) > -1) {
-			                                    count++;
-			                                }
-																}
-		                            if(count !== length) {
-																	// console.log('remove as count: ' + count + ' > length: ' + length);
-																	$scope.stepConfig.listGen.items.splice(i, 1);
-		                            }
-															} else {
-																// console.log('straight remove');
-																$scope.stepConfig.listGen.items.splice(i, 1);
-															}
-	                        }
-	                    }
-											// console.log('post conditions: ', $scope.stepConfig.listGen.items.length, $scope.stepConfig.listGen.itemsCached.length);
-										}
-                    callback();
-                    break;
-
-                case 3:
-                    if(!direction) {
-                        $scope.stepConfig.listGen.items = angular.copy($scope.stepConfig.listGen.itemsCached);
-                    }
-                    callback();
-                    break;
-            }
-        }
-
-        $scope.pushItem = function(item) {
-            if($scope.topten.conditions.limit === null || $scope.topten.conditions.limit === 0 || $scope.topten.conditions.limit > $scope.stepConfig.listGen.displayList.length) {
-                var index = $scope.topten[$scope.topten.type+'List'].indexOf(item._id);
-                if (!$scope.isCreate && index === -1) {
-                    index = ListService.findWithAttr($scope.topten[$scope.topten.type+'List'], '_id', item._id);
-                }
-                if (index === -1) {
-                    $scope.topten[$scope.topten.type + 'List'].push(item._id);
-                    $scope.stepConfig.listGen.displayList.push(item);
-                } else {
-                    NotificationFactory.warning('Duplicate!', 'Item has already been added to list.');
-                }
-            } else {
-                NotificationFactory.error('Full!', 'Item list has reached the defined capacity.');
-            }
-            $scope.stepConfig.listGen.toptenItem = '';
-        };
-
-        $scope.removeItem = function(item) {
-            //For display array.
-            var index = $scope.stepConfig.listGen.displayList.indexOf(item);
-            $scope.stepConfig.listGen.displayList.splice(index, 1);
-
-            //For topten list.
-            index = $scope.topten[$scope.topten.type + 'List'].indexOf(item._id);
-            if (!$scope.isCreate && index === -1) {
-                index = ListService.findWithAttr($scope.topten[$scope.topten.type+'List'], '_id', item._id);
-            }
-            $scope.topten[$scope.topten.type + 'List'].splice(index, 1);
-            NotificationFactory.warning('Removed!', 'Item has been removed from list.');
-        };
-
-        $scope.pushCondition = function(type, item) {
-            var index, indexTwo;
-            switch(type) {
-                case 'series':
-                    index = ListService.findWithAttr($scope.topten.conditions.series, 'name', item.name);
-                    if(index === -1) {
-                        $scope.topten.conditions.series.push(item);
-                    } else {
-                        NotificationFactory.warning('Duplicate!', 'Series has already been added to list.');
-                    }
-                    $scope.stepConfig.listGen.seriesLimit = '';
-                    break;
-
-                case 'tag':
-                    index = ListService.findWithAttr($scope.topten.conditions.tags, 'tag', item.tag);
-                    if(index === -1) {
-                        $scope.topten.conditions.tags.push(item);
-                    } else {
-                        NotificationFactory.warning('Duplicate!', 'Tag has already been added to list.');
-                    }
-                    $scope.stepConfig.listGen.tagLimit = '';
-                    break;
-            }
-        };
-
-        $scope.removeCondition = function(type, item) {
-            var index, indexTwo;
-            switch(type) {
-                case 'series':
-                    index = ListService.findWithAttr($scope.topten.conditions.series, 'name', item.name);
-										$scope.topten.conditions.series.splice(index, 1);
-                    NotificationFactory.warning('Removed!', 'Series has been removed from list.');
-                    break;
-
-                case 'tag':
-                    index = $scope.topten.conditions.tags.indexOf(item);
-                    $scope.topten.conditions.tags.splice(index, 1);
-                    NotificationFactory.warning('Removed!', 'Tag has been removed from list.');
-                    break;
-            }
-        };
-
-        //Step related functions:
-        $scope.takeStep = function(number, direction) {
-            process(number, direction, function() {
-                $scope.stepConfig.currentStep = (direction) ? number + 1 : number - 1;
-            });
-            // console.log('step: ', $scope.stepConfig, $scope.topten);
-        };
-        $scope.cancel = function() {
-            $location.path('toptens');
-        };
-
-        function inital() {
-            // console.log('state params: ', $stateParams);
-            if ($stateParams.toptenId !== undefined) {
-                $scope.isCreate = false;
-                Toptens.get({ toptenId: $stateParams.toptenId }).$promise.then(function(result) {
-                    $scope.topten = result;
-										// console.log('topten: ', result);
-                    typeSetItemPopulate();
+    function typeSetItemPopulate() {
+        var type = ListService.manipulateString(ctrl.topten.type, 'upper', true);
+        switch(type) {
+            case 'Anime':
+                Animeitems.query().$promise.then(function(result) {
+                    ctrl.stepConfig.listGen.items = result;
+                    ctrl.stepConfig.listGen.typeDisplay = 'title';
+                    ctrl.stepConfig.listGen.tags = CharacterService.buildCharacterTags(result);
+										ctrl.years = ItemService.endingYears(result);
                 });
-            }
+                break;
+            case 'Manga':
+                Mangaitems.query().$promise.then(function(result) {
+                    ctrl.stepConfig.listGen.items = result;
+                    ctrl.stepConfig.listGen.typeDisplay = 'title';
+                    ctrl.stepConfig.listGen.tags = CharacterService.buildCharacterTags(result);
+                });
+                break;
+            case 'Character':
+                Characters.query().$promise.then(function(result) {
+                    ctrl.stepConfig.listGen.items = result;
+                    ctrl.stepConfig.listGen.typeDisplay = 'name';
+                    ctrl.stepConfig.listGen.tags = CharacterService.buildCharacterTags(result);
+                    ctrl.stepConfig.listGen.series = CharacterService.buildSeriesList(result);
+										var getYears = [];
+										angular.forEach(result, function (item) {
+											if(item.anime) {
+												getYears.push(item.anime);
+											}
+										});
+										ctrl.years = ItemService.endingYears(getYears);
+                });
+                break;
         }
-        inital();
+        // console.log('type set: ', ctrl.stepConfig.listGen);
+			}
 
-				$scope.swappingItems = function(index) {
-					// console.log('item selected: ', index);
-					if($scope.stepConfig.swapping.one === '') {
-						$scope.stepConfig.swapping.one = index;
-					} else if($scope.stepConfig.swapping.one === index) {
-						$scope.stepConfig.swapping.one = '';
-					} else {
-						$scope.stepConfig.swapping.two = index;
-						//Re-order display list.
-						var temp = $scope.stepConfig.listGen.displayList[$scope.stepConfig.swapping.one];
-						$scope.stepConfig.listGen.displayList[$scope.stepConfig.swapping.one] = $scope.stepConfig.listGen.displayList[$scope.stepConfig.swapping.two];
-						$scope.stepConfig.listGen.displayList[$scope.stepConfig.swapping.two] = temp;
-						//Re-order topten item list.
-						temp = $scope.topten[$scope.topten.type + 'List'][$scope.stepConfig.swapping.one];
-						$scope.topten[$scope.topten.type + 'List'][$scope.stepConfig.swapping.one] = $scope.topten[$scope.topten.type + 'List'][$scope.stepConfig.swapping.two];
-						$scope.topten[$scope.topten.type + 'List'][$scope.stepConfig.swapping.two] = temp;
-						//Clear.
-						$scope.stepConfig.swapping.one = '';
-						$scope.stepConfig.swapping.two = '';
-					}
-				};
+    //Processing on step submits.
+    function process(number, direction, callback) {
+        // console.log(number, direction);
+        switch(number) {
+            case 1:
+                if (ctrl.topten.type !== '' && ctrl.isCreate) {
+                    typeSetItemPopulate();
+                    callback();
+                } else if (ctrl.topten.type !== '' && !ctrl.isCreate) {
+                    if (ctrl.stepConfig.listGen.displayList.length < 1) {
+                        angular.forEach(ctrl.topten[ctrl.topten.type + 'List'], function(item) {
+                            var index = ListService.findWithAttr(ctrl.stepConfig.listGen.items, '_id', item._id);
+                            ctrl.stepConfig.listGen.displayList.push(ctrl.stepConfig.listGen.items[index]);
+                        });
+                        ctrl.stepConfig.limitMin = ctrl.stepConfig.listGen.displayList.length;
+                    }
+                    callback();
+                } else if (ctrl.topten.type === '') {
+                    NotificationFactory.popup('Invalid form', 'You MUST select a type to continue.', 'error');
+                }
+                break;
+
+            case 2:
+								if(direction) {
+									var i = 0, j = 0, length;
+                  angular.copy(ctrl.stepConfig.listGen.items, ctrl.stepConfig.listGen.itemsCached);
+                  // console.log('pre conditions: ', ctrl.stepConfig.listGen.items.length, ctrl.stepConfig.listGen.itemsCached.length);
+
+									if(ctrl.topten.type === 'anime') {
+										if(ctrl.topten.conditions.season) {
+											if(ctrl.topten.conditions.year) {
+												ctrl.stepConfig.listGen.items = $filter('season')(ctrl.stepConfig.listGen.items, ctrl.topten.conditions.year, ctrl.topten.conditions.season);
+											} else {
+												NotificationFactory.popup('Invalid form', 'A year MUST be selected when selecting a season.', 'error');
+												break;
+											}
+										} else {
+											if(ctrl.topten.conditions.year) {
+												ctrl.stepConfig.listGen.items = $filter('filter')(ctrl.stepConfig.listGen.items, { season: { year: ctrl.topten.conditions.year } });
+											}
+										}
+									} else if(ctrl.topten.type === 'character') {
+										if(ctrl.topten.conditions.season) {
+											if(ctrl.topten.conditions.year) {
+												ctrl.stepConfig.listGen.items = $filter('seasonForCharacterAnime')(ctrl.stepConfig.listGen.items, ctrl.topten.conditions.year, ctrl.topten.conditions.season);
+											} else {
+												NotificationFactory.popup('Invalid form', 'A year MUST be selected when selecting a season.', 'error');
+												break;
+											}
+										} else {
+											if(ctrl.topten.conditions.year) {
+												ctrl.stepConfig.listGen.items = $filter('filter')(ctrl.stepConfig.listGen.items, { anime: { season: { year: ctrl.topten.conditions.year } } });
+											}
+										}
+									}
+
+                  if(ctrl.topten.conditions.series.length > 0) {
+                      i = ctrl.stepConfig.listGen.items.length;
+                      while(i--) {
+                          var remove = true,
+															attr = (ctrl.stepConfig.listGen.items[i].anime !== null) ? 'anime' :
+																		 (ctrl.stepConfig.listGen.items[i].anime !== null) ? 'manga' :
+																		 																											 null;
+													length = ctrl.topten.conditions.series.length;
+												//  console.log('tag while: ', i, length, attr);
+                          if(attr !== null) {
+														// console.log('tag item: ', ctrl.stepConfig.listGen.items[i]);
+														for(j = 0; j < length; j++) {
+															var series = ctrl.topten.conditions.series[j];
+															// console.log(ctrl.stepConfig.listGen.items[i][attr].title, series.name, ctrl.stepConfig.listGen.items[i][attr].title.indexOf(series.name));
+                              if(ctrl.stepConfig.listGen.items[i][attr].title.indexOf(series.name) > -1) {
+                                  remove = false;
+                              }
+														}
+                            if(remove) {
+															// console.log('remove as remove: ' + remove);
+                                ctrl.stepConfig.listGen.items.splice(i, 1);
+                            }
+                          } else {
+														// console.log('straight remove');
+														ctrl.stepConfig.listGen.items.splice(i, 1);
+                          }
+                      }
+                  }
+
+                  if(ctrl.topten.conditions.tags.length > 0) {
+                      i = ctrl.stepConfig.listGen.items.length;
+                      while(i--) {
+                          var count = 0;
+													length = ctrl.topten.conditions.tags.length;
+															// console.log('tag while: ', i, length);
+													if(ctrl.stepConfig.listGen.items[i].tags.length > 0) {
+														// console.log('tag item: ', ctrl.stepConfig.listGen.items[i].tags);
+														for(j = 0; j < length; j++) {
+															var tag = ctrl.topten.conditions.tags[j];
+															// console.log('tag round: ' + i + '-' + j, ctrl.stepConfig.listGen.items[i].tags, tag.tag, ListService.findWithAttr(ctrl.stepConfig.listGen.items[i].tags, 'text', tag.tag));
+	                                if(ListService.findWithAttr(ctrl.stepConfig.listGen.items[i].tags, 'text', tag.tag) > -1) {
+	                                    count++;
+	                                }
+														}
+                            if(count !== length) {
+															// console.log('remove as count: ' + count + ' > length: ' + length);
+															ctrl.stepConfig.listGen.items.splice(i, 1);
+                            }
+													} else {
+														// console.log('straight remove');
+														ctrl.stepConfig.listGen.items.splice(i, 1);
+													}
+                      }
+                  }
+									// console.log('post conditions: ', ctrl.stepConfig.listGen.items.length, ctrl.stepConfig.listGen.itemsCached.length);
+								}
+                callback();
+                break;
+
+            case 3:
+                if(!direction) {
+                    ctrl.stepConfig.listGen.items = angular.copy(ctrl.stepConfig.listGen.itemsCached);
+                }
+                callback();
+                break;
+        }
+    }
+
+    function pushItem(item) {
+        if(ctrl.topten.conditions.limit === null || ctrl.topten.conditions.limit === 0 || ctrl.topten.conditions.limit > ctrl.stepConfig.listGen.displayList.length) {
+            var index = ctrl.topten[ctrl.topten.type+'List'].indexOf(item._id);
+            if (!ctrl.isCreate && index === -1) {
+                index = ListService.findWithAttr(ctrl.topten[ctrl.topten.type+'List'], '_id', item._id);
+            }
+            if (index === -1) {
+                ctrl.topten[ctrl.topten.type + 'List'].push(item._id);
+                ctrl.stepConfig.listGen.displayList.push(item);
+            } else {
+                NotificationFactory.warning('Duplicate!', 'Item has already been added to list.');
+            }
+        } else {
+            NotificationFactory.error('Full!', 'Item list has reached the defined capacity.');
+        }
+        ctrl.stepConfig.listGen.toptenItem = '';
+    }
+
+    function removeItem(item) {
+        //For display array.
+        var index = ctrl.stepConfig.listGen.displayList.indexOf(item);
+        ctrl.stepConfig.listGen.displayList.splice(index, 1);
+
+        //For topten list.
+        index = ctrl.topten[ctrl.topten.type + 'List'].indexOf(item._id);
+        if (!ctrl.isCreate && index === -1) {
+            index = ListService.findWithAttr(ctrl.topten[ctrl.topten.type+'List'], '_id', item._id);
+        }
+        ctrl.topten[ctrl.topten.type + 'List'].splice(index, 1);
+        NotificationFactory.warning('Removed!', 'Item has been removed from list.');
+    }
+
+    function pushCondition(type, item) {
+        var index, indexTwo;
+        switch(type) {
+            case 'series':
+                index = ListService.findWithAttr(ctrl.topten.conditions.series, 'name', item.name);
+                if(index === -1) {
+                    ctrl.topten.conditions.series.push(item);
+                } else {
+                    NotificationFactory.warning('Duplicate!', 'Series has already been added to list.');
+                }
+                ctrl.stepConfig.listGen.seriesLimit = '';
+                break;
+
+            case 'tag':
+                index = ListService.findWithAttr(ctrl.topten.conditions.tags, 'tag', item.tag);
+                if(index === -1) {
+                    ctrl.topten.conditions.tags.push(item);
+                } else {
+                    NotificationFactory.warning('Duplicate!', 'Tag has already been added to list.');
+                }
+                ctrl.stepConfig.listGen.tagLimit = '';
+                break;
+        }
+    }
+
+    function removeCondition(type, item) {
+        var index, indexTwo;
+        switch(type) {
+            case 'series':
+                index = ListService.findWithAttr(ctrl.topten.conditions.series, 'name', item.name);
+								ctrl.topten.conditions.series.splice(index, 1);
+                NotificationFactory.warning('Removed!', 'Series has been removed from list.');
+                break;
+
+            case 'tag':
+                index = ctrl.topten.conditions.tags.indexOf(item);
+                ctrl.topten.conditions.tags.splice(index, 1);
+                NotificationFactory.warning('Removed!', 'Tag has been removed from list.');
+                break;
+        }
+    }
+
+    //Step related functions:
+    function takeStep(number, direction) {
+        process(number, direction, function() {
+            ctrl.stepConfig.currentStep = (direction) ? number + 1 : number - 1;
+        });
+        // console.log('step: ', ctrl.stepConfig, ctrl.topten);
+    }
+    function cancel() {
+        $location.path('toptens');
+    }
+
+    function inital() {
+        // console.log('state params: ', $stateParams);
+        if ($stateParams.toptenId !== undefined) {
+            ctrl.isCreate = false;
+            Toptens.get({ toptenId: $stateParams.toptenId }).$promise.then(function(result) {
+                ctrl.topten = result;
+								// console.log('topten: ', result);
+                typeSetItemPopulate();
+            });
+        }
+    }
+    inital();
+
+		function swappingItems(index) {
+			// console.log('item selected: ', index);
+			if(ctrl.stepConfig.swapping.one === '') {
+				ctrl.stepConfig.swapping.one = index;
+			} else if(ctrl.stepConfig.swapping.one === index) {
+				ctrl.stepConfig.swapping.one = '';
+			} else {
+				ctrl.stepConfig.swapping.two = index;
+				//Re-order display list.
+				var temp = ctrl.stepConfig.listGen.displayList[ctrl.stepConfig.swapping.one];
+				ctrl.stepConfig.listGen.displayList[ctrl.stepConfig.swapping.one] = ctrl.stepConfig.listGen.displayList[ctrl.stepConfig.swapping.two];
+				ctrl.stepConfig.listGen.displayList[ctrl.stepConfig.swapping.two] = temp;
+				//Re-order topten item list.
+				temp = ctrl.topten[ctrl.topten.type + 'List'][ctrl.stepConfig.swapping.one];
+				ctrl.topten[ctrl.topten.type + 'List'][ctrl.stepConfig.swapping.one] = ctrl.topten[ctrl.topten.type + 'List'][ctrl.stepConfig.swapping.two];
+				ctrl.topten[ctrl.topten.type + 'List'][ctrl.stepConfig.swapping.two] = temp;
+				//Clear.
+				ctrl.stepConfig.swapping.one = '';
+				ctrl.stepConfig.swapping.two = '';
+			}
+		}
 
 	}
-]);
+})();
 
-'use strict';
+(function() {
+  'use strict';
+  angular.module('toptens').controller('StatisticsTopten', StatisticsTopten);
+  StatisticsTopten.$inject = ['$scope','$uibModalInstance','list', 'CharacterService'];
 
-angular.module('toptens').controller('statisticsTopten', ['$scope','$uibModalInstance','list', 'CharacterService',
- function ($scope, $uibModalInstance, list, CharacterService) {
-   var self = this;
-   $scope.list = list;
-   $scope.toptenInfo = {
-     tags: [],
-     series: []
-   };
+   function StatisticsTopten($scope, $uibModalInstance, list, CharacterService) {
+     var ctrl = this;
 
-   function process() {
-     var listType = $scope.list.type + 'List';
-     $scope.toptenInfo.tags = CharacterService.buildCharacterTags($scope.list[listType]);
-     if($scope.list.type === 'character') {
-       $scope.toptenInfo.series = CharacterService.buildSeriesList($scope.list[listType]);
+     ctrl.cancel = cancel;
+     ctrl.list = list;
+     ctrl.toptenInfo = {
+       tags: [],
+       series: []
+     };
+
+     function process() {
+       var listType = ctrl.list.type + 'List';
+       ctrl.toptenInfo.tags = CharacterService.buildCharacterTags(ctrl.list[listType]);
+       if(ctrl.list.type === 'character') {
+         ctrl.toptenInfo.series = CharacterService.buildSeriesList(ctrl.list[listType]);
+       }
      }
-   }
-   process();
+     process();
 
-  $scope.cancel = function () {
-    $uibModalInstance.dismiss('cancel');
-  };
-}]);
+    function cancel() {
+      $uibModalInstance.dismiss('cancel');
+    }
+  }
 
-'use strict';
+})();
 
-// Toptens controller
-angular.module('toptens').controller('ToptensController', ['$scope', '$stateParams', '$location', 'Authentication', '$uibModal', 'Toptens', 'NotificationFactory', 'ListService', 'spinnerService',
-	function($scope, $stateParams, $location, Authentication, $uibModal, Toptens, NotificationFactory, ListService, spinnerService) {
-		$scope.authentication = Authentication;
+(function() {
+	'use strict';
+	angular.module('toptens').controller('ToptensController', ToptensController);
+	ToptensController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', '$uibModal', 'Toptens', 'NotificationFactory', 'ListService', 'spinnerService'];
 
-        // If user is not signed in then redirect back to signin.
-		if (!$scope.authentication.user) $location.path('/signin');
-
-        $scope.whichController = 'topten';
-        //paging variables.
-        $scope.pageConfig = {
-            currentPage: 0,
-            pageSize: 10
-        };
-        $scope.filterConfig = {
-            showingCount: 0,
-            expandFilters: false,
-            sortType: '',
-            sortReverse: false,
-            ratingLevel: undefined,
-            search: {},
-            searchTags: '',
-            tagsForFilter: [],
-            taglessItem: false,
-            areTagless: false,
-            selectListOptions: ListService.getSelectListOptions($scope.whichController),
-            commonArrays: ListService.getCommonArrays()
-        };
-        $scope.viewConfig = {
-            displayType: '',
-            linkSuffix: '',
-						tags: [],
-						series: []
-        };
+	function ToptensController($scope, $stateParams, $location, Authentication, $uibModal, Toptens, NotificationFactory, ListService, spinnerService) {
+		var ctrl = this;
+		ctrl.authentication = Authentication;
+		ctrl.filterConfig = {
+				showingCount: 0,
+				expandFilters: false,
+				sortType: '',
+				sortReverse: false,
+				ratingLevel: undefined,
+				search: {},
+				searchTags: '',
+				tagsForFilter: [],
+				taglessItem: false,
+				areTagless: false,
+				selectListOptions: {},
+				commonArrays: ListService.getCommonArrays()
+		};
+		ctrl.find = find;
+		ctrl.findOne = findOne;
+		ctrl.openListStats = openListStats;
+		ctrl.pageConfig = {
+				currentPage: 0,
+				pageSize: 10
+		};
+		ctrl.remove = remove;
+		ctrl.viewConfig = {
+        displayType: '',
+        linkSuffix: '',
+				tags: [],
+				series: []
+    };
+    ctrl.whichController = 'topten';
 
 		// Remove existing Topten
-		$scope.remove = function(topten) {
-            NotificationFactory.confirmation(function() {
-                if ( topten ) {
-                    topten.$remove();
-                    for (var i in $scope.toptens) {
-                        if ($scope.toptens [i] === topten) {
-                            $scope.toptens.splice(i, 1);
-                        }
-                    }
-                } else {
-                    $scope.topten.$remove(function() {
-                        $location.path('toptens');
-                    });
-                }
-                NotificationFactory.warning('Deleted!', 'Anime was successfully deleted.');
-            });
-		};
+		function remove(topten) {
+	    NotificationFactory.confirmation(function() {
+	        if ( topten ) {
+	            topten.$remove();
+	            for (var i in ctrl.toptens) {
+	                if (ctrl.toptens [i] === topten) {
+	                    ctrl.toptens.splice(i, 1);
+	                }
+	            }
+	        } else {
+	            ctrl.topten.$remove(function() {
+	                $location.path('toptens');
+	            });
+	        }
+	        NotificationFactory.warning('Deleted!', 'Anime was successfully deleted.');
+	    });
+		}
 
 		// Find a list of Toptens
-		$scope.find = function() {
-            spinnerService.loading('topten', Toptens.query().$promise.then(function(result) {
-                $scope.toptens = result;
-            }));
-//            console.log($scope.toptens);
-		};
+		function find() {
+			ctrl.filterConfig.selectListOptions = ListService.getSelectListOptions(ctrl.whichController);
+	    spinnerService.loading('topten', Toptens.query().$promise.then(function(result) {
+	        ctrl.toptens = result;
+	    }));
+			console.log(ctrl.toptens);
+		}
 
 		// Find existing Topten
-		$scope.findOne = function() {
-            Toptens.get({ toptenId: $stateParams.toptenId }).$promise.then(function(result) {
-                $scope.topten = result;
-                $scope.viewConfig.displayType = ($scope.topten.type === 'character') ? 'name' : 'title';
-                $scope.viewConfig.linkSuffix = ($scope.topten.type === 'character') ? 's' : 'items';
-            });
-		};
+		function findOne() {
+	    Toptens.get({ toptenId: $stateParams.toptenId }).$promise.then(function(result) {
+	        ctrl.topten = result;
+	        ctrl.viewConfig.displayType = (ctrl.topten.type === 'character') ? 'name' : 'title';
+	        ctrl.viewConfig.linkSuffix = (ctrl.topten.type === 'character') ? 's' : 'items';
+	    });
+		}
 
-		$scope.openListStats = function() {
+		function openListStats() {
 			var modalInstance = $uibModal.open({
 				animation: true,
       	templateUrl: '/modules/toptens/views/statistics-topten.client.view.html',
-      	controller: 'statisticsTopten',
+      	controller: 'StatisticsTopten as ctrl',
       	size: 'lg',
       	resolve: {
         	list: function () {
-          	return $scope.topten;
+          	return ctrl.topten;
 					}
 				}
 			});
-		};
+		}
 
 	}
-]);
+})();
 
-'use strict';
+(function() {
+  'use strict';
+  angular.module('toptens')
+  .directive('horizontalListItem', horizontalListItem);
 
-angular.module('toptens')
-.directive('steps', function() {
+   function horizontalListItem() {
+      return {
+          restrict: 'A',
+          replace: true,
+          transclude: true,
+          scope: {},
+          templateUrl: '/modules/toptens/templates/horizontal-list-item.html',
+          require: '^horizontalList',
+          link: function(scope, element, attr, horizontalListCtrl) {
+              scope.isVisible = false;
+              scope.itemWidth = horizontalListCtrl.itemWidth;
+              scope.position = element.index();
+              horizontalListCtrl.register(scope);
+          }
+      };
+  }
+
+})();
+
+(function() {
+  'use strict';
+  angular.module('toptens')
+  .directive('horizontalList', horizontalList);
+
+   function horizontalList() {
+      return {
+          restrict: 'A',
+          transclude: true,
+          require: 'horizontalList',
+          scope: {},
+          templateUrl: '/modules/toptens/templates/horizontal-list.html',
+          bindToController: true,
+          controllerAs: 'horizontalList',
+          controller: function($scope) {
+              var self = this;
+              self.clicks = 0;
+              self.items = [];
+              self.moveItems = moveItems;
+              self.register = register;
+              self.shift = 0;
+
+              function register(item) {
+                  self.items.push(item);
+                  if([0, 1, 2].indexOf(item.position) > -1) {
+                      item.isVisible = true;
+                  }
+              }
+
+              function setVisibility() {
+                  var values = [],
+                      check = self.clicks * 3;
+                  for(var i = 0; i < 3; i++) {
+                      values.push(check + i);
+                  }
+                  angular.forEach(self.items, function(item) {
+                      item.isVisible = (values.indexOf(item.position) > -1);
+                  });
+              }
+
+              function moveItems(direction) {
+                  if(direction === 'left') {
+                      if((self.clicks - 1) < 0) {
+                          self.clicks = 0;
+                      } else {
+                          self.clicks -= 1;
+                      }
+                      setVisibility();
+                  } else if (direction === 'right') {
+                      if ((self.clicks + 1) < Math.ceil(self.items.length / 3)) {
+                          self.clicks += 1;
+                      }
+                      setVisibility();
+                  }
+              }
+
+          },
+          link: function(scope, element, attr, ctrl) {
+              var el = element[0],
+                  child = el.children[0];
+              scope.settings = {
+                  child: child,
+                  style: child.style,
+                  value: 0
+              };
+
+              function listSettings() {
+                  ctrl.shift = -el.offsetWidth;
+                  ctrl.itemWidth = el.offsetWidth / 3;
+                  angular.forEach(ctrl.items, function(item) {
+                      item.itemWidth = ctrl.itemWidth;
+                  });
+              }
+              listSettings();
+
+              window.addEventListener('resize', function(e) {
+                  if(el.offsetWidth !== Math.abs(ctrl.shift)) {
+                      listSettings();
+                      scope.$apply();
+                  }
+              });
+
+          }
+      };
+  }
+
+})();
+
+(function() {
+  'use strict';
+  angular.module('toptens')
+  .directive('ngMax', ngMax);
+
+  function ngMax() {
+      return {
+          restrict: 'A',
+          require: 'ngModel',
+          link: function(scope, elem, attr, ctrl) {
+
+              scope.$watch(attr.ngMax, function(){
+                  if (ctrl.$isDirty) ctrl.$setViewValue(ctrl.$viewValue);
+              });
+
+              var isEmpty = function(value) {
+                 return angular.isUndefined(value) || value === '' || value === null;
+              };
+
+              var maxValidator = function(value) {
+                var max = scope.$eval(attr.ngMax) || Infinity;
+                if (!isEmpty(value) && value > max) {
+                  ctrl.$setValidity('ngMax', false);
+                  return undefined;
+                } else {
+                  ctrl.$setValidity('ngMax', true);
+                  return value;
+                }
+              };
+
+              ctrl.$parsers.push(maxValidator);
+              ctrl.$formatters.push(maxValidator);
+          }
+      };
+  }
+
+})();
+
+(function() {
+  'use strict';
+  angular.module('toptens')
+  .directive('ngMin', ngMin);
+
+  function ngMin() {
+      return {
+          restrict: 'A',
+          require: 'ngModel',
+          link: function(scope, elem, attr, ctrl) {
+              scope.$watch(attr.ngMin, function(){
+                  if (ctrl.$isDirty) ctrl.$setViewValue(ctrl.$viewValue);
+              });
+
+              var isEmpty = function(value) {
+                 return angular.isUndefined(value) || value === '' || value === null;
+              };
+
+              var minValidator = function(value) {
+                var min = scope.$eval(attr.ngMin) || 0;
+                if (!isEmpty(value) && value < min) {
+                  ctrl.$setValidity('ngMin', false);
+                  return undefined;
+                } else {
+                  ctrl.$setValidity('ngMin', true);
+                  return value;
+                }
+              };
+
+              ctrl.$parsers.push(minValidator);
+              ctrl.$formatters.push(minValidator);
+          }
+      };
+  }
+
+})();
+
+(function() {
+  'use strict';
+  angular.module('toptens')
+  .directive('oneStep', oneStep);
+
+  function oneStep() {
     return {
         restrict: 'A',
         replace: true,
+        transclude: true,
+        scope: {},
+        require: '^steps',
+        templateUrl: '/modules/toptens/templates/step.html',
+        link: function(scope, elm, attrs, stepsController) {
+            scope.active = false;
+            scope.stepNumber = elm.index() + 1;
+            stepsController.register(scope);
+        }
+    };
+  }
+
+})();
+
+(function() {
+  'use strict';
+  angular.module('toptens')
+  .directive('stepControls', stepControls);
+    function stepControls() {
+       return {
+           restrict: 'A',
+           replace: true,
+           transclude: true,
+           template: '<div class="step-controls step-button-group padding-5" ng-transclude>' +
+                      '</div>'
+       };
+    }
+
+})();
+
+(function() {
+  'use strict';
+  angular.module('toptens')
+  .directive('steps', steps);
+  function steps() {
+    return {
+        restrict: 'A',
         transclude: true,
         scope: {
             stepConfig: '='
         },
         template: '<div class="steps" ng-transclude>' +
                   '</div>',
-        bindToController: 'steps',
+        bindToController: true,
+        controllerAs: 'steps',
         controller: function($scope) {
             var self = this;
+
+            self.register = register;
             self.steps = [];
 
-            self.register = function(step) {
+            function register(step) {
                 self.steps.push(step);
                 if(step.stepNumber === 1) {
                     step.active = true;
                 }
-            };
-
-            $scope.$watch('stepConfig.currentStep', function(newValue) {
-                if (newValue !== undefined) {
-                    angular.forEach(self.steps, function(step) {
-                        if(step.stepNumber !== newValue) {
-                            step.active = false;
-                        } else {
-                            step.active = true;
-                        }
-                    });
-                }
-            });
-
-        }
-    };
-})
-.directive('oneStep', function() {
-  return {
-      restrict: 'A',
-      replace: true,
-      transclude: true,
-      scope: {},
-      require: '^steps',
-      templateUrl: '/modules/toptens/templates/step.html',
-      link: function(scope, elm, attrs, stepsController) {
-          scope.active = false;
-          scope.stepNumber = elm.index() + 1;
-          stepsController.register(scope);
-      }
-  };
-})
-.directive('stepControls', function() {
-   return {
-       restrict: 'A',
-       replace: true,
-       transclude: true,
-       template: '<div class="step-controls step-button-group padding-5" ng-transclude>' +
-                  '</div>'
-   };
-})
-.directive('sticky', function() {
-    return {
-        restrict: 'A',
-        scope: {},
-        link: function(scope, element, attrs) {
-
-            window.addEventListener('scroll', function (evt) {
-                var stickyClass = 'sticky-scroll-top', stickyInnerClass = 'sticky-inner-container',
-                    scrollTop = document.body.scrollTop,
-                    elm = element[0],
-                    inner = elm.children[0],
-                    viewportOffset = elm.getBoundingClientRect(),
-                    distance_from_top = viewportOffset.top; // This value is your scroll distance from the top
-
-                // The element has scrolled to the top of the page. Set appropriate style.
-                if (distance_from_top < 56) {
-//                    console.log('top hit : ', distance_from_top);
-                    elm.classList.add(stickyClass);
-                    inner.classList.add(stickyInnerClass);
-                }
-
-                // The element has not reached the top.
-                if(distance_from_top > 55 || scrollTop < 10) {
-//                    console.log('we are at: ', distance_from_top);
-                    elm.classList.remove(stickyClass);
-                    inner.classList.remove(stickyInnerClass);
-                }
-          });
-
-        }
-    };
-})
-.directive('horizontalList', function() {
-    return {
-        restrict: 'A',
-        replace: true,
-        transclude: true,
-        require: 'horizontalList',
-        scope: {},
-        templateUrl: '/modules/toptens/templates/horizontal-list.html',
-        bindToController: true,
-        controllerAs: 'horizontalList',
-        controller: function($scope) {
-            var self = this;
-            self.items = [];
-            self.shift = 0;
-            self.clicks = 0;
-            self.register = function(item) {
-                self.items.push(item);
-                if([0, 1, 2].indexOf(item.position) > -1) {
-                    item.isVisible = true;
-                }
-            };
-
-            function setVisibility() {
-                var values = [],
-                    check = self.clicks * 3;
-                for(var i = 0; i < 3; i++) {
-                    values.push(check + i);
-                }
-                angular.forEach(self.items, function(item) {
-                    item.isVisible = (values.indexOf(item.position) > -1);
-                });
             }
-
-            self.moveItems = function(direction) {
-                if(direction === 'left') {
-                    if((self.clicks - 1) < 0) {
-                        self.clicks = 0;
-                    } else {
-                        self.clicks -= 1;
-                    }
-                    setVisibility();
-                } else if (direction === 'right') {
-                    if ((self.clicks + 1) < Math.ceil(self.items.length / 3)) {
-                        self.clicks += 1;
-                    }
-                    setVisibility();
-                }
-            };
-
         },
-        link: function(scope, element, attr, ctrl) {
-            var el = element[0],
-                child = el.children[0];
-            scope.settings = {
-                child: child,
-                style: child.style,
-                value: 0
-            };
-
-            function listSettings() {
-                ctrl.shift = -el.offsetWidth;
-                ctrl.itemWidth = el.offsetWidth / 3;
-                angular.forEach(ctrl.items, function(item) {
-                    item.itemWidth = ctrl.itemWidth;
-                });
-            }
-            listSettings();
-
-            window.addEventListener('resize', function(e) {
-                if(el.offsetWidth !== Math.abs(ctrl.shift)) {
-                    listSettings();
-                    scope.$apply();
-                }
-            });
-
-        }
-    };
-})
-.directive('horizontalListItem', function() {
-    return {
-        restrict: 'A',
-        replace: true,
-        transclude: true,
-        scope: {},
-        templateUrl: '/modules/toptens/templates/horizontal-list-item.html',
-        require: '^horizontalList',
-        link: function(scope, element, attr, horizontalListCtrl) {
-            scope.isVisible = false;
-            scope.itemWidth = horizontalListCtrl.itemWidth;
-            scope.position = element.index();
-            horizontalListCtrl.register(scope);
-        }
-    };
-})
-.directive('ngMin', function() {
-    return {
-        restrict: 'A',
-        require: 'ngModel',
-        link: function(scope, elem, attr, ctrl) {
-            scope.$watch(attr.ngMin, function(){
-                if (ctrl.$isDirty) ctrl.$setViewValue(ctrl.$viewValue);
-            });
-
-            var isEmpty = function (value) {
-               return angular.isUndefined(value) || value === '' || value === null;
-            };
-
-            var minValidator = function(value) {
-              var min = scope.$eval(attr.ngMin) || 0;
-              if (!isEmpty(value) && value < min) {
-                ctrl.$setValidity('ngMin', false);
-                return undefined;
-              } else {
-                ctrl.$setValidity('ngMin', true);
-                return value;
+        link: function(scope, element, attrs, stepsController) {
+          scope.$watch('steps.stepConfig.currentStep', function(newValue) {
+              if (newValue !== undefined) {
+                console.log('steps: ', newValue);
+                  angular.forEach(stepsController.steps, function(step) {
+                      if(step.stepNumber !== newValue) {
+                          step.active = false;
+                      } else {
+                          step.active = true;
+                      }
+                  });
               }
-            };
-
-            ctrl.$parsers.push(minValidator);
-            ctrl.$formatters.push(minValidator);
+          });
         }
     };
-})
-.directive('ngMax', function() {
-    return {
-        restrict: 'A',
-        require: 'ngModel',
-        link: function(scope, elem, attr, ctrl) {
-            scope.$watch(attr.ngMax, function(){
-                if (ctrl.$isDirty) ctrl.$setViewValue(ctrl.$viewValue);
+  }
+
+})();
+
+(function() {
+  'use strict';
+  angular.module('toptens')
+  .directive('sticky', sticky);
+
+  function sticky() {
+      return {
+          restrict: 'A',
+          scope: {},
+          link: function(scope, element, attrs) {
+
+              window.addEventListener('scroll', function (evt) {
+                  var stickyClass = 'sticky-scroll-top',
+                      stickyInnerClass = 'sticky-inner-container',
+                      scrollTop = document.body.scrollTop,
+                      elm = element[0],
+                      inner = elm.children[0],
+                      viewportOffset = elm.getBoundingClientRect(),
+                      distance_from_top = viewportOffset.top; // This value is your scroll distance from the top
+
+                  // The element has scrolled to the top of the page. Set appropriate style.
+                  if (distance_from_top < 56) {
+  //                    console.log('top hit : ', distance_from_top);
+                      elm.classList.add(stickyClass);
+                      inner.classList.add(stickyInnerClass);
+                  }
+
+                  // The element has not reached the top.
+                  if(distance_from_top > 55 || scrollTop < 10) {
+  //                    console.log('we are at: ', distance_from_top);
+                      elm.classList.remove(stickyClass);
+                      inner.classList.remove(stickyInnerClass);
+                  }
             });
 
-            var isEmpty = function (value) {
-               return angular.isUndefined(value) || value === '' || value === null;
-            };
+          }
+      };
+  }
 
-            var maxValidator = function(value) {
-              var max = scope.$eval(attr.ngMax) || Infinity;
-              if (!isEmpty(value) && value > max) {
-                ctrl.$setValidity('ngMax', false);
-                return undefined;
-              } else {
-                ctrl.$setValidity('ngMax', true);
-                return value;
-              }
-            };
+})();
 
-            ctrl.$parsers.push(maxValidator);
-            ctrl.$formatters.push(maxValidator);
-        }
-    };
-});
+(function() {
+  'use strict';
+  angular.module('toptens')
+  .filter('toptenFilter', toptenFilter);
 
-'use strict';
-
-angular.module('toptens')
-.filter('toptenFilter', function() {
+  function toptenFilter() {
     return function(array, displayType, value) {
         if(array !== undefined) {
             return array.filter(function(item) {
@@ -6528,21 +6441,26 @@ angular.module('toptens')
             });
         }
     };
-});
+  }
+})();
 
-'use strict';
+(function() {
+	'use strict';
+	//Toptens service used to communicate Toptens REST endpoints
+	angular.module('toptens').factory('Toptens', ToptensFactory);
+	ToptensFactory.$inject = ['$resource'];
 
-//Toptens service used to communicate Toptens REST endpoints
-angular.module('toptens').factory('Toptens', ['$resource',
-	function($resource) {
-		return $resource('toptens/:toptenId', { toptenId: '@_id'
-		}, {
-			update: {
-				method: 'PUT'
-			}
-		});
-	}
-]);
+		function ToptensFactory($resource) {
+			return $resource('toptens/:toptenId', { toptenId: '@_id'
+			}, {
+				update: {
+					method: 'PUT'
+				}
+			});
+		}
+		
+})();
+
 'use strict';
 
 // Config HTTP Error Handling
@@ -6618,45 +6536,47 @@ angular.module('users').config(['$stateProvider',
 		});
 	}
 ]);
-'use strict';
+(function() {
+	'use strict';
+	angular.module('users').controller('AuthenticationController', AuthenticationController);
+	AuthenticationController.$inject = ['$scope', '$http', '$location', 'Authentication'];
 
-angular.module('users').controller('AuthenticationController', ['$scope', '$http', '$location', 'Authentication',
-	function($scope, $http, $location, Authentication) {
-		$scope.authentication = Authentication;
+	function AuthenticationController($scope, $http, $location, Authentication) {
+		var ctrl = this;
 
-		// If user is signed in then redirect back home
-		if ($scope.authentication.user) $location.path('/tasks');
+		ctrl.authentication = Authentication;
+		ctrl.signin = signin;
+		ctrl.signup = signup;
 
-		$scope.signup = function() {
-			$http.post('/auth/signup', $scope.credentials).success(function(response) {
+		function signup() {
+			$http.post('/auth/signup', ctrl.credentials).success(function(response) {
 				// If successful we assign the response to the global user model
-				$scope.authentication.user = response;
+				ctrl.authentication.user = response;
 
 				// And redirect to the index page
 				$location.path('/signin');
 			}).error(function(response) {
-				$scope.error = response.message;
+				ctrl.error = response.message;
 			});
-		};
+		}
 
-		$scope.signin = function() {
-            //console.log($scope.credentials);
-            $scope.credentials.username = 'username';
-            //console.log($scope.credentials);
-			$http.post('/auth/signin', $scope.credentials).success(function(response) {
+		function signin() {
+			ctrl.credentials.username = 'username';
+			$http.post('/auth/signin', ctrl.credentials).success(function(response) {
 				// If successful we assign the response to the global user model
-				$scope.authentication.user = response;
-                $scope.loginBody = true;
+				ctrl.authentication.user = response;
+				ctrl.loginBody = true;
 
 				// And redirect to the index page
 				$location.path('/tasks');
 			}).error(function(response) {
-				$scope.error = response.message;
+				ctrl.error = response.message;
 			});
-		};
-        
+		}
+
 	}
-]);
+})();
+
 'use strict';
 
 angular.module('users').controller('PasswordController', ['$scope', '$stateParams', '$http', '$location', 'Authentication',
@@ -6772,11 +6692,12 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 		};
 	}
 ]);
-'use strict';
+(function() {
+	'use strict';
+	// Authentication service for user variables
+	angular.module('users').factory('Authentication', AuthenticationFactory);
 
-// Authentication service for user variables
-angular.module('users').factory('Authentication', [
-	function() {
+	function AuthenticationFactory() {
 		var _this = this;
 
 		_this._data = {
@@ -6785,16 +6706,21 @@ angular.module('users').factory('Authentication', [
 
 		return _this._data;
 	}
-]);
-'use strict';
 
-// Users service used for communicating with the users REST endpoint
-angular.module('users').factory('Users', ['$resource',
-	function($resource) {
+})();
+
+(function() {
+	'use strict';
+	// Users service used for communicating with the users REST endpoint
+	angular.module('users').factory('Users', UsersFactory);
+	UsersFactory.$inject = ['$resource'];
+
+	function UsersFactory($resource) {
 		return $resource('users', {}, {
 			update: {
 				method: 'PUT'
 			}
 		});
 	}
-]);
+
+})();

@@ -5,7 +5,7 @@
                 <img ng-src="{{ctrl.trustAsResourceUrl(ctrl.mangaitem.image)}}" height="100%" width="100%"/>
             </div>
             <div class="col-lg-9 col-md-9 col-sm-6 col-xs-6">
-                <div class="pull-right" data-ng-show="((ctrl.authentication.user) && (authentication.user._id == ctrl.mangaitem.user._id))">
+                <div class="pull-right" data-ng-show="((ctrl.authentication.user) && (ctrl.authentication.user._id == ctrl.mangaitem.user._id))">
 		          <a class="btn btn-accent" href="/#!/mangaitems">
 			         <i class="glyphicon glyphicon-chevron-left"></i>
 		          </a>

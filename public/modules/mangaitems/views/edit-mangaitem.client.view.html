@@ -57,7 +57,7 @@
                 <div class="form-group">
                     <label for="rating" class="col-md-2 control-label">Rating</label>
                     <div class="col-md-6">
-                        <uib-rating class="form-control clickable rating-stars" data-ng-model="ctrl.mangaitem.rating" readonly="false" max="filterConfig.ratingActions.maxRating" on-hover="hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></uib-rating>
+                        <uib-rating class="form-control clickable rating-stars" data-ng-model="ctrl.mangaitem.rating" readonly="false" max="ctrl.filterConfig.ratingActions.maxRating" on-hover="ctrl.hoveringOver(value)" on-leave="ctrl.overStar = null" id="rating" name="rating"></uib-rating>
                     </div>
                     <span data-ng-show="ctrl.overStar!=null" class="label" ng-class="{'label-warning': ctrl.percent<40, 'label-info': ctrl.percent>=30 && ctrl.percent<70, 'label-success': ctrl.percent>=70}">{{ctrl.percent}}%</span>
                 </div>
@@ -110,7 +110,7 @@
 						<span ng-show="mangaForm.finalChapter.$valid && !mangaForm.finalChapter.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
 					</div>
                 </div>
-                <div class="form-group" ng-class="{ 'has-error' : mangaForm.finalVolume.$invalid && !mangaForm.finalVolume.$pristine }" ng-hide="mangaitem.end!=null && mangaitem.volumes===mangaitem.finalVolume || mangaitem.end!=null && mangaitem.reReading===true ">
+                <div class="form-group" ng-class="{ 'has-error' : mangaForm.finalVolume.$invalid && !mangaForm.finalVolume.$pristine }" ng-hide="ctrl.mangaitem.end!=null && ctrl.mangaitem.volumes===ctrl.mangaitem.finalVolume || ctrl.mangaitem.end!=null && ctrl.mangaitem.reReading===true ">
                     <label for="finalVolume" class="col-md-2 control-label">Final volume</label>
                     <div class="col-md-6">
                         <input type="number" class="form-control" data-ng-model="ctrl.mangaitem.finalVolume" id="finalVolume" name="finalVolume" placeholder="0">
@@ -123,7 +123,7 @@
                 <div class="form-group" data-ng-show="ctrl.mangaitem.status==true">
                     <label for="reReading" class="col-md-2 control-label">Re-reading?</label>
                     <div class="col-md-6">
-                        <input type="checkbox" class="form-control" data-ng-model="ctrl.mangaitem.reReading" data-ng-disabled="mangaitem.reReading" data-ng-change="mangaitem.chapters=0; mangaitem.volumes=0" id="reReading" name="reReading">
+                        <input type="checkbox" class="form-control" data-ng-model="ctrl.mangaitem.reReading" data-ng-disabled="mangaitem.reReading" data-ng-change="ctrl.mangaitem.chapters=0; ctrl.mangaitem.volumes=0" id="reReading" name="reReading">
                     </div>
                 </div>
                 </div>

@@ -1,41 +1,43 @@
-'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus', '$location',
-	function($scope, Authentication, Menus, $location) {
+(function() {
+	'use strict';
+	angular.module('core').controller('HeaderController', HeaderController);
+	HeaderController.$inject = ['$scope', 'Authentication', 'Menus', '$location'];
+
+	function HeaderController($scope, Authentication, Menus, $location) {
 		var ctrl = this;
+
 		ctrl.authentication = Authentication;
-
+		ctrl.isActive = isActive;
 		ctrl.isCollapsed = false;
+		ctrl.isTimedTheme = localStorage.getItem('timedTheme');
 		ctrl.menu = Menus.getMenu('topbar');
+		ctrl.saved = localStorage.getItem('theme');
+		ctrl.styles = [
+        { name: 'Day', url: 'dist/main-day.min.css' },
+        { name: 'Night', url: 'dist/main-night.min.css' }
+    ];
+		ctrl.theme = (localStorage.getItem('theme')!==null) ? JSON.parse(ctrl.saved) : 'dist/main-night.min.css';
+		ctrl.timedTheme = (localStorage.getItem('timedTheme')!==null) ? JSON.parse(ctrl.isTimedTheme) : false;
+		ctrl.toggleCollapsibleMenu = toggleCollapsibleMenu;
 
-		ctrl.toggleCollapsibleMenu = function() {
+		localStorage.setItem('theme', JSON.stringify(ctrl.theme));
+  	localStorage.setItem('timedTheme', JSON.stringify(ctrl.timedTheme));
+
+		function toggleCollapsibleMenu() {
 			ctrl.isCollapsed = !ctrl.isCollapsed;
-		};
+		}
 
 		// Collapsing the menu after navigation
 		$scope.$on('$stateChangeSuccess', function() {
 			ctrl.isCollapsed = false;
 		});
 
-    ctrl.isActive = function (viewLocation) {
+    function isActive(viewLocation) {
         return viewLocation === $location.path();
-    };
+    }
 
-    ctrl.saved = localStorage.getItem('theme');
-    ctrl.theme = (localStorage.getItem('theme')!==null) ? JSON.parse(ctrl.saved) : 'dist/main-night.min.css';
-    localStorage.setItem('theme', JSON.stringify(ctrl.theme));
-
-    ctrl.isTimedTheme = localStorage.getItem('timedTheme');
-    ctrl.timedTheme = (localStorage.getItem('timedTheme')!==null) ? JSON.parse(ctrl.isTimedTheme) : false;
-    localStorage.setItem('timedTheme', JSON.stringify(ctrl.timedTheme));
-
-    //user-selected style options/defaults.
-    ctrl.styles = [
-        { name: 'Day', url: 'dist/main-day.min.css' },
-        { name: 'Night', url: 'dist/main-night.min.css' }
-    ];
-
-    ctrl.changeTheme = function() {
+    function changeTheme() {
         localStorage.setItem('timedTheme', JSON.stringify(ctrl.timedTheme));
         var timeOfDayTheme = localStorage.getItem('timedTheme');
         if (timeOfDayTheme === 'false') {
@@ -52,7 +54,7 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
         link = document.getElementById('app-theme');
         link.href = storedValue.substr(1, storedValue.lastIndexOf('\"') - 1); //remove quotes for whatever reason.
         ctrl.theme = storedValue.substr(1, storedValue.lastIndexOf('\"') - 1); //remove quotes for whatever reason. //set the dropdown to the correct value;
-    };
+    }
 
 	}
-]);
+})();

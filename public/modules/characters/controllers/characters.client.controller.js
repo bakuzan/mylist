@@ -1,16 +1,16 @@
-'use strict';
+(function() {
+	'use strict';
+	angular.module('characters')
+	.controller('CharactersController', CharactersController);
+	CharactersController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Characters', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ListService', 'CharacterService', 'NotificationFactory', 'spinnerService', 'TagService'];
 
-// Characters controller
-angular.module('characters').controller('CharactersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Characters', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ListService', 'CharacterService', 'NotificationFactory', 'spinnerService', 'TagService',
-	function($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window, ListService, CharacterService, NotificationFactory, spinnerService, TagService) {
+	function CharactersController($scope, $stateParams, $location, Authentication, Characters, Animeitems, Mangaitems, fileUpload, $sce, $window, ListService, CharacterService, NotificationFactory, spinnerService, TagService) {
 		var ctrl = this;
+
+		ctrl.addTag = addTag;
 		ctrl.authentication = Authentication;
-		ctrl.whichController = 'character';
-    //paging variables.
-    ctrl.pageConfig = {
-        currentPage: 0,
-        pageSize: 10
-    };
+		ctrl.create = create;
+		ctrl.dropTag = dropTag;
     ctrl.filterConfig = {
 			isList: 'list', //show list? or slider.
       showingCount: 0,
@@ -22,37 +22,54 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
       tagsForFilter: [],
       taglessItem: false,
       areTagless: false,
-      selectListOptions: ListService.getSelectListOptions(ctrl.whichController),
+      selectListOptions: {},
       statTags: [],
       voiceActors: [],
       series: []
     };
-    ctrl.maxItemCount = 0; //number of characters.
+		ctrl.find = find;
+		ctrl.findAnime = findAnime;
+		ctrl.findManga = findManga;
+		ctrl.findOne = findOne;
+		ctrl.findOneAnime = findOneAnime;
+		ctrl.findOneManga = findOneManga;
     ctrl.imgPath = ''; //image path
+		ctrl.maxItemCount = 0; //number of characters.
+		ctrl.pageConfig = {
+				currentPage: 0,
+				pageSize: 10
+		};
+		ctrl.remove = remove;
+		ctrl.removeTag = removeTag;
     ctrl.tagArray = []; // holding tags pre-submit
     ctrl.tagArrayRemove = [];
+		ctrl.trustAsResourceUrl = trustAsResourceUrl;
+		ctrl.update = update;
+		ctrl.uploadFile = uploadFile;
     ctrl.usedTags = []; //for typeahead array.
+		ctrl.whichController = 'character';
+
 
 		//allow retreival of local resource
-    ctrl.trustAsResourceUrl = function(url) {
+    function trustAsResourceUrl(url) {
         return $sce.trustAsResourceUrl(url);
-    };
+    }
     //For adding new tags.
-    ctrl.addTag = function () {
+    function addTag() {
 			TagService.addTag(ctrl.tagArray, ctrl.newTag);
       ctrl.newTag = '';
-    };
+    }
 		//Drop tag for new tags.
-		ctrl.dropTag = function(text) {
+		function dropTag(text) {
 			TagService.dropTag(ctrl.tagArray, text);
-		};
+		}
 		//Drop tag for animeitem tags.
-		ctrl.removeTag = function(text) {
+		function removeTag(text) {
 			TagService.dropTag(ctrl.mangaitem.tags, text);
-		};
+		}
 
 		// Create new Character
-		ctrl.create = function() {
+		function create() {
 	    //console.log(ctrl.tagArray);
 	    var character = new Characters();
 			// Create new Character object
@@ -74,10 +91,10 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 				ctrl.error = errorResponse.data.message;
 				NotificationFactory.error('Error!', errorResponse.data.message);
 			});
-		};
+		}
 
 		// Remove existing Character
-		ctrl.remove = function(character) {
+		function remove(character) {
       //are you sure option...
 	    NotificationFactory.confirmation(function() {
 	        if ( character ) {
@@ -94,10 +111,10 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 	        }
 	        NotificationFactory.warning('Deleted!', 'Character was successfully deleted.');
 	    });
-		};
+		}
 
 		// Update existing Character
-		ctrl.update = function() {
+		function update() {
 			var character = ctrl.character;
       //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
       if (ctrl.character.manga!==null && ctrl.character.manga!==undefined) {
@@ -123,10 +140,11 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 				ctrl.error = errorResponse.data.message;
         NotificationFactory.error('Error!', errorResponse.data.message);
 			});
-		};
+		}
 
 		// Find a list of Characters
-		ctrl.find = function() {
+		function find() {
+			ctrl.filterConfig.selectListOptions = ListService.getSelectListOptions(ctrl.whichController);
 			spinnerService.loading('characters', Characters.query().$promise.then(function(result) {
 				ctrl.characters = result;
 				ctrl.filterConfig.areTagless = ListService.checkForTagless(result);
@@ -135,44 +153,45 @@ angular.module('characters').controller('CharactersController', ['$scope', '$sta
 				ctrl.filterConfig.series = CharacterService.buildSeriesList(result);
 				console.log('find characters: ', ctrl.characters, ctrl.filterConfig);
 			}));
-		};
+		}
 
 		// Find existing Character
-		ctrl.findOne = function() {
+		function findOne() {
 			ctrl.character = Characters.get({
 				characterId: $stateParams.characterId
 			});
-		};
+		}
 
     // Find a list of Animeitems
-		ctrl.findAnime = function() {
+		function findAnime() {
 			ctrl.animeitems = Animeitems.query();
-		};
+		}
 
     // Find existing Animeitem
-		ctrl.findOneAnime = function(anime) {
+		function findOneAnime(anime) {
 			ctrl.animeitem = Animeitems.get({
 				animeitemId: anime
 			});
-		};
+		}
 
     // Find a list of Mangaitems
-		ctrl.findManga = function() {
+		function findManga() {
 			ctrl.mangaitems = Mangaitems.query();
-		};
+		}
 
     // Find existing Animeitem
-		ctrl.findOneManga = function(manga) {
+		function findOneManga(manga) {
 			ctrl.mangaitem = Mangaitems.get({
 				mangaitemId: manga
 			});
-		};
+		}
 
     //image upload
-    ctrl.uploadFile = function(){
+    function uploadFile(){
         ctrl.imgPath = '/modules/characters/img/' + ctrl.myFile.name;
         fileUpload.uploadFileToUrl(ctrl.myFile, '/fileUploadCharacter');
-    };
+    }
 
 	}
-]);
+
+})();

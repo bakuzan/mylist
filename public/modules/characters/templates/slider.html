@@ -3,7 +3,7 @@
         <li class="slide"
             ng-repeat="slide in (filteredSlides =  (sliderController.slides | filter: sliderController.filterConfig.search | mediaFilter: sliderController.filterConfig.media | seriesFilter:sliderController.filterConfig.seriesFilter | tagFilter: sliderController.filterConfig.searchTags:sliderController.filterConfig.taglessItem))"
             ng-show="slide.visible"
-            ng-if="repeater">
+            ng-if="sliderController.repeater">
             <a href="/#!/characters/{{slide._id}}">
                 <img class="slide-image" ng-src="{{sliderController.trustAsResourceUrl(slide.image)}}">
                 <div class="slide-caption">

@@ -5,9 +5,27 @@
 	ItemService.$inject = ['moment', '$filter', 'ListService'];
 
 	function ItemService(moment, $filter, ListService) {
+		var obj = {
+			buildOverview: buildOverview,
+			buildRatingsDistribution: buildRatingsDistribution,
+			buildStatTags: buildStatTags,
+			completeByMonth: completeByMonth,
+			completeBySeason: completeBySeason,
+			convertDateToSeason: convertDateToSeason,
+			deleteHistory: deleteHistory,
+			endingYears: endingYears,
+			getRatingValues: getRatingValues,
+			itemHistory: itemHistory,
+			latestDate: latestDate,
+			maxCompleteMonth: maxCompleteMonth,
+			maxTagCount: maxTagCount,
+			ratingsWeighted: ratingsWeighted,
+			setSeason: setSeason
+		};
+		return obj;
 
 	        //Using the date, returns the season.
-	        this.convertDateToSeason = function(date) {
+	        function convertDateToSeason(date) {
 	            var season = '', year = date.getFullYear(), month = date.getMonth() + 1, commonArrays = ListService.getCommonArrays(),
 	                i = commonArrays.seasons.length;
 	//            console.log('convert: ', year, month);
@@ -22,10 +40,10 @@
 	            }
 	//            console.log('to: ', season);
 	            return season;
-	        };
+	        }
 
 	        //add history entry to item.
-	        this.itemHistory = function(item, updateHistory, type) {
+	        function itemHistory(item, updateHistory, type) {
 	//            console.log('item history: ', item, item.meta);
 	            //populate the history of when each part was 'checked' off.
 	            if (item.meta.history.length !== 0) {
@@ -54,10 +72,10 @@
 	                }
 	            }
 	            return item;
-	        };
+	        }
 
 	        //remove an entry from an items history.
-	        this.deleteHistory = function(item, history) {
+	        function deleteHistory(item, history) {
 	            var temp = [];
 	            angular.forEach(item.meta.history, function(past) {
 	                if (past.value !== history.value) {
@@ -66,10 +84,10 @@
 	            });
 	            item.meta.history = temp;
 	            return item;
-	        };
+	        }
 
 	        //function to display relative time - using latest or updated date.
-	        this.latestDate = function(latest, updated) {
+	        function latestDate(latest, updated) {
 	            //latest date display format.
 	//          console.log(latest, updated);
 	            var today = moment(new Date()), latestDate, diff;
@@ -98,20 +116,20 @@
 	                    return diff + ' days ago.';
 	                }
 	            }
-	        };
+	        }
 
 	        //build statistics item overview details.
-	        this.buildOverview = function(items) {
+	        function buildOverview(items) {
 	            var overview = {
 	                ongoing: $filter('filter')(items, {status: false }).length,
 	                completed: $filter('filter')(items, {status: true }).length
 	            };
 	//            console.log('overview ' , overview);
 	            return overview;
-	        };
+	        }
 
 	        //calculate which month has the most anime completed in it.
-	        this.maxCompleteMonth = function(items) {
+	        function maxCompleteMonth(items) {
 	            var modeMap = {}, maxCount = 0;
 	            for(var i = 0; i < items.length; i++) {
 	                if (items[i].end!==undefined && items[i].end!==null) {
@@ -127,10 +145,10 @@
 	                }
 	            }
 	            return maxCount;
-	        };
+	        }
 
 	        //calculate the rating values - max rated count and average rating.
-	        this.getRatingValues = function(items) {
+	        function getRatingValues(items) {
 	            var tempRating = 0,
 	                maxRatedCount = 0,
 	                averageRating = 0;
@@ -147,10 +165,10 @@
 	            };
 	//            console.log('values', values);
 	            return values;
-	        };
+	        }
 
 	        //calculate which month has the most anime completed in it.
-	        this.maxTagCount = function(items) {
+	        function maxTagCount(items) {
 	            var modeMap = {}, maxCount = 0;
 	            angular.forEach(items, function(item) {
 	                angular.forEach(item.tags, function(tag) {
@@ -166,11 +184,11 @@
 	                });
 	            });
 	            return maxCount;
-	        };
+	        }
 
 	        //build stat tags including counts, averages etc.
-	        this.buildStatTags = function(items, averageItemRating) {
-	            var self = this, add = true, statTags = [], checkedRating, maxTagCount = self.maxTagCount(items), itemCount = items.length;
+	        function buildStatTags(items, averageItemRating) {
+	            var add = true, statTags = [], checkedRating, maxTagCount = obj.maxTagCount(items), itemCount = items.length;
 	            //is tag in array?
 	            angular.forEach(items, function(item) {
 	                angular.forEach(item.tags, function(tag) {
@@ -182,7 +200,7 @@
 	                            statTags[i].ratings.push(item.rating);
 	                            statTags[i].ratingAdded += item.rating;
 	                            statTags[i].ratingAvg = statTags[i].ratingAdded === 0 ? 0 : statTags[i].ratingAdded / statTags[i].ratedCount;
-	                            statTags[i].ratingWeighted = self.ratingsWeighted(statTags[i].ratings);
+	                            statTags[i].ratingWeighted = obj.ratingsWeighted(statTags[i].ratings);
 	                        }
 	                    }
 	                    // add if not in
@@ -195,10 +213,10 @@
 	//                    console.log(statTags);
 	            });
 	            return statTags;
-	        };
+	        }
 
 	        //function to calculate the weighted mean ratings for the genre tags.
-	        this.ratingsWeighted = function(ratings) {
+	        function ratingsWeighted(ratings) {
 	            var values = [], weights = [], unratedCount = 0, total = 0, count = 0;
 	            /**
 	             *  create array (weights) with key(rating).
@@ -231,10 +249,10 @@
 							 * count = number of ratings.
 							 */
 	            return total / count;
-	        };
+	        }
 
 	        //builds counts for number of items given for each rating.
-	        this.buildRatingsDistribution = function(items) {
+	        function buildRatingsDistribution(items) {
 	            var maxCount = items.length, possibleValues = [10,9,8,7,6,5,4,3,2,1,0], ratingsDistribution = [], i = possibleValues.length;
 	            while(i--) {
 	                var count = $filter('filter')(items, { rating: i }, true).length;
@@ -250,10 +268,10 @@
 	            }
 	//            console.log('RD: ', ratingsDistribution);
 	            return ratingsDistribution;
-	        };
+	        }
 
 	        // 'sub-function' of the completeBy... functions.
-	        this.endingYears = function(items) {
+	        function endingYears(items) {
 	            var years = [],
 									itemYears = $filter('unique')(items, 'end.substring(0,4)'); //get unqiue years as items.
 	            		itemYears = $filter('orderBy')(itemYears, '-end.substring(0,4)'); //order desc.
@@ -263,11 +281,11 @@
 								}
 							});
 	            return years;
-	        };
+	        }
 
 	        //complete by month stats
-	        this.completeByMonth = function(items) {
-	            var self = this, monthDetails = {}, completeByMonth = [], maxCompleteMonth = 0, itemYears = self.endingYears(items), i = itemYears.length;
+	        function completeByMonth(items) {
+	            var monthDetails = {}, completeByMonth = [], maxCompleteMonth = 0, itemYears = obj.endingYears(items), i = itemYears.length;
 	            //build comlpeteByMonths object.
 	            while(i--) {
 	                //chuck the null end date. push the year part of the other end dates with months array.
@@ -290,16 +308,16 @@
 	                                         });
 	                }
 	            }
-	            maxCompleteMonth = self.maxCompleteMonth(items);
+	            maxCompleteMonth = obj.maxCompleteMonth(items);
 	            monthDetails = { months: completeByMonth, max: maxCompleteMonth };
 
 	//            console.log('completeByMonth', completeByMonth);
 	            return monthDetails;
-	        };
+	        }
 
 	        //complete by season stats.
-	        this.completeBySeason = function(items) {
-	            var self = this, seasonDetails = {}, completeBySeason = [], maxCompleteSeason = 0, itemYears = self.endingYears(items), i = itemYears.length;
+	        function completeBySeason(items) {
+	            var seasonDetails = {}, completeBySeason = [], maxCompleteSeason = 0, itemYears = obj.endingYears(items), i = itemYears.length;
 	            //build completeBySeason object.
 	            while(i--) {
 	                //chuck the null end date. push the year part of the other end dates with seasons array.
@@ -326,17 +344,17 @@
 	            seasonDetails = { seasons: completeBySeason, max: maxCompleteSeason };
 	//            console.log('completeBySeason', seasonDetails);
 	            return seasonDetails;
-	        };
+	        }
 
 	        //Temporary function to generate the season data for pre-exisiting items in db.
-	        this.setSeason = function(items, year, season) {
-	            var self = this, array = $filter('endedSeason')(items, year, season);
+	        function setSeason(items, year, season) {
+	            var array = $filter('endedSeason')(items, year, season);
 	            angular.forEach(array, function(item) {
 	                console.log(item.title);
-	                item.season = self.convertDateToSeason(new Date(item.start));
+	                item.season = obj.convertDateToSeason(new Date(item.start));
 	            });
 	            return array;
-	        };
+	        }
 
 	}
 

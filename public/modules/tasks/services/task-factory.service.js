@@ -4,17 +4,27 @@
   TaskFactory.$inject = ['$q', 'Animeitems', 'Mangaitems', 'AnimeFactory', 'MangaFactory', 'NotificationFactory', 'ListService', '$uibModal'];
 
     function TaskFactory($q, Animeitems, Mangaitems, AnimeFactory, MangaFactory, NotificationFactory, ListService, $uibModal) {
-      var obj = {};
+      var obj = {
+        getWeekBeginning: getWeekBeginning,
+        insertChecklistItem: insertChecklistItem,
+        removeTask: removeTask,
+        updateAnimeitem: updateAnimeitem,
+        updateMangaitem: updateMangaitem,
+        updateTask: updateTask,
+        tickOff: tickOff,
+        tickOffChecklist: tickOffChecklist,
+      };
+      return obj;
 
-          obj.getWeekBeginning = function() {
+          function getWeekBeginning() {
               var newDate = new Date(),
                   day = newDate.getDay(),
                   diff = newDate.getDate() - day + (day === 0 ? -6:1); // adjust when day is sunday
               var wkBeg = new Date();
               return new Date(wkBeg.setDate(diff));
-          };
+          }
 
-          obj.updateAnimeitem = function(task) {
+          function updateAnimeitem(task) {
               var query = Animeitems.get({
   							animeitemId: task.link.anime._id
   						});
@@ -24,9 +34,9 @@
                   data.latest = new Date();
                   AnimeFactory.update(data, undefined, true, undefined);
               });
-          };
+          }
 
-          obj.updateMangaitem = function(task, chapters, volumes) {
+          function updateMangaitem(task, chapters, volumes) {
   					return $q(function(resolve, reject) {
               var query = Mangaitems.get({
   							mangaitemId: task.link.manga._id
@@ -40,13 +50,13 @@
   								resolve(data);
               });
   					});
-          };
+          }
 
   				/** Task Update,Edit,Delete and other functions below here.
   				 */
 
   			 // Update existing Task
-  			 obj.updateTask = function(task, refresh) {
+  			 function updateTask(task, refresh) {
   				 return $q(function(resolve, reject) {
   					 //console.log('update');
   					 if (task.link.anime) {
@@ -67,10 +77,10 @@
   						  NotificationFactory.error('Error!', 'Task failed to save!');
   						});
   					});
-  			 };
+  			 }
 
   			 //Remove a task.
-  				obj.removeTask = function(task, tasks, userCheck) {
+  				function removeTask(task, tasks, userCheck) {
   					if(userCheck) {
   						//console.log('launch');
   						NotificationFactory.confirmation(function remove() {
@@ -79,7 +89,7 @@
   					} else {
   						removeTaskProcess(task, tasks);
   					}
-  				};
+  				}
 
   				function removeTaskProcess(task, tasks) {
   					if ( task ) {
@@ -110,7 +120,7 @@
   				}
 
   				//Completes a task.
-  				obj.tickOff = function(task) {
+  				function tickOff(task) {
   					return $q(function(resolve, reject) {
   						var isLinked = task.link.linked;
   				    //Is it linked?
@@ -149,10 +159,10 @@
   							});
   						}
   					});
-  				};
+  				}
 
   				//Completes a checklist item.
-  				obj.tickOffChecklist = function(task, index) {
+  				function tickOffChecklist(task, index) {
   					return $q(function(resolve, reject) {
   						//update the option for the task.
   						var isLinked = task.link.linked;
@@ -186,10 +196,10 @@
   							});
   						}
   					});
-  				};
+  				}
 
   				//Add additional items to a checklist.
-  				obj.insertChecklistItem = function(task, newChecklistItem) {
+  				function insertChecklistItem(task, newChecklistItem) {
   					if (newChecklistItem!=='' && newChecklistItem!==undefined) {
   							var alreadyAdded = false;
   							//find the item and insert the option.
@@ -206,10 +216,9 @@
   									NotificationFactory.popup('Option already exists.', 'Please re-name and try again.', 'error');
   							}
   					}
-  					this.updateTask(task);
-  				};
+  					obj.updateTask(task);
+  				}
 
-      return obj;
   }
 
 })();

@@ -5,25 +5,26 @@
 	fileUpload.$inject = ['$http', 'NotificationFactory'];
 
 	function fileUpload($http, NotificationFactory) {
-		return {
+		var obj = {
 			uploadFileToUrl: uploadFileToUrl
 		};
+		return obj;
 
-	    function uploadFileToUrl(file, uploadUrl){
-	        var fd = new FormData();
-	        fd.append('file', file);
-	        $http.post(uploadUrl, fd, {
-	            transformRequest: angular.identity,
-	            headers: {'Content-Type': undefined}
-	        })
-	        .success(function(response){
-	            NotificationFactory.success('Uploaded!', 'Image was saved successfully');
-	        })
-	        .error(function(err){
-	            NotificationFactory.popup('Woops!', 'Something went wrong! \n' + err, 'error');
-	        });
-	    }
-			
+    function uploadFileToUrl(file, uploadUrl){
+        var fd = new FormData();
+        fd.append('file', file);
+        $http.post(uploadUrl, fd, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        })
+        .success(function(response){
+            NotificationFactory.success('Uploaded!', 'Image was saved successfully');
+        })
+        .error(function(err){
+            NotificationFactory.popup('Woops!', 'Something went wrong! \n' + err, 'error');
+        });
+    }
+
 	}
 
 })();

@@ -1,24 +1,29 @@
-'use strict';
+(function() {
+	'use strict';
+	angular.module('animeitems')
+	.controller('WatchAnimeController', WatchAnimeController);
+	WatchAnimeController.$inject = ['$scope', 'Authentication', '$stateParams', '$timeout', 'Animeitems', '$sce', 'ListService'];
 
-// Animeitems controller
-angular.module('animeitems').controller('WatchAnimeController', ['$scope', 'Authentication', '$stateParams', '$timeout', 'Animeitems', '$sce', 'ListService',
-	function($scope, Authentication, $stateParams, $timeout, Animeitems, $sce, ListService) {
+	function WatchAnimeController($scope, Authentication, $stateParams, $timeout, Animeitems, $sce, ListService) {
 				var ctrl = this,
 						saved = localStorage.getItem('watched');
+
         ctrl.authentication = Authentication;
-				ctrl.watchedList = (localStorage.getItem('watched') !== null) ? JSON.parse(saved) : {};
+				ctrl.findOne = findOne;
+				ctrl.playVideo = playVideo;
         ctrl.videoFile = {
   				processed: '',
   				file: '',
 					number: '',
   				message: 'Please select an episode.'
         };
+				ctrl.watchedList = (localStorage.getItem('watched') !== null) ? JSON.parse(saved) : {};
 
-				ctrl.playVideo = function() {
+				function playVideo() {
 					ctrl.watchedList[ctrl.videoFile.file] = true;
 					localStorage.setItem('watched', JSON.stringify(ctrl.watchedList));
 					ctrl.watchedList = JSON.parse(localStorage.getItem('watched'));
-				};
+				}
 
         $scope.$watch('fileGrab', function(nVal, oVal) {
           if(nVal) {
@@ -30,13 +35,14 @@ angular.module('animeitems').controller('WatchAnimeController', ['$scope', 'Auth
         });
 
         // Find existing Animeitem
-    		ctrl.findOne = function() {
+    		function findOne() {
     	    Animeitems.get({ animeitemId: $stateParams.animeitemId }).$promise.then(function(result) {
     	        ctrl.animeitem = result;
     	   			console.log(ctrl.animeitem);
     	    });
-    		};
+    		}
         ctrl.findOne();
 
 	}
-]);
+
+})();

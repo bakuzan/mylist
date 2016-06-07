@@ -74,13 +74,13 @@
 	    var character = new Characters();
 			// Create new Character object
 			character = new Characters ({
-				name: this.name,
+				name: ctrl.name,
       	image: ctrl.imgPath,
-        anime: this.anime!==undefined && this.anime!==null ? this.anime._id : this.anime,
-        manga: this.manga!==undefined && this.manga!==null ? this.manga._id : this.manga,
-        voice: this.voice,
+        anime: ctrl.anime!==undefined && ctrl.anime!==null ? ctrl.anime._id : ctrl.anime,
+        manga: ctrl.manga!==undefined && ctrl.manga!==null ? ctrl.manga._id : ctrl.manga,
+        voice: ctrl.voice,
         tags: ctrl.tagArray,
-        user: this.user
+        user: ctrl.user
 			});
 
 			// Redirect after save

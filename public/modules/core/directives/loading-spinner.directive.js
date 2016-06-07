@@ -4,7 +4,7 @@
   .directive('loadingSpinner', loadingSpinner);
   loadingSpinner.$inject = ['$http', 'spinnerService'];
 
-   function spinnerService($http, spinnerService) {
+   function loadingSpinner($http, spinnerService) {
       return {
           restrict: 'A',
           transclude: true,

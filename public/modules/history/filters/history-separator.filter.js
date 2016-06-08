@@ -1,7 +1,10 @@
-'use strict';
+(function() {
+  'use strict';
+  angular.module('history')
+  .filter('historySeparator', historySeparator);
+  historySeparator.$inject = ['HistoryService', 'moment'];
 
-angular.module('history')
-.filter('historySeparator', ['HistoryService', 'moment', function(HistoryService, moment) {
+  function historySeparator(HistoryService, moment) {
     return function(array, level, timeframe) {
         var itemDate,
             attr = (level === 'group') ? 'latest' : 'date';
@@ -12,4 +15,6 @@ angular.module('history')
             });
         }
     };
-}]);
+  }
+
+})();

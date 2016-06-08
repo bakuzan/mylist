@@ -1,31 +1,39 @@
-'use strict';
-
-// History controller
-angular.module('ratings').controller('RatingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'ListService', 'NotificationFactory', 'StatisticsService', 'spinnerService',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, ListService, NotificationFactory, StatisticsService, spinnerService) {
+(function() {
+	'use strict';
+	angular.module('ratings')
+	.controller('RatingsController', RatingsController);
+	RatingsController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'ListService', 'NotificationFactory', 'StatisticsService', 'spinnerService'];
+	function RatingsController($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, ListService, NotificationFactory, StatisticsService, spinnerService) {
 		var ctrl = this;
+
 		ctrl.authentication = Authentication;
-    ctrl.view = 'Anime';
-    //paging variables.
+		ctrl.episodeScore = episodeScore;
+		ctrl.find = find;
+		ctrl.go = go;
+		ctrl.hoveringOver = hoveringOver;
+		ctrl.itemScore = itemScore;
+		ctrl.maxRating = 10;
+		ctrl.modelOptions = { debounce: 700 };
     ctrl.pageConfig = {
         currentPage: 0,
         pageSize: 20
     };
-		ctrl.modelOptions = { debounce: 700 };
-    ctrl.sortType = 'rating';
-    ctrl.sortReverse = true;
-    ctrl.viewItem = undefined;
     ctrl.ratingLevel = undefined; //default rating filter
-    //rating 'tooltip' function
-    ctrl.maxRating = 10;
-    ctrl.hoveringOver = function(value) {
+    ctrl.sortReverse = true;
+    ctrl.sortType = 'rating';
+		ctrl.view = 'Anime';
+		ctrl.viewEpisodeRatings = viewEpisodeRatings;
+    ctrl.viewItem = undefined;
+
+		//rating 'tooltip' function
+    function hoveringOver(value) {
         ctrl.overStar = value;
         ctrl.percent = 100 * (value / ctrl.maxRating);
-    };
+    }
 
-    ctrl.go = function(id) {
+    function go(id) {
         $location.path('/mangaitems/' + id);
-    };
+    }
 
     function getItems(view) {
         if (view === 'Anime') {
@@ -40,17 +48,17 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         ctrl.viewItem = undefined;
     }
 
-    ctrl.find = function(view) {
+    function find(view) {
 			if(view === 'Anime' || view === 'Manga') {
 				 getItems(view);
 			 } else {
 				ctrl.view = 'Anime';
 				getItems(ctrl.view);
 			 }
-    };
+    }
 
     //apply new score.
-    ctrl.itemScore = function(item, score) {
+    function itemScore(item, score) {
         if (item.rating !== score) {
             item.rating = score;
 
@@ -64,11 +72,11 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
 //                console.log('update');
         }
         return false;
-    };
+    }
 
     /** Episode rating functions below here.
      */
-    ctrl.viewEpisodeRatings = function(item) {
+    function viewEpisodeRatings(item) {
         ctrl.viewItem = (ctrl.viewItem !== item) ? item : undefined;
         ctrl.isEqual = (ctrl.viewItem === item) ? true : false;
         ctrl.search = (ctrl.viewItem === item) ? item.title : '';
@@ -77,9 +85,9 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
                 ctrl.summaryFunctions = result;
             }));
         }
-    };
+    }
 
-    ctrl.episodeScore = function(finished) {
+    function episodeScore(finished) {
 //            console.log('finished: ', finished, ctrl.viewItem.meta.history);
         if (finished) {
             var item = ctrl.viewItem;
@@ -94,8 +102,7 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
                 NotificationFactory.error('Error!', 'Your change failed!');
             });
         }
-    };
-
-
     }
-]);
+	}
+
+})();

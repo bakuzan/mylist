@@ -1,13 +1,17 @@
-'use strict';
+(function() {
+  'use strict';
+  angular.module('ratings')
+  .directive('focusOnShow', focusOnShow);
 
-angular.module('ratings').directive('focusOnShow', function($timeout) {
+  function focusOnShow($timeout) {
     return function(scope, element, attrs) {
-       scope.$watch(attrs.focusOnShow, function (newValue) { 
+       scope.$watch(attrs.focusOnShow, function (newValue) {
 //            console.log('preview changed!')
             $timeout(function() {
                 var myValue = newValue && element[0].focus();
                 return myValue;
             });
          },true);
-      };    
-});
+      };
+    }
+})();

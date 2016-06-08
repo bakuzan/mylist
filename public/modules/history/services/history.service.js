@@ -1,62 +1,66 @@
-'use strict';
+(function() {
+  'use strict';
+  angular.module('history')
+  .service('HistoryService', HistoryService);
+  HistoryService.$inject = ['moment', '$q'];
 
-//History service used to communicate Animeitems REST endpoints
-angular.module('history')
-.factory('AnimeHistory', ['$resource',
-        function($resource) {
-            return $resource('history/anime/:latest', { latest: '@_latest' }, { update: { method: 'PUT' } });
-        }
-    ])
-.factory('MangaHistory', ['$resource',
-        function($resource) {
-            return $resource('history/manga/:latest', { latest: '@_latest' }, { update: { method: 'PUT' } });
-        }
-    ])
-.service('HistoryService', ['moment', '$q', function(moment, $q) {
-      
+   function HistoryService(moment, $q) {
+     var service = {
+           buildHistoryList: buildHistoryList,
+           extractHistory: extractHistory,
+           filterItemHistory: filterItemHistory,
+           getEndsOfWeek: getEndsOfWeek,
+           getSetDaysAgo: getSetDaysAgo,
+           groupItemHistory: groupItemHistory,
+           happenedWhen: happenedWhen,
+           today: moment(new Date()).startOf('day'),
+           weekBeginning: weekBeginning,
+           weekEnding: weekEnding
+         },
+         endsOfWeek = getEndsOfWeek(),
+         mondays = endsOfWeek.mondays,
+         sundays = endsOfWeek.sundays;
+         return service;
+
     // getting mondays and sundays for this, last, two and three weeks ago.
-    this.getEndsOfWeek = function() {
-        var self = this, endsOfWeek = [], thisMonday = self.weekBeginning(), thisSunday = self.weekEnding();
-        endsOfWeek = { 
-            mondays: [ thisMonday, self.getSetDaysAgo(thisMonday, 7), self.getSetDaysAgo(thisMonday, 14), self.getSetDaysAgo(thisMonday, 21), self.getSetDaysAgo(thisMonday, 28) ],
-            sundays: [ thisSunday, self.getSetDaysAgo(thisSunday, 7), self.getSetDaysAgo(thisSunday, 14), self.getSetDaysAgo(thisSunday, 21), self.getSetDaysAgo(thisSunday, 28) ]
+    function getEndsOfWeek() {
+        var endsOfWeek = [], thisMonday = service.weekBeginning(), thisSunday = service.weekEnding();
+        endsOfWeek = {
+            mondays: [ thisMonday, service.getSetDaysAgo(thisMonday, 7), service.getSetDaysAgo(thisMonday, 14), service.getSetDaysAgo(thisMonday, 21), service.getSetDaysAgo(thisMonday, 28) ],
+            sundays: [ thisSunday, service.getSetDaysAgo(thisSunday, 7), service.getSetDaysAgo(thisSunday, 14), service.getSetDaysAgo(thisSunday, 21), service.getSetDaysAgo(thisSunday, 28) ]
         };
-        return endsOfWeek;        
-    };
+        return endsOfWeek;
+    }
+
     //get 'daysAgo' days ago from 'thisEnd' date.
-    this.getSetDaysAgo = function(thisEnd, daysAgo) {
+    function getSetDaysAgo(thisEnd, daysAgo) {
         var newDate = moment(thisEnd).subtract(daysAgo, 'days');
         return newDate;
-    };
+    }
+
     //get 'this' monday.
-    this.weekBeginning = function() {
+    function weekBeginning() {
         var date = new Date(),
             day = date.getDay(),
             diff = date.getDate() - day + (day === 0 ? -6:1),
             temp = new Date(),
             wkBeg = new Date(temp.setDate(diff));
         return moment(wkBeg.toISOString()).startOf('day');
-    };
+    }
+
     //get 'this' sunday.
-    this.weekEnding = function() {
+    function weekEnding() {
         var date = new Date(),
             day = date.getDay(),
             diff = date.getDate() - day + (day === 0 ? 0:7),
             temp = new Date(),
             wkEnd = new Date(temp.setDate(diff));
         return moment(wkEnd.toISOString()).endOf('day');
-    };
-    
-    //Variables that require the above functions;
-    this.today = moment(new Date()).startOf('day');
-    this.endsOfWeek = this.getEndsOfWeek();
-    this.mondays = this.endsOfWeek.mondays;
-    this.sundays = this.endsOfWeek.sundays;
+    }
 
-    this.buildHistoryList = function(items) {
+    function buildHistoryList(items) {
         var deferred = $q.defer(),
-            self = this,
-            promise = self.extractHistory(items).then(function(result) {
+            promise = service.extractHistory(items).then(function(result) {
 //                console.log('extract history: ', result);
                 result.sort(function (a, b) {
                     var dateA = a.date,
@@ -65,15 +69,15 @@ angular.module('history')
                     if(dateA < dateB) return 1;
                     if(dateA === dateB) return 0;
                 });
-                return self.groupItemHistory(result);
+                return service.groupItemHistory(result);
             }).then(function(result) {
 //                console.log('grouped', result);
                 deferred.resolve(result);
             });
         return deferred.promise;
-    };
-    
-    this.extractHistory = function(items) {
+    }
+
+    function extractHistory(items) {
         var deferred = $q.defer(),
             itemHistory = [], today = moment(new Date()).startOf('day');
         angular.forEach(items, function(item) {
@@ -88,9 +92,9 @@ angular.module('history')
         });
         deferred.resolve(itemHistory);
         return deferred.promise;
-    };
-    
-    this.groupItemHistory = function(itemHistory) {
+    }
+
+    function groupItemHistory(itemHistory) {
         var deferred = $q.defer(),
             index, prevItem, item, group,
             length = itemHistory.length,
@@ -128,44 +132,43 @@ angular.module('history')
         }
         deferred.resolve(groupedHistory);
         return deferred.promise;
-    };
-    
-    this.filterItemHistory = function(timeframe, itemDate) {
-        var self = this,
-            diff = self.today.diff(itemDate, 'days');
+    }
+
+    function filterItemHistory(timeframe, itemDate) {
+        var diff = service.today.diff(itemDate, 'days');
         switch(timeframe) {
             case 'today':
                 return diff === 0;
-                
+
             case 'yesterday':
                 return diff === 1;
-                
+
             case 'this week':
-                return self.mondays[0] <= itemDate && itemDate <= self.sundays[0];
-                
+                return mondays[0] <= itemDate && itemDate <= sundays[0];
+
             case 'last week':
-                return self.mondays[1] <= itemDate && itemDate <= self.sundays[1];
-                
+                return mondays[1] <= itemDate && itemDate <= sundays[1];
+
             case 'two weeks ago':
-                return self.mondays[2] <= itemDate && itemDate <= self.sundays[2];
-            
+                return mondays[2] <= itemDate && itemDate <= sundays[2];
+
             case 'three weeks ago':
-                return self.mondays[3] <= itemDate && itemDate <= self.sundays[3];
-                
+                return mondays[3] <= itemDate && itemDate <= sundays[3];
+
             case 'four weeks ago':
-                return self.mondays[4] <= itemDate && itemDate <= self.sundays[4];
+                return mondays[4] <= itemDate && itemDate <= sundays[4];
         }
-    };
-    
+    }
+
     /** function to display relative time.
      *  Using diff because fromNow will create conflicts between
      *  the item date and the 'group date'.
      */
-    this.happenedWhen = function(when) {
+    function happenedWhen(when) {
 //          console.log(latest, updated);
         var today = moment(new Date()).startOf('day'), thisDate = moment(when).startOf('day'),
             diff = today.diff(thisDate, 'days');
-                
+
         //for 0 and 1 day(s) ago use the special term.
         if (diff === 0) {
             return 'Today at ' + moment(when).format('HH:mm');
@@ -174,6 +177,8 @@ angular.module('history')
         } else {
             return diff + ' days ago at ' + moment(when).format('HH:mm');
         }
-    };
+    }
 
-}]);
+  }
+
+})();

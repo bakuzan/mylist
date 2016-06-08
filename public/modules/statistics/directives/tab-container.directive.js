@@ -1,7 +1,9 @@
-'use strict';
+(function() {
+  'use strict';
+  angular.module('statistics')
+  .directive('tabContainer', tabContainer);
 
-angular.module('statistics')
-.directive('tabContainer', function () {
+  function tabContainer() {
     return {
         restrict: 'A',
         transclude: true,
@@ -113,92 +115,6 @@ angular.module('statistics')
 
         }
     };
-})
-.directive('tabView', function () {
-    return {
-        restrict: 'A',
-        transclude: true,
-        replace: true,
-        template: '<div class="tab-view" role="tabpanel" ng-show="active" ng-transclude></div>',
-        require: '^tabContainer',
-        scope: {
-            heading: '@',
-            disabled: '='
-        },
-        link: function (scope, element, attrs, tabContainerCtrl) {
-            scope.active = false;
-            tabContainerCtrl.addTab(scope);
+  }
 
-            scope.$watch('disabled', function(newValue) {
-                if(newValue !== undefined) {
-                    if(newValue) {
-                        console.log(scope.heading, newValue);
-                        tabContainerCtrl.disable(scope);
-                    }
-                }
-            });
-        }
-    };
-})
-.directive('detectFlood', ['$timeout', function($timeout) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-            var el = element[0];
-
-            function overflowCheck() {
-                if (el.scrollWidth > el.offsetWidth) {
-                    el.classList.add('flooded');
-                } else {
-                    el.classList.remove('flooded');
-                }
-            }
-            overflowCheck();
-
-            scope.$watch(
-                function () {
-                    return {
-                        width: el.offsetWidth,
-                    };
-                }, function () {
-//                    console.log('detect flood?');
-                        overflowCheck();
-                }, true
-            );
-
-        }
-    };
-}])
-.directive('percentageBarContainer', function() {
-  return {
-      restrict: 'A',
-      replace: true,
-      scope: {
-        border: '@?'
-      },
-      transclude: true,
-      bindToController: true,
-      template: '<div class="relative {{percentageBarContainer.border}}" style="height: 20px;" ng-transclude></div>',
-      controllerAs: 'percentageBarContainer',
-      controller: function($scope) {
-
-      }
-  };
-})
-.directive('percentageBar', function() {
-    return {
-        restrict: 'A',
-        replace: true,
-        scope: {
-            type: '@?',
-            percentage: '@',
-            colour: '@?',
-            display: '@?'
-        },
-        require: '^percentageBarContainer',
-        templateUrl: '/modules/statistics/templates/percentage-bar.html',
-        link: function(scope, element, attrs, percentageBarContainerCtrl) {
-
-        }
-    };
-});
+})();

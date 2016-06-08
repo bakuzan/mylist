@@ -1,16 +1,18 @@
-'use strict';
+(function() {
+  'use strict';
+  angular.module('history').controller('HistoryController', HistoryController);
+  HistoryController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'AnimeHistory', 'MangaHistory', 'HistoryService', 'ListService', 'spinnerService'];
 
-// History controller
-angular.module('history').controller('HistoryController', ['$scope', '$stateParams', '$location', 'Authentication', 'AnimeHistory', 'MangaHistory', 'HistoryService', 'ListService', 'spinnerService',
-	function($scope, $stateParams, $location, Authentication, AnimeHistory, MangaHistory, HistoryService, ListService, spinnerService) {
+  function HistoryController($scope, $stateParams, $location, Authentication, AnimeHistory, MangaHistory, HistoryService, ListService, spinnerService) {
 		var ctrl = this,
 		    latestDate = new Date().setDate(new Date().getDate() - 29);
-		ctrl.authentication = Authentication;
 
-    ctrl.view = 'Anime';
+    ctrl.authentication = Authentication;
+    ctrl.buildHistory = buildHistory;
     ctrl.filterConfig = {
 			historyFilter: 'Today'
     };
+    ctrl.happenedWhen = happenedWhen;
     ctrl.historyGroups = [
       { name: 'Today' },
       { name: 'Yesterday' },
@@ -20,8 +22,10 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
       { name: 'Three weeks ago' },
       { name: 'Four weeks ago' },
     ];
+    ctrl.view = 'Anime';
 
-    ctrl.buildHistory = function() {
+
+    function buildHistory() {
 	    spinnerService.loading('history', AnimeHistory.query({ latest: latestDate }).$promise.then(function(result) {
 					return HistoryService.buildHistoryList(result);
 			}).then(function(result) {
@@ -36,7 +40,7 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
 				ctrl.mangaHistory = result;
 			})
 		  );
-    };
+    }
 
     //Needed to catch 'Character' setting and skip it.
     $scope.$watch('view', function(newValue) {
@@ -47,8 +51,10 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
       }
     });
 
-    ctrl.happenedWhen = function(when) {
+    function happenedWhen(when) {
         return HistoryService.happenedWhen(when);
-    };
+    }
+
 	}
-]);
+
+})();

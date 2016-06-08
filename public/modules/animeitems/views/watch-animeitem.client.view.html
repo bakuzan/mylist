@@ -12,7 +12,7 @@
     </aside>
     <header class="fixed-header">
       <h2>
-        Watch {{ctrl.animeitem.title}}
+        <span ng-bind="'Watch ' + ctrl.animeitem.title"></span>
         <span ng-if="ctrl.videoFile.number" ng-bind="'episode #' +ctrl.videoFile.number"></span>
       </h2>
     </header>
@@ -25,10 +25,14 @@
     <header>
       <h3 class="margin-5">Episodes</h3>
     </header>
+    <div>
+      <input type="checkbox" class="phantom-control" ng-model="ctrl.animeitem.reWatching" ng-change="ctrl.startRewatch()" />
+      <span>Rewatch</span>
+    </div>
     <div class="overflow-auto-hover" style="height: 33vh">
       <ul class="list-group" id="anime-watch-file-list">
         <li class="cursor-pointer padding-5" ng-class="ctrl.videoFile.file === file.file ? 'loaded' : ''" ng-repeat="file in ctrl.animeitem.video.files" click-pass="file-grabber">
-            <span>#{{file.number}}</span><i class="fa fa-check padding-left-10" style="color: green" ng-show="ctrl.watchedList[file.file]"></i>
+            <span ng-bind="'#' + file.number"></span><i class="fa fa-check padding-left-10" style="color: green" ng-show="ctrl.watchedList[file.file]"></i>
         </li>
       </ul>
     </div>

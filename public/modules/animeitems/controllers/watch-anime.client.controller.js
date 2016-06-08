@@ -11,6 +11,7 @@
         ctrl.authentication = Authentication;
 				ctrl.findOne = findOne;
 				ctrl.playVideo = playVideo;
+				ctrl.startRewatch = startRewatch;
         ctrl.videoFile = {
   				processed: '',
   				file: '',
@@ -19,10 +20,23 @@
         };
 				ctrl.watchedList = (localStorage.getItem('watched') !== null) ? JSON.parse(saved) : {};
 
-				function playVideo() {
-					ctrl.watchedList[ctrl.videoFile.file] = true;
+				function updateWatchedList() {
 					localStorage.setItem('watched', JSON.stringify(ctrl.watchedList));
 					ctrl.watchedList = JSON.parse(localStorage.getItem('watched'));
+				}
+
+				function playVideo() {
+					ctrl.watchedList[ctrl.videoFile.file] = true;
+					updateWatchedList();
+				}
+
+				function startRewatch() {
+					console.log('startRewatch: ');
+					var i = ctrl.animeitem.video.files.length;
+					while(i--) {
+						ctrl.watchedList[ctrl.animeitem.video.files[i].file] = false;
+					}
+					updateWatchedList();
 				}
 
         $scope.$watch('fileGrab', function(nVal, oVal) {

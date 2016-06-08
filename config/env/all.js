@@ -21,11 +21,11 @@ module.exports = {
 			js: [
                 'public/lib/jquery/dist/jquery.min.js',
 				'public/lib/angular/angular.js',
-				'public/lib/angular-resource/angular-resource.js', 
-				'public/lib/angular-cookies/angular-cookies.js', 
-				'public/lib/angular-animate/angular-animate.js', 
-				'public/lib/angular-touch/angular-touch.js', 
-				'public/lib/angular-sanitize/angular-sanitize.js', 
+				'public/lib/angular-resource/angular-resource.js',
+				'public/lib/angular-cookies/angular-cookies.js',
+				'public/lib/angular-animate/angular-animate.js',
+				'public/lib/angular-touch/angular-touch.js',
+				'public/lib/angular-sanitize/angular-sanitize.js',
 				'public/lib/angular-ui-router/release/angular-ui-router.js',
 				'public/lib/angular-ui-utils/ui-utils.js',
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
@@ -36,16 +36,16 @@ module.exports = {
                 'public/lib/angular-moment/angular-moment.min.js',
                 'public/lib/sweetalert/dist/sweetalert.min.js',
                 'public/lib/toastr/toastr.min.js'
-                
+
 			]
 		},
 		css: [
             'public/lib/components-font-awesome/css/font-awesome.min.css',
-            'public/style/css/components.css',
-            'public/style/helper/css/box-model.css',
-            'public/style/helper/css/text.css',
-            'public/style/helper/css/animation.css',
-            'public/style/helper/css/control-overrides.css'
+            'public/dist/components.css',
+            'public/dist/box-model.css',
+            'public/dist/text.css',
+            'public/dist/animation.css',
+            'public/dist/control-overrides.css'
 		],
 		js: [
 			'public/config.js',

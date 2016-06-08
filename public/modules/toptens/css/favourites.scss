@@ -4,7 +4,7 @@
     display: inline-block;
     width: 100%;
   padding-bottom: 5px;
-  border-bottom: $accent-line; 
+  border-bottom: $accent-line;
   margin-bottom: 10px;
   white-space: nowrap;
 }
@@ -12,6 +12,7 @@
 .favourite-link {
     color: inherit;
 }
+
 .favourite-link:hover,
 .favourite-link:focus {
     color: inherit;

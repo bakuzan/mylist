@@ -13,11 +13,11 @@ module.exports = {
 			js: [
                 'public/lib/jquery/dist/jquery.min.js',
 				'public/lib/angular/angular.min.js',
-				'public/lib/angular-resource/angular-resource.js', 
-				'public/lib/angular-cookies/angular-cookies.js', 
-				'public/lib/angular-animate/angular-animate.js', 
-				'public/lib/angular-touch/angular-touch.js', 
-				'public/lib/angular-sanitize/angular-sanitize.js', 
+				'public/lib/angular-resource/angular-resource.js',
+				'public/lib/angular-cookies/angular-cookies.js',
+				'public/lib/angular-animate/angular-animate.js',
+				'public/lib/angular-touch/angular-touch.js',
+				'public/lib/angular-sanitize/angular-sanitize.js',
 				'public/lib/angular-ui-router/release/angular-ui-router.min.js',
 				'public/lib/angular-ui-utils/ui-utils.min.js',
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
@@ -31,8 +31,12 @@ module.exports = {
 			]
 		},
         css: [
-			'public/dist/application.min.css',
-            'public/lib/components-font-awesome/css/font-awesome.min.css'
+            'public/lib/components-font-awesome/css/font-awesome.min.css',
+						'public/dist/components.css',
+            'public/dist/box-model.css',
+            'public/dist/text.css',
+            'public/dist/animation.css',
+            'public/dist/control-overrides.css'
 		],
 		js: 'public/dist/application.min.js'
 	},

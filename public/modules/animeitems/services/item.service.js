@@ -90,22 +90,22 @@
 	        function latestDate(latest, updated) {
 	            //latest date display format.
 	//          console.log(latest, updated);
-	            var today = moment(new Date()), latestDate, diff;
+	            var today = moment(new Date()), displayDate, diff;
 
 	            if (moment(latest).toISOString().substring(0,10)===moment(updated).toISOString().substring(0,10)) {
-	                 latestDate = moment(updated);
-	                 diff = latestDate.fromNow();
+	                 displayDate = moment(updated);
+	                 diff = displayDate.fromNow();
 
 	                if (diff==='a day ago') {
-	                    return 'Yesterday at ' + latestDate.format('HH:mm');
+	                    return 'Yesterday at ' + displayDate.format('HH:mm');
 	                } else if (diff.indexOf('days') > -1) {
-	                    return diff + ' at ' + latestDate.format('HH:mm');
+	                    return diff + ' at ' + displayDate.format('HH:mm');
 	                } else {
 	                    return diff + '.';
 	                }
 	            } else {
-	                 latestDate = moment(latest);
-	                 diff = today.diff(latestDate, 'days');
+	                 displayDate = moment(latest);
+	                 diff = today.diff(displayDate, 'days');
 
 	                //for 0 and 1 day(s) ago use the special term.
 	                if (diff===0) {
@@ -285,12 +285,12 @@
 
 	        //complete by month stats
 	        function completeByMonth(items) {
-	            var monthDetails = {}, completeByMonth = [], maxCompleteMonth = 0, itemYears = obj.endingYears(items), i = itemYears.length;
+	            var monthDetails = {}, completeByMonthItems = [], maxCompleteMonth = 0, itemYears = obj.endingYears(items), i = itemYears.length;
 	            //build comlpeteByMonths object.
 	            while(i--) {
 	                //chuck the null end date. push the year part of the other end dates with months array.
 	                if (itemYears[i].year !== undefined && itemYears[i].year !== null) {
-	                    completeByMonth.push({ year: itemYears[i].year,
+	                    completeByMonthItems.push({ year: itemYears[i].year,
 	                                          months: [
 	                                                    { number: '01', text: 'January', count: $filter('endedMonth')(items, itemYears[i].year, '01').length  },
 	                                                    { number: '02', text: 'February', count: $filter('endedMonth')(items, itemYears[i].year, '02').length },
@@ -309,20 +309,20 @@
 	                }
 	            }
 	            maxCompleteMonth = obj.maxCompleteMonth(items);
-	            monthDetails = { months: completeByMonth, max: maxCompleteMonth };
+	            monthDetails = { months: completeByMonthItems, max: maxCompleteMonth };
 
-	//            console.log('completeByMonth', completeByMonth);
+	//            console.log('completeByMonthItems', completeByMonthItems);
 	            return monthDetails;
 	        }
 
 	        //complete by season stats.
 	        function completeBySeason(items) {
-	            var seasonDetails = {}, completeBySeason = [], maxCompleteSeason = 0, itemYears = obj.endingYears(items), i = itemYears.length;
-	            //build completeBySeason object.
+	            var seasonDetails = {}, completeBySeasonItems = [], maxCompleteSeason = 0, itemYears = obj.endingYears(items), i = itemYears.length;
+	            //build completeBySeasonItems object.
 	            while(i--) {
 	                //chuck the null end date. push the year part of the other end dates with seasons array.
 	                if (itemYears[i].year !== undefined && itemYears[i].year !== null) {
-	                    completeBySeason.push({ year: itemYears[i].year,
+	                    completeBySeasonItems.push({ year: itemYears[i].year,
 	                                            seasons: [
 	                                                        { number: '03', text: 'Winter', count: $filter('season')(items, itemYears[i].year, 'Winter').length },
 	                                                        { number: '06', text: 'Spring', count: $filter('season')(items, itemYears[i].year, 'Spring').length },
@@ -333,7 +333,7 @@
 	                }
 	            }
 	            //find maximum complete in a season.
-	            angular.forEach(completeBySeason, function(item) {
+	            angular.forEach(completeBySeasonItems, function(item) {
 	                var i = item.seasons.length;
 	                while(i--) {
 	                    if (item.seasons[i].count > maxCompleteSeason) {
@@ -341,8 +341,8 @@
 	                    }
 	                }
 	            });
-	            seasonDetails = { seasons: completeBySeason, max: maxCompleteSeason };
-	//            console.log('completeBySeason', seasonDetails);
+	            seasonDetails = { seasons: completeBySeasonItems, max: maxCompleteSeason };
+	//            console.log('completeBySeasonItems', seasonDetails);
 	            return seasonDetails;
 	        }
 

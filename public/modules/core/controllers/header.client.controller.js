@@ -15,10 +15,10 @@
 		ctrl.menu = Menus.getMenu('topbar');
 		ctrl.saved = localStorage.getItem('theme');
 		ctrl.styles = [
-        { name: 'Day', url: 'dist/main-day.min.css' },
-        { name: 'Night', url: 'dist/main-night.min.css' }
+        { name: 'Day', url: 'dist/main-day.css' },
+        { name: 'Night', url: 'dist/main-night.css' }
     ];
-		ctrl.theme = (localStorage.getItem('theme')!==null) ? JSON.parse(ctrl.saved) : 'dist/main-night.min.css';
+		ctrl.theme = (localStorage.getItem('theme')!==null) ? JSON.parse(ctrl.saved) : ctrl.styles[1].url;
 		ctrl.timedTheme = (localStorage.getItem('timedTheme')!==null) ? JSON.parse(ctrl.isTimedTheme) : false;
 		ctrl.toggleCollapsibleMenu = toggleCollapsibleMenu;
 
@@ -46,9 +46,9 @@
         } else {
             var time = new Date().getHours();
             if (time > 20 || time < 8) {
-                localStorage.setItem('theme', JSON.stringify('dist/main-night.min.css'));
+                localStorage.setItem('theme', JSON.stringify(ctrl.styles[1].url));
             } else if (time > 8) {
-                localStorage.setItem('theme', JSON.stringify('dist/main-day.min.css'));
+                localStorage.setItem('theme', JSON.stringify(ctrl.styles[0].url));
             }
         }
         var storedValue = localStorage.getItem('theme'),

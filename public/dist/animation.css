@@ -1,0 +1,2 @@
+.animate.ease-out{max-height:0;transition:max-height .5s ease-out;overflow:hidden}.animate.ease-in{max-height:650px;transition:max-height 1s ease-in}.animate-transition{transition:all .5s linear}.animate.animate-rotate-hover{transition:transform 1.8s ease-in-out}.animate-rotate-hover:hover{transform:rotate(1turn)}.animate-spin-hover:hover{animation:fa-spin 2s 1 linear}
+/*# sourceMappingURL=maps/animation.css.map */

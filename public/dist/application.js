@@ -881,25 +881,26 @@ angular.module('animeitems').config(['$stateProvider',
 	fileUpload.$inject = ['$http', 'NotificationFactory'];
 
 	function fileUpload($http, NotificationFactory) {
-		return {
+		var obj = {
 			uploadFileToUrl: uploadFileToUrl
 		};
+		return obj;
 
-	    function uploadFileToUrl(file, uploadUrl){
-	        var fd = new FormData();
-	        fd.append('file', file);
-	        $http.post(uploadUrl, fd, {
-	            transformRequest: angular.identity,
-	            headers: {'Content-Type': undefined}
-	        })
-	        .success(function(response){
-	            NotificationFactory.success('Uploaded!', 'Image was saved successfully');
-	        })
-	        .error(function(err){
-	            NotificationFactory.popup('Woops!', 'Something went wrong! \n' + err, 'error');
-	        });
-	    }
-			
+    function uploadFileToUrl(file, uploadUrl){
+        var fd = new FormData();
+        fd.append('file', file);
+        $http.post(uploadUrl, fd, {
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+        })
+        .success(function(response){
+            NotificationFactory.success('Uploaded!', 'Image was saved successfully');
+        })
+        .error(function(err){
+            NotificationFactory.popup('Woops!', 'Something went wrong! \n' + err, 'error');
+        });
+    }
+
 	}
 
 })();
@@ -911,9 +912,27 @@ angular.module('animeitems').config(['$stateProvider',
 	ItemService.$inject = ['moment', '$filter', 'ListService'];
 
 	function ItemService(moment, $filter, ListService) {
+		var obj = {
+			buildOverview: buildOverview,
+			buildRatingsDistribution: buildRatingsDistribution,
+			buildStatTags: buildStatTags,
+			completeByMonth: completeByMonth,
+			completeBySeason: completeBySeason,
+			convertDateToSeason: convertDateToSeason,
+			deleteHistory: deleteHistory,
+			endingYears: endingYears,
+			getRatingValues: getRatingValues,
+			itemHistory: itemHistory,
+			latestDate: latestDate,
+			maxCompleteMonth: maxCompleteMonth,
+			maxTagCount: maxTagCount,
+			ratingsWeighted: ratingsWeighted,
+			setSeason: setSeason
+		};
+		return obj;
 
 	        //Using the date, returns the season.
-	        this.convertDateToSeason = function(date) {
+	        function convertDateToSeason(date) {
 	            var season = '', year = date.getFullYear(), month = date.getMonth() + 1, commonArrays = ListService.getCommonArrays(),
 	                i = commonArrays.seasons.length;
 	//            console.log('convert: ', year, month);
@@ -928,10 +947,10 @@ angular.module('animeitems').config(['$stateProvider',
 	            }
 	//            console.log('to: ', season);
 	            return season;
-	        };
+	        }
 
 	        //add history entry to item.
-	        this.itemHistory = function(item, updateHistory, type) {
+	        function itemHistory(item, updateHistory, type) {
 	//            console.log('item history: ', item, item.meta);
 	            //populate the history of when each part was 'checked' off.
 	            if (item.meta.history.length !== 0) {
@@ -960,10 +979,10 @@ angular.module('animeitems').config(['$stateProvider',
 	                }
 	            }
 	            return item;
-	        };
+	        }
 
 	        //remove an entry from an items history.
-	        this.deleteHistory = function(item, history) {
+	        function deleteHistory(item, history) {
 	            var temp = [];
 	            angular.forEach(item.meta.history, function(past) {
 	                if (past.value !== history.value) {
@@ -972,28 +991,28 @@ angular.module('animeitems').config(['$stateProvider',
 	            });
 	            item.meta.history = temp;
 	            return item;
-	        };
+	        }
 
 	        //function to display relative time - using latest or updated date.
-	        this.latestDate = function(latest, updated) {
+	        function latestDate(latest, updated) {
 	            //latest date display format.
 	//          console.log(latest, updated);
-	            var today = moment(new Date()), latestDate, diff;
+	            var today = moment(new Date()), displayDate, diff;
 
 	            if (moment(latest).toISOString().substring(0,10)===moment(updated).toISOString().substring(0,10)) {
-	                 latestDate = moment(updated);
-	                 diff = latestDate.fromNow();
+	                 displayDate = moment(updated);
+	                 diff = displayDate.fromNow();
 
 	                if (diff==='a day ago') {
-	                    return 'Yesterday at ' + latestDate.format('HH:mm');
+	                    return 'Yesterday at ' + displayDate.format('HH:mm');
 	                } else if (diff.indexOf('days') > -1) {
-	                    return diff + ' at ' + latestDate.format('HH:mm');
+	                    return diff + ' at ' + displayDate.format('HH:mm');
 	                } else {
 	                    return diff + '.';
 	                }
 	            } else {
-	                 latestDate = moment(latest);
-	                 diff = today.diff(latestDate, 'days');
+	                 displayDate = moment(latest);
+	                 diff = today.diff(displayDate, 'days');
 
 	                //for 0 and 1 day(s) ago use the special term.
 	                if (diff===0) {
@@ -1004,20 +1023,20 @@ angular.module('animeitems').config(['$stateProvider',
 	                    return diff + ' days ago.';
 	                }
 	            }
-	        };
+	        }
 
 	        //build statistics item overview details.
-	        this.buildOverview = function(items) {
+	        function buildOverview(items) {
 	            var overview = {
 	                ongoing: $filter('filter')(items, {status: false }).length,
 	                completed: $filter('filter')(items, {status: true }).length
 	            };
 	//            console.log('overview ' , overview);
 	            return overview;
-	        };
+	        }
 
 	        //calculate which month has the most anime completed in it.
-	        this.maxCompleteMonth = function(items) {
+	        function maxCompleteMonth(items) {
 	            var modeMap = {}, maxCount = 0;
 	            for(var i = 0; i < items.length; i++) {
 	                if (items[i].end!==undefined && items[i].end!==null) {
@@ -1033,10 +1052,10 @@ angular.module('animeitems').config(['$stateProvider',
 	                }
 	            }
 	            return maxCount;
-	        };
+	        }
 
 	        //calculate the rating values - max rated count and average rating.
-	        this.getRatingValues = function(items) {
+	        function getRatingValues(items) {
 	            var tempRating = 0,
 	                maxRatedCount = 0,
 	                averageRating = 0;
@@ -1053,10 +1072,10 @@ angular.module('animeitems').config(['$stateProvider',
 	            };
 	//            console.log('values', values);
 	            return values;
-	        };
+	        }
 
 	        //calculate which month has the most anime completed in it.
-	        this.maxTagCount = function(items) {
+	        function maxTagCount(items) {
 	            var modeMap = {}, maxCount = 0;
 	            angular.forEach(items, function(item) {
 	                angular.forEach(item.tags, function(tag) {
@@ -1072,11 +1091,11 @@ angular.module('animeitems').config(['$stateProvider',
 	                });
 	            });
 	            return maxCount;
-	        };
+	        }
 
 	        //build stat tags including counts, averages etc.
-	        this.buildStatTags = function(items, averageItemRating) {
-	            var self = this, add = true, statTags = [], checkedRating, maxTagCount = self.maxTagCount(items), itemCount = items.length;
+	        function buildStatTags(items, averageItemRating) {
+	            var add = true, statTags = [], checkedRating, maxTagCount = obj.maxTagCount(items), itemCount = items.length;
 	            //is tag in array?
 	            angular.forEach(items, function(item) {
 	                angular.forEach(item.tags, function(tag) {
@@ -1088,7 +1107,7 @@ angular.module('animeitems').config(['$stateProvider',
 	                            statTags[i].ratings.push(item.rating);
 	                            statTags[i].ratingAdded += item.rating;
 	                            statTags[i].ratingAvg = statTags[i].ratingAdded === 0 ? 0 : statTags[i].ratingAdded / statTags[i].ratedCount;
-	                            statTags[i].ratingWeighted = self.ratingsWeighted(statTags[i].ratings);
+	                            statTags[i].ratingWeighted = obj.ratingsWeighted(statTags[i].ratings);
 	                        }
 	                    }
 	                    // add if not in
@@ -1101,10 +1120,10 @@ angular.module('animeitems').config(['$stateProvider',
 	//                    console.log(statTags);
 	            });
 	            return statTags;
-	        };
+	        }
 
 	        //function to calculate the weighted mean ratings for the genre tags.
-	        this.ratingsWeighted = function(ratings) {
+	        function ratingsWeighted(ratings) {
 	            var values = [], weights = [], unratedCount = 0, total = 0, count = 0;
 	            /**
 	             *  create array (weights) with key(rating).
@@ -1137,10 +1156,10 @@ angular.module('animeitems').config(['$stateProvider',
 							 * count = number of ratings.
 							 */
 	            return total / count;
-	        };
+	        }
 
 	        //builds counts for number of items given for each rating.
-	        this.buildRatingsDistribution = function(items) {
+	        function buildRatingsDistribution(items) {
 	            var maxCount = items.length, possibleValues = [10,9,8,7,6,5,4,3,2,1,0], ratingsDistribution = [], i = possibleValues.length;
 	            while(i--) {
 	                var count = $filter('filter')(items, { rating: i }, true).length;
@@ -1156,10 +1175,10 @@ angular.module('animeitems').config(['$stateProvider',
 	            }
 	//            console.log('RD: ', ratingsDistribution);
 	            return ratingsDistribution;
-	        };
+	        }
 
 	        // 'sub-function' of the completeBy... functions.
-	        this.endingYears = function(items) {
+	        function endingYears(items) {
 	            var years = [],
 									itemYears = $filter('unique')(items, 'end.substring(0,4)'); //get unqiue years as items.
 	            		itemYears = $filter('orderBy')(itemYears, '-end.substring(0,4)'); //order desc.
@@ -1169,16 +1188,16 @@ angular.module('animeitems').config(['$stateProvider',
 								}
 							});
 	            return years;
-	        };
+	        }
 
 	        //complete by month stats
-	        this.completeByMonth = function(items) {
-	            var self = this, monthDetails = {}, completeByMonth = [], maxCompleteMonth = 0, itemYears = self.endingYears(items), i = itemYears.length;
+	        function completeByMonth(items) {
+	            var monthDetails = {}, completeByMonthItems = [], maxCompleteMonth = 0, itemYears = obj.endingYears(items), i = itemYears.length;
 	            //build comlpeteByMonths object.
 	            while(i--) {
 	                //chuck the null end date. push the year part of the other end dates with months array.
 	                if (itemYears[i].year !== undefined && itemYears[i].year !== null) {
-	                    completeByMonth.push({ year: itemYears[i].year,
+	                    completeByMonthItems.push({ year: itemYears[i].year,
 	                                          months: [
 	                                                    { number: '01', text: 'January', count: $filter('endedMonth')(items, itemYears[i].year, '01').length  },
 	                                                    { number: '02', text: 'February', count: $filter('endedMonth')(items, itemYears[i].year, '02').length },
@@ -1196,21 +1215,21 @@ angular.module('animeitems').config(['$stateProvider',
 	                                         });
 	                }
 	            }
-	            maxCompleteMonth = self.maxCompleteMonth(items);
-	            monthDetails = { months: completeByMonth, max: maxCompleteMonth };
+	            maxCompleteMonth = obj.maxCompleteMonth(items);
+	            monthDetails = { months: completeByMonthItems, max: maxCompleteMonth };
 
-	//            console.log('completeByMonth', completeByMonth);
+	//            console.log('completeByMonthItems', completeByMonthItems);
 	            return monthDetails;
-	        };
+	        }
 
 	        //complete by season stats.
-	        this.completeBySeason = function(items) {
-	            var self = this, seasonDetails = {}, completeBySeason = [], maxCompleteSeason = 0, itemYears = self.endingYears(items), i = itemYears.length;
-	            //build completeBySeason object.
+	        function completeBySeason(items) {
+	            var seasonDetails = {}, completeBySeasonItems = [], maxCompleteSeason = 0, itemYears = obj.endingYears(items), i = itemYears.length;
+	            //build completeBySeasonItems object.
 	            while(i--) {
 	                //chuck the null end date. push the year part of the other end dates with seasons array.
 	                if (itemYears[i].year !== undefined && itemYears[i].year !== null) {
-	                    completeBySeason.push({ year: itemYears[i].year,
+	                    completeBySeasonItems.push({ year: itemYears[i].year,
 	                                            seasons: [
 	                                                        { number: '03', text: 'Winter', count: $filter('season')(items, itemYears[i].year, 'Winter').length },
 	                                                        { number: '06', text: 'Spring', count: $filter('season')(items, itemYears[i].year, 'Spring').length },
@@ -1221,7 +1240,7 @@ angular.module('animeitems').config(['$stateProvider',
 	                }
 	            }
 	            //find maximum complete in a season.
-	            angular.forEach(completeBySeason, function(item) {
+	            angular.forEach(completeBySeasonItems, function(item) {
 	                var i = item.seasons.length;
 	                while(i--) {
 	                    if (item.seasons[i].count > maxCompleteSeason) {
@@ -1229,20 +1248,20 @@ angular.module('animeitems').config(['$stateProvider',
 	                    }
 	                }
 	            });
-	            seasonDetails = { seasons: completeBySeason, max: maxCompleteSeason };
-	//            console.log('completeBySeason', seasonDetails);
+	            seasonDetails = { seasons: completeBySeasonItems, max: maxCompleteSeason };
+	//            console.log('completeBySeasonItems', seasonDetails);
 	            return seasonDetails;
-	        };
+	        }
 
 	        //Temporary function to generate the season data for pre-exisiting items in db.
-	        this.setSeason = function(items, year, season) {
-	            var self = this, array = $filter('endedSeason')(items, year, season);
+	        function setSeason(items, year, season) {
+	            var array = $filter('endedSeason')(items, year, season);
 	            angular.forEach(array, function(item) {
 	                console.log(item.title);
-	                item.season = self.convertDateToSeason(new Date(item.start));
+	                item.season = obj.convertDateToSeason(new Date(item.start));
 	            });
 	            return array;
-	        };
+	        }
 
 	}
 
@@ -2435,10 +2454,10 @@ angular.module('characters').config(['$stateProvider',
 		ctrl.menu = Menus.getMenu('topbar');
 		ctrl.saved = localStorage.getItem('theme');
 		ctrl.styles = [
-        { name: 'Day', url: 'dist/main-day.min.css' },
-        { name: 'Night', url: 'dist/main-night.min.css' }
+        { name: 'Day', url: 'dist/main-day.css' },
+        { name: 'Night', url: 'dist/main-night.css' }
     ];
-		ctrl.theme = (localStorage.getItem('theme')!==null) ? JSON.parse(ctrl.saved) : 'dist/main-night.min.css';
+		ctrl.theme = (localStorage.getItem('theme')!==null) ? JSON.parse(ctrl.saved) : ctrl.styles[1].url;
 		ctrl.timedTheme = (localStorage.getItem('timedTheme')!==null) ? JSON.parse(ctrl.isTimedTheme) : false;
 		ctrl.toggleCollapsibleMenu = toggleCollapsibleMenu;
 
@@ -2466,9 +2485,9 @@ angular.module('characters').config(['$stateProvider',
         } else {
             var time = new Date().getHours();
             if (time > 20 || time < 8) {
-                localStorage.setItem('theme', JSON.stringify('dist/main-night.min.css'));
+                localStorage.setItem('theme', JSON.stringify(ctrl.styles[1].url));
             } else if (time > 8) {
-                localStorage.setItem('theme', JSON.stringify('dist/main-day.min.css'));
+                localStorage.setItem('theme', JSON.stringify(ctrl.styles[0].url));
             }
         }
         var storedValue = localStorage.getItem('theme'),
@@ -5513,17 +5532,27 @@ function CreateTaskController($scope, data, $stateParams, $location, Authenticat
   TaskFactory.$inject = ['$q', 'Animeitems', 'Mangaitems', 'AnimeFactory', 'MangaFactory', 'NotificationFactory', 'ListService', '$uibModal'];
 
     function TaskFactory($q, Animeitems, Mangaitems, AnimeFactory, MangaFactory, NotificationFactory, ListService, $uibModal) {
-      var obj = {};
+      var obj = {
+        getWeekBeginning: getWeekBeginning,
+        insertChecklistItem: insertChecklistItem,
+        removeTask: removeTask,
+        updateAnimeitem: updateAnimeitem,
+        updateMangaitem: updateMangaitem,
+        updateTask: updateTask,
+        tickOff: tickOff,
+        tickOffChecklist: tickOffChecklist,
+      };
+      return obj;
 
-          obj.getWeekBeginning = function() {
+          function getWeekBeginning() {
               var newDate = new Date(),
                   day = newDate.getDay(),
                   diff = newDate.getDate() - day + (day === 0 ? -6:1); // adjust when day is sunday
               var wkBeg = new Date();
               return new Date(wkBeg.setDate(diff));
-          };
+          }
 
-          obj.updateAnimeitem = function(task) {
+          function updateAnimeitem(task) {
               var query = Animeitems.get({
   							animeitemId: task.link.anime._id
   						});
@@ -5533,9 +5562,9 @@ function CreateTaskController($scope, data, $stateParams, $location, Authenticat
                   data.latest = new Date();
                   AnimeFactory.update(data, undefined, true, undefined);
               });
-          };
+          }
 
-          obj.updateMangaitem = function(task, chapters, volumes) {
+          function updateMangaitem(task, chapters, volumes) {
   					return $q(function(resolve, reject) {
               var query = Mangaitems.get({
   							mangaitemId: task.link.manga._id
@@ -5549,13 +5578,13 @@ function CreateTaskController($scope, data, $stateParams, $location, Authenticat
   								resolve(data);
               });
   					});
-          };
+          }
 
   				/** Task Update,Edit,Delete and other functions below here.
   				 */
 
   			 // Update existing Task
-  			 obj.updateTask = function(task, refresh) {
+  			 function updateTask(task, refresh) {
   				 return $q(function(resolve, reject) {
   					 //console.log('update');
   					 if (task.link.anime) {
@@ -5576,10 +5605,10 @@ function CreateTaskController($scope, data, $stateParams, $location, Authenticat
   						  NotificationFactory.error('Error!', 'Task failed to save!');
   						});
   					});
-  			 };
+  			 }
 
   			 //Remove a task.
-  				obj.removeTask = function(task, tasks, userCheck) {
+  				function removeTask(task, tasks, userCheck) {
   					if(userCheck) {
   						//console.log('launch');
   						NotificationFactory.confirmation(function remove() {
@@ -5588,7 +5617,7 @@ function CreateTaskController($scope, data, $stateParams, $location, Authenticat
   					} else {
   						removeTaskProcess(task, tasks);
   					}
-  				};
+  				}
 
   				function removeTaskProcess(task, tasks) {
   					if ( task ) {
@@ -5619,7 +5648,7 @@ function CreateTaskController($scope, data, $stateParams, $location, Authenticat
   				}
 
   				//Completes a task.
-  				obj.tickOff = function(task) {
+  				function tickOff(task) {
   					return $q(function(resolve, reject) {
   						var isLinked = task.link.linked;
   				    //Is it linked?
@@ -5658,10 +5687,10 @@ function CreateTaskController($scope, data, $stateParams, $location, Authenticat
   							});
   						}
   					});
-  				};
+  				}
 
   				//Completes a checklist item.
-  				obj.tickOffChecklist = function(task, index) {
+  				function tickOffChecklist(task, index) {
   					return $q(function(resolve, reject) {
   						//update the option for the task.
   						var isLinked = task.link.linked;
@@ -5695,10 +5724,10 @@ function CreateTaskController($scope, data, $stateParams, $location, Authenticat
   							});
   						}
   					});
-  				};
+  				}
 
   				//Add additional items to a checklist.
-  				obj.insertChecklistItem = function(task, newChecklistItem) {
+  				function insertChecklistItem(task, newChecklistItem) {
   					if (newChecklistItem!=='' && newChecklistItem!==undefined) {
   							var alreadyAdded = false;
   							//find the item and insert the option.
@@ -5715,10 +5744,9 @@ function CreateTaskController($scope, data, $stateParams, $location, Authenticat
   									NotificationFactory.popup('Option already exists.', 'Please re-name and try again.', 'error');
   							}
   					}
-  					this.updateTask(task);
-  				};
+  					obj.updateTask(task);
+  				}
 
-      return obj;
   }
 
 })();

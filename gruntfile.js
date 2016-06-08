@@ -9,7 +9,8 @@ module.exports = function(grunt) {
 		clientJS: ['public/js/*.js', 'public/modules/**/*.js'],
 		clientCSS: ['public/modules/**/*.css'],
 		mochaTests: ['app/tests/**/*.js'],
-        sass: ['public/modules/**/*.scss', 'public/style/helper/*.scss']
+		sass: ['public/modules/**/*.scss'],
+		helper:  ['public/style/helper/*.scss']
 	};
 
 	// Project Configuration
@@ -49,13 +50,20 @@ module.exports = function(grunt) {
 					livereload: true
 				}
 			},
-            sass: {
-                files: watchFiles.sass,
-                tasks: ['sass:dev'],
-			    options: {
-					livereload: true
-				}
-            }
+      sass: {
+          files: watchFiles.sass,
+          tasks: ['sass:dist'],
+					options: {
+						livereload: true
+					}
+      },
+			helper: {
+          files: watchFiles.sass,
+          tasks: ['sass:helper'],
+					options: {
+						livereload: true
+					}
+      }
 		},
 		jshint: {
 			all: {
@@ -148,33 +156,47 @@ module.exports = function(grunt) {
 				configFile: 'karma.conf.js'
 			}
 		},
-        /**
-		 * Sass
-		 */
 		sass: {
-		  dev: {
-              options: {
+			helper: {
+				options: {
+					style: 'expanded',
 		      compass: false
 		    },
-		    files: {
-              'public/style/css/components.css': 'public/style/components.scss',
-              'public/style/helper/css/box-model.css': 'public/style/helper/box-model.scss',
-              'public/style/helper/css/text.css': 'public/style/helper/text.scss',
-              'public/style/helper/css/animation.css': 'public/style/helper/animation.scss',
-              'public/style/helper/css/control-overrides.css': 'public/style/helper/control-overrides.scss'
-		    }
-		  },
+				files: {
+					'public/dist/components.css': 'public/style/components.scss',
+					'public/dist/box-model.css': 'public/style/helper/box-model.scss',
+					'public/dist/text.css': 'public/style/helper/text.scss',
+					'public/dist/animation.css': 'public/style/helper/animation.scss',
+					'public/dist/control-overrides.css': 'public/style/helper/control-overrides.scss'
+				}
+			},
 		  dist: {
 		    options: {
-		      style: 'compressed',
+					style: 'expanded',
 		      compass: false
 		    },
 		    files: {
-              'public/dist/main-day.min.css': 'public/style/main-day.scss',
-              'public/dist/main-night.min.css': 'public/style/main-night.scss',
+					'public/dist/main-day.css': 'public/style/main-day.scss',
+					'public/dist/main-night.css': 'public/style/main-night.scss'
 		    }
 		  }
-        }
+		},
+		postcss: {
+	    options: {
+	      map: {
+	          inline: false, // save all sourcemaps as separate files...
+	          annotation: 'public/dist/maps/' // ...to the specified directory
+	      },
+	      processors: [
+	        require('pixrem')(), // add fallbacks for rem units
+	        require('autoprefixer')({browsers: 'last 2 versions'}), // add vendor prefixes
+	        require('cssnano')() // minify the result
+	      ]
+	    },
+	    dist: {
+	      src: 'public/dist/*.css'
+	    }
+		}
 	});
 
 	// Load NPM tasks
@@ -205,7 +227,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('lint', ['jshint', 'csslint']);
 
 	// Build task(s).
-	grunt.registerTask('build', ['lint', 'loadConfig', 'ngAnnotate', 'uglify', 'cssmin', 'sass:dist']);
+	grunt.registerTask('build', ['lint', 'loadConfig', 'ngAnnotate', 'uglify', 'sass:helper', 'sass:dist', 'postcss:dist']);
 
 	// Test task.
 	grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);

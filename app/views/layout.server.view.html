@@ -36,29 +36,26 @@
 
 	<!--Application CSS Files-->
 	{% for cssFile in cssFiles %}<link rel="stylesheet" href="{{cssFile}}">{% endfor %}
+	<link type="text/css" rel="stylesheet" id="app-theme">
     <!-- USER SELECTED STYLE -->
     <script type="text/javascript">
         timeOfDayTheme = localStorage.getItem('timedTheme');
         storedValue = localStorage.getItem('theme');
-        link = document.createElement( "link" );
+        link = document.getElementById('app-theme');
         if (timeOfDayTheme === 'false' || !timeOfDayTheme) {
             if (!storedValue) {
-                localStorage.setItem('theme', JSON.stringify('dist/main-night.min.css'));
+                localStorage.setItem('theme', JSON.stringify('dist/main-night.css'));
             }
         } else {
             var time = new Date().getHours();
             if (time > 20 || time < 8) {
-                localStorage.setItem('theme', JSON.stringify('dist/main-night.min.css'));
+                localStorage.setItem('theme', JSON.stringify('dist/main-night.css'));
             } else if (time > 8) {
-                localStorage.setItem('theme', JSON.stringify('dist/main-day.min.css'));
+                localStorage.setItem('theme', JSON.stringify('dist/main-day.css'));
             }
         }
         storedValue = localStorage.getItem('theme');
         link.href = storedValue.substr(1, storedValue.lastIndexOf("\"") - 1); //remove quotes for whatever reason.
-        link.id = "app-theme";
-        link.type = "text/css";
-        link.rel = "stylesheet";
-        document.getElementsByTagName("head")[0].appendChild(link);
     </script>
 
 	<!-- HTML5 Shim -->

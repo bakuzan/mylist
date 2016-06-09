@@ -5,21 +5,35 @@
 	ListService.$inject = ['moment', '$q'];
 
 	function ListService(moment, $q) {
+		var service = {
+			checkForTagless: checkForTagless,
+			concatenateTagArrays: concatenateTagArrays,
+			findWithAttr: findWithAttr,
+			getCommonArrays: getCommonArrays,
+			getSelectListOptions: getSelectListOptions,
+			groupItemsByProperties: groupItemsByProperties,
+			loader: loader,
+			manipulateString: manipulateString,
+			numberOfPages: numberOfPages,
+			stringReverse: stringReverse,
+			weekEndingForDate: weekEndingForDate
+		};
+		return service;
 
 	        //show a loading gif if text doesn't exist.
-	        this.loader = function(value) {
+	        function loader(value) {
 	            if (value) {
 	                return false; //hide loader when value exists.
 	            }
 	            return true;
-	        };
+	        }
 
-	        this.stringReverse = function(string) {
+	        function stringReverse(string) {
 	            return string.split('').reverse().join('');
-	        };
+	        }
 
 	        //get number of pages for list.
-	        this.numberOfPages = function(showingCount, pageSize, currentPage) {
+	        function numberOfPages(showingCount, pageSize, currentPage) {
 	            var pageCount = Math.ceil(showingCount/pageSize);
 	            //reset number of pages to be the final page if the number of pages
 	            //becomes less than the one you are on.
@@ -31,10 +45,10 @@
 	            }
 	            var pagingDetails = { currentPage: currentPage, pageCount: pageCount };
 	            return pagingDetails;
-	        };
+	        }
 
 	        //find index of object with given attr.
-	        this.findWithAttr = function(array, attr, value) {
+	        function findWithAttr(array, attr, value) {
 	            if (array !== undefined) {
 	                for(var i = 0; i < array.length; i += 1) {
 	                    if(array[i][attr] === value) {
@@ -43,18 +57,18 @@
 	                }
 	            }
 	            return -1;
-	        };
+	        }
 
 					/** Splitting array into multiple arrays by grouping by attributes.
 					 */
-					 this.groupItemsByProperties = function (array, groupProperties) {
+					 function groupItemsByProperties(array, groupProperties) {
 						 return $q(function (resolve, reject) {
 								 var groupedArrays = groupBy(array, function (item) {
 										 return getGroupProperties(item, groupProperties);
 								 });
 								 resolve(groupedArrays);
 						 });
-					 };
+					 }
 					 //Retrieve the item values for grouping by
 					 function getGroupProperties(item, groups) {
 							 var array = [];
@@ -76,7 +90,7 @@
 							 });
 					 }
 
-	        this.manipulateString = function(string, transform, onlyFirst) {
+	        function manipulateString(string, transform, onlyFirst) {
 	            switch(transform.toLowerCase()) {
 	                case 'lower':
 	                    if (onlyFirst)  return string.charAt(0).toLowerCase() + string.slice(1);
@@ -89,19 +103,19 @@
 	                default:
 	                    return string.toLowerCase();
 	            }
-	        };
+	        }
 
-					this.weekEndingForDate = function(convertToSunday) {
+					function weekEndingForDate(convertToSunday) {
 			        var date = new Date(convertToSunday),
 			            day = date.getDay(),
 			            diff = date.getDate() - day + (day === 0 ? 0:7),
 			            temp = new Date(convertToSunday),
 			            wkEnd = new Date(temp.setDate(diff));
 			        return moment(wkEnd.toISOString()).endOf('day');
-			    };
+			    }
 
 	        //returns the options for the various filters in list pages.
-	        this.getSelectListOptions = function(controller) {
+	        function getSelectListOptions(controller) {
 	            var self = this, selectListOptions = [];
 	            if (controller !== 'character' && controller !== 'topten') {
 	                selectListOptions.status = [ { v: '', n: 'All' }, { v: false, n: 'Ongoing' }, { v: true, n: 'Completed' } ];
@@ -142,9 +156,9 @@
 	            }
 	//            console.log(selectListOptions);
 	            return selectListOptions;
-	        };
+	        }
 
-	        this.concatenateTagArrays = function(itemTags, tagArray) {
+	        function concatenateTagArrays(itemTags, tagArray) {
 	            if (itemTags.length > 0) {
 	                var i = 0, alreadyAdded = false;
 	                while(i < tagArray.length) {
@@ -166,10 +180,10 @@
 	                //if there are no tags for item, then just return the new tags.
 	                return tagArray;
 	            }
-	        };
+	        }
 
 	        //check to see if there are items with no tags.
-	        this.checkForTagless = function(items) {
+	        function checkForTagless(items) {
 	            var areTagless = false;
 	            angular.forEach(items, function(item) {
 	                if (item.tags.length === 0) {
@@ -177,9 +191,9 @@
 	                }
 	            });
 	            return areTagless;
-	        };
+	        }
 
-	        this.getCommonArrays = function(controller) {
+	        function getCommonArrays(controller) {
 	            var commonArrays = {},
 	                itemTypes = [
 	                    { name: 'anime' },
@@ -230,7 +244,7 @@
 	                ];
 	            commonArrays = { months: months, seasons: seasons, categories: categories, days: days, summaryFunctions: summaryFunctions, itemTypes: itemTypes };
 	            return commonArrays;
-	        };
+	        }
 
 	}
 

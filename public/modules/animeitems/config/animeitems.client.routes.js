@@ -11,7 +11,7 @@ angular.module('animeitems').config(['$stateProvider',
 		}).
 		state('createAnimeitem', {
 			url: '/animeitems/create',
-			templateUrl: 'modules/animeitems/views/create-animeitem.client.view.html'
+			templateUrl: 'modules/animeitems/views/edit-animeitem.client.view.html'
 		}).
 		state('viewAnimeitem', {
 			url: '/animeitems/:animeitemId',

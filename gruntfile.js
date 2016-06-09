@@ -58,7 +58,7 @@ module.exports = function(grunt) {
 					}
       },
 			helper: {
-          files: watchFiles.sass,
+          files: watchFiles.helper,
           tasks: ['sass:helper'],
 					options: {
 						livereload: true

@@ -56,7 +56,7 @@
 	            }
 
 				animeitem.$update(function() {
-					if (window.location.href.indexOf('tasks') === -1) $location.path('animeitems');
+					if (window.location.href.indexOf('tasks') === -1 && window.location.href.indexOf('watch') === -1 ) $location.path('animeitems');
 
 				    NotificationFactory.success('Saved!', 'Anime was saved successfully');
 				}, function(errorResponse) {

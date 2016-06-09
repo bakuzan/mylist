@@ -2,12 +2,15 @@
 @import '../../../public/style/partials/_mix';
 
 @each $size in $percentage-sizes {
-    .width-#{$size} {
-        width: #{$size}#{$percent};
-    }
-    .height-#{$size} {
-        height: #{$size}#{$percent};
-    }
+  .width-#{$size} {
+    width: #{$size}#{$percent};
+  }
+  .height-#{$size} {
+    height: #{$size}#{$percent};
+  }
+  .view-height-#{$size} {
+    height: #{$size}vh;
+  }
 }
 
 @each $place in $positions {

@@ -155,17 +155,15 @@ exports.animeitemByID = function(req, res, next, id) {
 		if (! animeitem) return next(new Error('Failed to load Animeitem ' + id));
 		var baseUrl = 'C:/Users/Steven/Videos/',
 				seriesName = animeitem.title.toLowerCase().replace(/\(.+?\)/g, '').replace(/[^a-z0-9+]+/gi, '-'),
-				location = baseUrl + seriesName,
-				index = 0,
-				pad = '000';
+				location = baseUrl + seriesName;
 		fs.readdir(location, function (err, files) {
 			animeitem.video.location = location + '/';
 			if(files) {
 				for(var i = 0, len = files.length; i < len; i++) {
 					var file = files[i],
+							index = file.lastIndexOf('.'),
 							number = file.substring(index - 3, index);
 					if(file.indexOf('.mp4') > -1) {
-						index = file.lastIndexOf('.');
 						animeitem.video.files.push({
 							file: file,
 							number: isNaN(number) ? ('000' + i.toString()).substring(i.length) + i : number

@@ -8,9 +8,9 @@ module.exports = function(app) {
 	app.route('/animeitems')
 		.get(animeitems.list)
 		.post(users.requiresLogin, animeitems.create);
-    
-//    app.route('/animeitems/list/:status')
-//		.get(animeitems.list);
+
+ app.route('/animeitems/watch')
+		.get(animeitems.watch);
 
 	app.route('/animeitems/:animeitemId')
 		.get(animeitems.read)
@@ -19,8 +19,8 @@ module.exports = function(app) {
 
 	// Finish by binding the Animeitem middleware
 	app.param('animeitemId', animeitems.animeitemByID);
-    
-        //image upload route
-    app.route('/fileUploadAnime')
-        .post(animeitems.postImage);
+
+  //image upload route
+  app.route('/fileUploadAnime')
+    .post(animeitems.postImage);
 };

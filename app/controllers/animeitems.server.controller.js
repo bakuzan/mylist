@@ -127,6 +127,13 @@ exports.list = function(req, res) {
 };
 
 /**
+ * Watchable anime
+ */
+exports.watch = function(req, res) {
+
+};
+
+/**
  * History list of anime
  */
 exports.history = function(req, res) {

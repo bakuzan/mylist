@@ -116,7 +116,7 @@
 
 	        //returns the options for the various filters in list pages.
 	        function getSelectListOptions(controller) {
-	            var self = this, selectListOptions = [];
+	            var selectListOptions = [];
 	            if (controller !== 'character' && controller !== 'topten') {
 	                selectListOptions.status = [ { v: '', n: 'All' }, { v: false, n: 'Ongoing' }, { v: true, n: 'Completed' } ];
 	                selectListOptions.searchName = 'title';
@@ -125,7 +125,7 @@
 	                    selectListOptions.sortOptions = [ { v: 'title', n: 'Title' },{ v: 'episodes', n: 'Episodes' },{ v: 'start', n: 'Start date' },
 	                                                      { v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' }
 	                                                    ];
-	                    selectListOptions.sortOption = self.findWithAttr(selectListOptions.sortOptions, 'n', 'Latest');
+	                    selectListOptions.sortOption = service.findWithAttr(selectListOptions.sortOptions, 'n', 'Latest');
 	                    selectListOptions.media = [ { v: '', n: 'All' }, { v: false, n: 'Online' }, { v: true, n: 'Disc' } ];
 	                    selectListOptions.mediaType = 'disc';
 	                    selectListOptions.repeating = [ { v: '', n: 'All' }, { v: false, n: 'Not Re-watching' }, { v: true, n: 'Re-watching' } ];
@@ -134,7 +134,7 @@
 	                    selectListOptions.sortOptions = [ { v: 'title', n: 'Title' },{ v: 'chapters', n: 'Chapters' },{ v: 'volumes', n: 'Volumes' },{ v: 'start', n: 'Start date' },
 	                                                      { v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' }
 	                                                    ];
-	                    selectListOptions.sortOption = self.findWithAttr(selectListOptions.sortOptions, 'n', 'Latest');
+	                    selectListOptions.sortOption = service.findWithAttr(selectListOptions.sortOptions, 'n', 'Latest');
 	                    selectListOptions.media = [ { v: '', n: 'All' }, { v: false, n: 'Online' }, { v: true, n: 'Hardcopy' } ];
 	                    selectListOptions.mediaType = 'hardcopy';
 	                    selectListOptions.repeating = [ { v: '', n: 'All' }, { v: false, n: 'Not Re-reading' }, { v: true, n: 'Re-reading' } ];
@@ -152,7 +152,7 @@
 	                    selectListOptions.mediaType = 'type';
 	                }
 	                selectListOptions.searchName = 'name';
-	                selectListOptions.sortOption = self.findWithAttr(selectListOptions.sortOptions, 'n', 'Name');
+	                selectListOptions.sortOption = service.findWithAttr(selectListOptions.sortOptions, 'n', 'Name');
 	            }
 	//            console.log(selectListOptions);
 	            return selectListOptions;

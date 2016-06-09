@@ -20,7 +20,8 @@
           <div class="form-group" ng-class="{ 'has-error' : animeForm.episodes.$invalid && !animeForm.episodes.$pristine }">
               <label for="episodes" class="col-md-2 control-label">Episodes</label>
               <div class="col-md-6">
-                  <input type="number" class="col-md-6 form-control" data-ng-model="ctrl.animeitem.episodes" min="0" ng-change="ctrl.animeitem.latest=ctrl.itemUpdate; ctrl.animeitem.episodes === ctrl.animeitem.finalEpisode && ctrl.animeitem.finalEpisode!=0 && ctrl.animeitem.reWatching===false ? ctrl.animeitem.end=ctrl.itemUpdate : ''; ctrl.animeitem.episodes > ctrl.animeitem.finalEpisode && ctrl.animeitem.finalEpisode!=0 ? ctrl.animeitem.episodes=ctrl.animeitem.finalEpisode : ''; ctrl.updateHistory = true;" id="episodes" name="episodes" placeholder="0" required>
+                  <input type="number" class="col-md-6 form-control" data-ng-model="ctrl.animeitem.episodes" min="0" ng-change="ctrl.addedEpisodes()"
+                         id="episodes" name="episodes" placeholder="0" required>
               </div>
               <div class="col-md-4">
                 <p ng-show="animeForm.episodes.$invalid && !animeForm.episodes.$pristine" class="help-block" >Episodes is a whole number and is required.</p>
@@ -64,15 +65,19 @@
             </div>
           </div>
 
-          <p class="clickable accent-text" ng-init="showAdditionals = false" ng-click="showAdditionals=!showAdditionals"><i class="fa" ng-class="showAdditionals ? 'fa-minus-square' : 'fa-plus-square'"></i> Additional properties</p>
-          <div ng-show="showAdditionals">
+          <p class="clickable accent-text" ng-click="ctrl.section.showAdditionals=!ctrl.section.showAdditionals">
+            <i class="fa" ng-class="ctrl.section.showAdditionals ? 'fa-minus-square' : 'fa-plus-square'"></i> Additional properties
+          </p>
+          <div ng-show="ctrl.section.showAdditionals">
 
               <div class="form-group" ng-if="::!ctrl.config.isCreate">
                   <label for="rating" class="col-md-2 control-label">Rating</label>
                   <div class="col-md-6">
                       <uib-rating class="form-control clickable rating-stars" data-ng-model="ctrl.animeitem.rating" readonly="false" max="ctrl.config.ratingActions.maxRating" on-hover="ctrl.hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></uib-rating>
                   </div>
-                  <span data-ng-show="ctrl.overStar!=null" class="label" ng-class="{'label-warning': percent<40, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}">{{percent}}%</span>
+                  <span data-ng-show="ctrl.config.ratingActions.overStar!=null" class="label" ng-class="{'label-warning': ctrl.config.ratingActions.percent<40, 'label-info': ctrl.config.ratingActions.percent>=30 && ctrl.config.ratingActions.percent<70, 'label-success': ctrl.config.ratingActions.percent>=70}"
+                    ng-bind="ctrl.config.ratingActions.percent + '%'">
+                  </span>
               </div>
 
               <div class="form-group">
@@ -107,10 +112,10 @@
 
             </div>
 
-            <p class="clickable accent-text" ng-init="showOthers = false" ng-click="showOthers=!showOthers" ng-if="::!ctrl.config.isCreate">
-              <i class="fa" ng-class="showOthers ? 'fa-minus-square' : 'fa-plus-square'"></i> Completion properties
+            <p class="clickable accent-text" ng-click="ctrl.section.showOthers=!ctrl.section.showOthers" ng-if="::!ctrl.config.isCreate">
+              <i class="fa" ng-class="ctrl.section.showOthers ? 'fa-minus-square' : 'fa-plus-square'"></i> Completion properties
             </p>
-            <div ng-show="showOthers" ng-if="::!ctrl.config.isCreate">
+            <div ng-show="ctrl.section.showOthers" ng-if="::!ctrl.config.isCreate">
 
               <div class="form-group" ng-show="!ctrl.animeitem.status || ctrl.animeitem.reWatching">
                   <label for="onHold" class="col-md-2 control-label">On Hold?</label>
@@ -123,7 +128,7 @@
                   <label for="season" class="col-md-2 control-label">In Season?</label>
                   <div ng-class="(ctrl.animeitem.season.season === null) ? 'col-md-6' : 'col-md-3'">
                       <select class="form-control" ng-options="option.text as option.text for option in ctrl.config.commonArrays.seasons" ng-model="ctrl.animeitem.season.season"
-                              ng-change="(ctrl.animeitem.season.season === null) ? ctrl.animeitem.season.year = null : ctrl.animeitem.season.year = ctrl.animeitem.start.substring(0,4)" id="season" name="season">
+                              ng-change="ctrl.setInSeason()" id="season" name="season">
                           <option value="">No Season</option>
                       </select>
                   </div>
@@ -158,14 +163,16 @@
               <div class="form-group" data-ng-show="ctrl.animeitem.status==true">
                   <label for="reWatching" class="col-md-2 control-label">Re-watching?</label>
                   <div class="col-md-6">
-                      <input type="checkbox" class="form-control" data-ng-model="ctrl.animeitem.reWatching" data-ng-disabled="ctrl.animeitem.reWatching" data-ng-change="ctrl.animeitem.episodes=0;" id="reReading" name="reReading">
+                      <input type="checkbox" class="form-control" data-ng-model="ctrl.animeitem.reWatching" data-ng-disabled="ctrl.animeitem.reWatching" data-ng-change="ctrl.animeitem.episodes=0;" id="reWatching" name="reWatching">
                   </div>
               </div>
 
             </div>
 
-            <p class="clickable accent-text" ng-init="showItemTags = false" ng-click="showItemTags=!showItemTags"><i class="fa" ng-class="showItemTags ? 'fa-minus-square' : 'fa-plus-square'"></i> Tag properties</p>
-            <div ng-show="showItemTags">
+            <p class="clickable accent-text" ng-click="ctrl.section.showItemTags=!ctrl.section.showItemTags">
+              <i class="fa" ng-class="ctrl.section.showItemTags ? 'fa-minus-square' : 'fa-plus-square'"></i> Tag properties
+            </p>
+            <div ng-show="ctrl.section.showItemTags">
 
               <div class="form-group" ng-class="{ 'has-error' : animeForm.tags.$invalid && !animeForm.tags.$pristine }">
                   <label for="tags" class="col-md-2 control-label">Tags</label>

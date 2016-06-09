@@ -31,6 +31,7 @@
         commonArrays: ListService.getCommonArrays(),
 				getItemsAvailable: getItemsAvailable
     };
+		ctrl.findOne = findOne;
 		ctrl.latestDate = latestDate;
 		ctrl.pageConfig = {
 				currentPage: 0,
@@ -98,6 +99,14 @@
             ctrl.update();
         });
     }
+
+		// Find existing Animeitem
+		function findOne() {
+	    Animeitems.get({ animeitemId: $stateParams.animeitemId }).$promise.then(function(result) {
+	        ctrl.animeitem = result;
+	   			console.log(ctrl.animeitem);
+	    });
+		}
 
 		/** Find a list of Animeitems for values:
          *  (0) returns only ongoing series. (1) returns all series.

@@ -8,10 +8,13 @@
 		var ctrl = this,
         animeitemId = $stateParams.animeitemId;
 
+		ctrl.addedEpisodes = addedEpisodes;
 		ctrl.addTag = addTag;
+		ctrl.animeitem = {};
 		ctrl.authentication = Authentication;
     ctrl.config = {
       title: 'Create',
+			updateHistory: false,
       ratingActions: {
           maxRating: 10,
           percent: undefined,
@@ -22,16 +25,21 @@
     };
 		ctrl.create = create;
 		ctrl.dropTag = dropTag;
-    ctrl.episodes = 0;
     ctrl.finalNumbers = false; //default show status of final number fields in edit view.
+		ctrl.find = find;
 		ctrl.findOne = findOne;
 		ctrl.findManga = findManga;
     ctrl.imgPath = ''; //image path
 		ctrl.itemUpdate = new Date(); // today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
     ctrl.init = init;
-		ctrl.latest = ctrl.itemUpdate;
 		ctrl.removeTag = removeTag;
-		ctrl.start = ctrl.itemUpdate;
+		ctrl.sections = {
+			showAdditional: false,
+			showCompletion: false,
+			showItemTags: false
+		};
+		ctrl.setInSeason = setInSeason;
+		ctrl.submit = submit;
     ctrl.tagArray = []; // holding tags pre-submit
     ctrl.tagArrayRemove = [];
 		ctrl.update = update;
@@ -40,7 +48,11 @@
 
     function init() {
       ctrl.config.isCreate = animeitemId === undefined;
-      if(!ctrl.config.isCreate) {
+      if(ctrl.config.isCreate) {
+				ctrl.animeitem.episodes = 0;
+				ctrl.animeitem.start = ctrl.itemUpdate;
+				ctrl.animeitem.latest = ctrl.itemUpdate;
+			} else if(!ctrl.config.isCreate) {
         ctrl.config.title = 'Edit';
         ctrl.findOne();
       }
@@ -63,19 +75,38 @@
 			TagService.dropTag(ctrl.animeitem.tags, text);
 		}
 
+		function addedEpisodes() {
+			ctrl.animeitem.latest = ctrl.itemUpdate;
+			ctrl.config.updateHistory = true;
+			if(ctrl.animeitem.episodes === ctrl.animeitem.finalEpisode && ctrl.animeitem.finalEpisode !== 0 && ctrl.animeitem.reWatching === false) {
+				ctrl.animeitem.end = ctrl.itemUpdate;
+			}
+			if(ctrl.animeitem.episodes > ctrl.animeitem.finalEpisode && ctrl.animeitem.finalEpisode !== 0) {
+				ctrl.animeitem.episodes = ctrl.animeitem.finalEpisode;
+			}
+		}
+
+		function setInSeason() {
+			if(ctrl.animeitem.season.season === null) {
+				 ctrl.animeitem.season.year = null;
+			 } else {
+				 ctrl.animeitem.season.year = ctrl.animeitem.start.substring(0,4);
+			 }
+		}
+
 		// Create new Animeitem
 		function create() {
 			// Create new Animeitem object
       var animeitem = new Animeitems();
       animeitem = new Animeitems ({
-          title: ctrl.title,
-          episodes: ctrl.episodes,
-          start: ctrl.start,
-          latest: ctrl.latest,
-          finalEpisode: ctrl.finalEpisode,
-          season: ctrl.season === true ? ItemService.convertDateToSeason(new Date(ctrl.start)) : '',
-          disc: ctrl.disc,
-          manga: ctrl.manga!==undefined && ctrl.manga!==null ? ctrl.manga._id : ctrl.manga,
+          title: ctrl.animeitem.title,
+          episodes: ctrl.animeitem.episodes,
+          start: ctrl.animeitem.start,
+          latest: ctrl.animeitem.latest,
+          finalEpisode: ctrl.animeitem.finalEpisode,
+          season: ctrl.animeitem.season === true ? ItemService.convertDateToSeason(new Date(ctrl.animeitem.start)) : '',
+          disc: ctrl.animeitem.disc,
+          manga: ctrl.animeitem.manga!==undefined && ctrl.animeitem.manga!==null ? ctrl.animeitem.manga._id : ctrl.animeitem.manga,
           tags: ctrl.tagArray,
           user: ctrl.user
        });
@@ -94,20 +125,25 @@
 		function update() {
 			var animeitem = ctrl.animeitem;
 			ctrl.animeitem = undefined;
-      AnimeFactory.update(animeitem, ctrl.tagArray, ctrl.updateHistory, ctrl.imgPath);
+      AnimeFactory.update(animeitem, ctrl.tagArray, ctrl.config.updateHistory, ctrl.imgPath);
+		}
+
+		function submit() {
+			if(ctrl.config.isCreate) ctrl.create();
+			if(!ctrl.config.isCreate) ctrl.update();
 		}
 
     // Find a list of Animeitems
     function find() {
         Animeitems.query().$promise.then(function(result) {
 					ctrl.animeitems = result;
-					ctrl.filterConfig.statTags = ItemService.buildStatTags(result, 0);
+						ctrl.config.statTags = ItemService.buildStatTags(result, 0);
 				});
     }
 
 		// Find existing Animeitem
 		function findOne() {
-	    Animeitems.get({ animeitemId: $stateParams.animeitemId }).$promise.then(function(result) {
+	    Animeitems.get({ animeitemId: animeitemId }).$promise.then(function(result) {
 	        ctrl.animeitem = result;
 	   			console.log(ctrl.animeitem);
 	    });
@@ -123,7 +159,6 @@
         ctrl.imgPath = '/modules/animeitems/img/' + ctrl.myFile.name;
         fileUpload.uploadFileToUrl(ctrl.myFile, '/fileUploadAnime');
     }
-
 
 	}
 

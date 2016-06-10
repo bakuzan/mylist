@@ -5,7 +5,7 @@
 	WatchAnime.$inject = ['$resource'];
 
 		function WatchAnime($resource) {
-			return $resource('animeitems/watch', {  }, { update: { method: 'PUT' } });
+			return $resource('animeitems/watch-list', { }, { update: { method: 'PUT' } });
 		}
 
 })();

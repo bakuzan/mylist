@@ -9,7 +9,7 @@ module.exports = function(app) {
 		.get(animeitems.list)
 		.post(users.requiresLogin, animeitems.create);
 
- app.route('/animeitems/watch')
+ app.route('/animeitems/watch-list')
 		.get(animeitems.watch);
 
 	app.route('/animeitems/:animeitemId')

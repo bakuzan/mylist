@@ -9,7 +9,9 @@ var mongoose = require('mongoose'),
     //uuid = require('node-uuid'),
     multiparty = require('multiparty'),
     fs = require('fs'),
-	_ = require('lodash');
+		path = require('path'),
+	_ = require('lodash'),
+	baseUrl = 'C:/Users/steven.walsh/Documents/MISC/'; //'C:/Users/Steven/Videos/';
 
 /**
  * Upload image.
@@ -126,11 +128,37 @@ exports.list = function(req, res) {
 	});
 };
 
+//Get subdirectories
+function getDirectories(srcpath) {
+  return fs.readdirSync(srcpath).filter(function(file) {
+    return fs.statSync(path.join(srcpath, file)).isDirectory();
+  });
+}
+
 /**
  * Watchable anime
  */
 exports.watch = function(req, res) {
-
+	var watchable = [], directories = getDirectories(baseUrl);
+	for(var i = 0, len = directories.length; i < len; i++) {
+		var array = [],
+				split = directories[i].split('-');
+		for(var j = 0, count = split.length; j < count; j++) {
+			array.push({ title: {$regex : split[j] } });
+		}
+		console.log('directory split: ', split, ' makes these regex: ', array);
+		watchable.push({ $and: array });
+	}
+	console.log('request watchable anime: ', watchable);
+	Animeitem.find({ $or: watchable }).sort('-created').populate('user', 'displayName').populate('manga', 'title').exec(function(err, animeitems) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(animeitems);
+		}
+	});
 };
 
 /**
@@ -160,8 +188,7 @@ exports.animeitemByID = function(req, res, next, id) {
 	Animeitem.findById(id).populate('user', 'displayName').populate('manga', 'title').exec(function(err, animeitem) {
 		if (err) return next(err);
 		if (! animeitem) return next(new Error('Failed to load Animeitem ' + id));
-		var baseUrl = 'C:/Users/Steven/Videos/',
-				seriesName = animeitem.title.toLowerCase().replace(/\(.+?\)/g, '').replace(/[^a-z0-9+]+/gi, '-'),
+		var seriesName = animeitem.title.toLowerCase().replace(/\(.+?\)/g, '').replace(/[^a-z0-9+]+/gi, '-'),
 				location = baseUrl + seriesName;
 		fs.readdir(location, function (err, files) {
 			animeitem.video.location = location + '/';

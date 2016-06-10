@@ -29,7 +29,7 @@
         selectListOptions: {},
         statTags: [],
         commonArrays: ListService.getCommonArrays(),
-				getItemsAvailable: getItemsAvailable
+				isWatch: getItemsAvailable
     };
 		ctrl.findOne = findOne;
 		ctrl.latestDate = latestDate;
@@ -132,6 +132,7 @@
             getAnime(1);
         }
     }
+		ctrl.filterConfig.getItemsAvailable();
 
 	}
 

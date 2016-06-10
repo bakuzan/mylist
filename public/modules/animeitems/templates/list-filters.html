@@ -10,11 +10,11 @@
             <div class="input-group-addon">
                 <i class="fa fa-list-ol"></i>
             </div>
-            <input type="text" class="form-control" value="Showing {{ (filterConfig.showingCount = (items | filter: filterConfig.search | mediaFilter: filterConfig.media | ratingFilter: filterConfig.ratingLevel | tagFilter: filterConfig.searchTags:filterConfig.taglessItem).length) }} items." disabled ng-if="page !== 'topten'">
-            <input type="text" class="form-control" value="Showing {{ (filterConfig.showingCount = (items | filter: filterConfig.search).length) }} items." disabled ng-if="page === 'topten'">
+            <input type="text" class="form-control" value="Showing {{ (filterConfig.showingCount = (items | filter: filterConfig.search | mediaFilter: filterConfig.media | ratingFilter: filterConfig.ratingLevel | tagFilter: filterConfig.searchTags:filterConfig.taglessItem).length) }} items." disabled ng-if="page !== 'topten' && page !== 'watch'">
+            <input type="text" class="form-control" value="Showing {{ (filterConfig.showingCount = (items | filter: filterConfig.search).length) }} items." disabled ng-if="page === 'topten' || page === 'watch'">
         </div>
 
-        <div class="input-group mt" ng-hide="filterConfig.expandFilters">
+        <div class="input-group mt" ng-hide="filterConfig.expandFilters" ng-if="page !== 'watch'">
             <div class="input-group-addon clickable" ng-click="filterConfig.expandFilters=!filterConfig.expandFilters">
                 <i class="fa fa-filter"></i>
             </div>

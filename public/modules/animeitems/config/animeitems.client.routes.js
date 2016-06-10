@@ -7,7 +7,13 @@ angular.module('animeitems').config(['$stateProvider',
 		$stateProvider.
         state('listAnimeitems', {
 			url: '/animeitems',
-			templateUrl: 'modules/animeitems/views/list-animeitems.client.view.html'
+			templateUrl: 'modules/animeitems/views/list-animeitems.client.view.html',
+			controller: 'AnimeitemsController as ctrl'
+		}).
+		state('watchListAnimeitems', {
+			url: '/animeitems/watch-list',
+			templateUrl: 'modules/animeitems/views/watch-list.client.view.html',
+			controller: 'WatchListController as ctrl'
 		}).
 		state('createAnimeitem', {
 			url: '/animeitems/create',

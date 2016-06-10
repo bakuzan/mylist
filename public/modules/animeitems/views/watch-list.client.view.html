@@ -1,0 +1,31 @@
+<section data-ng-show="ctrl.authentication.user">
+    <div class="fixed-header">
+        <h1>Watch list <button class="btn btn-primary show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</button></h1>
+    </div>
+    <div class="container">
+      <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }">
+          <div list-filters filter-config="ctrl.filterConfig" items="ctrl.animeitems" page="ctrl.whichController"></div>
+      </div>
+      <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
+      <div class="col-lg-8 col-md-6 col-sm-6 item-list-container" loading-spinner name="watch" size="fullscreen">
+        <div page-controls page-config="ctrl.pageConfig" showing-count="ctrl.filterConfig.showingCount"></div>
+        <div class="list-group col-lg-12 col-md-12 col-sm-12">
+          <div data-ng-repeat="animeitem in ctrl.animeitems | orderBy: ctrl.filterConfig.sortType:ctrl.filterConfig.sortReverse | filter: ctrl.filterConfig.search | startFrom: ctrl.pageConfig.currentPage*ctrl.pageConfig.pageSize | limitTo: ctrl.pageConfig.pageSize track by animeitem._id"
+               ng-click="ctrl.watchAnime(animeitem._id)"  list-back="{{ctrl.trustAsResourceUrl(animeitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12">
+      			<div class="view-item-top">
+              <small class="list-group-item-text">
+                <time ng-if="animeitem.latest.substring(0,10)===animeitem.meta.updated.substring(0,10)" title="{{animeitem.meta.updated | date: 'yyyy-MMM-dd HH:mm'}}" ng-bind="ctrl.latestDate(animeitem.latest, animeitem.meta.updated)"></time>
+                <time ng-if="animeitem.latest.substring(0,10)!==animeitem.meta.updated.substring(0,10)" title="{{animeitem.latest | date: 'yyyy-MMM-dd'}}" ng-bind="ctrl.latestDate(animeitem.latest, animeitem.meta.updated)"></time>
+      			  </small>
+              <p class="list-group-item-text">
+                <span data-ng-bind="animeitem.episodes"></span><span ng-if="animeitem.finalEpisode!==0">/{{animeitem.finalEpisode}}</span><span> Episodes</span>
+                <span class="item-icons green-text" ng-if="animeitem.status===true"><i class="fa fa-check"></i></span>
+                <span class="item-icons" ng-if="animeitem.disc===true"><i class="glyphicon glyphicon-cd"></i></span>
+                <span class="item-icons" ng-if="animeitem.reWatching===true"><i class="fa fa-repeat"></i></span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>

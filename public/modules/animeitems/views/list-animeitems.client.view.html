@@ -10,58 +10,7 @@
         <div class="col-lg-8 col-md-6 col-sm-6 item-list-container" loading-spinner name="anime" size="fullscreen">
             <div page-controls page-config="ctrl.pageConfig" showing-count="ctrl.filterConfig.showingCount"></div>
             <div class="list-group col-lg-12 col-md-12 col-sm-12">
-              <div data-ng-repeat="animeitem in ctrl.animeitems | orderBy: ctrl.filterConfig.sortType:ctrl.filterConfig.sortReverse | filter: ctrl.filterConfig.search | ratingFilter: ctrl.filterConfig.ratingLevel | tagFilter: ctrl.filterConfig.searchTags:ctrl.filterConfig.taglessItem | startFrom: ctrl.pageConfig.currentPage*ctrl.pageConfig.pageSize | limitTo: ctrl.pageConfig.pageSize track by animeitem._id" list-back="{{ctrl.trustAsResourceUrl(animeitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12">
-          			<div class="view-item-top">
-                  <small class="list-group-item-text">
-                    <time ng-if="animeitem.latest.substring(0,10)===animeitem.meta.updated.substring(0,10)" title="{{animeitem.meta.updated | date: 'yyyy-MMM-dd HH:mm'}}" ng-bind="ctrl.latestDate(animeitem.latest, animeitem.meta.updated)"></time>
-                    <time ng-if="animeitem.latest.substring(0,10)!==animeitem.meta.updated.substring(0,10)" title="{{animeitem.latest | date: 'yyyy-MMM-dd'}}" ng-bind="ctrl.latestDate(animeitem.latest, animeitem.meta.updated)"></time>
-          			  </small>
-          			  <h4 class="list-group-item-heading clickable" ng-click="viewItem===animeitem ? viewItem='' : viewItem=animeitem" data-ng-bind="animeitem.title"></h4>
-                  <p class="list-group-item-text">
-                    <a class="clickable decoration-none" ng-if="!animeitem.status" ng-click="ctrl.tickOff(animeitem)"><i class="fa fa-plus-square"></i></a>
-                    <span data-ng-bind="animeitem.episodes"></span><span ng-if="animeitem.finalEpisode!==0">/{{animeitem.finalEpisode}}</span><span> Episodes</span>
-                    <span class="item-icons green-text" ng-if="animeitem.status===true"><i class="fa fa-check"></i></span>
-                    <span class="item-icons" ng-if="animeitem.disc===true"><i class="glyphicon glyphicon-cd"></i></span>
-                    <span class="item-icons" ng-if="animeitem.reWatching===true"><i class="fa fa-repeat"></i></span>
-                  </p>
-                </div>
-                <div class="view-item-detail" ng-show="viewItem===animeitem">
-                  <div class="item-detail">
-                    <p>
-                        <em class="text-muted" data-ng-if="animeitem.rating==0">No rating.</em>
-                        <uib-rating data-ng-if="animeitem.rating!=0" data-ng-model="animeitem.rating" class="list-item-rating-stars" read-only="true" max="ctrl.filterConfig.ratingActions.maxRating" id="rating" name="rating"></uib-rating>
-                    </p>
-                    <p ng-if="animeitem.reWatchCount!=0">{{animeitem.reWatchCount}} re-watches.</p>
-                  </div>
-                  <div class="item-dates">
-                    <small>
-                        <span data-ng-bind="animeitem.start | date:'yyyy-MMM-dd'"></span> started.<br/>
-                        <span ng-if="animeitem.end!==undefined && animeitem.end!==null">{{animeitem.end | date:'yyyy-MMM-dd'}} ended.</span>
-                    </small>
-                  </div>
-                  <a class="clickable" ng-click="viewItemHistory = true;" ignore-here="true">View history</a>
-                  <div class="item-actions" data-ng-show="((ctrl.authentication.user) && (ctrl.authentication.user._id == animeitem.user._id))">
-                      <a class="btn btn-accent" href="/#!/animeitems/{{animeitem._id}}">
-                          <i class="fa fa-eye"></i>
-                      </a>
-                      <a class="btn btn-primary" href="/#!/animeitems/{{animeitem._id}}/edit">
-                          <i class="glyphicon glyphicon-edit"></i>
-                      </a>
-                  </div>
-                  <div class="col-lg-12 col-md-12 col-sm-12 item-history-popout" anywhere-but-here ng-show="viewItemHistory">
-                      <div class="item-history-container">
-                          <a class="close-button mt" data-ng-click="viewItemHistory = false;"><i class="fa fa-times"></i></a>
-                          <h4 class="popout-header">{{viewItem.title}} episode history</h4>
-                          <div ng-if="viewItem.meta.history.length === 0">No recorded history.</div>
-                          <div class="item-history-list" ng-if="viewItem.meta.history.length > 0">
-                            <div class="item-history mt" ng-repeat="history in viewItem.meta.history | orderBy: '-value' track by history.value">
-                                <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="ctrl.deleteHistory(viewItem, history)"><i class="fa fa-trash-o"></i></a>
-                                <span>{{history.date | date : 'dd-MM-yyyy HH:mm'}}</span><span> - Episode {{history.value}}</span>
-                            </div>
-                          </div>
-                      </div>
-                  </div>
-                </div><!-- VIEW ITEM END-->
+              <div anime-item-model data-ng-repeat="animeitem in ctrl.animeitems | orderBy: ctrl.filterConfig.sortType:ctrl.filterConfig.sortReverse | filter: ctrl.filterConfig.search | ratingFilter: ctrl.filterConfig.ratingLevel | tagFilter: ctrl.filterConfig.searchTags:ctrl.filterConfig.taglessItem | startFrom: ctrl.pageConfig.currentPage*ctrl.pageConfig.pageSize | limitTo: ctrl.pageConfig.pageSize track by animeitem._id">
               </div>
             </div>
         </div>

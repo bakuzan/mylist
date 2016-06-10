@@ -2,13 +2,12 @@
 	'use strict';
 	angular.module('animeitems')
 	.controller('AnimeitemsController', AnimeitemsController);
-	AnimeitemsController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory', 'spinnerService', 'TagService'];
+	AnimeitemsController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory', 'spinnerService', 'TagService', '$uibModal'];
 
-	function AnimeitemsController($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, AnimeFactory, spinnerService, TagService) {
+	function AnimeitemsController($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, AnimeFactory, spinnerService, TagService, $uibModal) {
 		var ctrl = this;
 
 		ctrl.authentication = Authentication;
-		ctrl.deleteHistory = deleteHistory;
     ctrl.filterConfig = {
         ongoingList: true,
         showingCount: 0,
@@ -29,7 +28,8 @@
         selectListOptions: {},
         statTags: [],
         commonArrays: ListService.getCommonArrays(),
-				isWatch: getItemsAvailable
+				getItemsAvailable: getItemsAvailable,
+				viewItem: ''
     };
 		ctrl.findOne = findOne;
 		ctrl.latestDate = latestDate;
@@ -42,7 +42,7 @@
 		ctrl.trustAsResourceUrl = trustAsResourceUrl;
 		ctrl.update = update;
     ctrl.usedTags = []; //for typeahead array.
-		ctrl.viewItemHistory = false; //default stat of item history popout.
+		ctrl.viewItemHistory = viewItemHistory;
 		ctrl.whichController = 'animeitem';
 
 		ctrl.filterConfig.selectListOptions = ListService.getSelectListOptions(ctrl.whichController);
@@ -92,13 +92,24 @@
         return ItemService.latestDate(latest, updated);
     }
 
-    function deleteHistory(item, history) {
-        //are you sure option...
-        NotificationFactory.confirmation(function() {
-            ctrl.animeitem = ItemService.deleteHistory(item, history);
-            ctrl.update();
-        });
-    }
+		function viewItemHistory() {
+			var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: '/modules/history/views/item-history.client.view.html',
+        controller: 'ViewHistoryController as viewHistory',
+        size: 'lg',
+				resolve: {
+					data: function () {
+						return { viewItem: ctrl.filterConfig.viewItem };
+					}
+				}
+      }).result.then(function(result) {
+        console.log('closed history: ', result, ctrl.filterConfig.viewItem.meta);
+				// if (result) {
+				// 	ctrl.update();
+				// }
+      });
+		}
 
 		// Find existing Animeitem
 		function findOne() {

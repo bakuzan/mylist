@@ -1,0 +1,13 @@
+<div class="col-lg-12 col-md-12 col-sm-12 item-history-popout">
+    <div class="item-history-container">
+        <a class="close-button mt" data-ng-click="ctrl.cancel()"><i class="fa fa-times"></i></a>
+        <h4 class="popout-header" ng-bind="ctrl.viewItem.title + ' episode history'"></h4>
+        <div ng-if="ctrl.viewItem.meta.history.length === 0">No recorded history.</div>
+        <div class="item-history-list" ng-if="ctrl.viewItem.meta.history.length > 0">
+          <div class="item-history mt" ng-repeat="history in ctrl.viewItem.meta.history | orderBy: '-value' track by history.value">
+              <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="ctrl.deleteHistory(ctrl.viewItem, history)"><i class="fa fa-trash-o"></i></a>
+              <time ng-bind="history.date | date : 'dd-MM-yyyy HH:mm'"></time><span ng-bind="' - Episode ' + history.value"></span>
+          </div>
+        </div>
+    </div>
+</div>

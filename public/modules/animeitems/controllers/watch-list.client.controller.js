@@ -2,9 +2,9 @@
 	'use strict';
 	angular.module('animeitems')
 	.controller('WatchListController', WatchListController);
-	WatchListController.$inject = ['$scope', 'Authentication', '$stateParams', '$sce', 'spinnerService', 'ItemService', 'ListService', 'WatchAnime'];
+	WatchListController.$inject = ['$scope', 'Authentication', '$state', '$sce', 'spinnerService', 'ItemService', 'ListService', 'WatchAnime'];
 
-	function WatchListController($scope, Authentication, $stateParams, $sce, spinnerService, ItemService, ListService, WatchAnime) {
+	function WatchListController($scope, Authentication, $state, $sce, spinnerService, ItemService, ListService, WatchAnime) {
 				var ctrl = this;
 
         ctrl.authentication = Authentication;

@@ -95,7 +95,7 @@
 		function viewItemHistory() {
 			var modalInstance = $uibModal.open({
         animation: true,
-        templateUrl: '/modules/history/views/item-history.client.view.html',
+        templateUrl: '/modules/history/views/item-history.html',
         controller: 'ViewHistoryController as viewHistory',
         size: 'lg',
 				resolve: {
@@ -105,9 +105,10 @@
 				}
       }).result.then(function(result) {
         console.log('closed history: ', result, ctrl.filterConfig.viewItem.meta);
-				// if (result) {
-				// 	ctrl.update();
-				// }
+				if (result) {
+					ctrl.animeitem = ctrl.filterConfig.viewItem;
+					ctrl.update();
+				}
       });
 		}
 

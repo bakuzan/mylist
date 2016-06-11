@@ -11,7 +11,7 @@ var mongoose = require('mongoose'),
     fs = require('fs'),
 		path = require('path'),
 	_ = require('lodash'),
-	baseUrl = 'C:/Users/steven.walsh/Documents/MISC/'; //'C:/Users/Steven/Videos/';
+	baseUrl = 'C:/Users/Steven/Videos/'; //'C:/Users/steven.walsh/Documents/MISC/';
 
 /**
  * Upload image.
@@ -141,13 +141,9 @@ function getDirectories(srcpath) {
 exports.watch = function(req, res) {
 	var watchable = [], directories = getDirectories(baseUrl);
 	for(var i = 0, len = directories.length; i < len; i++) {
-		var array = [],
-				split = directories[i].split('-');
-		for(var j = 0, count = split.length; j < count; j++) {
-			array.push({ title: {$regex : split[j] } });
-		}
-		console.log('directory split: ', split, ' makes these regex: ', array);
-		watchable.push({ $and: array });
+		var split = directories[i].split('-');
+		console.log('directory split: ', split);
+		watchable.push({ title: split });
 	}
 	console.log('request watchable anime: ', watchable);
 	Animeitem.find({ $or: watchable }).sort('-created').populate('user', 'displayName').populate('manga', 'title').exec(function(err, animeitems) {

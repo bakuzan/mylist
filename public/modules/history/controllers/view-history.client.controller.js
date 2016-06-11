@@ -9,9 +9,9 @@ function ViewHistoryController($scope, data, $stateParams, Authentication, ItemS
 
   ctrl.cancel = cancel;
   ctrl.deleteHistory = deleteHistory;
+  ctrl.submit = submit;
   ctrl.updated = false;
   ctrl.viewItem = data.viewItem;
-
 
   function deleteHistory(item, history) {
       //are you sure option...
@@ -21,8 +21,12 @@ function ViewHistoryController($scope, data, $stateParams, Authentication, ItemS
       });
   }
 
-  function cancel() {
+  function submit() {
     $uibModalInstance.close(ctrl.updated);
+  }
+
+  function cancel() {
+    $uibModalInstance.dismiss();
   }
 
 }

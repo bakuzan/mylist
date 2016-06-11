@@ -205,7 +205,7 @@
 
             </div>
             <div class="form-group padded-medium">
-                <input type="submit" value="Update" class="btn btn-default" ng-disabled="animeForm.$invalid">&nbsp; - &nbsp;<a href="/#!/animeitems">Back</a>
+                <input type="submit" value="{{ctrl.config.title}}" class="btn btn-default" ng-disabled="animeForm.$invalid">&nbsp; - &nbsp;<a href="/#!/animeitems">Back</a>
             </div>
       			<div data-ng-show="ctrl.error" class="text-danger">
       				<strong data-ng-bind="ctrl.error"></strong>

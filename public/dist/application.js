@@ -255,7 +255,7 @@ angular.module('animeitems').config(['$stateProvider',
         size: 'lg',
 				resolve: {
 					data: function () {
-						return { viewItem: ctrl.filterConfig.viewItem };
+						return { viewItem: ctrl.filterConfig.viewItem, type: 'anime' };
 					}
 				}
       }).result.then(function(result) {
@@ -3459,6 +3459,7 @@ function ViewHistoryController($scope, data, $stateParams, Authentication, ItemS
   ctrl.cancel = cancel;
   ctrl.deleteHistory = deleteHistory;
   ctrl.submit = submit;
+  ctrl.type = data.type;
   ctrl.updated = false;
   ctrl.viewItem = data.viewItem;
 
@@ -3758,16 +3759,15 @@ angular.module('mangaitems').config(['$stateProvider',
 (function() {
 	'use strict';
 	angular.module('mangaitems').controller('MangaitemsController', MangaitemsController);
-	MangaitemsController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'MangaFactory', 'spinnerService', 'TagService'];
+	MangaitemsController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'MangaFactory', 'spinnerService', 'TagService', '$uibModal'];
 
-	function MangaitemsController($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, MangaFactory, spinnerService, TagService) {
+	function MangaitemsController($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, MangaFactory, spinnerService, TagService, $uibModal) {
 		var ctrl = this;
 
 		ctrl.addTag = addTag;
 		ctrl.authentication = Authentication;
 		ctrl.chapters = 0;
 		ctrl.create = create;
-		ctrl.deleteHistory = deleteHistory;
 		ctrl.dropTag = dropTag;
     ctrl.filterConfig = {
         showingCount: 0,
@@ -3784,7 +3784,8 @@ angular.module('mangaitems').config(['$stateProvider',
         taglessItem: false,
         areTagless: false,
         selectListOptions: {},
-        statTags: []
+        statTags: [],
+				viewItem: ''
     };
 		ctrl.finalNumbers = false; //default show status of final number fields in edit view.
 		ctrl.find = find;
@@ -3808,6 +3809,7 @@ angular.module('mangaitems').config(['$stateProvider',
 		ctrl.update = update;
 		ctrl.uploadFile = uploadFile;
 		ctrl.usedTags = []; //for typeahead array.
+		ctrl.viewItemHistory = viewItemHistory;
 		ctrl.volumes = 0;
 		ctrl.whichController = 'mangaitem';
 
@@ -3930,15 +3932,42 @@ angular.module('mangaitems').config(['$stateProvider',
         return ItemService.latestDate(latest, updated);
     }
 
-    function deleteHistory(item, history) {
-        //are you sure option...
-       NotificationFactory.confirmation(function() {
-            ctrl.mangaitem = ItemService.deleteHistory(item, history);
-            ctrl.update();
-        });
-    }
+		function viewItemHistory() {
+			var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: '/modules/history/views/item-history.html',
+        controller: 'ViewHistoryController as viewHistory',
+        size: 'lg',
+				resolve: {
+					data: function () {
+						return { viewItem: ctrl.filterConfig.viewItem, type: 'manga' };
+					}
+				}
+      }).result.then(function(result) {
+        console.log('closed history: ', result, ctrl.filterConfig.viewItem.meta);
+				if (result) {
+					ctrl.mangaitem = ctrl.filterConfig.viewItem;
+					ctrl.update();
+				}
+      });
+		}
 
 	}
+
+})();
+
+(function() {
+  'use strict';
+  angular.module('tasks')
+  .directive('mangaItemModel', mangaItemModel);
+
+  function mangaItemModel() {
+    return {
+      restrict: 'A',
+      replace: true,
+      templateUrl: 'modules/mangaitems/templates/manga-item.html'
+    };
+  }
 
 })();
 

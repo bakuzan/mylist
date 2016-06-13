@@ -11,7 +11,7 @@ var mongoose = require('mongoose'),
     fs = require('fs'),
 		path = require('path'),
 	_ = require('lodash'),
-	baseUrl = 'C:/Users/steven.walsh/Documents/MISC/'; //'C:/Users/Steven/Videos/';
+	baseUrl = 'C:/Users/Steven/Videos/'; //'C:/Users/steven.walsh/Documents/MISC/';
 
 /**
  * Upload image.

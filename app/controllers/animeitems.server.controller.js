@@ -11,7 +11,7 @@ var mongoose = require('mongoose'),
     fs = require('fs'),
 		path = require('path'),
 	_ = require('lodash'),
-	baseUrl = 'C:/Users/Steven/Videos/'; //'C:/Users/steven.walsh/Documents/MISC/';
+	baseUrl = 'C:/Users/steven.walsh/Documents/MISC/'; //'C:/Users/Steven/Videos/';
 
 /**
  * Upload image.
@@ -139,13 +139,19 @@ function getDirectories(srcpath) {
  * Watchable anime
  */
 exports.watch = function(req, res) {
-	var watchable = [], directories = getDirectories(baseUrl);
+	var watchable = [],
+			directories = getDirectories(baseUrl); //Gets video directories.
 	for(var i = 0, len = directories.length; i < len; i++) {
-		var split = directories[i].split('-');
-		console.log('directory split: ', split);
-		watchable.push({ title: split });
+		var array = [],
+				split = directories[i].split('-');
+		for(var j = 0, count = split.length; j < count; j++) {
+			array.push({ title: { $regex: split[j], $options: 'i' } }); //Check attribute(title), contains value(split[j]) which is case-insensitve(options: 'i')
+		}
+		watchable.push({ $and: array });
 	}
-	console.log('request watchable anime: ', watchable);
+	/** Document must contain all values from any one of the directories.
+	 * e.g (title contains 'steins' AND 'gate') OR (title contains 'sidonia' AND 'no' AND 'kishi')
+	 */
 	Animeitem.find({ $or: watchable }).sort('-created').populate('user', 'displayName').populate('manga', 'title').exec(function(err, animeitems) {
 		if (err) {
 			return res.status(400).send({
@@ -184,7 +190,7 @@ exports.animeitemByID = function(req, res, next, id) {
 	Animeitem.findById(id).populate('user', 'displayName').populate('manga', 'title').exec(function(err, animeitem) {
 		if (err) return next(err);
 		if (! animeitem) return next(new Error('Failed to load Animeitem ' + id));
-		var seriesName = animeitem.title.toLowerCase().replace(/\(.+?\)/g, '').replace(/[^a-z0-9+]+/gi, '-'),
+		var seriesName = animeitem.title.toLowerCase().replace(/[^a-z0-9+]+/gi, '-').replace(/\-$/, ''), // .replace(/\(.+?\)/g, '')
 				location = baseUrl + seriesName;
 		fs.readdir(location, function (err, files) {
 			animeitem.video.location = location + '/';

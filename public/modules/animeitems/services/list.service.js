@@ -12,21 +12,12 @@
 			getCommonArrays: getCommonArrays,
 			getSelectListOptions: getSelectListOptions,
 			groupItemsByProperties: groupItemsByProperties,
-			loader: loader,
 			manipulateString: manipulateString,
 			numberOfPages: numberOfPages,
 			stringReverse: stringReverse,
 			weekEndingForDate: weekEndingForDate
 		};
 		return service;
-
-	        //show a loading gif if text doesn't exist.
-	        function loader(value) {
-	            if (value) {
-	                return false; //hide loader when value exists.
-	            }
-	            return true;
-	        }
 
 	        function stringReverse(string) {
 	            return string.split('').reverse().join('');
@@ -116,11 +107,11 @@
 
 	        //returns the options for the various filters in list pages.
 	        function getSelectListOptions(controller) {
-	            var selectListOptions = [];
+	            var selectListOptions = {};
 	            if (controller !== 'character' && controller !== 'topten') {
 	                selectListOptions.status = [ { v: '', n: 'All' }, { v: false, n: 'Ongoing' }, { v: true, n: 'Completed' } ];
 	                selectListOptions.searchName = 'title';
-	                if (controller === 'animeitem') {
+	                if (controller === 'animeitem' || controller === 'watch') {
 	                    selectListOptions.onHold = [ { v: '', n: 'All' }, { v: false, n: 'Ongoing' }, { v: true, n: 'On Hold' } ];
 	                    selectListOptions.sortOptions = [ { v: 'title', n: 'Title' },{ v: 'episodes', n: 'Episodes' },{ v: 'start', n: 'Start date' },
 	                                                      { v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' }

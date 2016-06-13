@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <div class="animate" ng-class="(filterConfig.expandFilters) ? 'ease-in' : 'ease-out'">
+        <div class="animate" ng-class="(filterConfig.expandFilters) ? 'ease-in' : 'ease-out'" ng-if="page !== 'watch'">
             <div class="input-group mt" ng-if="page !== 'topten'">
                 <div class="input-group-addon clickable" clear-tag-values>
                     <i class="fa fa-tags"></i>

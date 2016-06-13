@@ -5,9 +5,10 @@
       <time ng-if="animeitem.latest.substring(0,10)!==animeitem.meta.updated.substring(0,10)" title="{{animeitem.latest | date: 'yyyy-MMM-dd'}}" ng-bind="ctrl.latestDate(animeitem.latest, animeitem.meta.updated)"></time>
     </small>
     <h4 class="list-group-item-heading clickable" data-ng-bind="animeitem.title"
-        ng-click="ctrl.filterConfig.viewItem === animeitem ? ctrl.filterConfig.viewItem='' : ctrl.filterConfig.viewItem = animeitem"></h4>
+        ng-click="(ctrl.whichController === 'watch') ? ctrl.watchAnime(animeitem._id) :
+                  (ctrl.filterConfig.viewItem === animeitem) ? ctrl.filterConfig.viewItem = '' : ctrl.filterConfig.viewItem = animeitem"></h4>
     <p class="list-group-item-text">
-      <a class="clickable decoration-none" ng-if="!animeitem.status" ng-click="ctrl.tickOff(animeitem)"><i class="fa fa-plus-square"></i></a>
+      <a class="clickable decoration-none" ng-if="::ctrl.whichController === 'animeitem' && !animeitem.status" ng-click="ctrl.tickOff(animeitem)"><i class="fa fa-plus-square"></i></a>
       <span data-ng-bind="animeitem.episodes"></span><span ng-bind="'/' + animeitem.finalEpisode" ng-if="animeitem.finalEpisode !== 0"></span><span> Episodes</span>
       <span class="item-icons green-text" ng-if="animeitem.status === true"><i class="fa fa-check"></i></span>
       <span class="item-icons" ng-if="animeitem.disc===true"><i class="glyphicon glyphicon-cd"></i></span>

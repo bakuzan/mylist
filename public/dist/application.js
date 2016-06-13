@@ -105,11 +105,13 @@ ApplicationConfiguration.registerModule('users');
 angular.module('animeitems').run(['Menus',
 	function(Menus) {
 		// Set top bar menu items
-		Menus.addMenuItem('topbar', 'Animeitems', 'animeitems', 'dropdown', '/animeitems(/create)?');
+		Menus.addMenuItem('topbar', 'Animeitems', 'animeitems', 'dropdown');
 		Menus.addSubMenuItem('topbar', 'animeitems', 'List Animeitems', 'animeitems');
+		Menus.addSubMenuItem('topbar', 'animeitems', 'Watch Animeitems', 'animeitems/watch-list');
 		Menus.addSubMenuItem('topbar', 'animeitems', 'New Animeitem', 'animeitems/create');
 	}
 ]);
+
 'use strict';
 
 //Setting up route
@@ -119,7 +121,13 @@ angular.module('animeitems').config(['$stateProvider',
 		$stateProvider.
         state('listAnimeitems', {
 			url: '/animeitems',
-			templateUrl: 'modules/animeitems/views/list-animeitems.client.view.html'
+			templateUrl: 'modules/animeitems/views/list-animeitems.client.view.html',
+			controller: 'AnimeitemsController as ctrl'
+		}).
+		state('watchListAnimeitems', {
+			url: '/animeitems/watch-list',
+			templateUrl: 'modules/animeitems/views/list-animeitems.client.view.html',
+			controller: 'WatchListController as ctrl'
 		}).
 		state('createAnimeitem', {
 			url: '/animeitems/create',
@@ -131,7 +139,7 @@ angular.module('animeitems').config(['$stateProvider',
 		}).
 		state('editAnimeitem', {
 			url: '/animeitems/:animeitemId/edit',
-			templateUrl: 'modules/animeitems/views/edit-animeitem.client.view.html'
+			templateUrl: 'modules/animeitems/views/create-animeitem.client.view.html'
 		}).
 		state('watchAnimeitem', {
 			url: '/animeitems/watch/:animeitemId',
@@ -144,17 +152,12 @@ angular.module('animeitems').config(['$stateProvider',
 	'use strict';
 	angular.module('animeitems')
 	.controller('AnimeitemsController', AnimeitemsController);
-	AnimeitemsController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory', 'spinnerService', 'TagService'];
+	AnimeitemsController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory', 'spinnerService', 'TagService', '$uibModal'];
 
-	function AnimeitemsController($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, AnimeFactory, spinnerService, TagService) {
+	function AnimeitemsController($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, AnimeFactory, spinnerService, TagService, $uibModal) {
 		var ctrl = this;
 
-		ctrl.addTag = addTag;
 		ctrl.authentication = Authentication;
-		ctrl.create = create;
-		ctrl.deleteHistory = deleteHistory;
-		ctrl.dropTag = dropTag;
-    ctrl.episodes = 0;
     ctrl.filterConfig = {
         ongoingList: true,
         showingCount: 0,
@@ -175,31 +178,21 @@ angular.module('animeitems').config(['$stateProvider',
         selectListOptions: {},
         statTags: [],
         commonArrays: ListService.getCommonArrays(),
-				getItemsAvailable: getItemsAvailable
+				getItemsAvailable: getItemsAvailable,
+				viewItem: ''
     };
-    ctrl.finalNumbers = false; //default show status of final number fields in edit view.
-		ctrl.find = find;
 		ctrl.findOne = findOne;
-		ctrl.findManga = findManga;
-    ctrl.imgPath = ''; //image path
-		ctrl.itemUpdate = new Date(); // today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
-		ctrl.latest = ctrl.itemUpdate;
 		ctrl.latestDate = latestDate;
 		ctrl.pageConfig = {
 				currentPage: 0,
 				pageSize: 10
 		};
 		ctrl.remove = remove;
-		ctrl.removeTag = removeTag;
-		ctrl.start = ctrl.itemUpdate;
-    ctrl.tagArray = []; // holding tags pre-submit
-    ctrl.tagArrayRemove = [];
 		ctrl.tickOff = tickOff;
 		ctrl.trustAsResourceUrl = trustAsResourceUrl;
 		ctrl.update = update;
-		ctrl.uploadFile = uploadFile;
     ctrl.usedTags = []; //for typeahead array.
-		ctrl.viewItemHistory = false; //default stat of item history popout.
+		ctrl.viewItemHistory = viewItemHistory;
 		ctrl.whichController = 'animeitem';
 
 		ctrl.filterConfig.selectListOptions = ListService.getSelectListOptions(ctrl.whichController);
@@ -208,46 +201,6 @@ angular.module('animeitems').config(['$stateProvider',
     function trustAsResourceUrl(url) {
         return $sce.trustAsResourceUrl(url);
     }
-    //For adding new tags.
-    function addTag() {
-			TagService.addTag(ctrl.tagArray, ctrl.newTag);
-      ctrl.newTag = '';
-    }
-		//Drop tag for new tags.
-		function dropTag(text) {
-			TagService.dropTag(ctrl.tagArray, text);
-		}
-		//Drop tag for animeitem tags.
-		function removeTag(text) {
-			TagService.dropTag(ctrl.animeitem.tags, text);
-		}
-
-		// Create new Animeitem
-		function create() {
-			// Create new Animeitem object
-            var animeitem = new Animeitems();
-            animeitem = new Animeitems ({
-                title: ctrl.title,
-                episodes: ctrl.episodes,
-                start: ctrl.start,
-                latest: ctrl.latest,
-                finalEpisode: ctrl.finalEpisode,
-                season: ctrl.season === true ? ItemService.convertDateToSeason(new Date(ctrl.start)) : '',
-                disc: ctrl.disc,
-                manga: ctrl.manga!==undefined && ctrl.manga!==null ? ctrl.manga._id : ctrl.manga,
-                tags: ctrl.tagArray,
-                user: ctrl.user
-             });
-
-			// Redirect after save
-			animeitem.$save(function(response) {
-				$location.path('/animeitems/' + response._id);
-				NotificationFactory.success('Saved!', 'Anime was saved successfully');
-			}, function(errorResponse) {
-				ctrl.error = errorResponse.data.message;
-        NotificationFactory.error('Error!', errorResponse.data.message);
-			});
-		}
 
 		// Remove existing Animeitem
 		function remove(animeitem) {
@@ -274,24 +227,40 @@ angular.module('animeitems').config(['$stateProvider',
 		function update() {
 			var animeitem = ctrl.animeitem;
 			ctrl.animeitem = undefined;
-      AnimeFactory.update(animeitem, ctrl.tagArray, ctrl.updateHistory, ctrl.imgPath);
+      AnimeFactory.update(animeitem, undefined, true, undefined);
 		}
 
     function tickOff(item) {
         item.episodes += 1;
         item.latest = new Date(); //update latest.
-        ctrl.updateHistory = true; //add to history.
         ctrl.animeitem = item;
         ctrl.update();
     }
 
-    // Find a list of Animeitems
-    function find() {
-        Animeitems.query().$promise.then(function(result) {
-					ctrl.animeitems = result;
-					ctrl.filterConfig.statTags = ItemService.buildStatTags(result, 0);
-				});
+    //latest date display format.
+    function latestDate(latest, updated) {
+        return ItemService.latestDate(latest, updated);
     }
+
+		function viewItemHistory() {
+			var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: '/modules/history/views/item-history.html',
+        controller: 'ViewHistoryController as viewHistory',
+        size: 'lg',
+				resolve: {
+					data: function () {
+						return { viewItem: ctrl.filterConfig.viewItem };
+					}
+				}
+      }).result.then(function(result) {
+        console.log('closed history: ', result, ctrl.filterConfig.viewItem.meta);
+				if (result) {
+					ctrl.animeitem = ctrl.filterConfig.viewItem;
+					ctrl.update();
+				}
+      });
+		}
 
 		// Find existing Animeitem
 		function findOne() {
@@ -300,30 +269,6 @@ angular.module('animeitems').config(['$stateProvider',
 	   			console.log(ctrl.animeitem);
 	    });
 		}
-
-    // Find list of mangaitems for dropdown.
-    function findManga() {
-        ctrl.mangaitems = Mangaitems.query();
-    }
-
-    //image upload
-    function uploadFile(){
-        ctrl.imgPath = '/modules/animeitems/img/' + ctrl.myFile.name;
-        fileUpload.uploadFileToUrl(ctrl.myFile, '/fileUploadAnime');
-    }
-
-    //latest date display format.
-    function latestDate(latest, updated) {
-        return ItemService.latestDate(latest, updated);
-    }
-
-    function deleteHistory(item, history) {
-        //are you sure option...
-        NotificationFactory.confirmation(function() {
-            ctrl.animeitem = ItemService.deleteHistory(item, history);
-            ctrl.update();
-        });
-    }
 
 		/** Find a list of Animeitems for values:
          *  (0) returns only ongoing series. (1) returns all series.
@@ -349,6 +294,173 @@ angular.module('animeitems').config(['$stateProvider',
             getAnime(1);
         }
     }
+		ctrl.filterConfig.getItemsAvailable();
+
+	}
+
+})();
+
+(function() {
+	'use strict';
+	angular.module('animeitems')
+	.controller('CreateAnimeController', CreateAnimeController);
+	CreateAnimeController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory', 'spinnerService', 'TagService'];
+
+	function CreateAnimeController($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, AnimeFactory, spinnerService, TagService) {
+		var ctrl = this,
+        animeitemId = $stateParams.animeitemId;
+
+		ctrl.addedEpisodes = addedEpisodes;
+		ctrl.addTag = addTag;
+		ctrl.animeitem = {};
+		ctrl.authentication = Authentication;
+    ctrl.config = {
+      title: 'Create',
+			updateHistory: false,
+      ratingActions: {
+          maxRating: 10,
+          percent: undefined,
+          overStar: null
+      },
+      statTags: [],
+      commonArrays: ListService.getCommonArrays()
+    };
+		ctrl.create = create;
+		ctrl.dropTag = dropTag;
+    ctrl.finalNumbers = false; //default show status of final number fields in edit view.
+		ctrl.find = find;
+		ctrl.findOne = findOne;
+		ctrl.findManga = findManga;
+    ctrl.imgPath = ''; //image path
+		ctrl.itemUpdate = new Date(); // today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
+    ctrl.init = init;
+		ctrl.removeTag = removeTag;
+		ctrl.sections = {
+			showAdditional: false,
+			showCompletion: false,
+			showItemTags: false
+		};
+		ctrl.setInSeason = setInSeason;
+		ctrl.submit = submit;
+    ctrl.tagArray = []; // holding tags pre-submit
+    ctrl.tagArrayRemove = [];
+		ctrl.update = update;
+		ctrl.uploadFile = uploadFile;
+    ctrl.usedTags = []; //for typeahead array.
+
+    function init() {
+      ctrl.config.isCreate = animeitemId === undefined;
+      if(ctrl.config.isCreate) {
+				ctrl.animeitem.episodes = 0;
+				ctrl.animeitem.start = ctrl.itemUpdate;
+				ctrl.animeitem.latest = ctrl.itemUpdate;
+			} else if(!ctrl.config.isCreate) {
+        ctrl.config.title = 'Edit';
+        ctrl.findOne();
+      }
+      ctrl.find();
+      ctrl.findManga();
+    }
+    ctrl.init();
+
+    //For adding new tags.
+    function addTag() {
+			TagService.addTag(ctrl.tagArray, ctrl.newTag);
+      ctrl.newTag = '';
+    }
+		//Drop tag for new tags.
+		function dropTag(text) {
+			TagService.dropTag(ctrl.tagArray, text);
+		}
+		//Drop tag for animeitem tags.
+		function removeTag(text) {
+			TagService.dropTag(ctrl.animeitem.tags, text);
+		}
+
+		function addedEpisodes() {
+			ctrl.animeitem.latest = ctrl.itemUpdate;
+			ctrl.config.updateHistory = true;
+			if(ctrl.animeitem.episodes === ctrl.animeitem.finalEpisode && ctrl.animeitem.finalEpisode !== 0 && ctrl.animeitem.reWatching === false) {
+				ctrl.animeitem.end = ctrl.itemUpdate;
+			}
+			if(ctrl.animeitem.episodes > ctrl.animeitem.finalEpisode && ctrl.animeitem.finalEpisode !== 0) {
+				ctrl.animeitem.episodes = ctrl.animeitem.finalEpisode;
+			}
+		}
+
+		function setInSeason() {
+			if(ctrl.animeitem.season.season === null) {
+				 ctrl.animeitem.season.year = null;
+			 } else {
+				 ctrl.animeitem.season.year = ctrl.animeitem.start.substring(0,4);
+			 }
+		}
+
+		// Create new Animeitem
+		function create() {
+			// Create new Animeitem object
+      var animeitem = new Animeitems();
+      animeitem = new Animeitems ({
+          title: ctrl.animeitem.title,
+          episodes: ctrl.animeitem.episodes,
+          start: ctrl.animeitem.start,
+          latest: ctrl.animeitem.latest,
+          finalEpisode: ctrl.animeitem.finalEpisode,
+          season: ctrl.animeitem.season === true ? ItemService.convertDateToSeason(new Date(ctrl.animeitem.start)) : '',
+          disc: ctrl.animeitem.disc,
+          manga: ctrl.animeitem.manga!==undefined && ctrl.animeitem.manga!==null ? ctrl.animeitem.manga._id : ctrl.animeitem.manga,
+          tags: ctrl.tagArray,
+          user: ctrl.user
+       });
+
+			// Redirect after save
+			animeitem.$save(function(response) {
+				$location.path('/animeitems/' + response._id);
+				NotificationFactory.success('Saved!', 'Anime was saved successfully');
+			}, function(errorResponse) {
+				ctrl.error = errorResponse.data.message;
+        NotificationFactory.error('Error!', errorResponse.data.message);
+			});
+		}
+
+		// Update existing Animeitem
+		function update() {
+			var animeitem = ctrl.animeitem;
+			ctrl.animeitem = undefined;
+      AnimeFactory.update(animeitem, ctrl.tagArray, ctrl.config.updateHistory, ctrl.imgPath);
+		}
+
+		function submit() {
+			if(ctrl.config.isCreate) ctrl.create();
+			if(!ctrl.config.isCreate) ctrl.update();
+		}
+
+    // Find a list of Animeitems
+    function find() {
+        Animeitems.query().$promise.then(function(result) {
+					ctrl.animeitems = result;
+						ctrl.config.statTags = ItemService.buildStatTags(result, 0);
+				});
+    }
+
+		// Find existing Animeitem
+		function findOne() {
+	    Animeitems.get({ animeitemId: animeitemId }).$promise.then(function(result) {
+	        ctrl.animeitem = result;
+	   			console.log(ctrl.animeitem);
+	    });
+		}
+
+    // Find list of mangaitems for dropdown.
+    function findManga() {
+        ctrl.mangaitems = Mangaitems.query();
+    }
+
+    //image upload
+    function uploadFile(){
+        ctrl.imgPath = '/modules/animeitems/img/' + ctrl.myFile.name;
+        fileUpload.uploadFileToUrl(ctrl.myFile, '/fileUploadAnime');
+    }
 
 	}
 
@@ -358,15 +470,17 @@ angular.module('animeitems').config(['$stateProvider',
 	'use strict';
 	angular.module('animeitems')
 	.controller('WatchAnimeController', WatchAnimeController);
-	WatchAnimeController.$inject = ['$scope', 'Authentication', '$stateParams', '$timeout', 'Animeitems', '$sce', 'ListService'];
+	WatchAnimeController.$inject = ['$scope', 'Authentication', '$stateParams', '$timeout', 'Animeitems', '$sce', 'ListService', 'AnimeFactory'];
 
-	function WatchAnimeController($scope, Authentication, $stateParams, $timeout, Animeitems, $sce, ListService) {
+	function WatchAnimeController($scope, Authentication, $stateParams, $timeout, Animeitems, $sce, ListService, AnimeFactory) {
 				var ctrl = this,
 						saved = localStorage.getItem('watched');
 
         ctrl.authentication = Authentication;
 				ctrl.findOne = findOne;
 				ctrl.playVideo = playVideo;
+				ctrl.startRewatch = startRewatch;
+				ctrl.update = update;
         ctrl.videoFile = {
   				processed: '',
   				file: '',
@@ -375,8 +489,7 @@ angular.module('animeitems').config(['$stateProvider',
         };
 				ctrl.watchedList = (localStorage.getItem('watched') !== null) ? JSON.parse(saved) : {};
 
-				function playVideo() {
-					ctrl.watchedList[ctrl.videoFile.file] = true;
+				function updateWatchedList() {
 					localStorage.setItem('watched', JSON.stringify(ctrl.watchedList));
 					ctrl.watchedList = JSON.parse(localStorage.getItem('watched'));
 				}
@@ -390,6 +503,31 @@ angular.module('animeitems').config(['$stateProvider',
           }
         });
 
+				function playVideo() {
+					ctrl.watchedList[ctrl.videoFile.file] = true;
+					updateWatchedList();
+					if(ctrl.animeitem.reWatching) {
+						ctrl.animeitem.episodes = parseInt(ctrl.videoFile.number, 10);
+						ctrl.update();
+					}
+				}
+
+				function startRewatch() {
+					console.log('startRewatch: ');
+					var i = ctrl.animeitem.video.files.length;
+					while(i--) {
+						ctrl.watchedList[ctrl.animeitem.video.files[i].file] = false;
+					}
+					updateWatchedList();
+					ctrl.animeitem.episodes = 0;
+					ctrl.update();
+				}
+
+				// Update existing Animeitem
+				function update() {
+		      AnimeFactory.update(ctrl.animeitem, undefined, false, '');
+				}
+
         // Find existing Animeitem
     		function findOne() {
     	    Animeitems.get({ animeitemId: $stateParams.animeitemId }).$promise.then(function(result) {
@@ -400,6 +538,91 @@ angular.module('animeitems').config(['$stateProvider',
         ctrl.findOne();
 
 	}
+
+})();
+
+(function() {
+	'use strict';
+	angular.module('animeitems')
+	.controller('WatchListController', WatchListController);
+	WatchListController.$inject = ['$scope', 'Authentication', '$state', '$sce', 'spinnerService', 'ItemService', 'ListService', 'WatchAnime', '$filter'];
+
+	function WatchListController($scope, Authentication, $state, $sce, spinnerService, ItemService, ListService, WatchAnime, $filter) {
+				var ctrl = this;
+
+        ctrl.authentication = Authentication;
+				ctrl.filterConfig = {
+		        ongoingList: true,
+		        showingCount: 0,
+		        expandFilters: false,
+		        sortType: '',
+		        sortReverse: true,
+		        ratingLevel: undefined,
+		        ratingActions: {
+		            maxRating: 10,
+		            percent: undefined,
+		            overStar: null
+		        },
+		        search: {},
+		        searchTags: '',
+		        tagsForFilter: [],
+		        taglessItem: false,
+		        areTagless: false,
+		        selectListOptions: {},
+		        statTags: [],
+		        commonArrays: ListService.getCommonArrays()
+		    };
+				ctrl.find = find;
+				ctrl.latestDate = latestDate;
+				ctrl.pageConfig = {
+						currentPage: 0,
+						pageSize: 10
+				};
+				ctrl.trustAsResourceUrl = trustAsResourceUrl;
+				ctrl.watchAnime = watchAnime;
+				ctrl.whichController = 'watch';
+
+				function watchAnime(id) {
+					$state.go('watchAnimeitem', { animeitemId: id });
+				}
+
+        // Find a list of Animeitems
+        function find() {
+					ctrl.filterConfig.selectListOptions = ListService.getSelectListOptions(ctrl.whichController);
+					ctrl.filterConfig.sortType = ctrl.filterConfig.selectListOptions.sortOptions[ctrl.filterConfig.selectListOptions.sortOption].v; //Set sort order.
+          spinnerService.loading('watch', WatchAnime.query().$promise.then(function(result) {
+  					ctrl.animeitems = result;
+						console.log('watch list: ', result, 'filterConfig: ', ctrl.filterConfig);
+  				}));
+        }
+        ctrl.find();
+
+				//allow retreival of local resource
+		    function trustAsResourceUrl(url) {
+		        return $sce.trustAsResourceUrl(url);
+		    }
+
+				//latest date display format.
+		    function latestDate(latest, updated) {
+		        return ItemService.latestDate(latest, updated);
+		    }
+
+	}
+
+})();
+
+(function() {
+  'use strict';
+  angular.module('tasks')
+  .directive('animeItemModel', animeItemModel);
+
+  function animeItemModel() {
+    return {
+      restrict: 'A',
+      replace: true,
+      templateUrl: 'modules/animeitems/templates/anime-item.html'
+    };
+  }
 
 })();
 
@@ -849,7 +1072,7 @@ angular.module('animeitems').config(['$stateProvider',
 	            }
 
 				animeitem.$update(function() {
-					if (window.location.href.indexOf('tasks') === -1) $location.path('animeitems');
+					if (window.location.href.indexOf('tasks') === -1 && window.location.href.indexOf('watch') === -1 ) $location.path('animeitems');
 
 				    NotificationFactory.success('Saved!', 'Anime was saved successfully');
 				}, function(errorResponse) {
@@ -1274,21 +1497,26 @@ angular.module('animeitems').config(['$stateProvider',
 	ListService.$inject = ['moment', '$q'];
 
 	function ListService(moment, $q) {
+		var service = {
+			checkForTagless: checkForTagless,
+			concatenateTagArrays: concatenateTagArrays,
+			findWithAttr: findWithAttr,
+			getCommonArrays: getCommonArrays,
+			getSelectListOptions: getSelectListOptions,
+			groupItemsByProperties: groupItemsByProperties,
+			manipulateString: manipulateString,
+			numberOfPages: numberOfPages,
+			stringReverse: stringReverse,
+			weekEndingForDate: weekEndingForDate
+		};
+		return service;
 
-	        //show a loading gif if text doesn't exist.
-	        this.loader = function(value) {
-	            if (value) {
-	                return false; //hide loader when value exists.
-	            }
-	            return true;
-	        };
-
-	        this.stringReverse = function(string) {
+	        function stringReverse(string) {
 	            return string.split('').reverse().join('');
-	        };
+	        }
 
 	        //get number of pages for list.
-	        this.numberOfPages = function(showingCount, pageSize, currentPage) {
+	        function numberOfPages(showingCount, pageSize, currentPage) {
 	            var pageCount = Math.ceil(showingCount/pageSize);
 	            //reset number of pages to be the final page if the number of pages
 	            //becomes less than the one you are on.
@@ -1300,10 +1528,10 @@ angular.module('animeitems').config(['$stateProvider',
 	            }
 	            var pagingDetails = { currentPage: currentPage, pageCount: pageCount };
 	            return pagingDetails;
-	        };
+	        }
 
 	        //find index of object with given attr.
-	        this.findWithAttr = function(array, attr, value) {
+	        function findWithAttr(array, attr, value) {
 	            if (array !== undefined) {
 	                for(var i = 0; i < array.length; i += 1) {
 	                    if(array[i][attr] === value) {
@@ -1312,18 +1540,18 @@ angular.module('animeitems').config(['$stateProvider',
 	                }
 	            }
 	            return -1;
-	        };
+	        }
 
 					/** Splitting array into multiple arrays by grouping by attributes.
 					 */
-					 this.groupItemsByProperties = function (array, groupProperties) {
+					 function groupItemsByProperties(array, groupProperties) {
 						 return $q(function (resolve, reject) {
 								 var groupedArrays = groupBy(array, function (item) {
 										 return getGroupProperties(item, groupProperties);
 								 });
 								 resolve(groupedArrays);
 						 });
-					 };
+					 }
 					 //Retrieve the item values for grouping by
 					 function getGroupProperties(item, groups) {
 							 var array = [];
@@ -1345,7 +1573,7 @@ angular.module('animeitems').config(['$stateProvider',
 							 });
 					 }
 
-	        this.manipulateString = function(string, transform, onlyFirst) {
+	        function manipulateString(string, transform, onlyFirst) {
 	            switch(transform.toLowerCase()) {
 	                case 'lower':
 	                    if (onlyFirst)  return string.charAt(0).toLowerCase() + string.slice(1);
@@ -1358,29 +1586,29 @@ angular.module('animeitems').config(['$stateProvider',
 	                default:
 	                    return string.toLowerCase();
 	            }
-	        };
+	        }
 
-					this.weekEndingForDate = function(convertToSunday) {
+					function weekEndingForDate(convertToSunday) {
 			        var date = new Date(convertToSunday),
 			            day = date.getDay(),
 			            diff = date.getDate() - day + (day === 0 ? 0:7),
 			            temp = new Date(convertToSunday),
 			            wkEnd = new Date(temp.setDate(diff));
 			        return moment(wkEnd.toISOString()).endOf('day');
-			    };
+			    }
 
 	        //returns the options for the various filters in list pages.
-	        this.getSelectListOptions = function(controller) {
-	            var self = this, selectListOptions = [];
+	        function getSelectListOptions(controller) {
+	            var selectListOptions = {};
 	            if (controller !== 'character' && controller !== 'topten') {
 	                selectListOptions.status = [ { v: '', n: 'All' }, { v: false, n: 'Ongoing' }, { v: true, n: 'Completed' } ];
 	                selectListOptions.searchName = 'title';
-	                if (controller === 'animeitem') {
+	                if (controller === 'animeitem' || controller === 'watch') {
 	                    selectListOptions.onHold = [ { v: '', n: 'All' }, { v: false, n: 'Ongoing' }, { v: true, n: 'On Hold' } ];
 	                    selectListOptions.sortOptions = [ { v: 'title', n: 'Title' },{ v: 'episodes', n: 'Episodes' },{ v: 'start', n: 'Start date' },
 	                                                      { v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' }
 	                                                    ];
-	                    selectListOptions.sortOption = self.findWithAttr(selectListOptions.sortOptions, 'n', 'Latest');
+	                    selectListOptions.sortOption = service.findWithAttr(selectListOptions.sortOptions, 'n', 'Latest');
 	                    selectListOptions.media = [ { v: '', n: 'All' }, { v: false, n: 'Online' }, { v: true, n: 'Disc' } ];
 	                    selectListOptions.mediaType = 'disc';
 	                    selectListOptions.repeating = [ { v: '', n: 'All' }, { v: false, n: 'Not Re-watching' }, { v: true, n: 'Re-watching' } ];
@@ -1389,7 +1617,7 @@ angular.module('animeitems').config(['$stateProvider',
 	                    selectListOptions.sortOptions = [ { v: 'title', n: 'Title' },{ v: 'chapters', n: 'Chapters' },{ v: 'volumes', n: 'Volumes' },{ v: 'start', n: 'Start date' },
 	                                                      { v: 'end', n: 'End date' },{ v: ['latest', 'meta.updated'], n: 'Latest' },{ v: 'rating', n: 'Rating' }
 	                                                    ];
-	                    selectListOptions.sortOption = self.findWithAttr(selectListOptions.sortOptions, 'n', 'Latest');
+	                    selectListOptions.sortOption = service.findWithAttr(selectListOptions.sortOptions, 'n', 'Latest');
 	                    selectListOptions.media = [ { v: '', n: 'All' }, { v: false, n: 'Online' }, { v: true, n: 'Hardcopy' } ];
 	                    selectListOptions.mediaType = 'hardcopy';
 	                    selectListOptions.repeating = [ { v: '', n: 'All' }, { v: false, n: 'Not Re-reading' }, { v: true, n: 'Re-reading' } ];
@@ -1407,13 +1635,13 @@ angular.module('animeitems').config(['$stateProvider',
 	                    selectListOptions.mediaType = 'type';
 	                }
 	                selectListOptions.searchName = 'name';
-	                selectListOptions.sortOption = self.findWithAttr(selectListOptions.sortOptions, 'n', 'Name');
+	                selectListOptions.sortOption = service.findWithAttr(selectListOptions.sortOptions, 'n', 'Name');
 	            }
 	//            console.log(selectListOptions);
 	            return selectListOptions;
-	        };
+	        }
 
-	        this.concatenateTagArrays = function(itemTags, tagArray) {
+	        function concatenateTagArrays(itemTags, tagArray) {
 	            if (itemTags.length > 0) {
 	                var i = 0, alreadyAdded = false;
 	                while(i < tagArray.length) {
@@ -1435,10 +1663,10 @@ angular.module('animeitems').config(['$stateProvider',
 	                //if there are no tags for item, then just return the new tags.
 	                return tagArray;
 	            }
-	        };
+	        }
 
 	        //check to see if there are items with no tags.
-	        this.checkForTagless = function(items) {
+	        function checkForTagless(items) {
 	            var areTagless = false;
 	            angular.forEach(items, function(item) {
 	                if (item.tags.length === 0) {
@@ -1446,9 +1674,9 @@ angular.module('animeitems').config(['$stateProvider',
 	                }
 	            });
 	            return areTagless;
-	        };
+	        }
 
-	        this.getCommonArrays = function(controller) {
+	        function getCommonArrays(controller) {
 	            var commonArrays = {},
 	                itemTypes = [
 	                    { name: 'anime' },
@@ -1499,9 +1727,21 @@ angular.module('animeitems').config(['$stateProvider',
 	                ];
 	            commonArrays = { months: months, seasons: seasons, categories: categories, days: days, summaryFunctions: summaryFunctions, itemTypes: itemTypes };
 	            return commonArrays;
-	        };
+	        }
 
 	}
+
+})();
+
+(function() {
+	'use strict';
+	angular.module('animeitems')
+	.factory('WatchAnime', WatchAnime);
+	WatchAnime.$inject = ['$resource'];
+
+		function WatchAnime($resource) {
+			return $resource('animeitems/watch-list', { }, { update: { method: 'PUT' } });
+		}
 
 })();
 
@@ -3140,19 +3380,21 @@ angular.module('history').config(['$stateProvider', '$urlRouterProvider',
 		});
 	}
 ]);
-'use strict';
+(function() {
+  'use strict';
+  angular.module('history').controller('HistoryController', HistoryController);
+  HistoryController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'AnimeHistory', 'MangaHistory', 'HistoryService', 'ListService', 'spinnerService'];
 
-// History controller
-angular.module('history').controller('HistoryController', ['$scope', '$stateParams', '$location', 'Authentication', 'AnimeHistory', 'MangaHistory', 'HistoryService', 'ListService', 'spinnerService',
-	function($scope, $stateParams, $location, Authentication, AnimeHistory, MangaHistory, HistoryService, ListService, spinnerService) {
+  function HistoryController($scope, $stateParams, $location, Authentication, AnimeHistory, MangaHistory, HistoryService, ListService, spinnerService) {
 		var ctrl = this,
 		    latestDate = new Date().setDate(new Date().getDate() - 29);
-		ctrl.authentication = Authentication;
 
-    ctrl.view = 'Anime';
+    ctrl.authentication = Authentication;
+    ctrl.buildHistory = buildHistory;
     ctrl.filterConfig = {
 			historyFilter: 'Today'
     };
+    ctrl.happenedWhen = happenedWhen;
     ctrl.historyGroups = [
       { name: 'Today' },
       { name: 'Yesterday' },
@@ -3162,8 +3404,10 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
       { name: 'Three weeks ago' },
       { name: 'Four weeks ago' },
     ];
+    ctrl.view = 'Anime';
 
-    ctrl.buildHistory = function() {
+
+    function buildHistory() {
 	    spinnerService.loading('history', AnimeHistory.query({ latest: latestDate }).$promise.then(function(result) {
 					return HistoryService.buildHistoryList(result);
 			}).then(function(result) {
@@ -3178,7 +3422,7 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
 				ctrl.mangaHistory = result;
 			})
 		  );
-    };
+    }
 
     //Needed to catch 'Character' setting and skip it.
     $scope.$watch('view', function(newValue) {
@@ -3189,16 +3433,56 @@ angular.module('history').controller('HistoryController', ['$scope', '$statePara
       }
     });
 
-    ctrl.happenedWhen = function(when) {
+    function happenedWhen(when) {
         return HistoryService.happenedWhen(when);
-    };
+    }
+
 	}
-]);
 
-'use strict';
+})();
 
-angular.module('history')
-.filter('historySeparator', ['HistoryService', 'moment', function(HistoryService, moment) {
+(function() {
+  'use strict';
+
+  angular.module('tasks').controller('ViewHistoryController', ViewHistoryController);
+  ViewHistoryController.$inject =  ['$scope', 'data', '$stateParams', 'Authentication', 'ItemService', 'NotificationFactory', 'spinnerService', '$uibModalInstance'];
+
+function ViewHistoryController($scope, data, $stateParams, Authentication, ItemService, NotificationFactory, spinnerService, $uibModalInstance) {
+  var ctrl = this;
+
+  ctrl.cancel = cancel;
+  ctrl.deleteHistory = deleteHistory;
+  ctrl.submit = submit;
+  ctrl.updated = false;
+  ctrl.viewItem = data.viewItem;
+
+  function deleteHistory(item, history) {
+      //are you sure option...
+      NotificationFactory.confirmation(function() {
+          ctrl.viewItem = ItemService.deleteHistory(item, history);
+          ctrl.updated = true;
+      });
+  }
+
+  function submit() {
+    $uibModalInstance.close(ctrl.updated);
+  }
+
+  function cancel() {
+    $uibModalInstance.dismiss();
+  }
+
+}
+
+})();
+
+(function() {
+  'use strict';
+  angular.module('history')
+  .filter('historySeparator', historySeparator);
+  historySeparator.$inject = ['HistoryService', 'moment'];
+
+  function historySeparator(HistoryService, moment) {
     return function(array, level, timeframe) {
         var itemDate,
             attr = (level === 'group') ? 'latest' : 'date';
@@ -3209,66 +3493,86 @@ angular.module('history')
             });
         }
     };
-}]);
-'use strict';
+  }
 
-//History service used to communicate Animeitems REST endpoints
-angular.module('history')
-.factory('AnimeHistory', ['$resource',
-        function($resource) {
-            return $resource('history/anime/:latest', { latest: '@_latest' }, { update: { method: 'PUT' } });
-        }
-    ])
-.factory('MangaHistory', ['$resource',
-        function($resource) {
-            return $resource('history/manga/:latest', { latest: '@_latest' }, { update: { method: 'PUT' } });
-        }
-    ])
-.service('HistoryService', ['moment', '$q', function(moment, $q) {
-      
+})();
+
+(function() {
+  'use strict';
+  //History service used to communicate Animeitems REST endpoints
+  angular.module('history')
+  .factory('AnimeHistory', AnimeHistory);
+  AnimeHistory.$inject = ['$resource'];
+
+    function AnimeHistory($resource) {
+      return $resource('history/anime/:latest', { latest: '@_latest' }, { update: { method: 'PUT' } });
+    }
+
+})();
+
+(function() {
+  'use strict';
+  angular.module('history')
+  .service('HistoryService', HistoryService);
+  HistoryService.$inject = ['moment', '$q'];
+
+   function HistoryService(moment, $q) {
+     var service = {
+           buildHistoryList: buildHistoryList,
+           extractHistory: extractHistory,
+           filterItemHistory: filterItemHistory,
+           getEndsOfWeek: getEndsOfWeek,
+           getSetDaysAgo: getSetDaysAgo,
+           groupItemHistory: groupItemHistory,
+           happenedWhen: happenedWhen,
+           today: moment(new Date()).startOf('day'),
+           weekBeginning: weekBeginning,
+           weekEnding: weekEnding
+         },
+         endsOfWeek = getEndsOfWeek(),
+         mondays = endsOfWeek.mondays,
+         sundays = endsOfWeek.sundays;
+         return service;
+
     // getting mondays and sundays for this, last, two and three weeks ago.
-    this.getEndsOfWeek = function() {
-        var self = this, endsOfWeek = [], thisMonday = self.weekBeginning(), thisSunday = self.weekEnding();
-        endsOfWeek = { 
-            mondays: [ thisMonday, self.getSetDaysAgo(thisMonday, 7), self.getSetDaysAgo(thisMonday, 14), self.getSetDaysAgo(thisMonday, 21), self.getSetDaysAgo(thisMonday, 28) ],
-            sundays: [ thisSunday, self.getSetDaysAgo(thisSunday, 7), self.getSetDaysAgo(thisSunday, 14), self.getSetDaysAgo(thisSunday, 21), self.getSetDaysAgo(thisSunday, 28) ]
+    function getEndsOfWeek() {
+        var endsOfWeek = [], thisMonday = service.weekBeginning(), thisSunday = service.weekEnding();
+        endsOfWeek = {
+            mondays: [ thisMonday, service.getSetDaysAgo(thisMonday, 7), service.getSetDaysAgo(thisMonday, 14), service.getSetDaysAgo(thisMonday, 21), service.getSetDaysAgo(thisMonday, 28) ],
+            sundays: [ thisSunday, service.getSetDaysAgo(thisSunday, 7), service.getSetDaysAgo(thisSunday, 14), service.getSetDaysAgo(thisSunday, 21), service.getSetDaysAgo(thisSunday, 28) ]
         };
-        return endsOfWeek;        
-    };
+        return endsOfWeek;
+    }
+
     //get 'daysAgo' days ago from 'thisEnd' date.
-    this.getSetDaysAgo = function(thisEnd, daysAgo) {
+    function getSetDaysAgo(thisEnd, daysAgo) {
         var newDate = moment(thisEnd).subtract(daysAgo, 'days');
         return newDate;
-    };
+    }
+
     //get 'this' monday.
-    this.weekBeginning = function() {
+    function weekBeginning() {
         var date = new Date(),
             day = date.getDay(),
             diff = date.getDate() - day + (day === 0 ? -6:1),
             temp = new Date(),
             wkBeg = new Date(temp.setDate(diff));
         return moment(wkBeg.toISOString()).startOf('day');
-    };
+    }
+
     //get 'this' sunday.
-    this.weekEnding = function() {
+    function weekEnding() {
         var date = new Date(),
             day = date.getDay(),
             diff = date.getDate() - day + (day === 0 ? 0:7),
             temp = new Date(),
             wkEnd = new Date(temp.setDate(diff));
         return moment(wkEnd.toISOString()).endOf('day');
-    };
-    
-    //Variables that require the above functions;
-    this.today = moment(new Date()).startOf('day');
-    this.endsOfWeek = this.getEndsOfWeek();
-    this.mondays = this.endsOfWeek.mondays;
-    this.sundays = this.endsOfWeek.sundays;
+    }
 
-    this.buildHistoryList = function(items) {
+    function buildHistoryList(items) {
         var deferred = $q.defer(),
-            self = this,
-            promise = self.extractHistory(items).then(function(result) {
+            promise = service.extractHistory(items).then(function(result) {
 //                console.log('extract history: ', result);
                 result.sort(function (a, b) {
                     var dateA = a.date,
@@ -3277,15 +3581,15 @@ angular.module('history')
                     if(dateA < dateB) return 1;
                     if(dateA === dateB) return 0;
                 });
-                return self.groupItemHistory(result);
+                return service.groupItemHistory(result);
             }).then(function(result) {
 //                console.log('grouped', result);
                 deferred.resolve(result);
             });
         return deferred.promise;
-    };
-    
-    this.extractHistory = function(items) {
+    }
+
+    function extractHistory(items) {
         var deferred = $q.defer(),
             itemHistory = [], today = moment(new Date()).startOf('day');
         angular.forEach(items, function(item) {
@@ -3300,9 +3604,9 @@ angular.module('history')
         });
         deferred.resolve(itemHistory);
         return deferred.promise;
-    };
-    
-    this.groupItemHistory = function(itemHistory) {
+    }
+
+    function groupItemHistory(itemHistory) {
         var deferred = $q.defer(),
             index, prevItem, item, group,
             length = itemHistory.length,
@@ -3340,44 +3644,43 @@ angular.module('history')
         }
         deferred.resolve(groupedHistory);
         return deferred.promise;
-    };
-    
-    this.filterItemHistory = function(timeframe, itemDate) {
-        var self = this,
-            diff = self.today.diff(itemDate, 'days');
+    }
+
+    function filterItemHistory(timeframe, itemDate) {
+        var diff = service.today.diff(itemDate, 'days');
         switch(timeframe) {
             case 'today':
                 return diff === 0;
-                
+
             case 'yesterday':
                 return diff === 1;
-                
+
             case 'this week':
-                return self.mondays[0] <= itemDate && itemDate <= self.sundays[0];
-                
+                return mondays[0] <= itemDate && itemDate <= sundays[0];
+
             case 'last week':
-                return self.mondays[1] <= itemDate && itemDate <= self.sundays[1];
-                
+                return mondays[1] <= itemDate && itemDate <= sundays[1];
+
             case 'two weeks ago':
-                return self.mondays[2] <= itemDate && itemDate <= self.sundays[2];
-            
+                return mondays[2] <= itemDate && itemDate <= sundays[2];
+
             case 'three weeks ago':
-                return self.mondays[3] <= itemDate && itemDate <= self.sundays[3];
-                
+                return mondays[3] <= itemDate && itemDate <= sundays[3];
+
             case 'four weeks ago':
-                return self.mondays[4] <= itemDate && itemDate <= self.sundays[4];
+                return mondays[4] <= itemDate && itemDate <= sundays[4];
         }
-    };
-    
+    }
+
     /** function to display relative time.
      *  Using diff because fromNow will create conflicts between
      *  the item date and the 'group date'.
      */
-    this.happenedWhen = function(when) {
+    function happenedWhen(when) {
 //          console.log(latest, updated);
         var today = moment(new Date()).startOf('day'), thisDate = moment(when).startOf('day'),
             diff = today.diff(thisDate, 'days');
-                
+
         //for 0 and 1 day(s) ago use the special term.
         if (diff === 0) {
             return 'Today at ' + moment(when).format('HH:mm');
@@ -3386,9 +3689,24 @@ angular.module('history')
         } else {
             return diff + ' days ago at ' + moment(when).format('HH:mm');
         }
-    };
+    }
 
-}]);
+  }
+
+})();
+
+(function() {
+  'use strict';
+  angular.module('history')
+  .factory('MangaHistory', MangaHistory);
+  MangaHistory.$inject = ['$resource'];
+
+  function MangaHistory($resource) {
+    return $resource('history/manga/:latest', { latest: '@_latest' }, { update: { method: 'PUT' } });
+  }
+
+})();
+
 'use strict';
 
 // Configuring the Articles module
@@ -3425,89 +3743,98 @@ angular.module('mangaitems').config(['$stateProvider',
 		});
 	}
 ]);
-'use strict';
+(function() {
+	'use strict';
+	angular.module('mangaitems').controller('MangaitemsController', MangaitemsController);
+	MangaitemsController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'MangaFactory', 'spinnerService', 'TagService'];
 
-// Mangaitems controller
-angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'MangaFactory', 'spinnerService', 'TagService',
-	function($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, MangaFactory, spinnerService, TagService) {
+	function MangaitemsController($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, MangaFactory, spinnerService, TagService) {
 		var ctrl = this;
+
+		ctrl.addTag = addTag;
 		ctrl.authentication = Authentication;
+		ctrl.chapters = 0;
+		ctrl.create = create;
+		ctrl.deleteHistory = deleteHistory;
+		ctrl.dropTag = dropTag;
+    ctrl.filterConfig = {
+        showingCount: 0,
+        sortType: '',
+        sortReverse: true,
+        ratingLevel: undefined,
+        ratingActions: {
+            maxRating: 10,
+            percent: undefined,
+            overStar: null
+        },
+        searchTags: '',
+        tagsForFilter: [],
+        taglessItem: false,
+        areTagless: false,
+        selectListOptions: {},
+        statTags: []
+    };
+		ctrl.finalNumbers = false; //default show status of final number fields in edit view.
+		ctrl.find = find;
+		ctrl.findAnime = findAnime;
+		ctrl.findOne = findOne;
+		ctrl.imgPath = ''; //image path
+		ctrl.itemUpdate = new Date(); // today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
+		ctrl.latest = ctrl.itemUpdate;
+		ctrl.latestDate = latestDate;
+    ctrl.pageConfig = {
+        currentPage: 0,
+        pageSize: 10
+    };
+		ctrl.remove = remove;
+		ctrl.removeTag = removeTag;
+		ctrl.start = ctrl.itemUpdate;
+		ctrl.tagArray = []; // holding tags pre-submit
+		ctrl.tagArrayRemove = [];
+		ctrl.tickOff = tickOff;
+		ctrl.trustAsResourceUrl = trustAsResourceUrl;
+		ctrl.update = update;
+		ctrl.uploadFile = uploadFile;
+		ctrl.usedTags = []; //for typeahead array.
+		ctrl.volumes = 0;
+		ctrl.whichController = 'mangaitem';
 
-        ctrl.whichController = 'mangaitem';
-        //paging variables.
-        ctrl.pageConfig = {
-            currentPage: 0,
-            pageSize: 10
-        };
-        ctrl.filterConfig = {
-            showingCount: 0,
-            sortType: '',
-            sortReverse: true,
-            ratingLevel: undefined,
-            ratingActions: {
-                maxRating: 10,
-                percent: undefined,
-                overStar: null
-            },
-            searchTags: '',
-            tagsForFilter: [],
-            taglessItem: false,
-            areTagless: false,
-            selectListOptions: ListService.getSelectListOptions(ctrl.whichController),
-            statTags: []
-        };
+    //allow retreival of local resource
+    function trustAsResourceUrl(url) {
+        return $sce.trustAsResourceUrl(url);
+    }
+		//For adding new tags.
+    function addTag() {
+			TagService.addTag(ctrl.tagArray, ctrl.newTag);
+      ctrl.newTag = '';
+    }
+		//Drop tag for new tags.
+		function dropTag(text) {
+			TagService.dropTag(ctrl.tagArray, text);
+		}
+		//Drop tag for animeitem tags.
+		function removeTag(text) {
+			TagService.dropTag(ctrl.mangaitem.tags, text);
+		}
 
-        /** today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
-         *      AND chapter/volume/start/latest auto-pop in create.
-         */
-        ctrl.itemUpdate = new Date();
-        ctrl.start = ctrl.itemUpdate;
-        ctrl.latest = ctrl.itemUpdate;
-        ctrl.chapters = 0;
-        ctrl.volumes = 0;
-        ctrl.finalNumbers = false; //default show status of final number fields in edit view.
-        ctrl.imgPath = ''; //image path
-        ctrl.tagArray = []; // holding tags pre-submit
-        ctrl.tagArrayRemove = [];
-        ctrl.usedTags = []; //for typeahead array.
-
-        //allow retreival of local resource
-        ctrl.trustAsResourceUrl = function(url) {
-            return $sce.trustAsResourceUrl(url);
-        };
-				//For adding new tags.
-		    ctrl.addTag = function () {
-					TagService.addTag(ctrl.tagArray, ctrl.newTag);
-		      ctrl.newTag = '';
-		    };
-				//Drop tag for new tags.
-				ctrl.dropTag = function(text) {
-					TagService.dropTag(ctrl.tagArray, text);
-				};
-				//Drop tag for animeitem tags.
-				ctrl.removeTag = function(text) {
-					TagService.dropTag(ctrl.mangaitem.tags, text);
-				};
-
-
-        // Create new Mangaitem
-		ctrl.create = function() {
+    // Create new Mangaitem
+		function create() {
 
             var mangaitem = new Mangaitems();
             //Handle situation if objects not selected.
                 // Create new Mangaitem object
 			     mangaitem = new Mangaitems ({
-				    title: this.title,
-                    chapters: this.chapters,
-                    volumes: this.volumes,
-                    start: this.start,
-                    latest: this.latest,
-                    finalChapter: this.finalChapter,
-                    finalVolume: this.finalVolume,
-                    hardcopy: this.hardcopy,
-                    anime: this.anime!==undefined && this.anime!==null ? this.anime._id : this.anime,
+				    title: ctrl.title,
+                    chapters: ctrl.chapters,
+                    volumes: ctrl.volumes,
+                    start: ctrl.start,
+                    latest: ctrl.latest,
+                    finalChapter: ctrl.finalChapter,
+                    finalVolume: ctrl.finalVolume,
+                    hardcopy: ctrl.hardcopy,
+                    anime: ctrl.anime!==undefined && ctrl.anime!==null ? ctrl.anime._id : ctrl.anime,
                     tags: ctrl.tagArray,
-                    user: this.user
+                    user: ctrl.user
 			     });
 
 			// Redirect after save
@@ -3519,10 +3846,10 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
 				ctrl.error = errorResponse.data.message;
                 NotificationFactory.error('Error!', errorResponse.data.message);
 			});
-		};
+		}
 
 		// Remove existing Mangaitem
-		ctrl.remove = function(mangaitem) {
+		function remove(mangaitem) {
             //are you sure option...
             NotificationFactory.confirmation(function() {
                 if ( mangaitem ) {
@@ -3540,117 +3867,76 @@ angular.module('mangaitems').controller('MangaitemsController', ['$scope', '$sta
                 }
                 NotificationFactory.warning('Deleted!', 'Manga was successfully deleted.');
             });
-		};
+		}
 
 		// Update existing Mangaitem
-		ctrl.update = function() {
+		function update() {
 			var mangaitem = ctrl.mangaitem;
             ctrl.mangaitem = undefined;
             MangaFactory.update(mangaitem, ctrl.tagArray, ctrl.updateHistory, ctrl.imgPath);
-		};
-        ctrl.tickOff = function(item) {
-            item.chapters += 1;
-            item.latest = new Date(); //update latest.
-            ctrl.updateHistory = true; //add to history.
-            ctrl.mangaitem = item;
-            ctrl.update();
-        };
+		}
+
+		function tickOff(item) {
+        item.chapters += 1;
+        item.latest = new Date(); //update latest.
+        ctrl.updateHistory = true; //add to history.
+        ctrl.mangaitem = item;
+        ctrl.update();
+    }
 
 		// Find a list of Mangaitems
-		ctrl.find = function() {
-            spinnerService.loading('manga', Mangaitems.query().$promise.then(function(result) {
-                ctrl.mangaitems = result;
-								ctrl.filterConfig.areTagless = ListService.checkForTagless(result);
-								ctrl.filterConfig.statTags = ItemService.buildStatTags(result, 0);
-            }));
-		};
+		function find() {
+			ctrl.filterConfig.selectListOptions = ListService.getSelectListOptions(ctrl.whichController);
+      spinnerService.loading('manga', Mangaitems.query().$promise.then(function(result) {
+          ctrl.mangaitems = result;
+					ctrl.filterConfig.areTagless = ListService.checkForTagless(result);
+					ctrl.filterConfig.statTags = ItemService.buildStatTags(result, 0);
+      }));
+		}
 
 		// Find existing Mangaitem
-		ctrl.findOne = function() {
-            Mangaitems.get({ mangaitemId: $stateParams.mangaitemId }).$promise.then(function(result) {
-                ctrl.mangaitem = result;
-                //            console.log(ctrl.mangaitem);
-            });
-		};
+		function findOne() {
+	    Mangaitems.get({ mangaitemId: $stateParams.mangaitemId }).$promise.then(function(result) {
+	        ctrl.mangaitem = result;
+	        //            console.log(ctrl.mangaitem);
+	    });
+		}
 
-        // Find a list of Animeitems for dropdowns.
-		ctrl.findAnime = function() {
+    // Find a list of Animeitems for dropdowns.
+		function findAnime() {
 			ctrl.animeitems = Animeitems.query();
-		};
+		}
 
-        //image upload
-        ctrl.uploadFile = function(){
-            ctrl.imgPath = '/modules/mangaitems/img/' + ctrl.myFile.name;
-            fileUpload.uploadFileToUrl(ctrl.myFile, '/fileUpload');
-        };
+    //image upload
+    function uploadFile(){
+        ctrl.imgPath = '/modules/mangaitems/img/' + ctrl.myFile.name;
+        fileUpload.uploadFileToUrl(ctrl.myFile, '/fileUpload');
+    }
 
-        //latest date display format.
-        ctrl.latestDate = function(latest, updated) {
-            return ItemService.latestDate(latest, updated);
-        };
+    //latest date display format.
+    function latestDate(latest, updated) {
+        return ItemService.latestDate(latest, updated);
+    }
 
-        ctrl.deleteHistory = function(item, history) {
-            //are you sure option...
-           NotificationFactory.confirmation(function() {
-                ctrl.mangaitem = ItemService.deleteHistory(item, history);
-                ctrl.update();
-            });
-        };
+    function deleteHistory(item, history) {
+        //are you sure option...
+       NotificationFactory.confirmation(function() {
+            ctrl.mangaitem = ItemService.deleteHistory(item, history);
+            ctrl.update();
+        });
+    }
+
 	}
-]);
 
-//'use strict';
-//
-//angular.module('mangaitems')
-//.directive('fileModel', ['$parse', function ($parse) {
-//    return {
-//        restrict: 'A',
-//        link: function(scope, element, attrs) {
-//            var model = $parse(attrs.fileModel);
-//            var modelSetter = model.assign;
-//            
-//            element.bind('change', function(){
-//                scope.$apply(function(){
-//                    modelSetter(scope, element[0].files[0]);
-//                });
-//            });
-//        }
-//    };
-//}]);
-//.directive('listBack', function(){
-//    return function(scope, element, attrs){
-//        var url = attrs.listBack;
-//        element.css({
-//            'background-image': 'url(' + url +')',
-//            'background-size' : '50%',
-//            'background-repeat': 'no-repeat',
-//            'background-position': 'right'
-//        });
-//    };
-//});
+})();
 
-'use strict';
+(function() {
+	'use strict';
+	angular.module('mangaitems')
+	.factory('MangaFactory', MangaFactory);
+	MangaFactory.$inject = ['Mangaitems', 'ListService', 'ItemService', 'NotificationFactory', '$location'];
 
-//angular.module('mangaitems').filter('startFrom', function() {
-//    return function(input, start) {
-//        start = +start; //parse to int
-//        return input.slice(start);
-//    };
-//});
-'use strict';
-
-//Mangaitems service used to communicate Mangaitems REST endpoints
-angular.module('mangaitems').factory('Mangaitems', ['$resource',
-	function($resource) {
-		return $resource('mangaitems/:mangaitemId', { mangaitemId: '@_id'
-		}, {
-			update: {
-				method: 'PUT'
-			}
-		});
-	}
-])
-.factory('MangaFactory', ['Mangaitems', 'ListService', 'ItemService', 'NotificationFactory', '$location', function(Mangaitems, ListService, ItemService, NotificationFactory, $location) {
+	function MangaFactory(Mangaitems, ListService, ItemService, NotificationFactory, $location) {
     return {
         update: function(item, tagArray, updateHistory, imgPath) {
             var mangaitem = item;
@@ -3659,20 +3945,20 @@ angular.module('mangaitems').factory('Mangaitems', ['$resource',
             if (item.anime!==null && item.anime!==undefined) {
                 mangaitem.anime = item.anime._id;
             }
-            
+
             if (tagArray!==undefined) {
                 mangaitem.tags = ListService.concatenateTagArrays(mangaitem.tags, tagArray);
             }
-            
+
             //update the item history.
             mangaitem = ItemService.itemHistory(mangaitem, updateHistory, 'manga');
-            
+
             if (imgPath!==undefined && imgPath!==null && imgPath!=='') {
                 mangaitem.image = imgPath;
             }
             //console.log($scope.imgPath);
             //console.log(mangaitem.image);
-            
+
             //handle end date
             if (mangaitem.chapters===mangaitem.finalChapter && mangaitem.finalChapter!==0) {
                 if (mangaitem.end===undefined || mangaitem.end===null) {
@@ -3683,21 +3969,21 @@ angular.module('mangaitems').factory('Mangaitems', ['$resource',
             } else if (mangaitem.reReading === false) {
                 mangaitem.end = null;
             }
-            
+
             //handle status: completed.
             if(mangaitem.end!==undefined && mangaitem.end!==null) {
                 mangaitem.status = true;
             } else {
                 mangaitem.status = false;
             }
-            
+
             //handle re-reading, re-read count.
             if (mangaitem.reReading===true && mangaitem.chapters===mangaitem.finalChapter) {
                 mangaitem.volumes = mangaitem.finalVolume;
                 mangaitem.reReadCount += 1;
                 mangaitem.reReading = false;
             }
-            
+
 			mangaitem.$update(function() {
 				if (window.location.href.indexOf('tasks') === -1) $location.path('/mangaitems');
 
@@ -3706,11 +3992,32 @@ angular.module('mangaitems').factory('Mangaitems', ['$resource',
 				var error = errorResponse.data.message;
                 NotificationFactory.error('Error!', errorResponse.data.message);
 			});
-            
-            
+
+
         }
     };
-}]);
+	}
+
+})();
+
+(function() {
+	'use strict';
+	//Mangaitems service used to communicate Mangaitems REST endpoints
+	angular.module('mangaitems')
+	.factory('Mangaitems',  MangaitemsFactory);
+	MangaitemsFactory.$inject = ['$resource'];
+
+	function MangaitemsFactory($resource) {
+		return $resource('mangaitems/:mangaitemId', { mangaitemId: '@_id'
+		}, {
+			update: {
+				method: 'PUT'
+			}
+		});
+	}
+
+})();
+
 'use strict';
 
 // Configuring the Articles module
@@ -4057,34 +4364,42 @@ angular.module('ratings').config(['$stateProvider', '$urlRouterProvider',
 		});
 	}
 ]);
-'use strict';
-
-// History controller
-angular.module('ratings').controller('RatingsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'ListService', 'NotificationFactory', 'StatisticsService', 'spinnerService',
-	function($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, ListService, NotificationFactory, StatisticsService, spinnerService) {
+(function() {
+	'use strict';
+	angular.module('ratings')
+	.controller('RatingsController', RatingsController);
+	RatingsController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'ListService', 'NotificationFactory', 'StatisticsService', 'spinnerService'];
+	function RatingsController($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, ListService, NotificationFactory, StatisticsService, spinnerService) {
 		var ctrl = this;
+
 		ctrl.authentication = Authentication;
-    ctrl.view = 'Anime';
-    //paging variables.
+		ctrl.episodeScore = episodeScore;
+		ctrl.find = find;
+		ctrl.go = go;
+		ctrl.hoveringOver = hoveringOver;
+		ctrl.itemScore = itemScore;
+		ctrl.maxRating = 10;
+		ctrl.modelOptions = { debounce: 700 };
     ctrl.pageConfig = {
         currentPage: 0,
         pageSize: 20
     };
-		ctrl.modelOptions = { debounce: 700 };
-    ctrl.sortType = 'rating';
-    ctrl.sortReverse = true;
-    ctrl.viewItem = undefined;
     ctrl.ratingLevel = undefined; //default rating filter
-    //rating 'tooltip' function
-    ctrl.maxRating = 10;
-    ctrl.hoveringOver = function(value) {
+    ctrl.sortReverse = true;
+    ctrl.sortType = 'rating';
+		ctrl.view = 'Anime';
+		ctrl.viewEpisodeRatings = viewEpisodeRatings;
+    ctrl.viewItem = undefined;
+
+		//rating 'tooltip' function
+    function hoveringOver(value) {
         ctrl.overStar = value;
         ctrl.percent = 100 * (value / ctrl.maxRating);
-    };
+    }
 
-    ctrl.go = function(id) {
+    function go(id) {
         $location.path('/mangaitems/' + id);
-    };
+    }
 
     function getItems(view) {
         if (view === 'Anime') {
@@ -4099,17 +4414,17 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
         ctrl.viewItem = undefined;
     }
 
-    ctrl.find = function(view) {
+    function find(view) {
 			if(view === 'Anime' || view === 'Manga') {
 				 getItems(view);
 			 } else {
 				ctrl.view = 'Anime';
 				getItems(ctrl.view);
 			 }
-    };
+    }
 
     //apply new score.
-    ctrl.itemScore = function(item, score) {
+    function itemScore(item, score) {
         if (item.rating !== score) {
             item.rating = score;
 
@@ -4123,11 +4438,11 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
 //                console.log('update');
         }
         return false;
-    };
+    }
 
     /** Episode rating functions below here.
      */
-    ctrl.viewEpisodeRatings = function(item) {
+    function viewEpisodeRatings(item) {
         ctrl.viewItem = (ctrl.viewItem !== item) ? item : undefined;
         ctrl.isEqual = (ctrl.viewItem === item) ? true : false;
         ctrl.search = (ctrl.viewItem === item) ? item.title : '';
@@ -4136,9 +4451,9 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
                 ctrl.summaryFunctions = result;
             }));
         }
-    };
+    }
 
-    ctrl.episodeScore = function(finished) {
+    function episodeScore(finished) {
 //            console.log('finished: ', finished, ctrl.viewItem.meta.history);
         if (finished) {
             var item = ctrl.viewItem;
@@ -4153,25 +4468,29 @@ angular.module('ratings').controller('RatingsController', ['$scope', '$statePara
                 NotificationFactory.error('Error!', 'Your change failed!');
             });
         }
-    };
-
-
     }
-]);
+	}
 
-'use strict';
+})();
 
-angular.module('ratings').directive('focusOnShow', function($timeout) {
+(function() {
+  'use strict';
+  angular.module('ratings')
+  .directive('focusOnShow', focusOnShow);
+
+  function focusOnShow($timeout) {
     return function(scope, element, attrs) {
-       scope.$watch(attrs.focusOnShow, function (newValue) { 
+       scope.$watch(attrs.focusOnShow, function (newValue) {
 //            console.log('preview changed!')
             $timeout(function() {
                 var myValue = newValue && element[0].focus();
                 return myValue;
             });
          },true);
-      };    
-});
+      };
+    }
+})();
+
 'use strict';
 
 // Setting up route
@@ -4481,10 +4800,99 @@ angular.module('statistics').config(['$stateProvider', '$urlRouterProvider',
 
 })();
 
-'use strict';
+(function() {
+  'use strict';
+  angular.module('statistics')
+  .directive('detectFlood', detectFlood);
+  detectFlood.$inject = ['$timeout'];
 
-angular.module('statistics')
-.directive('tabContainer', function () {
+  function detectFlood($timeout) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            var el = element[0];
+
+            function overflowCheck() {
+                if (el.scrollWidth > el.offsetWidth) {
+                    el.classList.add('flooded');
+                } else {
+                    el.classList.remove('flooded');
+                }
+            }
+            overflowCheck();
+
+            scope.$watch(
+                function () {
+                    return {
+                        width: el.offsetWidth,
+                    };
+                }, function () {
+//                    console.log('detect flood?');
+                        overflowCheck();
+                }, true
+            );
+
+        }
+    };
+  }
+
+})();
+
+(function() {
+  'use strict';
+  angular.module('statistics')
+  .directive('percentageBarContainer', percentageBarContainer);
+
+  function percentageBarContainer() {
+    return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+          border: '@?'
+        },
+        transclude: true,
+        bindToController: true,
+        template: '<div class="relative {{percentageBarContainer.border}}" style="height: 20px;" ng-transclude></div>',
+        controllerAs: 'percentageBarContainer',
+        controller: function($scope) {
+
+        }
+    };
+  }
+
+})();
+
+(function() {
+  'use strict';
+  angular.module('statistics')
+  .directive('percentageBar', percentageBar);
+
+  function percentageBar() {
+    return {
+        restrict: 'A',
+        replace: true,
+        scope: {
+            type: '@?',
+            percentage: '@',
+            colour: '@?',
+            display: '@?'
+        },
+        require: '^percentageBarContainer',
+        templateUrl: '/modules/statistics/templates/percentage-bar.html',
+        link: function(scope, element, attrs, percentageBarContainerCtrl) {
+
+        }
+    };
+  }
+
+})();
+
+(function() {
+  'use strict';
+  angular.module('statistics')
+  .directive('tabContainer', tabContainer);
+
+  function tabContainer() {
     return {
         restrict: 'A',
         transclude: true,
@@ -4596,8 +5004,16 @@ angular.module('statistics')
 
         }
     };
-})
-.directive('tabView', function () {
+  }
+
+})();
+
+(function() {
+  'use strict';
+  angular.module('statistics')
+  .directive('tabView', tabView);
+
+  function tabView() {
     return {
         restrict: 'A',
         transclude: true,
@@ -4622,212 +5038,167 @@ angular.module('statistics')
             });
         }
     };
-})
-.directive('detectFlood', ['$timeout', function($timeout) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-            var el = element[0];
+  }
 
-            function overflowCheck() {
-                if (el.scrollWidth > el.offsetWidth) {
-                    el.classList.add('flooded');
-                } else {
-                    el.classList.remove('flooded');
-                }
-            }
-            overflowCheck();
+})();
 
-            scope.$watch(
-                function () {
-                    return {
-                        width: el.offsetWidth,
-                    };
-                }, function () {
-//                    console.log('detect flood?');
-                        overflowCheck();
-                }, true
-            );
+(function() {
+  'use strict';
+  //Statistics service
+  angular.module('statistics')
+  .service('StatisticsService', StatisticsService);
+  StatisticsService.$inject = ['$filter', 'ListService', '$q'];
 
-        }
-    };
-}])
-.directive('percentageBarContainer', function() {
-  return {
-      restrict: 'A',
-      replace: true,
-      scope: {
-        border: '@?'
-      },
-      transclude: true,
-      bindToController: true,
-      template: '<div class="relative {{percentageBarContainer.border}}" style="height: 20px;" ng-transclude></div>',
-      controllerAs: 'percentageBarContainer',
-      controller: function($scope) {
+   function StatisticsService($filter, ListService, $q) {
+      var service = {
+        buildEpisodeSummaries: buildEpisodeSummaries,
+        buildSummaryFunctions: buildSummaryFunctions,
+        buildToptenDataStructure: buildToptenDataStructure,
+        buildToptenModeList: buildToptenModeList,
+        buildYearSummary: buildYearSummary,
+        getModeMap: getModeMap,
+        occuranceCounter: occuranceCounter
+      };
+      return service;
 
+      function buildSummaryFunctions(array) {
+          return $q(function(resolve, reject) {
+              if (array !== undefined) {
+                  var i = array.length, highestRating = 0, lowestRating = 10, averageRating = 0, modeRating = {}, ratings = { count: 0, sum: 0 };
+                  while(i--) {
+      //                console.log(array[i]);
+                      highestRating = array[i].rating > highestRating ? array[i].rating : highestRating;
+                      lowestRating = 0 < array[i].rating && array[i].rating < lowestRating ? array[i].rating : lowestRating;
+                      ratings.count += array[i].rating > 0 ? 1 : 0;
+                      ratings.sum += array[i].rating;
+                      averageRating = (ratings.sum / ratings.count).toFixed(2);
+                      modeRating = service.getModeMap(array, 'rating', 0);
+                  }
+                  resolve([
+                      { metric: 'Average rating', value: averageRating },
+                      { metric: 'Highest rating', value: highestRating },
+                      { metric: 'Lowest rating',  value: (lowestRating === 10) ? 0 : lowestRating },
+                      { metric: 'Mode rating',    value: (modeRating.value === undefined) ? 0 : modeRating.value }
+                  ]);
+              }
+          });
       }
-  };
-})
-.directive('percentageBar', function() {
-    return {
-        restrict: 'A',
-        replace: true,
-        scope: {
-            type: '@?',
-            percentage: '@',
-            colour: '@?',
-            display: '@?'
-        },
-        require: '^percentageBarContainer',
-        templateUrl: '/modules/statistics/templates/percentage-bar.html',
-        link: function(scope, element, attrs, percentageBarContainerCtrl) {
 
-        }
-    };
-});
+      function processYearSummary(summary, array) {
+          var i = array.length;
+          if (summary.length < 1) {
+              while(i--) {
+                  summary.push({
+                      metric: array[i].metric,
+                      values: []
+                  });
+              }
+              summary.reverse();
+          }
+          i = array.length;
+          for(var j = 0; j < i; j++) {
+              summary[j].values.push({ value: array[j].value });
+          }
+          return summary;
+      }
 
-'use strict';
+      function buildYearSummary(array, year, type) {
+          return $q(function(resolve, reject) {
+              var filter = (type === 'months') ? 'endedMonth' : 'season',
+                  attr   = (type === 'months') ? 'number'     : 'text'  ,
+                  commonArrays = ListService.getCommonArrays(),
+                  i = commonArrays[type].length,
+                  yearSummary = [], results = [];
 
-//Statistics service
-angular.module('statistics').service('StatisticsService', ['$filter', 'ListService', '$q', function($filter, ListService, $q) {
-    var self = this;
+              for(var j = 0; j < i; j++) {
+                  var filteredArray = $filter(filter)(array, year, commonArrays[type][j][attr]),
+                      promise = service.buildSummaryFunctions(filteredArray);
+                  results.push(promise);
+              }
+              angular.forEach(results, function(promise) {
+                  promise.then(function(result) {
+                      yearSummary = processYearSummary(yearSummary, result);
+                  });
+              });
+              resolve(yearSummary);
+          });
+      }
 
-    this.buildSummaryFunctions = function(array) {
+      function buildEpisodeSummaries(array) {
+          return $q(function(resolve, reject) {
+              angular.forEach(array, function(item) {
+                  service.buildSummaryFunctions(item.meta.history).then(function(result) {
+                      item.meta.episodeSummaryFunctions = result;
+                  });
+              });
+              resolve(array);
+          });
+      }
+
+      function getModeMap(array, attr, ignore) {
+          var modeMap = {},
+              max = {
+                  count: 0,
+                  value: ''
+              };
+          for(var i = 0; i < array.length; i++) {
+              var value = array[i][attr];
+              if(modeMap[value] === null || modeMap[value] === undefined) {
+                  modeMap[value] = 1;
+              } else {
+                  modeMap[value]++;
+              }
+              if(modeMap[value] > max.count) {
+                  //Ignore is a value you might not care about e.g. 0;
+                  if (ignore !== value) {
+                      max.count = modeMap[value];
+                      max.value = value;
+                  }
+              }
+          }
+  //        console.log(max);
+          return max;
+      }
+
+      function occuranceCounter(array, attr) {
         return $q(function(resolve, reject) {
-            if (array !== undefined) {
-                var i = array.length, highestRating = 0, lowestRating = 10, averageRating = 0, modeRating = {}, ratings = { count: 0, sum: 0 };
-                while(i--) {
-    //                console.log(array[i]);
-                    highestRating = array[i].rating > highestRating ? array[i].rating : highestRating;
-                    lowestRating = 0 < array[i].rating && array[i].rating < lowestRating ? array[i].rating : lowestRating;
-                    ratings.count += array[i].rating > 0 ? 1 : 0;
-                    ratings.sum += array[i].rating;
-                    averageRating = (ratings.sum / ratings.count).toFixed(2);
-                    modeRating = self.getModeMap(array, 'rating', 0);
-                }
-                resolve([
-                    { metric: 'Average rating', value: averageRating },
-                    { metric: 'Highest rating', value: highestRating },
-                    { metric: 'Lowest rating',  value: (lowestRating === 10) ? 0 : lowestRating },
-                    { metric: 'Mode rating',    value: (modeRating.value === undefined) ? 0 : modeRating.value }
-                ]);
+          var occuranceCounter = [];
+          ListService.groupItemsByProperties(array, [attr]).then(function(result) {
+            for(var i = 0, len = result.length; i < len; i++) {
+              occuranceCounter.push({
+                value: result[i][0][attr],
+                count: result[i].length
+              });
             }
+          });
+          resolve(occuranceCounter);
         });
-    };
+      }
 
-    function processYearSummary(summary, array) {
-        var i = array.length;
-        if (summary.length < 1) {
-            while(i--) {
-                summary.push({
-                    metric: array[i].metric,
-                    values: []
-                });
+      function buildToptenDataStructure(obj, arrayOfArrays) {
+        return $q(function(resolve, reject) {
+          angular.forEach(arrayOfArrays, function(array) {
+            var type = array[0].type, listType = type + 'List', len = array.length;
+            obj[type].listCount = len;
+            for(var i = 0; i < len; i++) {
+              var itemLen = array[i][listType].length;
+              for(var j = 0; j < itemLen; j++) {
+                obj[type].items.push(array[i][listType][j]);
+              }
             }
-            summary.reverse();
-        }
-        i = array.length;
-        for(var j = 0; j < i; j++) {
-            summary[j].values.push({ value: array[j].value });
-        }
-        return summary;
+          });
+          resolve(obj);
+        });
+      }
+
+      function buildToptenModeList(array, type) {
+        var attr = type === 'character' ? 'name' : 'title';
+        return service.occuranceCounter(array, attr);
+      }
+
     }
 
-    this.buildYearSummary = function(array, year, type) {
-        return $q(function(resolve, reject) {
-            var filter = (type === 'months') ? 'endedMonth' : 'season',
-                attr   = (type === 'months') ? 'number'     : 'text'  ,
-                commonArrays = ListService.getCommonArrays(),
-                i = commonArrays[type].length,
-                yearSummary = [], results = [];
-
-            for(var j = 0; j < i; j++) {
-                var filteredArray = $filter(filter)(array, year, commonArrays[type][j][attr]),
-                    promise = self.buildSummaryFunctions(filteredArray);
-                results.push(promise);
-            }
-            angular.forEach(results, function(promise) {
-                promise.then(function(result) {
-                    yearSummary = processYearSummary(yearSummary, result);
-                });
-            });
-            resolve(yearSummary);
-        });
-    };
-
-    this.buildEpisodeSummaries = function(array) {
-        return $q(function(resolve, reject) {
-            angular.forEach(array, function(item) {
-                self.buildSummaryFunctions(item.meta.history).then(function(result) {
-                    item.meta.episodeSummaryFunctions = result;
-                });
-            });
-            resolve(array);
-        });
-    };
-
-    this.getModeMap = function(array, attr, ignore) {
-        var modeMap = {},
-            max = {
-                count: 0,
-                value: ''
-            };
-        for(var i = 0; i < array.length; i++) {
-            var value = array[i][attr];
-            if(modeMap[value] === null || modeMap[value] === undefined) {
-                modeMap[value] = 1;
-            } else {
-                modeMap[value]++;
-            }
-            if(modeMap[value] > max.count) {
-                //Ignore is a value you might not care about e.g. 0;
-                if (ignore !== value) {
-                    max.count = modeMap[value];
-                    max.value = value;
-                }
-            }
-        }
-//        console.log(max);
-        return max;
-    };
-
-    this.occuranceCounter = function(array, attr) {
-      return $q(function(resolve, reject) {
-        var occuranceCounter = [];
-        ListService.groupItemsByProperties(array, [attr]).then(function(result) {
-          for(var i = 0, len = result.length; i < len; i++) {
-            occuranceCounter.push({
-              value: result[i][0][attr],
-              count: result[i].length
-            });
-          }
-        });
-        resolve(occuranceCounter);
-      });
-    };
-
-    this.buildToptenDataStructure = function(obj, arrayOfArrays) {
-      return $q(function(resolve, reject) {
-        angular.forEach(arrayOfArrays, function(array) {
-          var type = array[0].type, listType = type + 'List', len = array.length;
-          obj[type].listCount = len;
-          for(var i = 0; i < len; i++) {
-            var itemLen = array[i][listType].length;
-            for(var j = 0; j < itemLen; j++) {
-              obj[type].items.push(array[i][listType][j]);
-            }
-          }
-        });
-        resolve(obj);
-      });
-    };
-
-    this.buildToptenModeList = function(array, type) {
-      var attr = type === 'character' ? 'name' : 'title';
-      return self.occuranceCounter(array, attr);
-    };
-
-}]);
+  })();
 
 'use strict';
 

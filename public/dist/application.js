@@ -37,7 +37,12 @@ angular.module(ApplicationConfiguration.applicationModuleName)
      .run(['$rootScope', '$state', 'Authentication', function ($rootScope, $state, Authentication) {
         $rootScope.$on('$stateChangeStart', function (event, toState) {
 					if(toState.name === 'signin') {
-						return;
+						if(Authentication.user._id) {
+							event.preventDefault();
+							$state.go('listTasks');
+						} else {
+							return;
+						}
 					}
 	        if (!Authentication.user) {
 						event.preventDefault();
@@ -3448,7 +3453,8 @@ angular.module('history').config(['$stateProvider', '$urlRouterProvider',
   ViewHistoryController.$inject =  ['$scope', 'data', '$stateParams', 'Authentication', 'ItemService', 'NotificationFactory', 'spinnerService', '$uibModalInstance'];
 
 function ViewHistoryController($scope, data, $stateParams, Authentication, ItemService, NotificationFactory, spinnerService, $uibModalInstance) {
-  var ctrl = this;
+  var ctrl = this,
+      historyStore = [];
 
   ctrl.cancel = cancel;
   ctrl.deleteHistory = deleteHistory;
@@ -3459,8 +3465,11 @@ function ViewHistoryController($scope, data, $stateParams, Authentication, ItemS
   function deleteHistory(item, history) {
       //are you sure option...
       NotificationFactory.confirmation(function() {
-          ctrl.viewItem = ItemService.deleteHistory(item, history);
-          ctrl.updated = true;
+        if(historyStore.length === 0) {
+          historyStore = ctrl.viewItem.meta.history;
+        }
+        ctrl.viewItem = ItemService.deleteHistory(item, history);
+        ctrl.updated = true;
       });
   }
 
@@ -3469,6 +3478,9 @@ function ViewHistoryController($scope, data, $stateParams, Authentication, ItemS
   }
 
   function cancel() {
+    if(ctrl.updated) {
+      ctrl.viewItem.meta.history = historyStore;
+    }
     $uibModalInstance.dismiss();
   }
 

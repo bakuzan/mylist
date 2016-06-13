@@ -14,7 +14,12 @@ angular.module(ApplicationConfiguration.applicationModuleName)
      .run(['$rootScope', '$state', 'Authentication', function ($rootScope, $state, Authentication) {
         $rootScope.$on('$stateChangeStart', function (event, toState) {
 					if(toState.name === 'signin') {
-						return;
+						if(Authentication.user._id) {
+							event.preventDefault();
+							$state.go('listTasks');
+						} else {
+							return;
+						}
 					}
 	        if (!Authentication.user) {
 						event.preventDefault();

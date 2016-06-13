@@ -178,7 +178,7 @@
                   <label for="tags" class="col-md-2 control-label">Tags</label>
                   <div class="col-md-6">
                       <input type="text" class="form-control" data-ng-model="ctrl.newTag" enter-tag="ctrl.addTag()" id="tags" name="tags" placeholder="tags..."
-                              uib-typeahead="stat.tag for stat in ctrl.config.statTags | filter: $viewValue">
+                              uib-typeahead="stat.tag for stat in ctrl.config.statTags | filter: $viewValue | limitTo: 10">
                   </div>
                   <div class="col-md-4 form-group">
                       <a class="btn btn-primary" data-ng-click="ctrl.addTag()" data-ng-disabled="ctrl.newTag==='' || ctrl.newTag===null || ctrl.newTag===undefined">Add Tag</a>

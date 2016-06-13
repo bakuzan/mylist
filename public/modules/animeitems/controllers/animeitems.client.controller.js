@@ -100,7 +100,7 @@
         size: 'lg',
 				resolve: {
 					data: function () {
-						return { viewItem: ctrl.filterConfig.viewItem };
+						return { viewItem: ctrl.filterConfig.viewItem, type: 'anime' };
 					}
 				}
       }).result.then(function(result) {

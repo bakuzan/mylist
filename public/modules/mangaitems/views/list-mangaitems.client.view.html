@@ -11,60 +11,9 @@
         <div class="col-lg-8 col-md-6 col-sm-6 item-list-container" loading-spinner name="manga" size="fullscreen">
             <div page-controls page-config="ctrl.pageConfig" showing-count="ctrl.filterConfig.showingCount"></div>
             <div class="list-group col-lg-12 col-md-12 col-sm-12">
-                <div data-ng-repeat="mangaitem in ctrl.mangaitems | orderBy: ctrl.filterConfig.sortType:ctrl.filterConfig.sortReverse | filter: ctrl.filterConfig.search | ratingFilter: ctrl.filterConfig.ratingLevel | tagFilter: ctrl.filterConfig.searchTags:ctrl.filterConfig.taglessItem | startFrom: ctrl.pageConfig.currentPage*ctrl.pageConfig.pageSize | limitTo: ctrl.pageConfig.pageSize track by mangaitem._id" list-back="{{ctrl.trustAsResourceUrl(mangaitem.image)}}" class="list-group-item col-lg-12 col-md-12 col-sm-12">
-			<div class="view-item-top">
-            <small class="list-group-item-text">
-                <time ng-if="mangaitem.latest.substring(0,10)===mangaitem.meta.updated.substring(0,10)" title="{{mangaitem.meta.updated | date: 'yyyy-MMM-dd HH:mm'}}" ng-bind="ctrl.latestDate(mangaitem.latest, mangaitem.meta.updated)"></time>
-                <time ng-if="mangaitem.latest.substring(0,10)!==mangaitem.meta.updated.substring(0,10)" title="{{mangaitem.latest | date: 'yyyy-MMM-dd'}}" ng-bind="ctrl.latestDate(mangaitem.latest, mangaitem.meta.updated)"></time>
-			</small>
-			<h4 class="list-group-item-heading clickable" ng-click="viewItem===mangaitem ? viewItem='' : viewItem=mangaitem" data-ng-bind="mangaitem.title"></h4>
-            <p class="list-group-item-text">
-                <a class="clickable decoration-none" ng-if="!mangaitem.status" ng-click="ctrl.tickOff(mangaitem)"><i class="fa fa-plus-square"></i> </a>
-                <span data-ng-bind="mangaitem.chapters"></span><span ng-if="mangaitem.finalChapter!==0">/{{mangaitem.finalChapter}}</span> Chapters,
-                <span data-ng-bind="mangaitem.volumes"></span><span ng-if="mangaitem.finalVolume!==0">/{{mangaitem.finalVolume}}</span> Volumes
-                <span class="item-icons green-text" ng-if="mangaitem.status===true"><i class="fa fa-check"></i></span>
-                <span class="item-icons" ng-if="mangaitem.hardcopy===true"><i class="fa fa-book"></i></span>
-                <span class="item-icons" ng-if="mangaitem.reReading===true"><i class="fa fa-repeat"></i></span>
-            </p>
-            </div>
-            <div class="view-item-detail" ng-if="viewItem===mangaitem">
-                <div class="item-detail">
-                    <p>
-                        <em class="text-muted" data-ng-if="mangaitem.rating==0">No rating.</em>
-                        <uib-rating data-ng-if="mangaitem.rating!=0" data-ng-model="mangaitem.rating" class="list-item-rating-stars" readonly="true" max="ctrl.filterConfig.ratingActions.maxRating" id="rating" name="rating"></uib-rating>
-                    </p>
-                    <p ng-if="mangaitem.reReadCount!=0">{{mangaitem.reReadCount}} re-reads.</p>
+                <div manga-item-model
+                     data-ng-repeat="mangaitem in ctrl.mangaitems | orderBy: ctrl.filterConfig.sortType:ctrl.filterConfig.sortReverse | filter: ctrl.filterConfig.search | ratingFilter: ctrl.filterConfig.ratingLevel | tagFilter: ctrl.filterConfig.searchTags:ctrl.filterConfig.taglessItem | startFrom: ctrl.pageConfig.currentPage*ctrl.pageConfig.pageSize | limitTo: ctrl.pageConfig.pageSize track by mangaitem._id">
                 </div>
-                <div class="item-dates">
-                    <small>
-                        <span data-ng-bind="mangaitem.start | date:'yyyy-MMM-dd'"></span> started.<br/>
-                        <span ng-if="mangaitem.end!==undefined && mangaitem.end!==null">{{mangaitem.end | date:'yyyy-MMM-dd'}} ended.</span>
-                    </small>
-                </div>
-                <a class="clickable" ng-click="viewItemHistory = true;" ignore-here="true">View history</a>
-                <div class="item-actions" data-ng-show="((ctrl.authentication.user) && (ctrl.authentication.user._id == mangaitem.user._id))">
-                    <a class="btn btn-accent" href="/#!/mangaitems/{{mangaitem._id}}">
-                        <i class="fa fa-eye"></i>
-                    </a>
-                    <a class="btn btn-primary" href="/#!/mangaitems/{{mangaitem._id}}/edit">
-                        <i class="glyphicon glyphicon-edit"></i>
-                    </a>
-                </div>
-                <div class="col-lg-12 col-md-12 col-sm-12 item-history-popout" anywhere-but-here ng-show="viewItemHistory">
-                    <div class="item-history-container">
-                        <a class="close-button mt" data-ng-click="viewItemHistory = false;"><i class="fa fa-times"></i></a>
-                        <h4 class="popout-header">{{viewItem.title}} chapter history</h4>
-                        <div ng-if="viewItem.meta.history.length === 0">No recorded history.</div>
-                        <div class="item-history-list" ng-if="viewItem.meta.history.length > 0">
-                            <div class="item-history mt" ng-repeat="history in viewItem.meta.history | orderBy: '-value'">
-                                <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="ctrl.deleteHistory(viewItem, history)"><i class="fa fa-trash-o"></i></a>
-                                <span>{{history.date | date : 'dd-MM-yyyy HH:mm'}}</span><span> - Chapter {{history.value}}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div><!-- VIEW ITEM END-->
-        </div>
             </div>
         </div>
     </div>

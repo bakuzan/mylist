@@ -11,6 +11,7 @@ function ViewHistoryController($scope, data, $stateParams, Authentication, ItemS
   ctrl.cancel = cancel;
   ctrl.deleteHistory = deleteHistory;
   ctrl.submit = submit;
+  ctrl.type = data.type;
   ctrl.updated = false;
   ctrl.viewItem = data.viewItem;
 

@@ -1,13 +1,15 @@
-<div class="container" data-ng-controller="HeaderController as footer" data-ng-show="footer.authentication.user">
-    <footer class="col-lg-12 col-md-12 col-sm-12">
-        <hr/>
-        <select class="phantom-control" ng-model="footer.theme"
-                ng-options="option.url as option.name for option in footer.styles | orderBy: 'name'" ng-change="footer.changeTheme()">
-        </select>
-        <input type="checkbox" class="phantom-control" ng-model="footer.timedTheme" ng-change="footer.changeTheme()">
-        <div>
-          <small>1.27.14</small><br/>
-          <small>swalsh</small><br/>
-        </div>
-    </footer>
+<div layout="column" data-ng-controller="HeaderController as footer" data-ng-show="footer.authentication.user">
+  <hr/>
+  <div class="padding-5" layout="column">
+    <small>1.27.14</small>
+    <small>swalsh</small>
+  </div>
+  <div class="center-contents" layout="row">
+    <md-select class="padding-right-10" ng-model="footer.theme" ng-change="footer.changeTheme()" aria-label="theme selector">
+      <md-option ng-repeat="option in footer.styles | orderBy: 'name'" value="{{option.url}}">
+        {{option.name}}
+      </md-option>
+    </md-select>
+    <md-checkbox ng-model="footer.timedTheme" ng-change="footer.changeTheme()" aria-label="timed theme">timed</md-checkbox>
+  </div>
 </div>

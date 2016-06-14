@@ -64,13 +64,12 @@
 	<![endif]-->
 </head>
 
-<body data-ng-controller="HeaderController as body" class="ng-cloak" ng-class="{ 'loginBG' : body.authentication.user }" ng-keydown="$broadcast('my:keydown', $event)">
-	<header data-ng-include="'/modules/core/views/header.client.view.html'" class="navbar navbar-fixed-top navbar-inverse" data-ng-show="body.authentication.user"></header>
-	<section class="content wrapper">
-		<section class="container" style="padding-bottom: 100px">
+<body data-ng-controller="HeaderController as body" class="ng-cloak" md-theme="{{ body.theme }}" md-theme-watch ng-keydown="$broadcast('my:keydown', $event)">
+	<nav data-ng-include="'/modules/core/views/header.client.view.html'" data-ng-show="body.authentication.user"></nav>
+	<aside data-ng-include="'/modules/core/views/left-sidebar.html'" data-ng-show="body.authentication.user"></aside>
+	<md-content class="content">
 			{% block content %}{% endblock %}
-		</section>
-	</section>
+	</md-content>
 	<footer data-ng-include="'/modules/core/views/footer.client.view.html'" data-ng-show="body.authentication.user"></footer>
 
 	<!--Embedding The User Object-->

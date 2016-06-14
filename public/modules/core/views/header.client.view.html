@@ -1,79 +1,24 @@
-<div class="container" data-ng-controller="HeaderController as header" data-ng-show="header.authentication.user">
-	<div class="navbar-header">
-		<button class="navbar-toggle" type="button" data-ng-click="header.toggleCollapsibleMenu()">
-			<span class="sr-only">Toggle navigation</span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-		</button>
-		<a href="/#!/tasks" class="navbar-brand" data-ng-show="header.authentication.user">Schedule</a>
+<md-toolbar data-ng-controller="HeaderController as header" data-ng-show="header.authentication.user">
+	<div class=md-toolbar-tools>
+		<md-button class="md-icon-button" aria-label="home" ng-click="header.home()" data-ng-show="header.authentication.user">
+			<md-tooltip md-direction="bottom">
+      	go to home
+      </md-tooltip>
+    	<i class="material-icons md-24">home</i>
+    </md-button>
+		<md-button class="md-icon-button" aria-label="Views" ng-click="header.toggleLeft()" data-ng-show="header.authentication.user">
+			<md-tooltip md-direction="bottom">
+      	open views
+      </md-tooltip>
+    	<i class="material-icons md-24">menu</i>
+    </md-button>
+    <span flex></span>
+    <span flex></span>
+		<md-button class="md-icon-button" aria-label="Account" ng-click="header.signout()">
+			<md-tooltip md-direction="bottom">
+      	signout
+      </md-tooltip>
+			<i class="material-icons md-24">account_circle</i>
+		</md-button>
 	</div>
-	<nav class="collapse navbar-collapse" uib-collapse="!header.isCollapsed" role="navigation">
-		<ul class="nav navbar-nav" data-ng-if="header.menu.shouldRender(header.authentication.user);">
-			<li data-ng-repeat="item in header.menu.items | orderBy: 'position'" data-ng-if="item.shouldRender(header.authentication.user);" ng-switch="item.menuItemType" ui-route="{{item.uiRoute}}" class="cursor-pointer {{item.menuItemClass}}" ng-class="{active: ($uiRoute)}" uib-dropdown="item.menuItemType === 'dropdown'">
-				<a ng-switch-when="dropdown" class="dropdown-toggle" uib-dropdown-toggle>
-					<span data-ng-bind="item.title"></span>
-					<b class="caret"></b>
-				</a>
-				<ul ng-switch-when="dropdown" class="dropdown-menu" uib-dropdown-menu>
-					<li data-ng-repeat="subitem in item.items | orderBy: 'position'" data-ng-if="subitem.shouldRender(header.authentication.user);" ui-route="{{subitem.uiRoute}}" ng-class="{active: $uiRoute}">
-						<a href="/#!/{{subitem.link}}" data-ng-bind="subitem.title"></a>
-					</li>
-				</ul>
-				<a ng-switch-default href="/#!/{{item.link}}" data-ng-bind="item.title"></a>
-			</li>
-		</ul>
-        <ul class="additional-navbar-links nav navbar-nav">
-            <li ng-class="{ active: header.isActive('/history')}">
-                <a href="/#!/history" class="navbar-link" data-ng-show="header.authentication.user"><i class="fa fa-history"></i> History</a>
-            </li>
-            <li ng-class="{ active: header.isActive('/statistics')}">
-                <a href="/#!/statistics" class="navbar-link" data-ng-show="header.authentication.user"><i class="fa fa-bar-chart"></i> Statistics</a>
-            </li>
-            <li ng-class="{ active: header.isActive('/ratings')}">
-                <a href="/#!/ratings" class="navbar-link" data-ng-show="header.authentication.user"><i class="fa fa-star"></i> Ratings</a>
-            </li>
-        </ul>
-        <ul class="additional-navbar-links-dropdown nav navbar-nav">
-            <li class="dropdown" uib-dropdown>
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" uib-dropdown-toggle>
-                    <span>More </span><b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu" uib-dropdown-menu>
-                    <li ng-class="{ active: header.isActive('/history')}">
-                        <a href="/#!/history" class="navbar-link" data-ng-show="header.authentication.user"><i class="fa fa-history"></i> History</a>
-                    </li>
-                    <li ng-class="{ active: header.isActive('/statistics')}">
-                        <a href="/#!/statistics" class="navbar-link" data-ng-show="header.authentication.user"><i class="fa fa-bar-chart"></i> Statistics</a>
-                    </li>
-                    <li ng-class="{ active: header.isActive('/ratings')}">
-                        <a href="/#!/ratings" class="navbar-link" data-ng-show="header.authentication.user"><i class="fa fa-star"></i> Ratings</a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-<!--
-		<ul class="nav navbar-nav navbar-right" data-ng-hide="authentication.user">
-			<li ui-route="/signup" ng-class="{active: $uiRoute}">
-				<a href="/#!/signup">Sign Up</a>
-			</li>
-			<li class="divider-vertical"></li>
-			<li ui-route="/signin" ng-class="{active: $uiRoute}">
-				<a href="/#!/signin">Sign In</a>
-			</li>
-		</ul>
--->
-		<ul class="nav navbar-nav navbar-right" data-ng-show="header.authentication.user">
-			<li class="dropdown" uib-dropdown>
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown" uib-dropdown-toggle>
-					<b class="caret"></b>
-				</a>
-				<ul class="dropdown-menu" uib-dropdown-menu>
-					<li>
-						<a href="/auth/signout">Signout</a>
-					</li>
-				</ul>
-			</li>
-		</ul>
-	</nav>
-</div>
+</md-toolbar>

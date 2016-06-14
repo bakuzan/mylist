@@ -1,0 +1,39 @@
+<section data-ng-controller="HeaderController as header">
+    <md-sidenav class="md-sidenav-left" md-component-id="left" aria-label="navigation bar">
+        <md-content ng-controller="LeftCtrl as left" layout-padding>
+            <header class="md-no-sticky padding-left-0">
+                <h3 class="lighter font-16 margin-0">Views</h3>
+            </header>
+            <md-list>
+                <md-list-item class="padding-0" layout="column" ng-repeat="item in header.menu.items | orderBy: 'position'" aria-label="navigation link item">
+                    <md-button class="md-primary width-100 margin-0" layout="row" title="{{item.title}}" aria-label="navigation button" ng-click="left.expand(item.title)">
+                      <span class="text-left margin-0" flex ng-bind="item.title"></span>
+                    </md-button>
+                    <md-list class="width-100" ng-show="left.expandedGroup === item.title">
+                      <md-list-item class="padding-0" ng-repeat="subitem in item.items | orderBy: 'position'" aria-label="navigation link subitem">
+                        <md-button class="md-primary width-100 margin-0" layout="row" title="{{subitem.title}}" aria-label="navigation button"
+                                   ng-click="left.close()" ui-sref="{{subitem.link}}" ui-sref-active="md-raised">
+                            <md-icon>keyboard_arrow_right</md-icon><span class="text-left margin-0" flex ng-bind="subitem.title"></span>
+                        </md-button>
+                      </md-list-item>
+                    </md-list>
+                </md-list-item>
+            </md-list>
+            <md-button ng-click="left.close()" class="md-primary">
+                Close
+            </md-button>
+        </md-content>
+    </md-sidenav>
+</section>
+
+      <!-- <ul class="additional-navbar-links nav navbar-nav">
+          <li ng-class="{ active: header.isActive('/history')}">
+              <a href="/#!/history" class="navbar-link" data-ng-show="header.authentication.user"><i class="fa fa-history"></i> History</a>
+          </li>
+          <li ng-class="{ active: header.isActive('/statistics')}">
+              <a href="/#!/statistics" class="navbar-link" data-ng-show="header.authentication.user"><i class="fa fa-bar-chart"></i> Statistics</a>
+          </li>
+          <li ng-class="{ active: header.isActive('/ratings')}">
+              <a href="/#!/ratings" class="navbar-link" data-ng-show="header.authentication.user"><i class="fa fa-star"></i> Ratings</a>
+          </li>
+      </ul> -->

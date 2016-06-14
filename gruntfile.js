@@ -163,6 +163,7 @@ module.exports = function(grunt) {
 		      compass: false
 		    },
 				files: {
+					'public/dist/material-icons.css': 'public/style/material-icons.scss',
 					'public/dist/components.css': 'public/style/components.scss',
 					'public/dist/box-model.css': 'public/style/helper/box-model.scss',
 					'public/dist/text.css': 'public/style/helper/text.scss',

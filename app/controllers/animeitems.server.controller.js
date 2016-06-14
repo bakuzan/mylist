@@ -4,14 +4,14 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-	errorHandler = require('./errors.server.controller'),
-	Animeitem = mongoose.model('Animeitem'),
+		errorHandler = require('./errors.server.controller'),
+		Animeitem = mongoose.model('Animeitem'),
     //uuid = require('node-uuid'),
     multiparty = require('multiparty'),
     fs = require('fs'),
 		path = require('path'),
 	_ = require('lodash'),
-	baseUrl = 'C:/Users/Steven/Videos/'; //'C:/Users/steven.walsh/Documents/MISC/';
+	baseUrl = 'C:/Users/Steven/Videos/'; // 'C:/Users/steven.walsh/Documents/MISC/'
 
 /**
  * Upload image.
@@ -194,15 +194,17 @@ exports.animeitemByID = function(req, res, next, id) {
 				location = baseUrl + seriesName;
 		fs.readdir(location, function (err, files) {
 			animeitem.video.location = location + '/';
+			animeitem.video.files = [];
 			if(files) {
 				for(var i = 0, len = files.length; i < len; i++) {
 					var file = files[i],
 							index = file.lastIndexOf('.'),
-							number = file.substring(index - 3, index);
+							number = file.substring(index - 3, index),
+							iStr = Number(i + 1).toString();
 					if(file.indexOf('.mp4') > -1) {
 						animeitem.video.files.push({
 							file: file,
-							number: isNaN(number) ? ('000' + i.toString()).substring(i.length) + i : number
+							number: isNaN(number) ? ('000' + iStr).substring(iStr.length) : number
 						});
 					}
 				}

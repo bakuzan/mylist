@@ -1,11 +1,12 @@
-<section class="row" data-ng-controller="AuthenticationController as ctrl">
-	<div class="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2">
-		<form data-ng-submit="ctrl.signin()" class="signin form-horizontal" autocomplete="off">
-			<fieldset>
-				<div class="form-group centerPiece">
-					<input type="password" id="password" name="password" class="form-control" data-ng-model="ctrl.credentials.password" placeholder="...">
+<section data-ng-controller="AuthenticationController as ctrl">
+	<div flex>
+		<form class="view-height-100" data-ng-submit="ctrl.signin()" autocomplete="off" novalidate="">
+				<div class="center-contents" layout-fill>
+					<md-input-container>
+						<label>password</label>
+						<input type="password" id="password" name="password" data-ng-model="ctrl.credentials.password">
+					</md-input-container>
 				</div>
-			</fieldset>
 		</form>
 	</div>
 </section>

@@ -67,7 +67,7 @@
 <body data-ng-controller="HeaderController as body" class="ng-cloak" md-theme="{{ body.theme }}" md-theme-watch ng-keydown="$broadcast('my:keydown', $event)">
 	<nav data-ng-include="'/modules/core/views/header.client.view.html'" data-ng-show="body.authentication.user"></nav>
 	<aside data-ng-include="'/modules/core/views/left-sidebar.html'" data-ng-show="body.authentication.user"></aside>
-	<md-content class="content">
+	<md-content class="content" ng-class="{ 'unauthorised': !body.authentication.user }">
 			{% block content %}{% endblock %}
 	</md-content>
 	<footer data-ng-include="'/modules/core/views/footer.client.view.html'" data-ng-show="body.authentication.user"></footer>

@@ -1,5 +1,5 @@
 <section data-ng-controller="TasksController as ctrl">
-    <header class="fixed-header">
+    <header class="fixed-header" flex="100">
         <h3>
             <span class="hover-data-right" hover-data="Refresh data" ng-click="ctrl.refreshItems()">
                 <span class="clickable">
@@ -13,7 +13,7 @@
     <div layout="row">
       <div layout="column" flex="25" ng-class="{ 'in-the-way' : inTheWay }" ng-show="(ctrl.filterConfig.view === 'list')">
           <md-button class="md-primary" ng-click="ctrl.createTask()" aria-label="add task">
-              <md-icon>add</md-icon>Add task
+              Add task
           </md-button>
           <div list-filters filter-config="ctrl.filterConfig" items="ctrl.tasks" page="ctrl.whichController"></div>
       </div>

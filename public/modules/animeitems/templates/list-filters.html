@@ -1,62 +1,56 @@
 <div ng-class="(filterConfig.expandFilters) ? 'popout-filters-container animate-transition' : 'animate-transition'" lose-interest>
     <div ng-if="page !== 'task'">
-        <div class="input-group">
-            <div class="input-group-addon">
-                <i class="fa fa-search"></i>
-            </div>
-            <input type="text" class="form-control" placeholder="search" ng-model="filterConfig.search[filterConfig.selectListOptions.searchName]">
-       </div>
-        <div class="input-group mt" ng-if="items !== undefined">
-            <div class="input-group-addon">
-                <i class="fa fa-list-ol"></i>
-            </div>
-            <input type="text" class="form-control" value="Showing {{ (filterConfig.showingCount = (items | filter: filterConfig.search | mediaFilter: filterConfig.media | ratingFilter: filterConfig.ratingLevel | tagFilter: filterConfig.searchTags:filterConfig.taglessItem).length) }} items." disabled ng-if="page !== 'topten' && page !== 'watch'">
-            <input type="text" class="form-control" value="Showing {{ (filterConfig.showingCount = (items | filter: filterConfig.search).length) }} items." disabled ng-if="page === 'topten' || page === 'watch'">
-        </div>
+        <md-input-container>
+          <label>search</label>
+          <input type="text" ng-model="filterConfig.search[filterConfig.selectListOptions.searchName]">
+       </md-input-container>
+        <md-input-container ng-if="items !== undefined">
+          <label> </label>
+          <input type="text" value="Showing {{ (filterConfig.showingCount = (items | filter: filterConfig.search | mediaFilter: filterConfig.media | ratingFilter: filterConfig.ratingLevel | tagFilter: filterConfig.searchTags:filterConfig.taglessItem).length) }} items." disabled ng-if="page !== 'topten' && page !== 'watch'">
+          <input type="text" value="Showing {{ (filterConfig.showingCount = (items | filter: filterConfig.search).length) }} items." disabled ng-if="page === 'topten' || page === 'watch'">
+        </md-input-container>
 
-        <div class="input-group mt" ng-hide="filterConfig.expandFilters" ng-if="page !== 'watch'">
-            <div class="input-group-addon clickable" ng-click="filterConfig.expandFilters=!filterConfig.expandFilters">
-                <i class="fa fa-filter"></i>
+        <div ng-hide="filterConfig.expandFilters" ng-if="page !== 'watch'">
+            <div class="clickable" ng-click="filterConfig.expandFilters=!filterConfig.expandFilters">
+                <md-icon>filter_list</md-icon>
             </div>
         </div>
 
         <div class="animate" ng-class="(filterConfig.expandFilters) ? 'ease-in' : 'ease-out'" ng-if="page !== 'watch'">
-            <div class="input-group mt" ng-if="page !== 'topten'">
-                <div class="input-group-addon clickable" clear-tag-values>
-                    <i class="fa fa-tags"></i>
-                </div>
-               <input type="text" class="form-control" placeholder="search tags - tag1,tag2.." ng-model="characterTags" uib-typeahead="stat.tag for stat in filterConfig.statTags | filter: $viewValue | limitTo: 10" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
-           </div>
-            <div class="input-group mt search-tag-list-container" ng-hide="filterConfig.searchTags===undefined || filterConfig.searchTags==='' || filterConfig.searchTags===null">
-               <ul class="tag-list col-lg-12 col-md-12">
-                    <li class="tag-bubble col-lg-12 col-md-12" ng-repeat="tag in filterConfig.tagsForFilter track by $index">
+            <md-input-container ng-if="page !== 'topten'">
+              <label>search tags</label>
+               <input type="text" ng-model="characterTags" uib-typeahead="stat.tag for stat in filterConfig.statTags | filter: $viewValue | limitTo: 10" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
+           </md-input-container>
+            <div class="search-tag-list-container" ng-hide="filterConfig.searchTags===undefined || filterConfig.searchTags==='' || filterConfig.searchTags===null">
+               <ul class="tag-list" layout="column">
+                    <li class="tag-bubble" ng-repeat="tag in filterConfig.tagsForFilter track by $index">
                         {{tag}}
-                        <a class="bin-style clickable pull-right" aria-hidden="true" delete-search-tag="{{tag}}"><i class="fa fa-trash-o"></i></a>
+                        <a class="bin-style clickable pull-right" aria-hidden="true" delete-search-tag="{{tag}}">
+                          <md-icon>delete</md-icon>
+                        </a>
                     </li>
                 </ul>
            </div>
-            <div class="input-group mt" ng-hide="filterConfig.isList === 'slider' || page === 'topten'">
-              <div class="input-group-addon">
-                  <i class="fa fa-sort"></i>
-              </div>
-                <select class="form-control"
-                        ng-model="filterConfig.sortType"
-                        ng-init="filterConfig.sortType = filterConfig.selectListOptions.sortOptions[filterConfig.selectListOptions.sortOption].v"
-                        ng-options="so.v as so.n for so in filterConfig.selectListOptions.sortOptions">
-                </select>
+            <div ng-hide="filterConfig.isList === 'slider' || page === 'topten'">
+              <label>
+                <md-icon>sort</md-icon>
+              </label>
+              <md-select ng-model="filterConfig.sortType" ng-init="filterConfig.sortType = filterConfig.selectListOptions.sortOptions[filterConfig.selectListOptions.sortOption].v">
+                <md-option ng-repeat="so in filterConfig.selectListOptions.sortOptions" value="{{so.v}}">
+                  {{so.n}}
+                </md-option>
+              </md-select>
             </div>
-            <div class="input-group mt clickable" ng-hide="filterConfig.isList === 'slider'" ng-click="filterConfig.sortReverse = !filterConfig.sortReverse">
-              <div class="input-group-addon">
-                  <i class="fa" ng-class="sortReverse ? 'fa-sort-amount-desc' : 'fa-sort-amount-asc' "></i>
-              </div>
-                <input type="text" class="form-control" value="Ascending" ng-show="!filterConfig.sortReverse" disabled>
-                <input type="text" class="form-control" value="Descending" ng-show="filterConfig.sortReverse" disabled>
-            </div>
+            <md-input-container class="clickable" ng-hide="filterConfig.isList === 'slider'" ng-click="filterConfig.sortReverse = !filterConfig.sortReverse">
+              <label>
+                <md-icon>sort</md-icon>
+              </label>
+              <input type="text" value="{{filterConfig.sortReverse ? 'Descending' : 'Ascending'}}" disabled>
+            </md-input-container>
             <div class="input-group mt" ng-if="page === 'animeitem'">
-                <div class="input-group-addon">
-                    <i class="fa" ng-class="(filterConfig.ongoingList) ? 'fa-compress' : 'fa-expand'"></i>
-                </div>
-                <input class="phantom-control" type="checkbox" data-ng-model="filterConfig.ongoingList" ng-change="itemsAvailable()">
+              <md-checkbox data-ng-model="filterConfig.ongoingList" ng-change="itemsAvailable()">
+                Hide completed
+              </md-checkbox>
             </div>
             <div class="input-group mt" ng-if="page !== 'character' && page !== 'topten'" ng-hide="filterConfig.ongoingList === true">
               <div class="input-group-addon">
@@ -148,32 +142,31 @@
             </div>
         </div>
     </div>
-    <div ng-if="page === 'task'">
-        <div class="input-group">
-            <div class="input-group-addon">
-                <i class="fa fa-search"></i>
-            </div>
-           <input type="text" class="form-control" placeholder="search" ng-model="filterConfig.search.description">
-        </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 input-group mt">
-            <div class="input-group-addon">
-              <i class="fa fa-list-ol"></i>
-            </div>
-            <input type="text" class="form-control"
-                   value="Showing {{ (filterConfig.showingCount = (filteredItems = (items | filter: filterConfig.search | calendarFilter:filterConfig.datesSelected)).length) }} tasks." disabled>
-        </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 mt input-group">
-            <div class="input-group-addon">
-              <i class="fa fa-check-square"></i>
-            </div>
-            <input type="text" class="form-control"
-                   value="{{ (filteredItems | filter: { complete: false }).length }} remaining of {{ filterConfig.showingCount }} current tasks." disabled>
-        </div>
-        <div class="input-group mt">
-            <div class="input-group-addon">
-                <i class="fa fa-calendar-o"></i>
-            </div>
-            <input class="phantom-control" type="checkbox" data-ng-model="filterConfig.datesSelected">
+    <div layout="column" layout-padding ng-if="page === 'task'">
+        <md-input-container>
+            <label>search</label>
+           <input type="text" ng-model="filterConfig.search.description">
+        </md-input-container>
+        <md-input-container>
+          <md-tooltip md-direction="top">
+            Showing {{ (filterConfig.showingCount = (filteredItems = (items | filter: filterConfig.search | calendarFilter:filterConfig.datesSelected)).length) }} tasks.
+          </md-tooltip>
+          <label> </label>
+          <input type="text"
+                 value="Showing {{ (filterConfig.showingCount = (filteredItems = (items | filter: filterConfig.search | calendarFilter:filterConfig.datesSelected)).length) }} tasks." disabled>
+        </md-input-container>
+        <md-input-container>
+          <md-tooltip md-direction="top">
+            {{ (filteredItems | filter: { complete: false }).length }} remaining of {{ filterConfig.showingCount }} current tasks.
+          </md-tooltip>
+          <label> </label>
+          <input type="text"
+                 value="{{ (filteredItems | filter: { complete: false }).length }} remaining of {{ filterConfig.showingCount }} current tasks." disabled>
+        </md-input-container>
+        <div>
+          <md-checkbox data-ng-model="filterConfig.datesSelected">
+            view future tasks
+          </md-checkbox>
         </div>
     </div>
 </div>

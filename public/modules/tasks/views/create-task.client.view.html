@@ -1,61 +1,48 @@
-<div class="col-lg-12 col-md-12 col-sm-12 primary-background">
-    <a class="close-button mt" data-ng-click="taskCreate.cancel()"><i class="fa fa-times"></i></a>
+<div flex>
+    <md-button class="md-primary md-fab" data-ng-click="taskCreate.cancel()">
+      <md-icon>cancel</md-icon>
+    </md-button>
     <h4 class="popout-header">Add new task</h4>
-    <div class="col-lg-12 col-md-12 col-sm-12 relative" style="height: 80%;">
-        <form name="scheduleForm" reset-form="taskCreate.newTask" class="form-horizontal" novalidate>
+    <div class="relative height-80">
+        <form name="scheduleForm" reset-form="taskCreate.newTask" novalidate>
             <fieldset>
                 <div steps step-config="taskCreate.stepConfig">
                     <div one-step>
-                        <div class="form-group">
-                            <label for="description" class="col-lg-3 col-md-3 col-sm-3 control-label">Description</label>
-                            <div class="col-lg-8 col-md-8 col-sm-8">
-                                <input type="text" required id="description" class="form-control" placeholder="What do you need to do?" ng-model="taskCreate.newTask.description">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="link" class="col-lg-3 col-md-3 col-sm-3 control-label">Linked?</label>
-                            <div class="col-lg-8 col-md-8 col-sm-8">
-                                <input type="checkbox" id="link" class="form-control" ng-model="taskCreate.newTask.link.linked">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="day" class="col-lg-3 col-md-3 col-sm-3 control-label">Day</label>
-                            <!--<i class="fa fa-caret-down selectArrow"></i>-->
-                            <div class="col-lg-8 col-md-8 col-sm-8">
-                                <select required id="day" class="form-control" ng-model="taskCreate.newTask.day" ng-options="obj.name as obj.name for obj in taskCreate.commonArrays.days">
-                                    <option class="disabled" value="">Choose a day</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="date" class="col-lg-3 col-md-3 col-sm-3 control-label">Date</label>
-                            <!--<i class="fa fa-caret-down selectArrow"></i>-->
-                            <div class="col-lg-8 col-md-8 col-sm-8">
-                                <input type="date" id="date" class="form-control" ng-model="taskCreate.newTask.date">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="category" class="col-lg-3 col-md-3 col-sm-3 control-label">Category</label>
-                            <!--<i class="fa fa-caret-down selectArrow"></i>-->
-                            <div class="col-lg-8 col-md-8 col-sm-8">
-                                <select id="category" class="form-control" ng-model="taskCreate.newTask.category" ng-options="obj.name as obj.name for obj in taskCreate.commonArrays.categories">
-                                    <option class="disabled" value="">Choose a category</option>
-                                </select>
-                            </div>
-                        </div>
+                      <md-input-container>
+                        <label>What do you need to do?</label>
+                        <input type="text" required id="description" placeholder="" ng-model="taskCreate.newTask.description">
+                      </md-input-container>
+                      <md-checkbox ng-model="taskCreate.newTask.link.linked">
+                        Linked?
+                      </md-checkbox>
+                      <md-select ng-model="taskCreate.newTask.day" id="day" required>
+                          <md-option class="disabled" value="">
+                            Choose a day
+                          </md-option>
+                          <md-option ng-repeat="obj in taskCreate.commonArrays.days" value="{{obj.name}}">
+                             {{obj.name}}
+                          </md-option>
+                      </md-select>
+                      <md-input-container>
+                        <label>Date</label>
+                        <input type="date" id="date" ng-model="taskCreate.newTask.date">
+                      </md-input-container>
+                      <md-select id="category" ng-model="taskCreate.newTask.category">
+                        <md-option class="disabled" value="">Choose a category</md-option>
+                        <md-option ng-repeat="obj in taskCreate.commonArrays.categories" value="{{obj.name}}">
+                          {{obj.name}}
+                        </md-option>
+                      </md-select>
                     </div>
                     <div one-step>
-                        <div ng-show="taskCreate.newTask.link.linked">
-                            <div class="form-group">
-                                <label for="link.id" class="col-lg-3 col-md-3 col-sm-3 control-label">Link to</label>
-                                <div class="col-lg-8 col-md-8 col-sm-8">
-                                    <select id="link-id" class="form-control" ng-model="taskCreate.newTask.link[taskCreate.linkType]"
-                                            ng-options="obj as obj.title for obj in taskCreate.linkItems">
-                                        <option class="disabled" value="">Choose link item</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
+                      <div ng-show="taskCreate.newTask.link.linked">
+                        <select id="link-id" ng-model="taskCreate.newTask.link[taskCreate.linkType]">
+                            <md-option class="disabled" value="">Choose link item</md-option>
+                            <md-option ng-repeat="obj as obj.title for obj in taskCreate.linkItems" value="{{obj}}">
+                              {{obj.title}}
+                            </md-option>
+                        </select>
+                      </div>
                         <div class="form-group" ng-hide="taskCreate.newTask.daily || taskCreate.newTask.category === 'Watch'">
                             <label for="checklist" class="col-lg-3 col-md-3 col-sm-3 control-label">Checklist?</label>
                             <div class="col-lg-8 col-md-8 col-sm-8">

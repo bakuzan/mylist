@@ -35,7 +35,8 @@
               <label>
                 <md-icon>sort</md-icon>
               </label>
-              <md-select ng-model="filterConfig.sortType" ng-init="filterConfig.sortType = filterConfig.selectListOptions.sortOptions[filterConfig.selectListOptions.sortOption].v">
+              <md-select ng-model="filterConfig.sortType" ng-init="filterConfig.sortType = filterConfig.selectListOptions.sortOptions[filterConfig.selectListOptions.sortOption].v"
+                         aria-label="sort type">
                 <md-option ng-repeat="so in filterConfig.selectListOptions.sortOptions" value="{{so.v}}">
                   {{so.n}}
                 </md-option>
@@ -48,70 +49,64 @@
               <input type="text" value="{{filterConfig.sortReverse ? 'Descending' : 'Ascending'}}" disabled>
             </md-input-container>
             <div class="input-group mt" ng-if="page === 'animeitem'">
-              <md-checkbox data-ng-model="filterConfig.ongoingList" ng-change="itemsAvailable()">
+              <md-checkbox data-ng-model="filterConfig.ongoingList" ng-change="itemsAvailable()" aria-label="hide completed">
                 Hide completed
               </md-checkbox>
             </div>
-            <div class="input-group mt" ng-if="page !== 'character' && page !== 'topten'" ng-hide="filterConfig.ongoingList === true">
-              <div class="input-group-addon">
-                  <i class="fa fa-check"></i>
-              </div>
-                <select class="form-control" ng-model="filterConfig.search.status" ng-init="filterConfig.search.status = false" ng-options="so.v as so.n for so in filterConfig.selectListOptions.status">
-                </select>
+            <div ng-if="page !== 'character' && page !== 'topten'" ng-hide="filterConfig.ongoingList === true">
+                <md-select ng-model="filterConfig.search.status" ng-init="filterConfig.search.status = false" aria-label="complete status filter">
+                  <md-option ng-repeat="so in filterConfig.selectListOptions.status" value="{{so.v}}">
+                    {{so.n}}
+                  </md-option>
+                </md-select>
             </div>
-            <div class="input-group mt" ng-if="page === 'animeitem'" ng-show="filterConfig.ongoingList === true">
-              <div class="input-group-addon">
-                  <i class="fa fa-pause"></i>
-              </div>
-                <select class="form-control" ng-model="filterConfig.search.onHold" ng-init="filterConfig.search.onHold = false" ng-options="so.v as so.n for so in filterConfig.selectListOptions.onHold">
-                </select>
+            <div ng-if="page === 'animeitem'" ng-show="filterConfig.ongoingList === true">
+                <md-select ng-model="filterConfig.search.onHold" ng-init="filterConfig.search.onHold = false" aria-label="on hold filter">
+                  <md-option ng-repeat="so in filterConfig.selectListOptions.onHold" value="{{so.v}}">
+                    {{so.n}}
+                  </md-option>
+                </md-select>
             </div>
-            <div class="input-group mt" ng-if="page !== 'character'">
-              <div class="input-group-addon">
-                  <i class="glyphicon"
-                     ng-class="{'glyphicon-cd' : filterConfig.selectListOptions.mediaType === 'disc',
-                                'glyphicon-book' : filterConfig.selectListOptions.mediaType === 'hardcopy',
-                                'glyphicon-folder-open' : filterConfig.selectListOptions.mediaType === 'type' }"></i>
-              </div>
-                <select class="form-control"
-                        ng-model="filterConfig.search[filterConfig.selectListOptions.mediaType]"
-                        ng-init="filterConfig.search[filterConfig.selectListOptions.mediaType] = ''"
-                        ng-options="so.v as so.n for so in filterConfig.selectListOptions.media">
-                </select>
+            <div ng-if="page !== 'character'">
+              <md-select ng-model="filterConfig.search[filterConfig.selectListOptions.mediaType]" ng-init="filterConfig.search[filterConfig.selectListOptions.mediaType] = ''"
+                         aria-label="media type filter">
+                    <md-option ng-repeat="so in filterConfig.selectListOptions.media" value="{{so.v}}">
+                      {{so.n}}
+                    </md-option>
+              </md-select>
             </div>
-            <div class="input-group mt" ng-if="page !== 'character' && page !== 'topten'">
-              <div class="input-group-addon">
-                  <i class="fa fa-repeat"></i>
-              </div>
-                <select class="form-control"
-                        ng-model="filterConfig.search[filterConfig.selectListOptions.repeatType]"
-                        ng-init="filterConfig.search[filterConfig.selectListOptions.repeatType] = ''"
-                        ng-options="so.v as so.n for so in filterConfig.selectListOptions.repeating">
-                </select>
+            <div ng-if="page !== 'character' && page !== 'topten'">
+                <md-select ng-model="filterConfig.search[filterConfig.selectListOptions.repeatType]"
+                           ng-init="filterConfig.search[filterConfig.selectListOptions.repeatType] = ''"
+                           aria-label="repeating filter">
+                        <md-option ng-repeat="so in filterConfig.selectListOptions.repeating" value-"{{so.v}}">
+                          {{so.n}}
+                        </md-option>
+                </md-select>
             </div>
             <div class="input-group mt" ng-if="page !== 'character' && page !== 'topten'">
                 <div class="input-group-addon clickable" data-ng-click="filterConfig.ratingLevel=undefined">
                     <i class="fa fa-star"></i>
                 </div>
-                   <uib-rating class="form-control rating-stars clickable" ng-model="filterConfig.ratingLevel" readonly="false" max="filterConfig.ratingActions.maxRating" on-hover="hoveringOver(value)" on-leave="filterConfig.ratingActions.overStar = null" id="rating" name="rating"></uib-rating>
+                <uib-rating class="form-control rating-stars clickable" ng-model="filterConfig.ratingLevel" readonly="false" max="filterConfig.ratingActions.maxRating" on-hover="hoveringOver(value)" on-leave="filterConfig.ratingActions.overStar = null" id="rating" name="rating"></uib-rating>
                 <div class="input-group-addon">
                     <span data-ng-show="filterConfig.ratingActions.overStar!=null"
                           class="label rating-label"
                           ng-class="{'label-warning': filterConfig.ratingActions.percent<40, 'label-info': filterConfig.ratingActions.percent>=30 && filterConfig.ratingActions.percent<70, 'label-success': filterConfig.ratingActions.percent>=70}">{{filterConfig.ratingActions.percent}}%</span>
                 </div>
             </div>
-            <div class="input-group mt" ng-if="page === 'character'">
-              <div class="input-group-addon">
-                  <i class="fa fa-book"></i>
-              </div>
-                <select class="form-control" ng-model="filterConfig.media" ng-init="filterConfig.media = ''" ng-options="so.v as so.n for so in filterConfig.selectListOptions.media">
-                </select>
+            <div ng-if="page === 'character'">
+              <md-select ng-model="filterConfig.media" ng-init="filterConfig.media = ''" aria-label="series filter">
+                <md-option ng-repeat="so in filterConfig.selectListOptions.media" value="{{so.v}}">
+                  {{so.n}}
+                </md-option>
+              </md-select>
             </div>
-            <div class="input-group mt" ng-if="page === 'character'">
-              <div class="input-group-addon">
-                  <i class="fa fa-book"></i>
-              </div>
-                <input type="text" class="form-control" placeholder="search series" ng-model="filterConfig.seriesFilter" uib-typeahead="series.name for series in filterConfig.series | filter: $viewValue | limitTo: 5">
+            <div ng-if="page === 'character'">
+              <md-input-container>
+                <label>series</label>
+                <input type="text" ng-model="filterConfig.seriesFilter" uib-typeahead="series.name for series in filterConfig.series | filter: $viewValue | limitTo: 5">
+              </md-input-container>
             </div>
             <div class="input-group mt" ng-if="page === 'character'">
                 <div class="input-group-addon">
@@ -132,13 +127,9 @@
                 <input class="phantom-control" type="checkbox" data-ng-model="filterConfig.search.isRanked" ng-change="(filterConfig.search.isRanked) ? true : filterConfig.search.isRanked = ''">
             </div>
             <div class="input-group mt" ng-if="page !== 'topten'" data-ng-show="filterConfig.areTagless">
-              <div class="input-group-addon">
-                  <span class="fa-stack fa-md">
-                      <i class="fa fa-tag fa-stack-1x"></i>
-                      <i class="fa fa-ban fa-stack-2x text-danger"></i>
-                  </span>
-              </div>
-              <input class="phantom-control" type="checkbox" data-ng-model="filterConfig.taglessItem">
+              <md-checkbox data-ng-model="filterConfig.taglessItem">
+                Tagless
+              </md-checkbox>
             </div>
         </div>
     </div>

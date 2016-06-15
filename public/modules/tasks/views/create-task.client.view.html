@@ -1,103 +1,103 @@
-<div flex>
-    <md-button class="md-primary md-fab" data-ng-click="taskCreate.cancel()">
-      <md-icon>cancel</md-icon>
-    </md-button>
-    <h4 class="popout-header">Add new task</h4>
+<section flex>
+  <header>
+    <h4 class="popout-header">
+      Add new task
+      <md-button class="md-warn md-fab" data-ng-click="taskCreate.cancel()">
+        <md-icon>cancel</md-icon>
+      </md-button>
+    </h4>
+  </header>
     <div class="relative height-80">
         <form name="scheduleForm" reset-form="taskCreate.newTask" novalidate>
-            <fieldset>
-                <div steps step-config="taskCreate.stepConfig">
-                    <div one-step>
-                      <md-input-container>
-                        <label>What do you need to do?</label>
-                        <input type="text" required id="description" placeholder="" ng-model="taskCreate.newTask.description">
-                      </md-input-container>
-                      <md-checkbox ng-model="taskCreate.newTask.link.linked">
-                        Linked?
-                      </md-checkbox>
-                      <md-select ng-model="taskCreate.newTask.day" id="day" required>
-                          <md-option class="disabled" value="">
-                            Choose a day
-                          </md-option>
-                          <md-option ng-repeat="obj in taskCreate.commonArrays.days" value="{{obj.name}}">
-                             {{obj.name}}
-                          </md-option>
-                      </md-select>
-                      <md-input-container>
-                        <label>Date</label>
-                        <input type="date" id="date" ng-model="taskCreate.newTask.date">
-                      </md-input-container>
-                      <md-select id="category" ng-model="taskCreate.newTask.category">
-                        <md-option class="disabled" value="">Choose a category</md-option>
-                        <md-option ng-repeat="obj in taskCreate.commonArrays.categories" value="{{obj.name}}">
-                          {{obj.name}}
+            <div steps step-config="taskCreate.stepConfig">
+                <div one-step>
+                  <md-input-container>
+                    <label>What do you need to do?</label>
+                    <input type="text" required id="description" placeholder="" ng-model="taskCreate.newTask.description">
+                  </md-input-container>
+                  <md-checkbox ng-model="taskCreate.newTask.link.linked">
+                    Linked?
+                  </md-checkbox>
+                  <md-select ng-model="taskCreate.newTask.day" id="day" aria-label="day select" required>
+                      <md-option class="disabled" value="">
+                        Choose a day
+                      </md-option>
+                      <md-option ng-repeat="obj in taskCreate.commonArrays.days" value="{{obj.name}}">
+                         {{obj.name}}
+                      </md-option>
+                  </md-select>
+                  <md-input-container>
+                    <label>Date</label>
+                    <input type="date" id="date" ng-model="taskCreate.newTask.date">
+                  </md-input-container>
+                  <md-select ng-model="taskCreate.newTask.category" id="category" aria-label="task category">
+                    <md-option class="disabled" value="">Choose a category</md-option>
+                    <md-option ng-repeat="obj in taskCreate.commonArrays.categories" value="{{obj.name}}">
+                      {{obj.name}}
+                    </md-option>
+                  </md-select>
+                </div>
+                <div one-step>
+                  <div ng-show="taskCreate.newTask.link.linked">
+                    <md-select id="link-id" ng-model="taskCreate.newTask.link[taskCreate.linkType]">
+                        <md-option class="disabled" value="">Choose link item</md-option>
+                        <md-option ng-repeat="obj in taskCreate.linkItems" value="{{obj}}">
+                          {{obj.title}}
                         </md-option>
-                      </md-select>
-                    </div>
-                    <div one-step>
-                      <div ng-show="taskCreate.newTask.link.linked">
-                        <select id="link-id" ng-model="taskCreate.newTask.link[taskCreate.linkType]">
-                            <md-option class="disabled" value="">Choose link item</md-option>
-                            <md-option ng-repeat="obj as obj.title for obj in taskCreate.linkItems" value="{{obj}}">
-                              {{obj.title}}
-                            </md-option>
-                        </select>
+                    </md-select>
+                  </div>
+                  <div ng-hide="taskCreate.newTask.daily || taskCreate.newTask.category === 'Watch'">
+                    <md-checkbox ng-model="taskCreate.newTask.checklist" ng-change="taskCreate.newTask.repeat = (taskCreate.newTask.checklist === true) ? 1 : 0; taskCreate.newTask.daily = (taskCreate.newTask.checklist === true) ? false : taskCreate.newTask.daily" id="checklist">
+                      Checklist?
+                    </md-checkbox>
+                  </div>
+                  <div ng-hide="taskCreate.newTask.link.linked">
+                      <div ng-hide="taskCreate.newTask.checklist">
+                        <md-checkbox ng-model="taskCreate.newTask.daily"
+                                     ng-change="taskCreate.newTask.checklist = (taskCreate.newTask.daily === true) ? false : taskCreate.newTask.checklist">
+                          Daily?
+                        </md-checkbox>
                       </div>
-                        <div class="form-group" ng-hide="taskCreate.newTask.daily || taskCreate.newTask.category === 'Watch'">
-                            <label for="checklist" class="col-lg-3 col-md-3 col-sm-3 control-label">Checklist?</label>
-                            <div class="col-lg-8 col-md-8 col-sm-8">
-                                <input type="checkbox" id="checklist" class="form-control" ng-model="taskCreate.newTask.checklist" ng-change="taskCreate.newTask.repeat = (taskCreate.newTask.checklist === true) ? 1 : 0; taskCreate.newTask.daily = (taskCreate.newTask.checklist === true) ? false : taskCreate.newTask.daily">
-                            </div>
-                        </div>
-                        <div ng-hide="taskCreate.newTask.link.linked">
-                            <div class="form-group" ng-hide="taskCreate.newTask.checklist">
-                                <label for="daily" class="col-lg-3 col-md-3 col-sm-3 control-label">Daily?</label>
-                                <div class="col-lg-8 col-md-8 col-sm-8">
-                                    <input type="checkbox" id="daily" class="form-control" ng-model="taskCreate.newTask.daily"
-                                           ng-change="taskCreate.newTask.checklist = (taskCreate.newTask.daily === true) ? false : taskCreate.newTask.checklist">
-                                </div>
-                            </div>
-                            <div class="form-group" ng-hide="taskCreate.newTask.checklist">
-                                <label for="repeat" class="col-lg-3 col-md-3 col-sm-3 control-label">Repeat</label>
-                                <div class="col-lg-8 col-md-8 col-sm-8">
-                                    <input type="number" required id="repeat" min="0" class="form-control" placeholder="1" ng-model="taskCreate.newTask.repeat">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group" ng-show="taskCreate.newTask.checklist">
-                            <label for="checklistOptions" class="col-lg-3 col-md-3 col-sm-3 control-label">Options</label>
-                                <div class="col-lg-7 col-md-7 col-sm-7">
-                                    <input type="text" id="checklistOptions" class="form-control" ng-model="taskCreate.newTask.checklistItem" enter-tag="taskCreate.addChecklistItem()">
-                                </div>
-                                <div class="col-lg-2 col-md-2 col-sm-2 form-group">
-                                    <a class="btn btn-primary" data-ng-click="taskCreate.addChecklistItem()" ng-disabled="taskCreate.newTask.checklistItem==='' || taskCreate.newTask.checklistItem===null || taskCreate.newTask.checklistItem===undefined">Add</a>
-                                </div>
-                            </div>
-                        <div class="form-group" ng-show="taskCreate.newTask.checklist">
-                            <div class="col-lg-3 col-md-3 col-sm-3"></div>
-                            <div class="options-list-container col-lg-8 col-md-8 col-sm-8">
-                                <ul class="options-list">
-                                    <li class="col-lg-12 col-md-12 col-sm-12" ng-repeat="option in taskCreate.newTask.checklistItems">
-                                        <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="taskCreate.dropChecklistItem(option.text)"><i class="fa fa-trash-o"></i></a>
-                                        <p>{{option.text}}</p>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                      <md-input-container ng-hide="taskCreate.newTask.checklist">
+                        <label>Repeat</label>
+                        <input type="number" id="repeat" min="0" placeholder="1" ng-model="taskCreate.newTask.repeat" required>
+                      </md-input-container>
+                  </div>
+                  <div ng-show="taskCreate.newTask.checklist">
+                    <md-input-container>
+                      <label>Options</label>
+                      <input type="text" id="checklistOptions" ng-model="taskCreate.newTask.checklistItem" enter-tag="taskCreate.addChecklistItem()">
+                    </md-input-container>
+                    <md-button class="md-primary" data-ng-click="taskCreate.addChecklistItem()"
+                               ng-disabled="taskCreate.newTask.checklistItem==='' || taskCreate.newTask.checklistItem===null || taskCreate.newTask.checklistItem===undefined">
+                               Add
+                    </md-button>
+                  </div>
+                  <div ng-show="taskCreate.newTask.checklist">
+                      <div class="options-list-container">
+                          <md-list class="options-list">
+                              <md-list-item ng-repeat="option in taskCreate.newTask.checklistItems">
+                                  <md-button class="md-warn md-fab pull-right" aria-hidden="true" ng-click="taskCreate.dropChecklistItem(option.text)">
+                                    <md-icon>delete</md-icon>
+                                  </md-button>
+                                  <p>{{option.text}}</p>
+                              </md-list-item>
+                          </md-list>
+                      </div>
+                  </div>
                 </div>
-                <div step-controls style="bottom: 10px">
-                    <button class="btn btn-primary width-50"
-                            ng-click="taskCreate.cancel()" ng-show="taskCreate.stepConfig.currentStep === 1">CANCEL</button>
-                    <button class="btn btn-primary width-50"
-                            ng-click="taskCreate.backStep(taskCreate.stepConfig.currentStep)" ng-show="taskCreate.stepConfig.currentStep === 2">BACK</button>
-                    <button class="btn btn-primary width-50"
-                            ng-click="taskCreate.takeStep(taskCreate.stepConfig.currentStep)" ng-show="taskCreate.stepConfig.currentStep === 1">NEXT</button>
-                    <button class="btn btn-primary width-50"
-                            ng-click="taskCreate.submit()" ng-show="taskCreate.stepConfig.currentStep === 2"
-                            ng-disabled="scheduleForm.$invalid">CREATE</button>
-                </div>
-            </fieldset>
+            </div>
+            <div step-controls style="bottom: 10px">
+                <button class="btn btn-primary width-50"
+                        ng-click="taskCreate.cancel()" ng-show="taskCreate.stepConfig.currentStep === 1">CANCEL</button>
+                <button class="btn btn-primary width-50"
+                        ng-click="taskCreate.backStep(taskCreate.stepConfig.currentStep)" ng-show="taskCreate.stepConfig.currentStep === 2">BACK</button>
+                <button class="btn btn-primary width-50"
+                        ng-click="taskCreate.takeStep(taskCreate.stepConfig.currentStep)" ng-show="taskCreate.stepConfig.currentStep === 1">NEXT</button>
+                <button class="btn btn-primary width-50"
+                        ng-click="taskCreate.submit()" ng-show="taskCreate.stepConfig.currentStep === 2"
+                        ng-disabled="scheduleForm.$invalid">CREATE</button>
+            </div>
         </form><!-- </form> -->
     </div><!-- collapse FORM -->
-</div>
+</section>

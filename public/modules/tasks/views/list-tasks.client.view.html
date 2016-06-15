@@ -1,23 +1,23 @@
 <section data-ng-controller="TasksController as ctrl">
-    <header class="fixed-header" flex="100">
-        <h3>
-            <span class="hover-data-right" hover-data="Refresh data" ng-click="ctrl.refreshItems()">
-                <span class="clickable">
-                    <md-icon class="animate-spin-hover font-20">refresh</md-icon>
-                </span>
-            </span>
-            Week Beginning <span ng-bind="ctrl.weekBeginning() | dateSuffix"></span>
-            <md-button class="md-primary md-raised show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</md-button>
-        </h3>
-    </header>
     <div layout="row">
-      <div layout="column" flex="25" ng-class="{ 'in-the-way' : inTheWay }" ng-show="(ctrl.filterConfig.view === 'list')">
-          <md-button class="md-primary" ng-click="ctrl.createTask()" aria-label="add task">
-              Add task
-          </md-button>
-          <div list-filters filter-config="ctrl.filterConfig" items="ctrl.tasks" page="ctrl.whichController"></div>
+      <div layout="column" flex="20" ng-class="{ 'in-the-way' : inTheWay }" ng-show="(ctrl.filterConfig.view === 'list')">
+        <header>
+            <h3>
+                <span class="hover-data-right" hover-data="Refresh data" ng-click="ctrl.refreshItems()">
+                    <span class="clickable">
+                        <md-icon class="animate-spin-hover font-20">refresh</md-icon>
+                    </span>
+                </span>
+                Week Beginning <span ng-bind="ctrl.weekBeginning() | dateSuffix"></span>
+                <md-button class="md-primary md-raised show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</md-button>
+            </h3>
+        </header>
+        <md-button class="md-primary" ng-click="ctrl.createTask()" aria-label="add task">
+            Add task
+        </md-button>
+        <div list-filters filter-config="ctrl.filterConfig" items="ctrl.tasks" page="ctrl.whichController"></div>
       </div>
-      <div layout="column" loading-spinner name="tasks" size="fullscreen" ng-class="(ctrl.filterConfig.view === 'list') ? 'flex-75' : 'flex-100'">
+      <div layout="column" loading-spinner name="tasks" size="fullscreen" ng-class="(ctrl.filterConfig.view === 'list') ? 'flex-75 flex-offset-5' : 'flex-100'">
         <div tab-container ng-model="ctrl.filterConfig.view">
           <div tab-view heading="list">
               <div class="tab-filter-container width-100 margin-top-40" id="task-tab-filter-container" sticky>

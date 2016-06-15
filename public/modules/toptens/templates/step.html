@@ -1,6 +1,6 @@
-<div class="step" id="step-{{stepNumber}}" 
+<div class="step" id="step-{{stepNumber}}"
      ng-class="(active) ? 'step-in step-transition' : 'step-out step-transition'"
      ng-style="{'z-index' : (active) ? 2 : 1}">
-    <div class="step-inner-container" ng-transclude>
+    <div class="step-inner-container" layout="column" ng-transclude>
     </div>
 </div>

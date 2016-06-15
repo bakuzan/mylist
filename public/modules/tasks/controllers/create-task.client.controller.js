@@ -2,15 +2,15 @@
   'use strict';
 
   angular.module('tasks').controller('CreateTaskController', CreateTaskController);
-  CreateTaskController.$inject =  ['$scope', 'data', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory', 'spinnerService', '$uibModalInstance', 'Animeitems', 'Mangaitems'];
+  CreateTaskController.$inject =  ['$scope', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory', 'spinnerService', '$mdDialog', 'Animeitems', 'Mangaitems'];
 
-function CreateTaskController($scope, data, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory, spinnerService, $uibModalInstance, Animeitems, Mangaitems) {
+function CreateTaskController($scope, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory, spinnerService, $mdDialog, Animeitems, Mangaitems) {
   var ctrl = this,
       newTaskModel = {};
+      console.log('create task: ', ctrl.commonArrays);
   ctrl.addChecklistItem = addChecklistItem;
   ctrl.backStep = backStep;
   ctrl.cancel = cancel;
-  ctrl.commonArrays = data.commonArrays;
   ctrl.create = create;
   ctrl.dropChecklistItem = dropChecklistItem;
   ctrl.stepConfig = {
@@ -129,10 +129,10 @@ function CreateTaskController($scope, data, $stateParams, $location, Authenticat
   }
   function submit() {
     ctrl.create();
-    $uibModalInstance.close();
+    $mdDialog.hide('created');
   }
   function cancel() {
-    $uibModalInstance.dismiss();
+    $mdDialog.cancel();
   }
 
   function process(step) {

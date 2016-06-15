@@ -3,9 +3,9 @@
 
 	// Tasks controller
 	angular.module('tasks').controller('TasksController', TasksController);
-	TasksController.$inject =  ['$scope', '$timeout', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory', 'spinnerService', '$uibModal', 'moment'];
+	TasksController.$inject =  ['$scope', '$timeout', '$stateParams', '$location', 'Authentication', 'Tasks', 'ListService', 'NotificationFactory', 'TaskFactory', 'spinnerService', '$mdDialog', 'moment'];
 
-	function TasksController($scope, $timeout, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory, spinnerService, $uibModal, moment) {
+	function TasksController($scope, $timeout, $stateParams, $location, Authentication, Tasks, ListService, NotificationFactory, TaskFactory, spinnerService, $mdDialog, moment) {
 		var ctrl = this,
 				today = new Date(),
 				day = today.getDay();
@@ -53,21 +53,23 @@
         return TaskFactory.getWeekBeginning();
     }
 
-		function createTask() {
-			var modalInstance = $uibModal.open({
-        animation: true,
-        templateUrl: '/modules/tasks/views/create-task.client.view.html',
-        controller: 'CreateTaskController as taskCreate',
-        size: 'lg',
-				resolve: {
-					data: function () {
-						return { commonArrays: ctrl.commonArrays };
-					}
+		function createTask(ev) {
+			$mdDialog.show({
+				bindToController: true,
+	      controller: 'CreateTaskController',
+				controllerAs: 'taskCreate',
+	      templateUrl: '/modules/tasks/views/create-task.client.view.html',
+	      parent: angular.element(document.body),
+	      targetEvent: ev,
+	      clickOutsideToClose: true,
+				fullscreen: true,
+				locals: {
+					commonArrays: ctrl.commonArrays
 				}
-      }).result.then(function(result) {
-        console.log('closed create task: ', result);
+	    }).then(function(result) {
+				console.log('closed create task: ', result);
 				find();
-      });
+			});
 		}
 
 		// Remove existing Task

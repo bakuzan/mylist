@@ -109,26 +109,26 @@
               </md-input-container>
             </div>
             <div class="input-group mt" ng-if="page === 'character'">
-                <div class="input-group-addon">
-                    <i class="fa fa-microphone"></i>
-                </div>
-                <input type="text" class="form-control" placeholder="search voice" ng-model="filterConfig.search.voice" uib-typeahead="voice.name for voice in filterConfig.voiceActors | filter: $viewValue | limitTo: 5">
+              <md-input-container>
+                <label>voice</label>
+                <input type="text" ng-model="filterConfig.search.voice" uib-typeahead="voice.name for voice in filterConfig.voiceActors | filter: $viewValue | limitTo: 5">
+              </md-input-container>
             </div>
             <div class="input-group mt" ng-if="page === 'topten'">
-                <div class="input-group-addon">
-                    <i class="fa fa-star" style="color: gold"></i>
-                </div>
-                <input class="phantom-control" type="checkbox" data-ng-model="filterConfig.search.isFavourite" ng-change="(filterConfig.search.isFavourite) ? true : filterConfig.search.isFavourite = ''">
+                <md-checkbox data-ng-model="filterConfig.search.isFavourite" ng-change="(filterConfig.search.isFavourite) ? true : filterConfig.search.isFavourite = ''"
+                            aria-label="favourite filter">
+                            Favourite?
+                </md-checkbox>
             </div>
             <div class="input-group mt" ng-if="page === 'topten'">
-                <div class="input-group-addon">
-                    <i class="fa fa-trophy trophy-5"></i>
-                </div>
-                <input class="phantom-control" type="checkbox" data-ng-model="filterConfig.search.isRanked" ng-change="(filterConfig.search.isRanked) ? true : filterConfig.search.isRanked = ''">
+                <md-checkbox data-ng-model="filterConfig.search.isRanked" ng-change="(filterConfig.search.isRanked) ? true : filterConfig.search.isRanked = ''"
+                             aria-label="ranked filter">
+                             Ranked?
+                </md-checkbox>
             </div>
-            <div class="input-group mt" ng-if="page !== 'topten'" data-ng-show="filterConfig.areTagless">
-              <md-checkbox data-ng-model="filterConfig.taglessItem">
-                Tagless
+            <div ng-if="page !== 'topten'" data-ng-show="filterConfig.areTagless">
+              <md-checkbox data-ng-model="filterConfig.taglessItem" aria-label="tagless filter">
+                Tagless?
               </md-checkbox>
             </div>
         </div>

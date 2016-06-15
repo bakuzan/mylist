@@ -15,7 +15,7 @@
                     <label>What do you need to do?</label>
                     <input type="text" required id="description" placeholder="" ng-model="taskCreate.newTask.description">
                   </md-input-container>
-                  <md-checkbox ng-model="taskCreate.newTask.link.linked">
+                  <md-checkbox ng-model="taskCreate.newTask.link.linked" aria-label="linked task">
                     Linked?
                   </md-checkbox>
                   <md-select ng-model="taskCreate.newTask.day" id="day" aria-label="day select" required>
@@ -39,7 +39,7 @@
                 </div>
                 <div one-step>
                   <div ng-show="taskCreate.newTask.link.linked">
-                    <md-select id="link-id" ng-model="taskCreate.newTask.link[taskCreate.linkType]">
+                    <md-select id="link-id" ng-model="taskCreate.newTask.link[taskCreate.linkType]" aria-label="link type">
                         <md-option class="disabled" value="">Choose link item</md-option>
                         <md-option ng-repeat="obj in taskCreate.linkItems" value="{{obj}}">
                           {{obj.title}}
@@ -47,14 +47,17 @@
                     </md-select>
                   </div>
                   <div ng-hide="taskCreate.newTask.daily || taskCreate.newTask.category === 'Watch'">
-                    <md-checkbox ng-model="taskCreate.newTask.checklist" ng-change="taskCreate.newTask.repeat = (taskCreate.newTask.checklist === true) ? 1 : 0; taskCreate.newTask.daily = (taskCreate.newTask.checklist === true) ? false : taskCreate.newTask.daily" id="checklist">
+                    <md-checkbox ng-model="taskCreate.newTask.checklist"
+                                 ng-change="taskCreate.newTask.repeat = (taskCreate.newTask.checklist === true) ? 1 : 0; taskCreate.newTask.daily = (taskCreate.newTask.checklist === true) ? false : taskCreate.newTask.daily" id="checklist"
+                                 aria-label="checklist task">
                       Checklist?
                     </md-checkbox>
                   </div>
                   <div ng-hide="taskCreate.newTask.link.linked">
                       <div ng-hide="taskCreate.newTask.checklist">
                         <md-checkbox ng-model="taskCreate.newTask.daily"
-                                     ng-change="taskCreate.newTask.checklist = (taskCreate.newTask.daily === true) ? false : taskCreate.newTask.checklist">
+                                     ng-change="taskCreate.newTask.checklist = (taskCreate.newTask.daily === true) ? false : taskCreate.newTask.checklist"
+                                     aria-label="daily task">
                           Daily?
                         </md-checkbox>
                       </div>
@@ -98,6 +101,6 @@
                         ng-click="taskCreate.submit()" ng-show="taskCreate.stepConfig.currentStep === 2"
                         ng-disabled="scheduleForm.$invalid">CREATE</button>
             </div>
-        </form><!-- </form> -->
-    </div><!-- collapse FORM -->
+        </form>
+    </div>
 </section>

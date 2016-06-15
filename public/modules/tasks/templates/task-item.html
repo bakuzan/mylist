@@ -1,4 +1,5 @@
-<div class="taskItem">
+<div class="taskItem" layout="column">
+  <div layout="row">
     <md-checkbox ng-model="taskItem.complete" ng-change="ctrl.tickOff(taskItem)" ng-disabled="taskItem.complete || taskItem.checklist"
                  aria-label="tick off task">
     </md-checkbox>
@@ -18,6 +19,7 @@
             {{taskItem.link.anime.episodes}}/{{taskItem.link.anime.finalEpisode}}
         </span>
     </span>
+    <span flex></span>
     <span class="category-{{taskItem.category}} hover-data-left"
           hover-data="{{taskItem.link.linked ? (taskItem.link.type ===  'anime') ?
                                                 taskItem.link.anime.title        :
@@ -29,6 +31,8 @@
     <md-button class="md-warn md-fab" aria-hidden="true" ng-click="ctrl.removeTask(taskItem)">
         <md-icon>delete</md-icon>
     </md-button>
+  </div>
+  <div layout="row">
     <strong class="taskDate complete-{{taskItem.complete}}">
         <span hover-data="{{taskItem.date | date: 'dd MMM yyyy' }}" pass-click="date-input-{{taskItem.meta.uniqueDescription}}">
           <input type="date"
@@ -55,34 +59,35 @@
             DAILY
         </span>
     </strong>
-    <div class="margin-top-10" percentage-bar-container border="alter-border" ng-if="taskItem.checklist">
-        <div percentage-bar percentage="{{ ((taskItem.checklistItems | filter: {complete: true}).length / taskItem.checklistItems.length) * 100}}"
-             type="white-text accent-alter-background"
-             hover-data="{{ ((taskItem.checklistItems | filter: {complete: true}).length / taskItem.checklistItems.length)*100 | number: 2 }}%"></div>
-    </div>
-    <div ng-if="taskItem.checklist" class="checklist-list-container" ng-show="viewTask">
-      <md-input-container>
-        <label>new checklist item</label>
-        <input ng-show="!taskItem.complete && addingToChecklist" type="text" ng-model="insertNewChecklistItem"
-               enter-tag="ctrl.insertChecklistItem(taskItem, insertNewChecklistItem); insertNewChecklistItem = ''">
-      </md-input-container>
-        <md-button class="md-accent" ng-show="!taskItem.complete" ng-click="addingToChecklist=!addingToChecklist">
-            <md-icon ng-hide="addingToChecklist">add</md-icon>
-            <md-icon ng-show="addingToChecklist">minus</md-icon>
-        </md-button>
-        <md-button class="md-accent" ng-show="!taskItem.complete && addingToChecklist" ng-click="ctrl.insertChecklistItem(taskItem, insertNewChecklistItem); insertNewChecklistItem = ''"
-           ng-disabled="insertNewChecklistItem==='' || insertNewChecklistItem===null || insertNewChecklistItem===undefined">
-            Add
-        </md-button>
-        <md-list class="checklist-list">
-            <md-list-item class="checklist-item" ng-repeat="option in taskItem.checklistItems">
-                <md-checkbox ng-model="option.complete" ng-change="ctrl.tickOffChecklist(taskItem, $index)" ng-disabled="option.complete"
-                             aria-label="tick off checklist item">
-                </md-checkbox>
-                <span class="complete-{{option.complete}}">
-                    {{option.text}}
-                </span>
-            </md-list-item>
-        </md-list>
-    </div>
+  </div>
+  <div class="margin-top-10" percentage-bar-container border="alter-border" ng-if="taskItem.checklist">
+    <div percentage-bar percentage="{{ ((taskItem.checklistItems | filter: {complete: true}).length / taskItem.checklistItems.length) * 100}}"
+         type="white-text accent-alter-background"
+         hover-data="{{ ((taskItem.checklistItems | filter: {complete: true}).length / taskItem.checklistItems.length)*100 | number: 2 }}%"></div>
+  </div>
+  <div ng-if="taskItem.checklist" class="checklist-list-container" ng-show="viewTask">
+    <md-input-container>
+      <label>new checklist item</label>
+      <input ng-show="!taskItem.complete && addingToChecklist" type="text" ng-model="insertNewChecklistItem"
+             enter-tag="ctrl.insertChecklistItem(taskItem, insertNewChecklistItem); insertNewChecklistItem = ''">
+    </md-input-container>
+      <md-button class="md-accent" ng-show="!taskItem.complete" ng-click="addingToChecklist=!addingToChecklist">
+          <md-icon ng-hide="addingToChecklist">add</md-icon>
+          <md-icon ng-show="addingToChecklist">minus</md-icon>
+      </md-button>
+      <md-button class="md-accent" ng-show="!taskItem.complete && addingToChecklist" ng-click="ctrl.insertChecklistItem(taskItem, insertNewChecklistItem); insertNewChecklistItem = ''"
+         ng-disabled="insertNewChecklistItem==='' || insertNewChecklistItem===null || insertNewChecklistItem===undefined">
+          Add
+      </md-button>
+      <md-list class="checklist-list">
+          <md-list-item class="checklist-item" ng-repeat="option in taskItem.checklistItems">
+              <md-checkbox ng-model="option.complete" ng-change="ctrl.tickOffChecklist(taskItem, $index)" ng-disabled="option.complete"
+                           aria-label="tick off checklist item">
+              </md-checkbox>
+              <span class="complete-{{option.complete}}">
+                  {{option.text}}
+              </span>
+          </md-list-item>
+      </md-list>
+  </div>
 </div>

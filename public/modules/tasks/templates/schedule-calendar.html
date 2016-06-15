@@ -1,13 +1,16 @@
 <div class="schedule-calendar">
   <div class="header">
-      <i class="fa fa-angle-left" ng-click="previous()"></i>
-      <span>{{month.format("MMMM, YYYY")}}</span>
-      <i class="fa fa-angle-right" ng-click="next()"></i>
+    <md-icon ng-click="previous()">keyboard_arrow_left</md-icon>
+    <span>{{month.format("MMMM, YYYY")}}</span>
+    <md-icon ng-click="next()">keyboard_arrow_right</md-icon>
   </div>
   <div class="week names">
-      <span class="day" ng-repeat="day in days">{{day.text}}</span>
+    <span class="day" ng-repeat="day in days">{{day.text}}</span>
   </div>
   <div class="week" ng-repeat="week in weeks">
-     <span class="day" ng-class="{ today: day.isToday, 'different-month': !day.isCurrentMonth, selected: day.date.isSame(selected) }" ng-click="select(day)" ng-repeat="day in week.days">{{day.number}}</span>
+     <span class="day" ng-class="{ today: day.isToday, 'different-month': !day.isCurrentMonth, selected: day.date.isSame(selected) }"
+           ng-click="select(day)" ng-repeat="day in week.days">
+           {{day.number}}
+     </span>
   </div>
 </div>

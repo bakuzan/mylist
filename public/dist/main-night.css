@@ -293,6 +293,7 @@
 
 .content {
   height: calc(100% - 64px - 51px);
+  overflow: visible;
 }
 .content.unauthorised {
   height: 100vh;

@@ -10,16 +10,14 @@
       ctrl.expand = expand;
       ctrl.expandedGroup = '';
 
-      function close() {
-          $mdSidenav('left').close()
-          .then(function () {
-              //$log.debug('close LEFT is done');
-          });
-      }
-
       function expand(position) {
         ctrl.expandedGroup = position;
       }
+
+      function close() {
+        $mdSidenav('left').close();
+      }
+
   }
 
 })();

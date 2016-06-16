@@ -4,23 +4,19 @@ $height: 300px;
 /** Step base styling **/
 
 .steps {
-    min-height: $height;
-    height: $height;
-    overflow: hidden;
+  position: relative;
+  height: 100%;
+  overflow: hidden;
 }
 .step {
-    position: absolute;
-    top: 0;
-    left: 0;
-    min-height: $height;
-    height: $height;
+    position: relative;
     width: 100%;
+    height: calc(100% - 70px);
     opacity: 0;
     z-index: 1;
 }
 .step-inner-container {
     min-height: $height;
-    height: $height;
 }
 
 .step.ng-hide-add,
@@ -36,7 +32,8 @@ $height: 300px;
   opacity: 0;
 }
 .step-out {
-    opacity: 0;
+  height: 0;
+  opacity: 0;
 }
 .step-in {
     opacity: 1;
@@ -48,12 +45,7 @@ $height: 300px;
 
 .step-button-group {
     position: relative;
-    left: 0;
-    width: 100%;
-    bottom: -10px;
-    display: inline-flex;
-    z-index: 1;
-    button {
-        z-index: 1;
-    }
+    width: 215px;
+    margin-left: auto;
+    z-index: 5;
 }

@@ -62,7 +62,7 @@
 	      parent: angular.element(document.body),
 	      targetEvent: ev,
 	      clickOutsideToClose: true,
-				fullscreen: true,
+				fullscreen: false,
 				locals: {
 					commonArrays: ctrl.commonArrays
 				}

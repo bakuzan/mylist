@@ -112,7 +112,7 @@
               templateUrl: '/modules/tasks/views/update-manga-task.client.view.html',
               parent: angular.element(document.body),
               clickOutsideToClose: true,
-              fullscreen: true,
+              fullscreen: false,
               locals: {
                 item: angular.copy(task),
                 itemOriginal: task
@@ -139,7 +139,7 @@
   				        } else if (task.link.type === 'manga') {
   									  task.complete = false;
   				            var dialog = launchMangaUpdateDialog(task);
-  										dialog.result.then(function(result) {
+  										dialog.then(function(result) {
   											task = result;
   											task.completeTimes += 1;
   											task.complete = true;
@@ -171,7 +171,7 @@
   						if (isLinked && task.link.type === 'manga') {
   								task.checklistItems[index].complete = false;
   								var dialog = launchMangaUpdateDialog(task, index);
-  								dialog.result.then(function(result) {
+  								dialog.then(function(result) {
   									task = result;
   									task.checklistItems[index].complete = true;
   									if(ListService.findWithAttr(task.checklistItems, 'complete', false) === -1) {

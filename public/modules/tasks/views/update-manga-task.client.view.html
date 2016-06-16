@@ -1,17 +1,17 @@
-<md-dialog class="primary-background" flex>
+<md-dialog class="height-50" flex="30">
   <header>
-    <h4 class="popout-header">
+    <h4 class="popout-header relative">
       Update linked manga
-      <md-button class="md-warn md-icon-button" data-ng-click="ctrl.cancel()">
+      <md-button class="md-warn md-icon-button absolute position-top position-right" data-ng-click="ctrl.cancel()">
         <md-icon>cancel</md-icon>
       </md-button>
     </h4>
   </header>
-    <div class="relative height-80">
+    <div class="relative">
         <form name="mangaForm" novalidate>
           <div steps step-config="ctrl.stepConfig">
               <div one-step>
-                <div layout="row">
+                <div class="center-contents" layout="row">
                   <md-input-container>
                     <label>Chapters</label>
                     <input type="number" id="chapter" ng-model="ctrl.item.link.manga.chapters">
@@ -21,7 +21,7 @@
                     <input type="number" id="finalChapter" ng-model="ctrl.item.link.manga.finalChapter" disabled>
                   </md-input-container>
                 </div>
-                <div layout="row">
+                <div class="center-contents" layout="row">
                   <md-input-container>
                     <label>Volumes</label>
                     <input type="number" id="volume" ng-model="ctrl.item.link.manga.volumes">
@@ -32,13 +32,6 @@
                   </md-input-container>
                 </div>
               </div>
-          </div>
-          <div step-controls style="bottom: 10px">
-              <button class="btn btn-primary width-50"
-                      ng-click="ctrl.cancel()" ng-show="ctrl.stepConfig.currentStep === 1">CANCEL</button>
-              <button class="btn btn-primary width-50"
-                      ng-click="ctrl.submit()" ng-show="ctrl.stepConfig.currentStep === ctrl.stepConfig.stepCount"
-                      ng-disabled="mangaForm.$invalid">UPDATE</button>
           </div>
         </form>
     </div>

@@ -461,25 +461,21 @@ div.slider-full-screen .slider-indicators {
 
 /** Step base styling **/
 .steps {
-  min-height: 300px;
-  height: 300px;
+  position: relative;
+  height: 100%;
   overflow: hidden;
 }
 
 .step {
-  position: absolute;
-  top: 0;
-  left: 0;
-  min-height: 300px;
-  height: 300px;
+  position: relative;
   width: 100%;
+  height: calc(100% - 70px);
   opacity: 0;
   z-index: 1;
 }
 
 .step-inner-container {
   min-height: 300px;
-  height: 300px;
 }
 
 .step.ng-hide-add,
@@ -504,6 +500,7 @@ div.slider-full-screen .slider-indicators {
 }
 
 .step-out {
+  height: 0;
   opacity: 0;
 }
 
@@ -518,14 +515,9 @@ div.slider-full-screen .slider-indicators {
 
 .step-button-group {
   position: relative;
-  left: 0;
-  width: 100%;
-  bottom: -10px;
-  display: inline-flex;
-  z-index: 1;
-}
-.step-button-group button {
-  z-index: 1;
+  width: 215px;
+  margin-left: auto;
+  z-index: 5;
 }
 
 .border-box, .schedule-calendar, .schedule-calendar > div.header > i, .schedule-calendar > div.header > span, .schedule-calendar > div.week > span.day {

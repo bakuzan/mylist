@@ -15,7 +15,10 @@ function CreateTaskController($scope, $stateParams, $location, Authentication, T
   ctrl.dropChecklistItem = dropChecklistItem;
   ctrl.stepConfig = {
       currentStep: 1,
-      stepCount: 2
+      cancel: cancel,
+      submit: submit,
+      takeStep: takeStep,
+      backStep: backStep
   };
   ctrl.submit = submit;
   ctrl.takeStep = takeStep;
@@ -87,8 +90,8 @@ function CreateTaskController($scope, $stateParams, $location, Authentication, T
             type: (ctrl.newTask.link.linked === false) ? ''      :
                   (ctrl.newTask.category === 'Watch')  ? 'anime' :
                                                          'manga' ,
-            anime: (ctrl.newTask.link.anime === undefined) ? undefined : ctrl.newTask.link.anime._id ,
-            manga: (ctrl.newTask.link.manga === undefined) ? undefined : ctrl.newTask.link.manga._id
+            anime: ctrl.newTask.link.anime,
+            manga: ctrl.newTask.link.manga
         },
         day: ctrl.newTask.daily === true ? 'Any' : ctrl.newTask.day,
         date: ctrl.newTask.date === '' ? new Date() : ctrl.newTask.date,

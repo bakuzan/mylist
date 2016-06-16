@@ -1,14 +1,14 @@
-<md-dialog flex>
+<md-dialog class="height-60" flex="60">
   <header>
-    <h4 class="popout-header">
+    <h4 class="popout-header relative">
       Add new task
-      <md-button class="md-warn md-icon-button" data-ng-click="taskCreate.cancel()">
+      <md-button class="md-warn md-icon-button absolute position-top position-right" data-ng-click="taskCreate.cancel()">
         <md-icon>cancel</md-icon>
       </md-button>
     </h4>
   </header>
-    <div class="relative height-80">
-        <form name="scheduleForm" reset-form="taskCreate.newTask" novalidate>
+    <div class="relative height-100 center-contents">
+        <form class="height-100" flex="60" name="scheduleForm" reset-form="taskCreate.newTask" novalidate>
             <div steps step-config="taskCreate.stepConfig">
                 <div one-step>
                   <md-input-container>
@@ -41,7 +41,7 @@
                   <div ng-show="taskCreate.newTask.link.linked">
                     <md-select id="link-id" ng-model="taskCreate.newTask.link[taskCreate.linkType]" aria-label="link type">
                         <md-option class="disabled" value="">Choose link item</md-option>
-                        <md-option ng-repeat="obj in taskCreate.linkItems" value="{{obj}}">
+                        <md-option ng-repeat="obj in taskCreate.linkItems" value="{{obj._id}}">
                           {{obj.title}}
                         </md-option>
                     </md-select>
@@ -80,26 +80,15 @@
                       <div class="options-list-container">
                           <md-list class="options-list">
                               <md-list-item ng-repeat="option in taskCreate.newTask.checklistItems">
-                                  <md-button class="md-warn md-fab pull-right" aria-hidden="true" ng-click="taskCreate.dropChecklistItem(option.text)">
+                                  <p>{{option.text}}</p>
+                                  <md-button class="md-warn md-icon-button" aria-hidden="true" ng-click="taskCreate.dropChecklistItem(option.text)">
                                     <md-icon>delete</md-icon>
                                   </md-button>
-                                  <p>{{option.text}}</p>
                               </md-list-item>
                           </md-list>
                       </div>
                   </div>
                 </div>
-            </div>
-            <div step-controls style="bottom: 10px">
-                <button class="btn btn-primary width-50"
-                        ng-click="taskCreate.cancel()" ng-show="taskCreate.stepConfig.currentStep === 1">CANCEL</button>
-                <button class="btn btn-primary width-50"
-                        ng-click="taskCreate.backStep(taskCreate.stepConfig.currentStep)" ng-show="taskCreate.stepConfig.currentStep === 2">BACK</button>
-                <button class="btn btn-primary width-50"
-                        ng-click="taskCreate.takeStep(taskCreate.stepConfig.currentStep)" ng-show="taskCreate.stepConfig.currentStep === 1">NEXT</button>
-                <button class="btn btn-primary width-50"
-                        ng-click="taskCreate.submit()" ng-show="taskCreate.stepConfig.currentStep === 2"
-                        ng-disabled="scheduleForm.$invalid">CREATE</button>
             </div>
         </form>
     </div>

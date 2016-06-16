@@ -20,7 +20,7 @@
       <div layout="column" loading-spinner name="tasks" size="fullscreen" ng-class="(ctrl.filterConfig.view === 'list') ? 'flex-75 flex-offset-5' : 'flex-100'">
         <div tab-container ng-model="ctrl.filterConfig.view">
           <div tab-view heading="list">
-              <div class="tab-filter-container width-100 margin-top-40" id="task-tab-filter-container" sticky>
+              <div class="tab-filter-container margin-top-40" flex="95" id="task-tab-filter-container" sticky>
                   <div layout="row" flex id="task-tab-filter-inner-container">
                       <div class="relative tab-filter clickable" ng-class="(ctrl.filterConfig.search.day === '') ? 'tab-in' : 'tab-out' ">
                           <label class="width-100 clickable text-center" ng-click="ctrl.tabFilter('')">ALL</label>

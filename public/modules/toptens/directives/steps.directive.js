@@ -5,17 +5,24 @@
   function steps() {
     return {
         restrict: 'A',
+        replace: true,
         transclude: true,
         scope: {
             stepConfig: '='
         },
-        template: '<div class="steps" ng-transclude>' +
-                  '</div>',
+        template:
+        `<div class="steps">
+          <ng-transclude></ng-transclude>
+          <div step-controls>
+           </div>
+         </div>`,
         bindToController: true,
         controllerAs: 'steps',
         controller: function($scope) {
             var self = this;
-
+            console.log('steps: ', self);
+            self.catchFunctions = catchFunctions;
+            self.catchFunctions();
             self.register = register;
             self.steps = [];
 
@@ -25,6 +32,21 @@
                     step.active = true;
                 }
             }
+
+            function catchFunctions() {
+              if(!self.stepConfig.takeStep) self.stepConfig.takeStep = takeStep;
+              if(!self.stepConfig.backStep) self.stepConfig.backStep = backStep;
+            }
+
+            function takeStep() {
+              self.stepConfig.currentStep += 1;
+            }
+
+            function backStep() {
+              self.stepConfig.currentStep -= 1;
+            }
+
+
         },
         link: function(scope, element, attrs, stepsController) {
           scope.$watch('steps.stepConfig.currentStep', function(newValue) {

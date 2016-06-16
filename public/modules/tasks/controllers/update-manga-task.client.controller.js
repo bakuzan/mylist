@@ -2,25 +2,25 @@
 	'use strict';
 
 	angular.module('tasks').controller('UpdateMangaTaskController', UpdateMangaTaskController);
-	UpdateMangaTaskController.$inject = ['$scope', '$uibModalInstance', 'data'];
+	UpdateMangaTaskController.$inject = ['$scope', '$mdDialog'];
 
-	function UpdateMangaTaskController($scope, $uibModalInstance, data) {
+	function UpdateMangaTaskController($scope, $mdDialog) {
     var ctrl = this;
 		ctrl.cancel = cancel;
-    ctrl.item = data.item;
     ctrl.stepConfig = {
         currentStep: 1,
-        stepCount: 1
+				cancel: cancel,
+	      submit: submit
     };
 		ctrl.submit = submit;
     console.log('update linked manga item: ', ctrl.item);
 
     function submit() {
-      $uibModalInstance.close(ctrl.item);
+      $mdDialog.hide(ctrl.item);
     }
 
     function cancel() {
-      $uibModalInstance.dismiss('cancel');
+      $mdDialog.cancel();
     }
 	}
 

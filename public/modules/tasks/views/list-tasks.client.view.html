@@ -2,15 +2,15 @@
     <div layout="row">
       <div layout="column" flex="20" ng-class="{ 'in-the-way' : inTheWay }" ng-show="(ctrl.filterConfig.view === 'list')">
         <header>
-            <h3>
-                <span class="hover-data-right" hover-data="Refresh data" ng-click="ctrl.refreshItems()">
-                    <span class="clickable">
-                        <md-icon class="animate-spin-hover font-20">refresh</md-icon>
-                    </span>
+          <h3>
+            <span class="hover-data-right" hover-data="Refresh data" ng-click="ctrl.refreshItems()">
+                <span class="clickable">
+                    <md-icon class="animate-spin-hover font-20">refresh</md-icon>
                 </span>
-                Week Beginning <span ng-bind="ctrl.weekBeginning() | dateSuffix"></span>
-                <md-button class="md-primary md-raised show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</md-button>
-            </h3>
+            </span>
+            Week Beginning <span ng-bind="ctrl.weekBeginning() | dateSuffix"></span>
+            <md-button class="md-primary md-raised show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</md-button>
+          </h3>
         </header>
         <md-button class="md-primary" ng-click="ctrl.createTask()" aria-label="add task">
             Add task
@@ -21,7 +21,7 @@
         <div tab-container ng-model="ctrl.filterConfig.view">
           <div tab-view heading="list">
               <div class="tab-filter-container width-100 margin-top-40" id="task-tab-filter-container" sticky>
-                  <div id="task-tab-filter-inner-container">
+                  <div layout="row" flex id="task-tab-filter-inner-container">
                       <div class="relative tab-filter clickable" ng-class="(ctrl.filterConfig.search.day === '') ? 'tab-in' : 'tab-out' ">
                           <label class="width-100 clickable text-center" ng-click="ctrl.tabFilter('')">ALL</label>
                       </div>
@@ -31,12 +31,12 @@
                       </div>
                   </div>
               </div>
-              <md-list>
-                  <div ng-if="ctrl.filterConfig.showingCount === 0" class="relative width-100 margin-top-20 text-center">
-                      <p class="relative width-100">No items were found using your selection criteria.</p>
-                  </div>
-                  <md-list-item task-item-model ng-repeat="taskItem in ctrl.tasks | orderBy: '-date' | filter: ctrl.filterConfig.search | calendarFilter:ctrl.filterConfig.datesSelected">
-                  </md-list-item>
+              <md-list flex="95">
+                <div ng-if="ctrl.filterConfig.showingCount === 0" class="relative width-100 margin-top-20 text-center">
+                  <p class="relative width-100">No items were found using your selection criteria.</p>
+                </div>
+                <md-list-item task-item-model ng-repeat="taskItem in ctrl.tasks | orderBy: '-date' | filter: ctrl.filterConfig.search | calendarFilter:ctrl.filterConfig.datesSelected">
+                </md-list-item>
               </md-list>
           </div>
           <div tab-view heading="calendar">

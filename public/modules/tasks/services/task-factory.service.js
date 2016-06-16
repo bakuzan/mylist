@@ -1,9 +1,9 @@
 (function() {
   'use strict';
   angular.module('tasks').factory('TaskFactory', TaskFactory);
-  TaskFactory.$inject = ['$q', 'Animeitems', 'Mangaitems', 'AnimeFactory', 'MangaFactory', 'NotificationFactory', 'ListService', '$uibModal'];
+  TaskFactory.$inject = ['$q', 'Animeitems', 'Mangaitems', 'AnimeFactory', 'MangaFactory', 'NotificationFactory', 'ListService', '$mdDialog'];
 
-    function TaskFactory($q, Animeitems, Mangaitems, AnimeFactory, MangaFactory, NotificationFactory, ListService, $uibModal) {
+    function TaskFactory($q, Animeitems, Mangaitems, AnimeFactory, MangaFactory, NotificationFactory, ListService, $mdDialog) {
       var obj = {
         getWeekBeginning: getWeekBeginning,
         insertChecklistItem: insertChecklistItem,
@@ -105,18 +105,20 @@
 
   				//Linked manga need special options dialog.
   				function launchMangaUpdateDialog(task, checklistIndex) {
-  					var modalInstance = $uibModal.open({
-  						animation: true,
-  		      	templateUrl: '/modules/tasks/views/update-manga-task.client.view.html',
-  		      	controller: 'UpdateMangaTaskController as ctrl',
-  		      	size: 'lg',
-  		      	resolve: {
-  		        	data: function () {
-  		          	return { item: angular.copy(task), itemOriginal: task };
-  							}
-  						}
-  					});
-  					return modalInstance;
+            var modal = $mdDialog.show({
+              bindToController: true,
+              controller: 'UpdateMangaTaskController',
+              controllerAs: 'ctrl',
+              templateUrl: '/modules/tasks/views/update-manga-task.client.view.html',
+              parent: angular.element(document.body),
+              clickOutsideToClose: true,
+              fullscreen: true,
+              locals: {
+                item: angular.copy(task),
+                itemOriginal: task
+              }
+            });
+            return modal;
   				}
 
   				//Completes a task.

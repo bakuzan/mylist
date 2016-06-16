@@ -35,6 +35,13 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(function (
 		$mdThemingProvider.alwaysWatchTheme(true);
 });
 
+//Datepicker formatting
+angular.module(ApplicationConfiguration.applicationModuleName).config(function($mdDateLocaleProvider) {
+    $mdDateLocaleProvider.formatDate = function(date) {
+       return moment(date).format('DD-MMM-YYYY');
+    };
+});
+
 angular.module(ApplicationConfiguration.applicationModuleName).run(['$rootScope', '$state', 'Authentication', function ($rootScope, $state, Authentication) {
 	$rootScope.$on('$stateChangeStart', function (event, toState) {
 		if(toState.name === 'signin') {

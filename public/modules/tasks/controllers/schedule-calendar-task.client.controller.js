@@ -1,19 +1,17 @@
 (function() {
 	'use strict';
 	angular.module('tasks').controller('ScheduleCalendarTaskController', ScheduleCalendarTaskController);
-	ScheduleCalendarTaskController.$inject = ['$scope', '$uibModalInstance', 'moment', 'data', 'ListService', 'TaskFactory'];
+	ScheduleCalendarTaskController.$inject = ['$scope', '$mdDialog', 'moment', 'ListService', 'TaskFactory'];
 
-	function ScheduleCalendarTaskController($scope, $uibModalInstance, moment, data, ListService, TaskFactory) {
+	function ScheduleCalendarTaskController($scope, $mdDialog, moment, ListService, TaskFactory) {
     var ctrl = this,
 				refresh = false,
-				timeDiff = Math.abs(new Date(data.date).getTime() - new Date().getTime());
+				timeDiff = Math.abs(new Date(ctrl.date).getTime() - new Date().getTime());
 
 		ctrl.cancel = cancel;
-    ctrl.date = new Date(data.date);
+    ctrl.date = new Date(ctrl.date);
 		ctrl.day = ctrl.date.getDay() > 0 ? ctrl.date.getDay() - 1 : 6;
-		ctrl.days = data.days;
 		ctrl.daysFromToday = Math.ceil(timeDiff / (1000 * 3600 * 24));
-    ctrl.events = [];
 		ctrl.init = init;
 		ctrl.insertChecklistItem = insertChecklistItem;
 		ctrl.removeTask = removeTask;
@@ -21,11 +19,13 @@
 		ctrl.tickOffChecklist = tickOffChecklist;
 		ctrl.today = new Date();
 		ctrl.updateTask = updateTask;
-		console.log('data: ', data, 'days: ', ctrl.days, ctrl.day, ctrl.date);
+		console.log('days: ', ctrl.days, ctrl.day, ctrl.date);
 
 		function init() {
-			var weekEnds = new Date(ListService.weekEndingForDate(ctrl.date));
-			angular.forEach(data.events, function(event) {
+			var weekEnds = new Date(ListService.weekEndingForDate(ctrl.date)),
+					temp = ctrl.events;
+			ctrl.events = [];
+			angular.forEach(temp, function(event) {
 				if(new Date(event.date) < weekEnds && ((event.day.substring(0, 3) === ctrl.days[ctrl.day].text) || (event.day === 'Any'))) {
 					// console.log('daysFromToday: ', ctrl.daysFromToday);
 					if(!event.daily) {
@@ -78,7 +78,7 @@
     }
 
     function cancel() {
-      $uibModalInstance.close(refresh);
+      $mdDialog.hide(refresh);
     }
 	}
 })();

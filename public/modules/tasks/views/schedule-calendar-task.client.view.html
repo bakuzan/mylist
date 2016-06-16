@@ -1,8 +1,8 @@
-<div class="primary-background view-height-75">
+<md-dialog class="primary-background view-height-75">
   <header>
     <h4 class="popout-header">
       {{::ctrl.date | date: 'EEEE'}} {{::ctrl.date | dateSuffix }}
-      <md-button class="md-warn md-fab" data-ng-click="ctrl.cancel()">
+      <md-button class="md-warn md-icon-button" data-ng-click="ctrl.cancel()">
         <md-icon>cancel</md-icon>
       </md-button>
     </h4>
@@ -16,4 +16,4 @@
       </md-list-item>
     </md-list>
   </div>
-</div>
+</md-dialog>

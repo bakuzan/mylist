@@ -55,4 +55,12 @@ ul.dropdown-menu {
   padding: 0;
 }
 
+/** MATERIAL OVERRIDES **/
+md-datepicker.or-shrink > .md-datepicker-input-container {
+  padding: 0;
+}
+md-datepicker.or-shrink > .md-datepicker-button {
+  height: 36px;
+}
+
 /*# sourceMappingURL=control-overrides.css.map */

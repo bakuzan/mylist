@@ -1,11 +1,11 @@
-<section data-ng-controller="HeaderController as header">
+<section>
     <md-sidenav class="md-sidenav-left" md-component-id="left" aria-label="navigation bar">
         <md-content ng-controller="LeftCtrl as left" layout-padding>
             <header class="md-no-sticky padding-left-0">
                 <h3 class="lighter font-16 margin-0">Views</h3>
             </header>
             <md-list>
-                <md-list-item class="padding-0" layout="column" ng-repeat="item in header.menu.items | orderBy: 'position'" aria-label="navigation link item">
+                <md-list-item class="padding-0" layout="column" ng-repeat="item in body.menu.items | orderBy: 'position'" aria-label="navigation link item">
                     <md-button class="md-primary width-100 margin-0" layout="row" title="{{item.title}}" aria-label="navigation button" ng-click="left.expand(item.title)">
                       <span class="text-left margin-0" flex ng-bind="item.title"></span>
                     </md-button>

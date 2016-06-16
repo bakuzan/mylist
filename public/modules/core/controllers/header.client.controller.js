@@ -7,6 +7,7 @@
 	function HeaderController($scope, Authentication, Menus, $state, $location, $mdSidenav, $mdUtil) {
 		var ctrl = this;
 
+		ctrl.applicationThemes = [{ n: 'day', v: 'day-time' }, { n: 'night', v: 'night-time' }];
 		ctrl.authentication = Authentication;
 		ctrl.changeTheme = changeTheme;
 		ctrl.home = home;
@@ -16,24 +17,20 @@
 		ctrl.menu = Menus.getMenu('topbar');
 		console.log('menu: ', ctrl.menu);
 		ctrl.saved = localStorage.getItem('theme');
-		ctrl.signout = signout;
 		ctrl.styles = [
-        { name: 'Day', url: 'dist/main-day.css' },
-        { name: 'Night', url: 'dist/main-night.css' }
+        { n: 'Day', v: 'dist/main-day.css' },
+        { n: 'Night', v: 'dist/main-night.css' }
     ];
-		ctrl.theme = (localStorage.getItem('theme')!==null) ? JSON.parse(ctrl.saved) : ctrl.styles[1].url;
-		ctrl.timedTheme = (localStorage.getItem('timedTheme')!==null) ? JSON.parse(ctrl.isTimedTheme) : false;
+		ctrl.theme = ctrl.applicationThemes[0].v; //(localStorage.getItem('theme')!==null) ? JSON.parse(ctrl.saved) : ctrl.styles[1].url;
+		// ctrl.timedTheme = (localStorage.getItem('timedTheme')!==null) ? JSON.parse(ctrl.isTimedTheme) : false;
 		ctrl.toggleLeft = buildToggler('left');
-		localStorage.setItem('theme', JSON.stringify(ctrl.theme));
-  	localStorage.setItem('timedTheme', JSON.stringify(ctrl.timedTheme));
+		// localStorage.setItem('theme', JSON.stringify(ctrl.theme));
+  	// localStorage.setItem('timedTheme', JSON.stringify(ctrl.timedTheme));
 
 		function home() {
 			$state.go('listTasks');
 		}
 
-		function signout() {
-			$location.path('/auth/signout');
-		}
 
 		/**
      * Build handler to open/close a SideNav; when animation finishes
@@ -62,23 +59,25 @@
     }
 
     function changeTheme() {
-        localStorage.setItem('timedTheme', JSON.stringify(ctrl.timedTheme));
-        var timeOfDayTheme = localStorage.getItem('timedTheme');
-        if (timeOfDayTheme === 'false') {
-            localStorage.setItem('theme', JSON.stringify(ctrl.theme));
-        } else {
-            var time = new Date().getHours();
-            if (time > 20 || time < 8) {
-                localStorage.setItem('theme', JSON.stringify(ctrl.styles[1].url));
-            } else if (time > 8) {
-                localStorage.setItem('theme', JSON.stringify(ctrl.styles[0].url));
-            }
-        }
-        var storedValue = localStorage.getItem('theme'),
-        link = document.getElementById('app-theme');
-        link.href = storedValue.substr(1, storedValue.lastIndexOf('\"') - 1); //remove quotes for whatever reason.
-        ctrl.theme = storedValue.substr(1, storedValue.lastIndexOf('\"') - 1); //remove quotes for whatever reason. //set the dropdown to the correct value;
+			console.log('new theme: ', ctrl.theme);
+        // localStorage.setItem('timedTheme', JSON.stringify(ctrl.timedTheme));
+        // var timeOfDayTheme = localStorage.getItem('timedTheme');
+        // if (timeOfDayTheme === 'false') {
+        //     localStorage.setItem('theme', JSON.stringify(ctrl.theme));
+        // } else {
+        //     var time = new Date().getHours();
+        //     if (time > 20 || time < 8) {
+        //         localStorage.setItem('theme', JSON.stringify(ctrl.styles[1].url));
+        //     } else if (time > 8) {
+        //         localStorage.setItem('theme', JSON.stringify(ctrl.styles[0].url));
+        //     }
+        // }
+        // var storedValue = localStorage.getItem('theme'),
+        // link = document.getElementById('app-theme');
+        // link.href = storedValue.substr(1, storedValue.lastIndexOf('\"') - 1); //remove quotes for whatever reason.
+        // ctrl.theme = storedValue.substr(1, storedValue.lastIndexOf('\"') - 1); //remove quotes for whatever reason. //set the dropdown to the correct value;
     }
 
 	}
+
 })();

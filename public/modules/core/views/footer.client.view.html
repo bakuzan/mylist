@@ -1,15 +1,15 @@
-<div layout="column" data-ng-controller="HeaderController as footer" data-ng-show="footer.authentication.user">
+<div layout="column" data-ng-show="body.authentication.user">
   <hr/>
   <div class="padding-5" layout="column">
     <small>1.27.14</small>
     <small>swalsh</small>
   </div>
   <div class="center-contents" layout="row">
-    <md-select class="padding-right-10" ng-model="footer.theme" ng-change="footer.changeTheme()" aria-label="theme selector">
-      <md-option ng-repeat="option in footer.styles | orderBy: 'name'" value="{{option.url}}">
-        {{option.name}}
+    <md-select class="padding-right-10" ng-model="body.theme" ng-change="body.changeTheme()"  aria-label="theme selector">
+      <md-option ng-repeat="option in body.applicationThemes | orderBy: 'name'" value="{{option.v}}">
+        {{option.n}}
       </md-option>
     </md-select>
-    <md-checkbox ng-model="footer.timedTheme" ng-change="footer.changeTheme()" aria-label="timed theme">timed</md-checkbox>
+    <md-checkbox ng-model="body.timedTheme" ng-change="body.changeTheme()" aria-label="timed theme">timed</md-checkbox>
   </div>
 </div>

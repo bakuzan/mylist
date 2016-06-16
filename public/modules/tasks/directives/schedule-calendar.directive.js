@@ -2,9 +2,9 @@
   'use strict';
   angular.module('tasks')
   .directive('scheduleCalendar', scheduleCalendar);
-  scheduleCalendar.$inject = ['$uibModal', 'moment', 'ListService'];
+  scheduleCalendar.$inject = ['$mdDialog', 'moment', 'ListService'];
 
-   function scheduleCalendar($uibModal, moment, ListService) {
+   function scheduleCalendar($mdDialog, moment, ListService) {
 
     function _removeTime(date) {
       return date.day(1).hour(12).minute(0).second(0).millisecond(0);
@@ -41,17 +41,21 @@
      }
 
      function _displayEvents(events, date, days) {
-       var modalInstance = $uibModal.open({
-         animation: true,
+       console.log(events, date,days);
+       $mdDialog.show({
+         bindToController: true,
+         controller: 'ScheduleCalendarTaskController',
+         controllerAs: 'ctrl',
          templateUrl: '/modules/tasks/views/schedule-calendar-task.client.view.html',
-         controller: 'ScheduleCalendarTaskController as ctrl',
-         size: 'lg',
-         resolve: {
-           data: function () {
-             return { events: events, date: date, days: days };
-           }
+         parent: angular.element(document.body),
+         clickOutsideToClose: true,
+         fullscreen: true,
+         locals: {
+           events: events,
+           date: date,
+           days: days
          }
-       }).result.then(function(result) {
+       }).then(function(result) {
          console.log('closed - require refresh: ', result);
        });
      }

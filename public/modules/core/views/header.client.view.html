@@ -1,12 +1,12 @@
-<md-toolbar data-ng-controller="HeaderController as header" data-ng-show="header.authentication.user">
+<md-toolbar data-ng-show="body.authentication.user">
 	<div class=md-toolbar-tools>
-		<md-button class="md-icon-button" aria-label="home" ng-click="header.home()" data-ng-show="header.authentication.user">
+		<md-button class="md-icon-button" aria-label="home" ng-click="body.home()" data-ng-show="body.authentication.user">
 			<md-tooltip md-direction="bottom">
       	go to home
       </md-tooltip>
     	<i class="material-icons md-24">home</i>
     </md-button>
-		<md-button class="md-icon-button" aria-label="Views" ng-click="header.toggleLeft()" data-ng-show="header.authentication.user">
+		<md-button class="md-icon-button" aria-label="Views" ng-click="body.toggleLeft()" data-ng-show="body.authentication.user">
 			<md-tooltip md-direction="bottom">
       	open views
       </md-tooltip>
@@ -14,11 +14,11 @@
     </md-button>
     <span flex></span>
     <span flex></span>
-		<md-button class="md-icon-button" aria-label="Account" ng-click="header.signout()">
+		<a class="md-icon-button" aria-label="Account" href="/auth/signout">
 			<md-tooltip md-direction="bottom">
       	signout
       </md-tooltip>
 			<i class="material-icons md-24">account_circle</i>
-		</md-button>
+		</a>
 	</div>
 </md-toolbar>

@@ -51,3 +51,14 @@ input[type="checkbox"].phantom-control {
 ul.dropdown-menu {
     padding: 0;
 }
+
+/** MATERIAL OVERRIDES **/
+
+md-datepicker.or-shrink {
+  > .md-datepicker-input-container {
+    padding: 0;
+  }
+  > .md-datepicker-button {
+    height: 36px;
+  }
+}

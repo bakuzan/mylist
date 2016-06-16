@@ -594,7 +594,7 @@ angular.module('animeitems').config(['$stateProvider',
         // Find a list of Animeitems
         function find() {
 					ctrl.filterConfig.selectListOptions = ListService.getSelectListOptions(ctrl.whichController);
-					ctrl.filterConfig.sortType = ctrl.filterConfig.selectListOptions.sortOptions[ctrl.filterConfig.selectListOptions.sortOption].v; //Set sort order.
+					ctrl.filterConfig.sortType = 'meta.updated'; //Set sort order.
           spinnerService.loading('watch', WatchAnime.query().$promise.then(function(result) {
   					ctrl.animeitems = result;
 						console.log('watch list: ', result, 'filterConfig: ', ctrl.filterConfig);

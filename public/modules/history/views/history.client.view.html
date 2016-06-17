@@ -1,50 +1,48 @@
 <section data-ng-controller="HistoryController as ctrl" ng-init="ctrl.buildHistory()" ng-show="ctrl.authentication.user" keycuts>
   <div layout="row" flex="100">
     <header class="padding-10" flex="90">
-      <h1 ng-bind="ctrl.view + ' history'"></h1>
-      <md-input-container>
-        <label>search</label>
-          <input type="text" ng-model="ctrl.filterConfig.search.name">
-      </md-input-container>
+      <h1 class="font-32" ng-bind="ctrl.view + ' history'"></h1>
+      <div layout="row">
+        <md-input-container>
+          <label>search history</label>
+            <input type="text" ng-model="ctrl.filterConfig.search.name">
+        </md-input-container>
+        <div flex="60" flex-offset="10" tab-container ng-model="ctrl.filterConfig.historyFilter">
+         <div tab-view ng-repeat="item in ctrl.historyGroups" heading="{{::item.name}}"></div>
+        </div>
+      </div>
     </header>
     <div flex tab-container ng-model="ctrl.view">
       <div tab-view heading="Anime"></div>
       <div tab-view heading="Manga"></div>
     </div>
   </div>
-  <div class="col-lg-12 col-md-12 col-sm-12 history-list-container relative" style="top: 125px" loading-spinner name="history" size="fullscreen">
-    <div tab-container ng-model="ctrl.filterConfig.historyFilter">
-     <div tab-view ng-repeat="item in ctrl.historyGroups" heading="{{::item.name}}"></div>
-    </div>
-    <div class="col-lg-12 col-md-12 col-sm-12 history-list" ng-show="ctrl.view === 'Anime'">
-        <div class="col-lg-12 col-md-12 col-sm-12 history-list-item"
+  <div loading-spinner name="history" size="fullscreen">
+    <div class="center-contents">
+      <md-list flex="60" ng-show="ctrl.view === 'Anime'">
+        <md-list-item layout-wrap
              ng-repeat="item in ctrl.animeHistory | filter: ctrl.filterConfig.search.name | historySeparator:'group':ctrl.filterConfig.historyFilter | orderBy: ['-latest','-oldest'] track by $index">
-            <h4 class="history-group-header clickable" ng-click="viewItem = (viewItem === item.title) ? '' : item.title"
-                ng-bind="item.title + ' - (' + animeHistoryItems.length + ')'">
-            </h4>
-            <div ng-show="viewItem === item.title">
-                <div ng-repeat="episode in (animeHistoryItems = (item.items | historySeparator:'item':ctrl.filterConfig.historyFilter | orderBy: ['-date','-value'])) track by episode.value">
-                    <time class="float-right" title="{{episode.date | date: 'dd MMMM HH:mm'}}" ng-bind="ctrl.happenedWhen(episode.date)">
-                    </time>
-                    <p><a href="/#!/animeitems/{{episode.id}}" ng-bind="episode.title"></a> - Episode {{episode.value}}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-12 col-md-12 col-sm-12 history-list" ng-show="ctrl.view === 'Manga'">
-        <div class="col-lg-12 col-md-12 col-sm-12 history-list-item"
-             ng-repeat="item in ctrl.mangaHistory | filter: ctrl.filterConfig.search.name | historySeparator:'group':ctrl.filterConfig.historyFilter | orderBy: ['-latest','-oldest'] track by $index">
-            <h4 class="history-group-header clickable" ng-click="viewItem = (viewItem === item.title) ? '' : item.title"
-                ng-bind="item.title + ' - (' + mangaHistoryItems.length + ')'">
-            </h4>
-            <div ng-show="viewItem === item.title">
-                <div ng-repeat="chapter in (mangaHistoryItems = (item.items | historySeparator:'item':ctrl.filterConfig.historyFilter | orderBy: ['-date','-value'])) track by chapter.value">
-                    <time class="float-right" title="{{chapter.date | date: 'dd MMMM HH:mm'}}" ng-bind="ctrl.happenedWhen(chapter.date)">
-                    </time>
+            <h4 class="history-group-header clickable" ng-click="viewItem = (viewItem === item.title) ? '' : item.title" ng-bind="item.title + ' - (' + animeHistoryItems.length + ')'"></h4>
+            <md-list flex="100" ng-show="viewItem === item.title">
+              <md-list-item ng-repeat="episode in (animeHistoryItems = (item.items | historySeparator:'item':ctrl.filterConfig.historyFilter | orderBy: ['-date','-value'])) track by episode.value">
+                  <p><a href="/#!/animeitems/{{episode.id}}" ng-bind="episode.title"></a> - Episode {{episode.value}}</p>
+                  <time title="{{episode.date | date: 'dd MMMM HH:mm'}}" ng-bind="ctrl.happenedWhen(episode.date)"></time>
+              </md-list-item>
+            </md-list>
+        </md-list-item>
+      </md-list>
+      <md-list flex="60" ng-show="ctrl.view === 'Manga'">
+          <md-list-item layout-wrap
+               ng-repeat="item in ctrl.mangaHistory | filter: ctrl.filterConfig.search.name | historySeparator:'group':ctrl.filterConfig.historyFilter | orderBy: ['-latest','-oldest'] track by $index">
+              <h4 class="history-group-header clickable" ng-click="viewItem = (viewItem === item.title) ? '' : item.title" ng-bind="item.title + ' - (' + mangaHistoryItems.length + ')'"></h4>
+              <md-list flex="100" ng-show="viewItem === item.title">
+                <md-list-item ng-repeat="chapter in (mangaHistoryItems = (item.items | historySeparator:'item':ctrl.filterConfig.historyFilter | orderBy: ['-date','-value'])) track by chapter.value">
                     <p><a href="/#!/mangaitems/{{chapter.id}}" ng-bind="chapter.title"></a> - Chapter {{chapter.value}}</p>
-                </div>
-            </div>
-        </div>
+                    <time title="{{chapter.date | date: 'dd MMMM HH:mm'}}" ng-bind="ctrl.happenedWhen(chapter.date)"></time>
+                </md-list-item>
+              </md-list>
+          </md-list-item>
+      </md-list>
     </div>
   </div>
 </section>

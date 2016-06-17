@@ -1,5 +1,5 @@
 .content {
-	height: calc(100% - 64px - 51px); //full minus space for navbar and footer.
+	min-height: calc(100% - 64px - 51px); //full minus space for navbar and footer.
 	overflow: visible;
 	&.unauthorised {
 		height: 100vh;

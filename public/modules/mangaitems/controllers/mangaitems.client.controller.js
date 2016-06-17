@@ -1,9 +1,9 @@
 (function() {
 	'use strict';
 	angular.module('mangaitems').controller('MangaitemsController', MangaitemsController);
-	MangaitemsController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'MangaFactory', 'spinnerService', 'TagService', '$uibModal'];
+	MangaitemsController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'MangaFactory', 'spinnerService', 'TagService', '$mdDialog'];
 
-	function MangaitemsController($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, MangaFactory, spinnerService, TagService, $uibModal) {
+	function MangaitemsController($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, MangaFactory, spinnerService, TagService, $mdDialog) {
 		var ctrl = this;
 
 		ctrl.addTag = addTag;
@@ -174,24 +174,27 @@
         return ItemService.latestDate(latest, updated);
     }
 
-		function viewItemHistory() {
-			var modalInstance = $uibModal.open({
-        animation: true,
-        templateUrl: '/modules/history/views/item-history.html',
-        controller: 'ViewHistoryController as viewHistory',
-        size: 'lg',
-				resolve: {
-					data: function () {
-						return { viewItem: ctrl.filterConfig.viewItem, type: 'manga' };
-					}
+		function viewItemHistory(ev) {
+			var modalInstance = $mdDialog.show({
+				bindToController: true,
+				controller: 'ViewHistoryController',
+				controllerAs: 'viewHistory',
+				templateUrl: '/modules/history/views/item-history.html',
+				parent: angular.element(document.body),
+				targetEvent: ev,
+				clickOutsideToClose: true,
+				fullscreen: false,
+				locals: {
+					viewItem: ctrl.filterConfig.viewItem,
+					type: 'manga'
 				}
-      }).result.then(function(result) {
-        console.log('closed history: ', result, ctrl.filterConfig.viewItem.meta);
+			}).then(function(result) {
+				console.log('closed history: ', result, ctrl.filterConfig.viewItem.meta);
 				if (result) {
 					ctrl.mangaitem = ctrl.filterConfig.viewItem;
 					ctrl.update();
 				}
-      });
+			});
 		}
 
 	}

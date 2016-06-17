@@ -1,20 +1,28 @@
-<div class="col-lg-12 col-md-12 col-sm-12 primary-background">
-    <div class="item-history-container">
-        <a class="close-button mt" data-ng-click="viewHistory.cancel()"><i class="fa fa-times"></i></a>
-        <h4 class="popout-header" ng-bind="::viewHistory.type === 'anime' ? viewHistory.viewItem.title + ' Episode history' : viewHistory.viewItem.title + ' Chapter history'"></h4>
-        <div ng-if="viewHistory.viewItem.meta.history.length === 0">No recorded history.</div>
-        <div class="item-history-list view-height-50" ng-if="viewHistory.viewItem.meta.history.length > 0">
-          <div class="item-history mt" ng-repeat="history in viewHistory.viewItem.meta.history | orderBy: '-value' track by history.value">
-              <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="viewHistory.deleteHistory(viewHistory.viewItem, history)">
-                <i class="fa fa-trash-o"></i>
-              </a>
-              <time ng-bind="history.date | date : 'dd-MM-yyyy HH:mm'"></time>
-              <span ng-bind="::viewHistory.type === 'anime' ? ' - Episode ' : ' - Chapter '"></span><span ng-bind="history.value | numberFixedLen: 3"></span>
-              <uib-rating ng-model="history.rating" read-only="true" max="10" ng-if="::viewHistory.type === 'anime'"></uib-rating>
-          </div>
-        </div>
-        <div class="padding-10">
-          <button class="btn btn-primary" ng-click="viewHistory.submit()" >OK</button>
-        </div>
-    </div>
-</div>
+<md-dialog class="view-height-50" flex="40">
+  <header>
+    <h4 class="padding-10 margin-5 relative">
+      <span ng-bind="::viewHistory.type === 'anime' ? viewHistory.viewItem.title + ' Episode history' : viewHistory.viewItem.title + ' Chapter history'"></span>
+      <md-button class="md-warn md-icon-button absolute position-top position-right" data-ng-click="viewHistory.cancel()">
+        <md-icon>cancel</md-icon>
+      </md-button>
+    </h4>
+  </header>
+  <md-list class="overflow-auto-hover" layout-padding ng-if="viewHistory.viewItem.meta.history.length > 0">
+    <p ng-if="viewHistory.viewItem.meta.history.length === 0">No recorded history.</p>
+    <md-list-item class="center-contents" layout="row" flex ng-repeat="history in viewHistory.viewItem.meta.history | orderBy: '-value' track by history.value">
+      <time flex="25" ng-bind="history.date | date : 'dd-MM-yyyy HH:mm'"></time>
+      <p class="margin-right-5" flex="10" ng-bind="::viewHistory.type === 'anime' ? ' Episode ' : ' Chapter '"></p>
+      <p class="margin-0" flex="10" ng-bind="history.value | numberFixedLen: 3"></p>
+      <uib-rating ng-model="history.rating" read-only="true" max="10" ng-if="::viewHistory.type === 'anime'"></uib-rating>
+      <md-button class="md-warn md-icon-button" aria-hidden="true" ng-click="viewHistory.deleteHistory(viewHistory.viewItem, history)">
+        <md-tooltip md-direction="bottom">
+          delete task
+        </md-tooltip>
+        <md-icon>delete</md-icon>
+      </md-button>
+    </md-list-item>
+  </md-list>
+  <div flex flex-offset="85">
+    <md-button class="md-primary" ng-click="viewHistory.submit()" >OK</md-button>
+  </div>
+</md-dialog>

@@ -1,6 +1,6 @@
 <section data-ng-controller="RatingsController as ctrl" data-ng-init="ctrl.find(ctrl.view)" data-ng-show="ctrl.authentication.user" keycuts>
   <div layout="row" flex="100">
-    <header flex="90">
+    <header class="padding-5" flex="90">
         <h1 class="font-32">
           <span ng-bind="ctrl.view + ' ratings'"></span>
           <md-button class="md-primary md-raised show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</md-button>
@@ -33,7 +33,7 @@
         </div>
       </div>
     </div>
-    <div layout="column" flex="75" flex-offset="5" loading-spinner name="rating" size="fullscreen">
+    <div layout="column" flex="75" ng-class="(ctrl.viewItem === undefined) ? 'flex-offset-5' : 'flex-offset-25'" loading-spinner name="rating" size="fullscreen">
         <div flex="95" page-controls page-config="ctrl.pageConfig" showing-count="showingCount"></div>
         <table flex="95" class="ratings-table">
             <thead>
@@ -41,25 +41,29 @@
                     <a href="" ng-click="ctrl.sortType = 'status'; ctrl.sortReverse = !ctrl.sortReverse ">
                     S
                     </a>
-                    <i ng-show="ctrl.sortType == 'status'" class="fa" ng-class="ctrl.sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                    <md-icon ng-show="ctrl.sortType == 'status'" ng-if="ctrl.sortReverse">arrow_drop_up</md-icon>
+                    <md-icon ng-show="ctrl.sortType == 'status'" ng-if="!ctrl.sortReverse">arrow_drop_down</md-icon>
                 </th>
                 <th class="left">
                     <a href="" ng-click="ctrl.sortType = 'title'; ctrl.sortReverse = !ctrl.sortReverse ">
                     Title
                     </a>
-                    <i ng-show="ctrl.sortType == 'title'" class="fa" ng-class="ctrl.sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                    <md-icon ng-show="ctrl.sortType == 'title'" ng-if="ctrl.sortReverse">arrow_drop_up</md-icon>
+                    <md-icon ng-show="ctrl.sortType == 'title'" ng-if="!ctrl.sortReverse">arrow_drop_down</md-icon>
                 </th><!-- Make ~80% width of table. -->
                 <th>
                     <a href="" ng-click="ctrl.sortType = 'rating'; ctrl.sortReverse = !ctrl.sortReverse ">
                     R
                     </a>
-                    <i ng-show="ctrl.sortType == 'rating'" class="fa" ng-class="ctrl.sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                    <md-icon ng-show="ctrl.sortType == 'rating'" ng-if="ctrl.sortReverse">arrow_drop_up</md-icon>
+                    <md-icon ng-show="ctrl.sortType == 'rating'" ng-if="!ctrl.sortReverse">arrow_drop_down</md-icon>
                 </th>
             </thead>
             <tbody>
                 <tr ng-repeat="item in ctrl.items | filter: { title: ctrl.search }:ctrl.isEqual | ratingFilter: ctrl.ratingLevel | orderBy: ctrl.sortType:ctrl.sortReverse | startFrom: ctrl.pageConfig.currentPage*ctrl.pageConfig.pageSize | limitTo: ctrl.pageConfig.pageSize">
                     <td>
-                        <i class="fa" ng-class="item.status ? ' fa-check green-text' : ' fa-minus'"></i>
+                      <md-icon ng-if="::item.status">check</md-icon>
+                      <md-icon ng-if="::!item.status">remove</md-icon>
                     </td>
                     <td class="left">
                         <span class="clickable" ng-click="(ctrl.view === 'Anime') ? ctrl.viewEpisodeRatings(item) : ctrl.go(item._id)" ng-bind="item.title"></span>
@@ -81,7 +85,7 @@
         </h4>
       </header>
       <div layout="row">
-        <div class="vertical-scroll overflow-auto-hover">
+        <div class="vertical-scroll overflow-auto-hover" flex="50">
             <table class="inner-vertical-scroll">
               <thead>
                 <tr>
@@ -102,8 +106,8 @@
                 </tbody>
             </table>
         </div>
-        <div class="absolute position-right width-30" loading-spinner name="summary">
-            <table class="margin-10" flex="50" id="anime-episode-ratings">
+        <div flex="30" flex-offset="10" loading-spinner name="summary">
+            <table class="margin-10" flex id="anime-episode-ratings">
                 <tbody>
                     <tr ng-repeat="item in ctrl.summaryFunctions">
                         <th ng-bind="item.metric"></th><td ng-bind="item.value"></td>

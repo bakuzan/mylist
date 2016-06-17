@@ -2,18 +2,16 @@
   'use strict';
 
   angular.module('tasks').controller('ViewHistoryController', ViewHistoryController);
-  ViewHistoryController.$inject =  ['$scope', 'data', '$stateParams', 'Authentication', 'ItemService', 'NotificationFactory', 'spinnerService', '$uibModalInstance'];
+  ViewHistoryController.$inject =  ['$scope', '$stateParams', 'Authentication', 'ItemService', 'NotificationFactory', 'spinnerService', '$mdDialog'];
 
-function ViewHistoryController($scope, data, $stateParams, Authentication, ItemService, NotificationFactory, spinnerService, $uibModalInstance) {
+function ViewHistoryController($scope, $stateParams, Authentication, ItemService, NotificationFactory, spinnerService, $mdDialog) {
   var ctrl = this,
       historyStore = [];
 
   ctrl.cancel = cancel;
   ctrl.deleteHistory = deleteHistory;
   ctrl.submit = submit;
-  ctrl.type = data.type;
   ctrl.updated = false;
-  ctrl.viewItem = data.viewItem;
 
   function deleteHistory(item, history) {
       //are you sure option...
@@ -27,14 +25,14 @@ function ViewHistoryController($scope, data, $stateParams, Authentication, ItemS
   }
 
   function submit() {
-    $uibModalInstance.close(ctrl.updated);
+    $mdDialog.hide(ctrl.updated);
   }
 
   function cancel() {
     if(ctrl.updated) {
       ctrl.viewItem.meta.history = historyStore;
     }
-    $uibModalInstance.dismiss();
+    $mdDialog.cancel();
   }
 
 }

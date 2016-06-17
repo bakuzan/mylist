@@ -2,9 +2,9 @@
 	'use strict';
 	angular.module('animeitems')
 	.controller('AnimeitemsController', AnimeitemsController);
-	AnimeitemsController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory', 'spinnerService', 'TagService', '$uibModal'];
+	AnimeitemsController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory', 'spinnerService', 'TagService', '$mdDialog'];
 
-	function AnimeitemsController($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, AnimeFactory, spinnerService, TagService, $uibModal) {
+	function AnimeitemsController($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, AnimeFactory, spinnerService, TagService, $mdDialog) {
 		var ctrl = this;
 
 		ctrl.authentication = Authentication;
@@ -92,18 +92,21 @@
         return ItemService.latestDate(latest, updated);
     }
 
-		function viewItemHistory() {
-			var modalInstance = $uibModal.open({
-        animation: true,
-        templateUrl: '/modules/history/views/item-history.html',
-        controller: 'ViewHistoryController as viewHistory',
-        size: 'lg',
-				resolve: {
-					data: function () {
-						return { viewItem: ctrl.filterConfig.viewItem, type: 'anime' };
-					}
+		function viewItemHistory(ev) {
+			var modalInstance = $mdDialog.show({
+				bindToController: true,
+	      controller: 'ViewHistoryController',
+				controllerAs: 'viewHistory',
+	      templateUrl: '/modules/history/views/item-history.html',
+	      parent: angular.element(document.body),
+	      targetEvent: ev,
+	      clickOutsideToClose: true,
+				fullscreen: false,
+				locals: {
+					viewItem: ctrl.filterConfig.viewItem,
+					type: 'anime'
 				}
-      }).result.then(function(result) {
+	    }).then(function(result) {
         console.log('closed history: ', result, ctrl.filterConfig.viewItem.meta);
 				if (result) {
 					ctrl.animeitem = ctrl.filterConfig.viewItem;

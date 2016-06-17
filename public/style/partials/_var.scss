@@ -6,7 +6,6 @@ $brand-success: #47a447;
 $brand-success-alter: #0C640C;
 $brand-success-accent: #FFF; //#CD5959;
 $brand-success-accent-alter: #fcfcfc; //#F59191;
-
 $tile-background: #f9f9f9;
 
 //named colours.
@@ -25,6 +24,10 @@ $grey-dark: #777;
 
 $off-white: #fcfcfc;
 
+//coloured variables:
+$success-colour: $green;
+$warning-colour: $orange;
+$error-colour: $red;
 
 //lines and borders.
 $grey-line: 1px solid $grey-light;

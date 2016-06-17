@@ -55,12 +55,23 @@ ul.dropdown-menu {
   padding: 0;
 }
 
-/** MATERIAL OVERRIDES **/
+/** MATERIAL OVERRIDES
+ *
+ * or-shrink  : for making material elements smaller/less padding/less margin
+ * or-success : for overriding theme colours to force green / success-colour.
+ */
 md-datepicker.or-shrink > .md-datepicker-input-container {
   padding: 0;
 }
 md-datepicker.or-shrink > .md-datepicker-button {
   height: 36px;
+}
+
+md-checkbox.or-success.md-checked > .md-ink-ripple, md-checkbox[disabled].or-success.md-checked > .md-ink-ripple {
+  color: #47a447;
+}
+md-checkbox.or-success.md-checked .md-icon, md-checkbox[disabled].or-success.md-checked .md-icon {
+  background-color: #47a447;
 }
 
 /*# sourceMappingURL=control-overrides.css.map */

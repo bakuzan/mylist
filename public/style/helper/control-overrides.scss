@@ -52,7 +52,13 @@ ul.dropdown-menu {
     padding: 0;
 }
 
-/** MATERIAL OVERRIDES **/
+/** MATERIAL OVERRIDES
+ *
+ * or-shrink  : for making material elements smaller/less padding/less margin
+ * or-success : for overriding theme colours to force green / success-colour.
+ */
+
+//OVERRIDE SHRINK
 
 md-datepicker.or-shrink {
   > .md-datepicker-input-container {
@@ -60,5 +66,16 @@ md-datepicker.or-shrink {
   }
   > .md-datepicker-button {
     height: 36px;
+  }
+}
+
+//OVERRIDE SUCCESS
+
+md-checkbox.or-success.md-checked, md-checkbox[disabled].or-success.md-checked {
+  > .md-ink-ripple {
+    color: $success-colour;
+  }
+  .md-icon {
+    background-color: $success-colour;
   }
 }

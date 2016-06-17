@@ -1,6 +1,6 @@
 <div class="taskItem" layout="column">
   <div layout="row">
-    <md-checkbox ng-model="taskItem.complete" ng-change="ctrl.tickOff(taskItem)" ng-disabled="taskItem.complete || taskItem.checklist"
+    <md-checkbox class="or-success" ng-model="taskItem.complete" ng-change="ctrl.tickOff(taskItem)" ng-disabled="taskItem.complete || taskItem.checklist"
                  aria-label="tick off task">
     </md-checkbox>
     <span class="task-description-text complete-{{taskItem.complete}} display-inline-block" ng-class="taskItem.checklist === true ? 'clickable' : ''"
@@ -69,7 +69,7 @@
     </md-button>
     <md-list class="checklist-list">
       <md-list-item ng-repeat="option in taskItem.checklistItems">
-        <md-checkbox ng-model="option.complete" ng-change="ctrl.tickOffChecklist(taskItem, $index)" ng-disabled="option.complete"
+        <md-checkbox class="or-success" ng-model="option.complete" ng-change="ctrl.tickOffChecklist(taskItem, $index)" ng-disabled="option.complete"
                      aria-label="tick off checklist item">
         </md-checkbox>
         <span class="complete-{{option.complete}}">

@@ -5,9 +5,14 @@
                 <h3 class="lighter font-16 margin-0">Views</h3>
             </header>
             <md-list>
-                <md-list-item class="padding-0" layout="column" ng-repeat="item in body.menu.items | orderBy: 'position'" aria-label="navigation link item">
-                    <md-button class="md-primary width-100 margin-0" layout="row" title="{{item.title}}" aria-label="navigation button" ng-click="left.expand(item.title)">
+                <md-list-item class="padding-0" layout="column" ng-repeat="item in ::body.menu.items | orderBy: 'position'" aria-label="navigation link item">
+                    <md-button class="md-primary width-100 margin-0" layout="row" title="{{item.title}}" aria-label="navigation button"
+                               ng-click="left.expand(item.title)" ng-if="::item.items.length > 0">
                       <span class="text-left margin-0" flex ng-bind="item.title"></span>
+                    </md-button>
+                    <md-button class="md-primary width-100 margin-0" layout="row" title="{{item.title}}" aria-label="navigation button"
+                               ng-click="left.close()" ui-sref="{{item.link}}" ui-sref-active="md-raised" ng-if="::item.items.length === 0">
+                        <md-icon>keyboard_arrow_right</md-icon><span class="text-left margin-0" flex ng-bind="item.title"></span>
                     </md-button>
                     <md-list class="width-100" ng-show="left.expandedGroup === item.title">
                       <md-list-item class="padding-0" ng-repeat="subitem in item.items | orderBy: 'position'" aria-label="navigation link subitem">
@@ -25,15 +30,3 @@
         </md-content>
     </md-sidenav>
 </section>
-
-      <!-- <ul class="additional-navbar-links nav navbar-nav">
-          <li ng-class="{ active: header.isActive('/history')}">
-              <a href="/#!/history" class="navbar-link" data-ng-show="header.authentication.user"><i class="fa fa-history"></i> History</a>
-          </li>
-          <li ng-class="{ active: header.isActive('/statistics')}">
-              <a href="/#!/statistics" class="navbar-link" data-ng-show="header.authentication.user"><i class="fa fa-bar-chart"></i> Statistics</a>
-          </li>
-          <li ng-class="{ active: header.isActive('/ratings')}">
-              <a href="/#!/ratings" class="navbar-link" data-ng-show="header.authentication.user"><i class="fa fa-star"></i> Ratings</a>
-          </li>
-      </ul> -->

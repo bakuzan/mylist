@@ -1,5 +1,5 @@
 .content {
-	min-height: calc(100% - 64px - 51px); //full minus space for navbar and footer.
+	min-height: calc(100% - 64px); //full minus space for navbar. this hides the footer just out of view always.
 	overflow: visible;
 	&.unauthorised {
 		height: 100vh;

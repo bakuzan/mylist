@@ -1,6 +1,6 @@
-<div ng-class="(filterConfig.expandFilters) ? 'popout-filters-container animate-transition' : 'animate-transition'" lose-interest>
+<div class="md-padding animate-transition" ng-class="(filterConfig.expandFilters) ? 'popout-filters-container' : ''" lose-interest>
     <div ng-if="page !== 'task'">
-        <md-input-container>
+        <md-input-container flex>
           <label>search</label>
           <input type="text" ng-model="filterConfig.search[filterConfig.selectListOptions.searchName]">
        </md-input-container>
@@ -11,9 +11,9 @@
         </md-input-container>
 
         <div ng-hide="filterConfig.expandFilters" ng-if="page !== 'watch'">
-            <div class="clickable" ng-click="filterConfig.expandFilters=!filterConfig.expandFilters">
+            <md-button class="md-primary width-100" ng-click="filterConfig.expandFilters=!filterConfig.expandFilters">
                 <md-icon>filter_list</md-icon>
-            </div>
+            </md-button>
         </div>
 
         <div class="animate" ng-class="(filterConfig.expandFilters) ? 'ease-in' : 'ease-out'" ng-if="page !== 'watch'">
@@ -133,7 +133,7 @@
             </div>
         </div>
     </div>
-    <div layout="column" layout-padding ng-if="page === 'task'">
+    <div layout="column" ng-if="page === 'task'">
         <md-input-container>
             <label>search</label>
            <input type="text" ng-model="filterConfig.search.description">

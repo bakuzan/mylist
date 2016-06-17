@@ -1,20 +1,21 @@
-<section data-ng-controller="MangaitemsController as ctrl" data-ng-init="ctrl.find()" data-ng-show="ctrl.authentication.user">
-    <span keycuts></span>
-    <div class="fixed-header">
-        <h1>Manga list <button class="btn btn-primary show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</button></h1>
+<section data-ng-controller="MangaitemsController as ctrl" data-ng-init="ctrl.find()" data-ng-show="ctrl.authentication.user" keycuts>
+  <div layout="row">
+    <div layout="column" flex="20" ng-class="{ 'in-the-way' : inTheWay }">
+      <header>
+        <h1 class="font-32">
+          Manga list
+          <md-button class="md-primary md-raised show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</md-button>
+        </h1>
+      </header>
+        <div list-filters filter-config="ctrl.filterConfig" items="ctrl.mangaitems" page="ctrl.whichController"></div>
     </div>
-    <div class="container">
-        <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }">
-            <div list-filters filter-config="ctrl.filterConfig" items="ctrl.mangaitems" page="ctrl.whichController"></div>
-        </div>
-        <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
-        <div class="col-lg-8 col-md-6 col-sm-6 item-list-container" loading-spinner name="manga" size="fullscreen">
-            <div page-controls page-config="ctrl.pageConfig" showing-count="ctrl.filterConfig.showingCount"></div>
-            <div class="list-group col-lg-12 col-md-12 col-sm-12">
-                <div manga-item-model
-                     data-ng-repeat="mangaitem in ctrl.mangaitems | orderBy: ctrl.filterConfig.sortType:ctrl.filterConfig.sortReverse | filter: ctrl.filterConfig.search | ratingFilter: ctrl.filterConfig.ratingLevel | tagFilter: ctrl.filterConfig.searchTags:ctrl.filterConfig.taglessItem | startFrom: ctrl.pageConfig.currentPage*ctrl.pageConfig.pageSize | limitTo: ctrl.pageConfig.pageSize track by mangaitem._id">
-                </div>
-            </div>
-        </div>
+    <div layout="column" flex="75" flex-offset="5" loading-spinner name="manga" size="fullscreen">
+        <div flex="95" page-controls page-config="ctrl.pageConfig" showing-count="ctrl.filterConfig.showingCount"></div>
+        <md-list flex="95">
+          <div manga-item-model
+               data-ng-repeat="mangaitem in ctrl.mangaitems | orderBy: ctrl.filterConfig.sortType:ctrl.filterConfig.sortReverse | filter: ctrl.filterConfig.search | ratingFilter: ctrl.filterConfig.ratingLevel | tagFilter: ctrl.filterConfig.searchTags:ctrl.filterConfig.taglessItem | startFrom: ctrl.pageConfig.currentPage*ctrl.pageConfig.pageSize | limitTo: ctrl.pageConfig.pageSize track by mangaitem._id">
+          </div>
+        </md-list>
     </div>
+  </div>
 </section>

@@ -1,21 +1,21 @@
-<div class="paging-controls col-lg-12 col-md-12 col-sm-12" id="list-paging-controls" keycuts>
+<div class="paging-controls" id="list-paging-controls" keycuts>
     <div id="list-paging-controls-inner-container" sticky>
         <div>
-            <button class="btn btn-accent width-20" ng-click="first()">
+            <md-button class="md-accent width-20" ng-click="first()" aria-label="first page">
                 <i class="fa fa-backward"></i>
-            </button>
-            <button class="btn btn-primary width-20" ng-disabled="pageConfig.currentPage <= 0" ng-click="prev()">
+            </md-button>
+            <md-button class="md-primary width-20" ng-disabled="pageConfig.currentPage <= 0" ng-click="prev()" aria-label="previous page">
                 <i class="fa fa-chevron-left"></i>
-            </button>
+            </md-button>
             <span>{{pageConfig.currentPage+1}}</span>
             <span>/</span>
             <span>{{pageCount}}</span>
-            <button class="btn btn-primary width-20" ng-disabled="pageConfig.currentPage >= pageCount - 1" ng-click="next()">
+            <md-button class="md-primary width-20" ng-disabled="pageConfig.currentPage >= pageCount - 1" ng-click="next()" aria-label="next page">
                 <i class="fa fa-chevron-right"></i>
-            </button>
-            <button class="btn btn-accent width-20" ng-click="last()">
+            </md-button>
+            <md-button class="md-accent width-20" ng-click="last()" aria-label="last page">
                 <i class="fa fa-forward"></i>
-            </button>
+            </md-button>
         </div>
     </div>
 </div>

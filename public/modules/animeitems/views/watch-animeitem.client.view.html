@@ -1,46 +1,52 @@
 <section ng-controller="WatchAnimeController as ctrl">
-  <div class="relative" style="height: 100px">
-    <aside class="float-right margin-top-20">
-      <div data-ng-show="((ctrl.authentication.user) && (ctrl.authentication.user._id == ctrl.animeitem.user._id))">
-        <a class="btn btn-accent" href="/#!/animeitems">
-            <i class="glyphicon glyphicon-chevron-left"></i>
-        </a>
-        <a class="btn btn-primary" href="/#!/animeitems/{{ctrl.animeitem._id}}">
-            <i class="fa fa-eye"></i>
-        </a>
-      </div>
-    </aside>
-    <header class="fixed-header">
-      <h2>
+  <aside class="padding-5" layout="row">
+    <header flex="90">
+      <h2 class="font-32">
         <span ng-bind="'Watch ' + ctrl.animeitem.title"></span>
         <span ng-if="ctrl.videoFile.number" ng-bind="'episode #' +ctrl.videoFile.number"></span>
       </h2>
     </header>
-  </div>
-  <div class="col-lg-10 col-md-10 col-sm-10">
-    <p class="primary-background text-center padding-5 margin-0" ng-bind="ctrl.videoFile.message" ng-if="ctrl.videoFile.message !== ''"></p>
-    <video class="width-100" id="stream" sw-onplay="ctrl.playVideo()" ng-src="{{ctrl.videoFile.processed}}" poster="{{trustAsResourceUrl(ctrl.animeitem.image)}}" type="video/mp4" controls></video>
-  </div>
-  <article class="relative width-20 margin-left-auto">
-    <header>
-      <h3 class="margin-5">Episodes</h3>
-    </header>
-    <div>
-      <div class="padding-2" ng-if="ctrl.animeitem.status">
-        <input type="checkbox" class="phantom-control" ng-model="ctrl.animeitem.reWatching" ng-change="ctrl.startRewatch()" />
-        <span ng-bind="'Rewatch (' + ctrl.animeitem.reWatchCount + ')'"></span>
-      </div>
-      <div class="padding-2" ng-if="ctrl.animeitem.reWatching">
-        <span ng-bind="ctrl.animeitem.episodes + '/' + ctrl.animeitem.finalEpisode"></spam>
-      </div>
+    <div flex data-ng-show="((ctrl.authentication.user) && (ctrl.authentication.user._id == ctrl.animeitem.user._id))">
+      <a class="md-button md-accent md-icon-button" href="/#!/animeitems/watch-list">
+        <md-tooltip md-direction="bottom">
+          go to watch list
+        </md-tooltip>
+        <md-icon>list</md-icon>
+      </a>
+      <a class="md-button md-primary md-icon-button" href="/#!/animeitems/{{ctrl.animeitem._id}}">
+        <md-tooltip md-direction="bottom">
+          view detail
+        </md-tooltip>
+        <md-icon>pageview</md-icon>
+      </a>
     </div>
-    <div class="view-height-33 overflow-auto-hover">
-      <ul class="list-group" id="anime-watch-file-list">
-        <li class="cursor-pointer padding-5" ng-class="ctrl.videoFile.file === file.file ? 'loaded' : ''" ng-repeat="file in ctrl.animeitem.video.files" click-pass="file-grabber">
-            <span ng-bind="'#' + file.number"></span><i class="fa fa-check padding-left-10" style="color: green" ng-show="ctrl.watchedList[file.file]"></i>
-        </li>
-      </ul>
+  </aside>
+  <div layout="row">
+    <div flex="75">
+      <p class="primary-background text-center padding-5 margin-0" ng-bind="ctrl.videoFile.message" ng-if="ctrl.videoFile.message !== ''"></p>
+      <video class="width-100 view-height-70" id="stream" sw-onplay="ctrl.playVideo()" ng-src="{{ctrl.videoFile.processed}}" poster="{{trustAsResourceUrl(ctrl.animeitem.image)}}" type="video/mp4" controls></video>
     </div>
-    <input type="file" accept="video/mp4" file-model="fileGrab" style="display: none" id="file-grabber" />
-  </article>
+    <article flex flex-offset="5">
+      <header>
+        <h3 class="margin-5">Episodes</h3>
+      </header>
+      <div>
+        <div class="padding-2" ng-if="ctrl.animeitem.status">
+          <input type="checkbox" class="phantom-control" ng-model="ctrl.animeitem.reWatching" ng-change="ctrl.startRewatch()" />
+          <span ng-bind="'Rewatch (' + ctrl.animeitem.reWatchCount + ')'"></span>
+        </div>
+        <div class="padding-2" ng-if="ctrl.animeitem.reWatching">
+          <span ng-bind="ctrl.animeitem.episodes + '/' + ctrl.animeitem.finalEpisode"></spam>
+        </div>
+      </div>
+      <div class="view-height-33 overflow-auto-hover">
+        <ul class="list-group" id="anime-watch-file-list">
+          <li class="cursor-pointer padding-5" ng-class="ctrl.videoFile.file === file.file ? 'loaded' : ''" ng-repeat="file in ctrl.animeitem.video.files" click-pass="file-grabber">
+              <span ng-bind="'#' + file.number"></span><i class="fa fa-check padding-left-10" style="color: green" ng-show="ctrl.watchedList[file.file]"></i>
+          </li>
+        </ul>
+      </div>
+      <input type="file" accept="video/mp4" file-model="fileGrab" style="display: none" id="file-grabber" />
+    </article>
+  </div>
 </section>

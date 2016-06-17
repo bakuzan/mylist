@@ -1,49 +1,59 @@
 <section data-ng-controller="CharactersController as ctrl" data-ng-init="ctrl.find()" data-ng-show="ctrl.authentication.user" keycuts>
-    <header class="fixed-header">
-        <h1>Characters {{ctrl.filterConfig.isList}} <button class="btn btn-primary show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</button></h1>
-    </header>
-    <div class="container">
-        <aside class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }">
-            <div class="view-controls">
-                <div tab-container ng-model="ctrl.filterConfig.isList">
-                    <div tab-view heading="list"></div>
-                    <div tab-view heading="slider"></div>
-                </div>
+  <div layout="row">
+    <aside layout="column" flex="20" ng-class="{ 'in-the-way' : inTheWay }">
+      <header>
+          <h1 class="font-32">
+            Characters {{ctrl.filterConfig.isList}}
+            <md-button class="md-primary md-raised show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</md-button>
+          </h1>
+      </header>
+      <div class="view-controls">
+          <div tab-container ng-model="ctrl.filterConfig.isList">
+              <div tab-view heading="list"></div>
+              <div tab-view heading="slider"></div>
+          </div>
+      </div>
+      <div list-filters filter-config="ctrl.filterConfig" items="ctrl.characters" page="ctrl.whichController"></div>
+    </aside>
+    <section layout="column" flex="75" flex-offset="5" loading-spinner name="characters" size="fullscreen">
+      <div flex="95" page-controls page-config="ctrl.pageConfig" showing-count="ctrl.filterConfig.showingCount" ng-hide="ctrl.filterConfig.isList === 'slider'"></div>
+        <md-list flex="95" data-ng-show="ctrl.filterConfig.isList==='list'">
+          <div data-ng-repeat="character in ctrl.characters | orderBy: ctrl.filterConfig.sortType:ctrl.filterConfig.sortReverse | filter: ctrl.filterConfig.search | mediaFilter: ctrl.filterConfig.media | seriesFilter: ctrl.filterConfig.seriesFilter | tagFilter: ctrl.filterConfig.searchTags:ctrl.filterConfig.taglessItem | startFrom: ctrl.pageConfig.currentPage*ctrl.pageConfig.pageSize | limitTo: ctrl.pageConfig.pageSize track by character._id" character-back="{{ctrl.trustAsResourceUrl(character.image)}}" class="list-group-item" ng-class="viewItem===character ? 'col-lg-12 col-md-12 col-sm-12 character-expanded' : ' col-lg-6 col-md-6 col-sm-6 character-default'">
+            <div class="clickable view-item-top" ng-click="viewItem===character ? viewItem='' : viewItem=character">
+              <h4 class="dark-bordered-font-heading" data-ng-bind="character.name"></h4>
+                <p class="list-group-item-text">
+                  <span class="dark-bordered-font" data-ng-bind="character.voice"></span>
+                </p>
+                <span class="dark-bordered-font" data-ng-show="character.manga!==undefined && character.manga!==null" data-ng-bind="character.manga.title"></span>
+                <span class="dark-bordered-font" data-ng-show="character.anime!==undefined && character.manga===null" data-ng-bind="character.anime.title"></span>
             </div>
-            <div list-filters filter-config="ctrl.filterConfig" items="ctrl.characters" page="ctrl.whichController"></div>
-        </aside>
-        <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
-        <section class="col-lg-8 col-md-6 col-sm-6 item-list-container" loading-spinner name="characters" size="fullscreen">
-          <div page-controls page-config="ctrl.pageConfig" showing-count="ctrl.filterConfig.showingCount" ng-hide="ctrl.filterConfig.isList === 'slider'"></div>
-            <div class="list-group col-lg-12 col-md-12 col-sm-12" data-ng-show="ctrl.filterConfig.isList==='list'">
-              <div data-ng-repeat="character in ctrl.characters | orderBy: ctrl.filterConfig.sortType:ctrl.filterConfig.sortReverse | filter: ctrl.filterConfig.search | mediaFilter: ctrl.filterConfig.media | seriesFilter: ctrl.filterConfig.seriesFilter | tagFilter: ctrl.filterConfig.searchTags:ctrl.filterConfig.taglessItem | startFrom: ctrl.pageConfig.currentPage*ctrl.pageConfig.pageSize | limitTo: ctrl.pageConfig.pageSize track by character._id" character-back="{{ctrl.trustAsResourceUrl(character.image)}}" class="list-group-item" ng-class="viewItem===character ? 'col-lg-12 col-md-12 col-sm-12 character-expanded' : ' col-lg-6 col-md-6 col-sm-6 character-default'">
-                <div class="clickable view-item-top" ng-click="viewItem===character ? viewItem='' : viewItem=character">
-                  <h4 class="dark-bordered-font-heading" data-ng-bind="character.name"></h4>
-                    <p class="list-group-item-text">
-                      <span class="dark-bordered-font" data-ng-bind="character.voice"></span>
-                    </p>
-                    <span class="dark-bordered-font" data-ng-show="character.manga!==undefined && character.manga!==null" data-ng-bind="character.manga.title"></span>
-                    <span class="dark-bordered-font" data-ng-show="character.anime!==undefined && character.manga===null" data-ng-bind="character.anime.title"></span>
-                </div>
-                <div class="view-item-detail" ng-if="viewItem===character">
-                  <p class="clickable" ng-init="showCharacterTags = false" ng-click="showCharacterTags=!showCharacterTags"><i class="fa" ng-class="showCharacterTags ? 'fa-minus-square' : 'fa-plus-square'"></i> View Tags</p>
-                  <div class="col-lg-12 col-md-12 col-sm-12 item-tags" ng-show="showCharacterTags">
-                      <span class="col-md-2 tag-bubble" ng-repeat="tag in character.tags">{{tag.text}}</span>
-                  </div>
-                  <div class="item-actions" data-ng-show="((ctrl.authentication.user) && (ctrl.authentication.user._id === character.user._id))">
-                      <a class="btn btn-accent" href="/#!/characters/{{character._id}}">
-                          <i class="fa fa-eye"></i>
-                      </a>
-                      <a class="btn btn-primary" href="/#!/characters/{{character._id}}/edit">
-                          <i class="glyphicon glyphicon-edit"></i>
-                      </a>
-                  </div>
-                </div><!-- VIEW ITEM END-->
-              </div><!-- LIST ITEM END -->
-            </div><!-- LIST END -->
-          <div class="slider-container col-lg-12 col-md-12 col-sm-12" data-ng-show="ctrl.filterConfig.isList==='slider'">
-            <ul slider slides="ctrl.characters" filter-config="ctrl.filterConfig" interval="1000"></ul>
-          </div><!-- SLIDER END -->
-        </section>
-    </div>
+            <div class="view-item-detail" ng-if="viewItem===character">
+              <md-button class="md-primary" ng-init="showCharacterTags = false" ng-click="showCharacterTags=!showCharacterTags">
+                View Tags
+              </md-button>
+              <div class="col-lg-12 col-md-12 col-sm-12 item-tags" ng-show="showCharacterTags">
+                  <span class="col-md-2 tag-bubble" ng-repeat="tag in character.tags">{{tag.text}}</span>
+              </div>
+              <div class="item-actions" data-ng-show="((ctrl.authentication.user) && (ctrl.authentication.user._id === character.user._id))">
+                  <a class="md-button md-accent md-icon-button" href="/#!/characters/{{character._id}}">
+                    <md-tooltip md-direction="bottom">
+                      view detail
+                    </md-tooltip>
+                    <md-icon>pageview</md-icon>
+                  </a>
+                  <a class="md-button md-primary md-icon-button" href="/#!/characters/{{character._id}}/edit">
+                    <md-tooltip md-direction="bottom">
+                      edit item
+                    </md-tooltip>
+                    <md-icon>edit</md-icon>
+                  </a>
+              </div>
+            </div><!-- VIEW ITEM END-->
+          </div><!-- LIST ITEM END -->
+        </md-list>
+      <div class="slider-container margin-top-40" flex="95" data-ng-show="ctrl.filterConfig.isList==='slider'">
+        <ul flex="50" slider slides="ctrl.characters" filter-config="ctrl.filterConfig" interval="1000"></ul>
+      </div>
+    </section>
+  </div>
 </section>

@@ -1,121 +1,116 @@
 <section data-ng-controller="RatingsController as ctrl" data-ng-init="ctrl.find(ctrl.view)" data-ng-show="ctrl.authentication.user" keycuts>
-    <div class="fixed-header width-95 secondary-background">
-        <div class="view-controls absolute position-right" style="min-width: 165px">
-            <div tab-container ng-model="ctrl.view" ng-change="ctrl.find(ctrl.view)">
-                <div tab-view heading="Anime"></div>
-                <div tab-view heading="Manga"></div>
-            </div>
-        </div>
-        <h1>
+  <div layout="row" flex="100">
+    <header flex="90">
+        <h1 class="font-32">
           <span ng-bind="ctrl.view + ' ratings'"></span>
-          <button class="btn btn-primary show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</button>
+          <md-button class="md-primary md-raised show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</md-button>
         </h1>
+    </header>
+    <div flex tab-container ng-model="ctrl.view" ng-change="ctrl.find(ctrl.view)">
+        <div tab-view heading="Anime"></div>
+        <div tab-view heading="Manga"></div>
     </div>
-    <div class="container relative" style="top: 40px">
-        <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }" ng-hide="ctrl.viewItem !== undefined">
-            <div class="input-group">
-                <div class="input-group-addon">
-                    <i class="fa fa-search"></i>
-                </div>
-               <input type="text" class="form-control" placeholder="search items" ng-model="ctrl.search" ng-model-options="ctrl.modelOptions">
-           </div>
-            <div class="input-group mt">
-              <div class="input-group-addon">
-                  <i class="fa fa-list-ol"></i>
-              </div>
-                <input type="text" class="form-control" value="Showing {{ (showingCount = (ctrl.items | filter: ctrl.search | ratingFilter: ctrl.ratingLevel).length) }} {{ctrl.view.toLowerCase()}}." disabled>
-            </div>
-            <div class="input-group mt">
-                <div class="input-group-addon clickable" data-ng-click="ctrl.ratingLevel=undefined">
-                    <i class="fa fa-star"></i>
-                </div>
-                   <uib-rating class="form-control rating-stars clickable" data-ng-model="ctrl.ratingLevel" read-only="false" max="ctrl.maxRating" on-hover="ctrl.hoveringOver(value)" on-leave="ctrl.overStar = null" id="rating" name="rating"></uib-rating>
-                <div class="input-group-addon">
-                    <span class="label rating-label" ng-class="{'label-warning': ctrl.percent<40, 'label-info': ctrl.percent>=30 && ctrl.percent<70, 'label-success': ctrl.percent>=70}"
-                          ng-bind="ctrl.percent + '%'" data-ng-show="ctrl.overStar!=null">
-                    </span>
-                </div>
-            </div>
+  </div>
+  <div layout="row">
+    <div class="md-padding" layout="column" flex="20" ng-class="{ 'in-the-way' : inTheWay }" ng-hide="ctrl.viewItem !== undefined">
+      <md-input-container>
+        <label>search items</label>
+        <input type="text" ng-model="ctrl.search" ng-model-options="ctrl.modelOptions">
+     </md-input-container>
+     <md-input-container>
+       <label> </label>
+       <input type="text" value="Showing {{ (showingCount = (ctrl.items | filter: ctrl.search | ratingFilter: ctrl.ratingLevel).length) }} {{ctrl.view.toLowerCase()}}." disabled>
+     </md-input-container>
+      <div class="input-group mt">
+        <div class="input-group-addon clickable" data-ng-click="ctrl.ratingLevel=undefined">
+            <i class="fa fa-star"></i>
         </div>
-        <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
-        <div class="col-lg-8 col-md-6 col-sm-6 item-list-container" loading-spinner name="rating" size="fullscreen">
-            <div page-controls page-config="ctrl.pageConfig" showing-count="showingCount"></div>
-            <table class="ratings-table">
-                <thead>
-                    <th>
-                        <a href="" ng-click="ctrl.sortType = 'status'; ctrl.sortReverse = !ctrl.sortReverse ">
-                        S
-                        </a>
-                        <i ng-show="ctrl.sortType == 'status'" class="fa" ng-class="ctrl.sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
-                    </th>
-                    <th class="left">
-                        <a href="" ng-click="ctrl.sortType = 'title'; ctrl.sortReverse = !ctrl.sortReverse ">
-                        Title
-                        </a>
-                        <i ng-show="ctrl.sortType == 'title'" class="fa" ng-class="ctrl.sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
-                    </th><!-- Make ~80% width of table. -->
-                    <th>
-                        <a href="" ng-click="ctrl.sortType = 'rating'; ctrl.sortReverse = !ctrl.sortReverse ">
-                        R
-                        </a>
-                        <i ng-show="ctrl.sortType == 'rating'" class="fa" ng-class="ctrl.sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
-                    </th>
-                </thead>
+           <uib-rating class="form-control rating-stars clickable" data-ng-model="ctrl.ratingLevel" read-only="false" max="ctrl.maxRating" on-hover="ctrl.hoveringOver(value)" on-leave="ctrl.overStar = null" id="rating" name="rating"></uib-rating>
+        <div class="input-group-addon">
+            <span class="label rating-label" ng-class="{'label-warning': ctrl.percent<40, 'label-info': ctrl.percent>=30 && ctrl.percent<70, 'label-success': ctrl.percent>=70 }"
+                  ng-bind="ctrl.percent + '%'" data-ng-show="ctrl.overStar!=null">
+            </span>
+        </div>
+      </div>
+    </div>
+    <div layout="column" flex="75" flex-offset="5" loading-spinner name="rating" size="fullscreen">
+        <div flex="95" page-controls page-config="ctrl.pageConfig" showing-count="showingCount"></div>
+        <table flex="95" class="ratings-table">
+            <thead>
+                <th>
+                    <a href="" ng-click="ctrl.sortType = 'status'; ctrl.sortReverse = !ctrl.sortReverse ">
+                    S
+                    </a>
+                    <i ng-show="ctrl.sortType == 'status'" class="fa" ng-class="ctrl.sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                </th>
+                <th class="left">
+                    <a href="" ng-click="ctrl.sortType = 'title'; ctrl.sortReverse = !ctrl.sortReverse ">
+                    Title
+                    </a>
+                    <i ng-show="ctrl.sortType == 'title'" class="fa" ng-class="ctrl.sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                </th><!-- Make ~80% width of table. -->
+                <th>
+                    <a href="" ng-click="ctrl.sortType = 'rating'; ctrl.sortReverse = !ctrl.sortReverse ">
+                    R
+                    </a>
+                    <i ng-show="ctrl.sortType == 'rating'" class="fa" ng-class="ctrl.sortReverse ? 'fa-caret-up' : 'fa-caret-down' "></i>
+                </th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in ctrl.items | filter: { title: ctrl.search }:ctrl.isEqual | ratingFilter: ctrl.ratingLevel | orderBy: ctrl.sortType:ctrl.sortReverse | startFrom: ctrl.pageConfig.currentPage*ctrl.pageConfig.pageSize | limitTo: ctrl.pageConfig.pageSize">
+                    <td>
+                        <i class="fa" ng-class="item.status ? ' fa-check green-text' : ' fa-minus'"></i>
+                    </td>
+                    <td class="left">
+                        <span class="clickable" ng-click="(ctrl.view === 'Anime') ? ctrl.viewEpisodeRatings(item) : ctrl.go(item._id)" ng-bind="item.title"></span>
+                    </td>
+                    <td ng-init="newRating = item.rating">
+                        <input type="number" class="small-input phantom-control" min="0" max="{{::ctrl.maxRating}}" ng-model="newRating"
+                               ng-blur="ctrl.itemScore(item, newRating)" enter-tag="ctrl.itemScore(item, newRating)" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+  </div>
+  <section class="padding-10 margin-top-25" ng-show="ctrl.viewItem !== undefined && ctrl.search === ctrl.viewItem.title">
+      <header>
+        <h4>
+          <a href="/#!/{{ctrl.view.toLowerCase()}}items/{{ctrl.viewItem._id}}" class="clickable" ng-bind="ctrl.viewItem.title"></a>
+          <span ng-bind="ctrl.viewItem.rating === 0 ? '' : '- ' + ctrl.viewItem.rating"></span>
+        </h4>
+      </header>
+      <div layout="row">
+        <div class="vertical-scroll overflow-auto-hover">
+            <table class="inner-vertical-scroll">
+              <thead>
+                <tr>
+                  <th style="width: 100px">Episode</th>
+                  <th style="width: 100px">Ratings</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="episode in ctrl.viewItem.meta.history | orderBy: '-value'">
+                  <td class="text-center">
+                    <span ng-bind="episode.value"></span>
+                  </td>
+                  <td>
+                      <input type="number" class="phantom-control width-100 text-center" min="0" max="{{::ctrl.maxRating}}"
+                             ng-model="episode.rating" ng-blur="ctrl.episodeScore(true)" enter-tag="ctrl.episodeScore(true)" />
+                  </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="absolute position-right width-30" loading-spinner name="summary">
+            <table class="margin-10" flex="50" id="anime-episode-ratings">
                 <tbody>
-                    <tr ng-repeat="item in ctrl.items | filter: { title: ctrl.search }:ctrl.isEqual | ratingFilter: ctrl.ratingLevel | orderBy: ctrl.sortType:ctrl.sortReverse | startFrom: ctrl.pageConfig.currentPage*ctrl.pageConfig.pageSize | limitTo: ctrl.pageConfig.pageSize">
-                        <td>
-                            <i class="fa" ng-class="item.status ? ' fa-check green-text' : ' fa-minus'"></i>
-                        </td>
-                        <td class="left">
-                            <span class="clickable" ng-click="(ctrl.view === 'Anime') ? ctrl.viewEpisodeRatings(item) : ctrl.go(item._id)" ng-bind="item.title"></span>
-                        </td>
-                        <td ng-init="newRating = item.rating">
-                            <input type="number" class="small-input phantom-control" min="0" max="{{::ctrl.maxRating}}" ng-model="newRating"
-                                   ng-blur="ctrl.itemScore(item, newRating)" enter-tag="ctrl.itemScore(item, newRating)" />
-                        </td>
+                    <tr ng-repeat="item in ctrl.summaryFunctions">
+                        <th ng-bind="item.metric"></th><td ng-bind="item.value"></td>
                     </tr>
                 </tbody>
             </table>
         </div>
-    </div>
-    <section class="padding-10 margin-top-25" ng-show="ctrl.viewItem !== undefined && ctrl.search === ctrl.viewItem.title">
-        <header>
-          <h4>
-            <a href="/#!/{{ctrl.view.toLowerCase()}}items/{{ctrl.viewItem._id}}" class="clickable" ng-bind="ctrl.viewItem.title"></a>
-            <span ng-bind="ctrl.viewItem.rating === 0 ? '' : '- ' + ctrl.viewItem.rating"></span>
-          </h4>
-        </header>
-        <div class="row-container">
-          <div class="vertical-scroll overflow-auto-hover">
-              <table class="inner-vertical-scroll">
-                <thead>
-                  <tr>
-                    <th style="width: 100px">Episode</th>
-                    <th style="width: 100px">Ratings</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr ng-repeat="episode in ctrl.viewItem.meta.history | orderBy: '-value'">
-                    <td class="text-center">
-                      <span ng-bind="episode.value"></span>
-                    </td>
-                    <td>
-                        <input type="number" class="phantom-control width-100 text-center" min="0" max="{{::ctrl.maxRating}}"
-                               ng-model="episode.rating" ng-blur="ctrl.episodeScore(true)" enter-tag="ctrl.episodeScore(true)" />
-                    </td>
-                  </tr>
-                  </tbody>
-              </table>
-          </div>
-          <div class="absolute position-right width-30" loading-spinner name="summary">
-              <table class="col-lg-6 col-md-6 col-sm-6 margin-10" id="anime-episode-ratings">
-                  <tbody>
-                      <tr ng-repeat="item in ctrl.summaryFunctions">
-                          <th ng-bind="item.metric"></th><td ng-bind="item.value"></td>
-                      </tr>
-                  </tbody>
-              </table>
-          </div>
-        </div>
-    </section>
+      </div>
+  </section>
 </section>

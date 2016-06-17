@@ -1,24 +1,41 @@
-<div class="list-group-item col-lg-12 col-md-12 col-sm-12" list-back="{{ctrl.trustAsResourceUrl(mangaitem.image)}}">
+<div class="md-padding" list-back="{{ctrl.trustAsResourceUrl(mangaitem.image)}}">
   <div class="view-item-top">
     <small class="list-group-item-text">
       <time ng-if="mangaitem.latest.substring(0,10)===mangaitem.meta.updated.substring(0,10)" title="{{mangaitem.meta.updated | date: 'yyyy-MMM-dd HH:mm'}}" ng-bind="ctrl.latestDate(mangaitem.latest, mangaitem.meta.updated)"></time>
       <time ng-if="mangaitem.latest.substring(0,10)!==mangaitem.meta.updated.substring(0,10)" title="{{mangaitem.latest | date: 'yyyy-MMM-dd'}}" ng-bind="ctrl.latestDate(mangaitem.latest, mangaitem.meta.updated)"></time>
     </small>
-    <h4 class="list-group-item-heading clickable" ng-click="ctrl.filterConfig.viewItem===mangaitem ? ctrl.filterConfig.viewItem='' : ctrl.filterConfig.viewItem=mangaitem" data-ng-bind="mangaitem.title"></h4>
-    <p class="list-group-item-text">
-      <a class="clickable decoration-none" ng-if="!mangaitem.status" ng-click="ctrl.tickOff(mangaitem)"><i class="fa fa-plus-square"></i> </a>
+    <h4 class="margin-0 cursor-pointer" ng-click="ctrl.filterConfig.viewItem===mangaitem ? ctrl.filterConfig.viewItem='' : ctrl.filterConfig.viewItem=mangaitem" data-ng-bind="mangaitem.title"></h4>
+    <p class="margin-0">
+      <md-button class="md-primary md-icon-button" ng-if="!mangaitem.status" ng-click="ctrl.tickOff(mangaitem)">
+        <md-icon>add_box</md-icon>
+      </md-button>
       <span data-ng-bind="mangaitem.chapters"></span><span ng-bind="'/' + mangaitem.finalChapter" ng-if="mangaitem.finalChapter!==0"></span> Chapters,
       <span data-ng-bind="mangaitem.volumes"></span><span ng-bind="'/' + mangaitem.finalVolume" ng-if="mangaitem.finalVolume!==0"></span> Volumes
-      <span class="item-icons green-text" ng-if="mangaitem.status===true"><i class="fa fa-check"></i></span>
-      <span class="item-icons" ng-if="mangaitem.hardcopy===true"><i class="fa fa-book"></i></span>
-      <span class="item-icons" ng-if="mangaitem.reReading===true"><i class="fa fa-repeat"></i></span>
+      <md-icon ng-if="mangaitem.status===true">
+        <md-tooltip md-direction="bottom">
+          complete
+        </md-tooltip>
+        check
+      </md-icon>
+      <md-icon ng-if="mangaitem.hardcopy===true">
+        <md-tooltip md-direction="bottom">
+          own
+        </md-tooltip>
+        book
+      </md-icon>
+      <md-icon ng-if="mangaitem.reReading===true">
+        <md-tooltip md-direction="bottom">
+          re-reading
+        </md-tooltip>
+        repeat
+      </md-icon>
     </p>
   </div>
   <div class="view-item-detail" ng-if="ctrl.filterConfig.viewItem===mangaitem">
     <div class="item-detail">
       <p>
-          <em class="text-muted" data-ng-if="mangaitem.rating==0">No rating.</em>
-          <uib-rating data-ng-if="mangaitem.rating!=0" data-ng-model="mangaitem.rating" class="list-item-rating-stars" read-only="true" max="ctrl.filterConfig.ratingActions.maxRating" id="rating" name="rating"></uib-rating>
+        <em class="text-muted" data-ng-if="mangaitem.rating==0">No rating.</em>
+        <uib-rating data-ng-if="mangaitem.rating!=0" data-ng-model="mangaitem.rating" class="list-item-rating-stars" read-only="true" max="ctrl.filterConfig.ratingActions.maxRating" id="rating" name="rating"></uib-rating>
       </p>
       <p ng-if="mangaitem.reReadCount!=0">{{mangaitem.reReadCount}} re-reads.</p>
     </div>
@@ -28,14 +45,20 @@
         <span ng-if="mangaitem.end!==undefined && mangaitem.end!==null">{{mangaitem.end | date:'yyyy-MMM-dd'}} ended.</span>
       </small>
     </div>
-    <a class="clickable" ng-click="ctrl.viewItemHistory()">View history</a>
+    <md-button class="md-primary" ng-click="ctrl.viewItemHistory()">View history</md-button>
     <div class="item-actions" data-ng-show="((ctrl.authentication.user) && (ctrl.authentication.user._id == mangaitem.user._id))">
-        <a class="btn btn-accent" href="/#!/mangaitems/{{mangaitem._id}}">
-            <i class="fa fa-eye"></i>
-        </a>
-        <a class="btn btn-primary" href="/#!/mangaitems/{{mangaitem._id}}/edit">
-            <i class="glyphicon glyphicon-edit"></i>
-        </a>
+      <a class="md-button md-accent md-icon-button" href="/#!/mangaitems/{{mangaitem._id}}">
+        <md-tooltip md-direction="bottom">
+          view detail
+        </md-tooltip>
+        <md-icon>pageview</md-icon>
+      </a>
+      <a class="md-button md-primary md-icon-button" href="/#!/mangaitems/{{mangaitem._id}}/edit">
+        <md-tooltip md-direction="bottom">
+          edit item
+        </md-tooltip>
+        <md-icon>edit</md-icon>
+      </a>
     </div>
   </div>
 </div>

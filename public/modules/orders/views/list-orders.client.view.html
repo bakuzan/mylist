@@ -1,46 +1,51 @@
 <section data-ng-controller="OrdersController as ctrl" data-ng-show="ctrl.authentication.user">
-    <div class="fixed-header width-95 secondary-background">
-        <h1>Orders <button class="btn btn-primary show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</button></h1>
+  <div layout="row">
+    <div layout="column" flex="20" ng-class="{ 'in-the-way' : inTheWay }">
+      <header>
+        <h1 class="font-32">
+          Orders
+          <md-button class="md-primary md-raised show-actions" ng-init="inTheWay = false" ng-click="inTheWay = !inTheWay">Toggle actions</md-button>
+        </h1>
+      </header>
+      <md-input-container>
+        <label>search orders</label>
+        <input type="text" ng-model="search.series.title">
+     </md-input-container>
+     <md-input-container>
+       <label> </label>
+       <input type="text" value="Showing {{ (showingCount = (ctrl.orders | filter: search).length) }} orders." disabled>
+     </md-input-container>
     </div>
-    <div class="container relative" style="top: 40px">
-        <div class="col-lg-4 col-md-4 col-sm-4 item-filter-container" ng-class="{ 'in-the-way' : inTheWay }">
-            <div class="input-group">
-                <div class="input-group-addon">
-                    <i class="fa fa-search"></i>
-                </div>
-               <input type="text" class="form-control" placeholder="search orders" ng-model="search.series.title">
-           </div>
-            <div class="input-group mt">
-              <div class="input-group-addon">
-                  <i class="fa fa-list-ol"></i>
-              </div>
-                <input type="text" class="form-control" value="Showing {{ (showingCount = (ctrl.orders | filter: search).length) }} orders." disabled>
+
+    <div layout="column" flex="75" flex-offset="5" loading-spinner name="orders" size="fullscreen">
+        <div flex="95" page-controls page-config="ctrl.pageConfig" showing-count="showingCount"></div>
+        <md-list flex="95">
+          <div data-ng-repeat="item in ctrl.orders | orderBy: 'nextVolume.date' | filter: search | startFrom: ctrl.pageConfig.currentPage*ctrl.pageConfig.pageSize | limitTo: ctrl.pageConfig.pageSize" class="list-group-item col-lg-12 col-md-12 col-sm-12">
+            <div class="view-item-top">
+                <h4 class="list-group-item-heading clickable" ng-click="(viewItem === item) ? viewItem='' : viewItem=item" data-ng-bind="item.series.title"></h4>
+                <p class="list-group-item-text">
+                    Next volume: <span ng-bind="item.nextVolume.volume"></span><br/>
+                    Release: <span ng-bind="item.nextVolume.date | date: 'dd-MMM-yyyy'"></span><br/>
+                </p>
             </div>
-        </div>
-        <div class="col-lg-3 col-md-5 col-sm-5 item-placeholder-container"></div>
-        <div class="col-lg-8 col-md-6 col-sm-6 item-list-container" loading-spinner name="orders" size="fullscreen">
-            <div page-controls page-config="ctrl.pageConfig" showing-count="showingCount"></div>
-            <div class="list-group col-lg-12 col-md-12 col-sm-12">
-              <div data-ng-repeat="item in ctrl.orders | orderBy: 'nextVolume.date' | filter: search | startFrom: ctrl.pageConfig.currentPage*ctrl.pageConfig.pageSize | limitTo: ctrl.pageConfig.pageSize" class="list-group-item col-lg-12 col-md-12 col-sm-12">
-                <div class="view-item-top">
-                    <h4 class="list-group-item-heading clickable" ng-click="(viewItem === item) ? viewItem='' : viewItem=item" data-ng-bind="item.series.title"></h4>
-                    <p class="list-group-item-text">
-                        Next volume: <span ng-bind="item.nextVolume.volume"></span><br/>
-                        Release: <span ng-bind="item.nextVolume.date | date: 'dd-MMM-yyyy'"></span><br/>
-                    </p>
+            <div class="view-item-detail" ng-show="viewItem === item">
+                <div class="item-actions" data-ng-show="((ctrl.authentication.user) && (ctrl.authentication.user._id == item.user._id))">
+                    <a class="md-button md-accent md-icon-button" href="/#!/orders/{{item._id}}">
+                      <md-tooltip md-direction="bottom">
+                        view detail
+                      </md-tooltip>
+                      <md-icon>pageview</md-icon>
+                    </a>
+                    <a class="md-button md-primary md-icon-button" href="/#!/orders/{{item._id}}/edit">
+                      <md-tooltip md-direction="bottom">
+                        edit item
+                      </md-tooltip>
+                      <md-icon>edit</md-icon>
+                    </a>
                 </div>
-                <div class="view-item-detail" ng-show="viewItem === item">
-                    <div class="item-actions" data-ng-show="((ctrl.authentication.user) && (ctrl.authentication.user._id == item.user._id))">
-                        <a class="btn btn-accent" href="/#!/orders/{{item._id}}">
-                            <i class="fa fa-eye"></i>
-                        </a>
-                        <a class="btn btn-primary" href="/#!/orders/{{item._id}}/edit">
-                            <i class="glyphicon glyphicon-edit"></i>
-                        </a>
-                    </div>
-                </div>
-              </div>
             </div>
-        </div>
+          </div>
+        </md-list>
     </div>
+  </div>
 </section>

@@ -27,7 +27,7 @@
     </header>
     <div>
       <div class="padding-2" ng-if="ctrl.animeitem.status">
-        <input type="checkbox" class="phantom-control" ng-model="ctrl.animeitem.reWatching" ng-change="ctrl.startRewatch()" />
+        <input type="checkbox" class="phantom-control" ng-model="ctrl.animeitem.reWatching" ng-change="ctrl.startRewatch()" ng-disabled="ctrl.animeitem.reWatching" />
         <span ng-bind="'Rewatch (' + ctrl.animeitem.reWatchCount + ')'"></span>
       </div>
       <div class="padding-2" ng-if="ctrl.animeitem.reWatching">

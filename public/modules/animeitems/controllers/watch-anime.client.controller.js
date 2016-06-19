@@ -38,7 +38,7 @@
 				function playVideo() {
 					ctrl.watchedList[ctrl.videoFile.file] = true;
 					updateWatchedList();
-					if(ctrl.animeitem.reWatching) {
+					if(ctrl.animeitem.reWatching && (ListService.findWithAttr(ctrl.animeitem.video.files, 'file', ctrl.videoFile.file) > -1)) {
 						ctrl.animeitem.episodes = parseInt(ctrl.videoFile.number, 10);
 						ctrl.update();
 					}
@@ -57,6 +57,7 @@
 
 				// Update existing Animeitem
 				function update() {
+					ctrl.animeitem.latest = new Date();
 		      AnimeFactory.update(ctrl.animeitem, undefined, false, '');
 				}
 

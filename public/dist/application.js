@@ -511,7 +511,7 @@ angular.module('animeitems').config(['$stateProvider',
 				function playVideo() {
 					ctrl.watchedList[ctrl.videoFile.file] = true;
 					updateWatchedList();
-					if(ctrl.animeitem.reWatching) {
+					if(ctrl.animeitem.reWatching && (ListService.findWithAttr(ctrl.animeitem.video.files, 'file', ctrl.videoFile.file) > -1)) {
 						ctrl.animeitem.episodes = parseInt(ctrl.videoFile.number, 10);
 						ctrl.update();
 					}
@@ -530,6 +530,7 @@ angular.module('animeitems').config(['$stateProvider',
 
 				// Update existing Animeitem
 				function update() {
+					ctrl.animeitem.latest = new Date();
 		      AnimeFactory.update(ctrl.animeitem, undefined, false, '');
 				}
 
@@ -594,7 +595,7 @@ angular.module('animeitems').config(['$stateProvider',
         // Find a list of Animeitems
         function find() {
 					ctrl.filterConfig.selectListOptions = ListService.getSelectListOptions(ctrl.whichController);
-					ctrl.filterConfig.sortType = 'meta.updated'; //Set sort order.
+					ctrl.filterConfig.sortType = ctrl.filterConfig.selectListOptions.sortOptions[ctrl.filterConfig.selectListOptions.sortOption].v; //Set sort order.
           spinnerService.loading('watch', WatchAnime.query().$promise.then(function(result) {
   					ctrl.animeitems = result;
 						console.log('watch list: ', result, 'filterConfig: ', ctrl.filterConfig);

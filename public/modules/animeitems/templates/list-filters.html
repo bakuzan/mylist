@@ -1,6 +1,6 @@
-<div class="md-padding animate-transition" ng-class="(filterConfig.expandFilters) ? 'popout-filters-container' : ''" lose-interest>
-    <div ng-if="page !== 'task'">
-        <md-input-container flex>
+<div class="md-padding animate-transition" lose-interest>
+    <div layout="column" ng-if="page !== 'task'">
+        <md-input-container>
           <label>search</label>
           <input type="text" ng-model="filterConfig.search[filterConfig.selectListOptions.searchName]">
        </md-input-container>
@@ -16,20 +16,20 @@
             </md-button>
         </div>
 
-        <div class="animate" ng-class="(filterConfig.expandFilters) ? 'ease-in' : 'ease-out'" ng-if="page !== 'watch'">
+        <div class="animate" layout="column" ng-class="(filterConfig.expandFilters) ? 'ease-in' : 'ease-out'" ng-if="page !== 'watch'">
             <md-input-container ng-if="page !== 'topten'">
               <label>search tags</label>
                <input type="text" ng-model="characterTags" uib-typeahead="stat.tag for stat in filterConfig.statTags | filter: $viewValue | limitTo: 10" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
            </md-input-container>
             <div class="search-tag-list-container" ng-hide="filterConfig.searchTags===undefined || filterConfig.searchTags==='' || filterConfig.searchTags===null">
-               <ul class="tag-list" layout="column">
-                    <li class="tag-bubble" ng-repeat="tag in filterConfig.tagsForFilter track by $index">
-                        {{tag}}
-                        <a class="bin-style clickable pull-right" aria-hidden="true" delete-search-tag="{{tag}}">
-                          <md-icon>delete</md-icon>
-                        </a>
-                    </li>
-                </ul>
+             <ul class="tag-list" layout="column">
+                <li class="tag-bubble" ng-repeat="tag in filterConfig.tagsForFilter track by $index">
+                  {{tag}}
+                  <a class="bin-style clickable pull-right" aria-hidden="true" delete-search-tag="{{tag}}">
+                    <md-icon>delete</md-icon>
+                  </a>
+                </li>
+              </ul>
            </div>
             <div ng-hide="filterConfig.isList === 'slider' || page === 'topten'">
               <label>

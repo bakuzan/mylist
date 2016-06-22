@@ -67,6 +67,19 @@ md-datepicker.or-shrink > .md-datepicker-button {
   height: 36px;
 }
 
+.md-button.md-icon-button.or-shrink {
+  width: 25px;
+  min-height: 25px;
+  height: 25px;
+  padding: 2px;
+  margin: 0 2px;
+}
+.md-button.md-icon-button.or-shrink .material-icons {
+  height: 20px;
+  width: 20px;
+  font-size: 18px;
+}
+
 md-checkbox.or-success.md-checked > .md-ink-ripple, md-checkbox[disabled].or-success.md-checked > .md-ink-ripple {
   color: #47a447;
 }

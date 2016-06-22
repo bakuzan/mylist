@@ -69,6 +69,19 @@ md-datepicker.or-shrink {
   }
 }
 
+.md-button.md-icon-button.or-shrink {
+  width: 25px;
+  min-height: 25px;
+  height: 25px;
+  padding: 2px;
+  margin: 0 2px;
+  .material-icons {
+    height: 20px;
+    width: 20px;
+    font-size: 18px;
+  }
+}
+
 //OVERRIDE SUCCESS
 
 md-checkbox.or-success.md-checked, md-checkbox[disabled].or-success.md-checked {

@@ -22,19 +22,16 @@
                <input type="text" ng-model="characterTags" uib-typeahead="stat.tag for stat in filterConfig.statTags | filter: $viewValue | limitTo: 10" typeahead-on-select="passTag(characterTags); characterTags = ''"><!--  -->
            </md-input-container>
             <div class="search-tag-list-container" ng-hide="filterConfig.searchTags===undefined || filterConfig.searchTags==='' || filterConfig.searchTags===null">
-             <ul class="tag-list" layout="column">
-                <li class="tag-bubble" ng-repeat="tag in filterConfig.tagsForFilter track by $index">
-                  {{tag}}
-                  <a class="bin-style clickable pull-right" aria-hidden="true" delete-search-tag="{{tag}}">
+             <md-list class="tag-list" layout="column">
+                <md-list-item class="tag-bubble" layout="row" ng-repeat="tag in filterConfig.tagsForFilter track by $index">
+                  <p class="margin-0" flex="90" ng-bind="tag"></p>
+                  <md-button class="md-warn md-icon-button or-shrink" aria-hidden="true" delete-search-tag="{{tag}}">
                     <md-icon>delete</md-icon>
-                  </a>
-                </li>
-              </ul>
+                  </md-buttom>
+                </md-list-item>
+              </md-list>
            </div>
             <div ng-hide="filterConfig.isList === 'slider' || page === 'topten'">
-              <label>
-                <md-icon>sort</md-icon>
-              </label>
               <md-select ng-model="filterConfig.sortType" ng-init="filterConfig.sortType = filterConfig.selectListOptions.sortOptions[filterConfig.selectListOptions.sortOption].v"
                          aria-label="sort type">
                 <md-option ng-repeat="so in filterConfig.selectListOptions.sortOptions" value="{{so.v}}">
@@ -43,9 +40,7 @@
               </md-select>
             </div>
             <md-input-container class="clickable" ng-hide="filterConfig.isList === 'slider'" ng-click="filterConfig.sortReverse = !filterConfig.sortReverse">
-              <label>
-                <md-icon>sort</md-icon>
-              </label>
+              <md-icon>sort</md-icon>
               <input type="text" value="{{filterConfig.sortReverse ? 'Descending' : 'Ascending'}}" disabled>
             </md-input-container>
             <div class="input-group mt" ng-if="page === 'animeitem'">
@@ -79,7 +74,7 @@
                 <md-select ng-model="filterConfig.search[filterConfig.selectListOptions.repeatType]"
                            ng-init="filterConfig.search[filterConfig.selectListOptions.repeatType] = ''"
                            aria-label="repeating filter">
-                        <md-option ng-repeat="so in filterConfig.selectListOptions.repeating" value-"{{so.v}}">
+                        <md-option ng-repeat="so in filterConfig.selectListOptions.repeating" value="{{so.v}}">
                           {{so.n}}
                         </md-option>
                 </md-select>
@@ -95,32 +90,26 @@
                           ng-class="{'label-warning': filterConfig.ratingActions.percent<40, 'label-info': filterConfig.ratingActions.percent>=30 && filterConfig.ratingActions.percent<70, 'label-success': filterConfig.ratingActions.percent>=70}">{{filterConfig.ratingActions.percent}}%</span>
                 </div>
             </div>
-            <div ng-if="page === 'character'">
+            <div layout="column" ng-if="page === 'character'">
               <md-select ng-model="filterConfig.media" ng-init="filterConfig.media = ''" aria-label="series filter">
                 <md-option ng-repeat="so in filterConfig.selectListOptions.media" value="{{so.v}}">
                   {{so.n}}
                 </md-option>
               </md-select>
-            </div>
-            <div ng-if="page === 'character'">
               <md-input-container>
                 <label>series</label>
                 <input type="text" ng-model="filterConfig.seriesFilter" uib-typeahead="series.name for series in filterConfig.series | filter: $viewValue | limitTo: 5">
               </md-input-container>
-            </div>
-            <div class="input-group mt" ng-if="page === 'character'">
               <md-input-container>
                 <label>voice</label>
                 <input type="text" ng-model="filterConfig.search.voice" uib-typeahead="voice.name for voice in filterConfig.voiceActors | filter: $viewValue | limitTo: 5">
               </md-input-container>
             </div>
-            <div class="input-group mt" ng-if="page === 'topten'">
+            <div layout="column" ng-if="page === 'topten'">
                 <md-checkbox data-ng-model="filterConfig.search.isFavourite" ng-change="(filterConfig.search.isFavourite) ? true : filterConfig.search.isFavourite = ''"
                             aria-label="favourite filter">
                             Favourite?
                 </md-checkbox>
-            </div>
-            <div class="input-group mt" ng-if="page === 'topten'">
                 <md-checkbox data-ng-model="filterConfig.search.isRanked" ng-change="(filterConfig.search.isRanked) ? true : filterConfig.search.isRanked = ''"
                              aria-label="ranked filter">
                              Ranked?

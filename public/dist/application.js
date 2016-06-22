@@ -1072,9 +1072,12 @@ angular.module('animeitems').config(['$stateProvider',
 	            }
 
 	            //handle re-reading, re-read count.
-	            if (animeitem.reWatching===true && animeitem.episodes===animeitem.finalEpisode) {
+	            if (animeitem.reWatching===true) {
+								animeitem = ItemService.itemRevisits(animeitem, 'anime');
+								if(animeitem.episodes===animeitem.finalEpisode) {
 	                animeitem.reWatchCount += 1;
 	                animeitem.reWatching = false;
+								}
 	            }
 
 				animeitem.$update(function() {
@@ -1152,6 +1155,7 @@ angular.module('animeitems').config(['$stateProvider',
 			endingYears: endingYears,
 			getRatingValues: getRatingValues,
 			itemHistory: itemHistory,
+			itemRevisits: itemRevisits,
 			latestDate: latestDate,
 			maxCompleteMonth: maxCompleteMonth,
 			maxTagCount: maxTagCount,
@@ -1221,6 +1225,26 @@ angular.module('animeitems').config(['$stateProvider',
 	            item.meta.history = temp;
 	            return item;
 	        }
+
+					function itemRevisits(item, type) {
+						var anime = { count: 'reWatchCount', currentPart: 'episodes', finalPart: 'finalEpisode' },
+								manga = { count: 'reReadCount',  currentPart: 'chapters', finalPart: 'finalChapter' },
+								repeating = type === 'anime' ? anime : manga,
+								index = ListService.findWithAttr(item.meta.revisits, 'value', item[repeating.count] + 1);
+						if(index === -1) {
+							item.meta.revisits.push({
+								id: item.id,
+								title: item.title,
+								value: item[repeating.count] + 1,
+								rating: 0,
+								start: item.latest,
+								end: item[repeating.currentPart] === item[repeating.finalPart] ? item.latest : null
+							});
+						} else if(index > -1 && item[repeating.currentPart] === item[repeating.finalPart]) {
+							item.meta.revisits[index].end = item.latest;
+						}
+						return item;
+					}
 
 	        //function to display relative time - using latest or updated date.
 	        function latestDate(latest, updated) {

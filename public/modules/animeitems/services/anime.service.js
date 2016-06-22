@@ -50,9 +50,12 @@
 	            }
 
 	            //handle re-reading, re-read count.
-	            if (animeitem.reWatching===true && animeitem.episodes===animeitem.finalEpisode) {
+	            if (animeitem.reWatching===true) {
+								animeitem = ItemService.itemRevisits(animeitem, 'anime');
+								if(animeitem.episodes===animeitem.finalEpisode) {
 	                animeitem.reWatchCount += 1;
 	                animeitem.reWatching = false;
+								}
 	            }
 
 				animeitem.$update(function() {

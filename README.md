@@ -1,3 +1,9 @@
+arrancar-21 (1.27.21)
+- fixed bug of videoless anime appearing in watch list.
+  - Added a check after watch-list query:
+    > if the anime title, in folder name syntax, is NOT in the list of directories
+      then the item should be spliced.
+
 arrancar-20 (1.27.20)
 - created rewatch/reread tracking features.
   - Added revisits property to animeitems.meta (mangaitems will require if I want to track re-reads).

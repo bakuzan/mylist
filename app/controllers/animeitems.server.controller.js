@@ -158,6 +158,15 @@ exports.watch = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
+			var i = animeitems.length, seriesName = '', index = 0;
+			while(i--) {
+				seriesName = animeitems[i].title.toLowerCase().replace(/[^a-z0-9+]+/gi, '-').replace(/\-$/, ''); // .replace(/\(.+?\)/g, '')
+				index = directories.indexOf(seriesName);
+				console.log('find: ', seriesName, directories, index);
+				if(index === -1) {
+					animeitems.splice(i, 1);
+				}
+			}
 			res.jsonp(animeitems);
 		}
 	});

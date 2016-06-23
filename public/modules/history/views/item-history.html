@@ -2,14 +2,16 @@
     <div class="item-history-container">
         <a class="close-button mt" data-ng-click="viewHistory.cancel()"><i class="fa fa-times"></i></a>
         <h4 class="popout-header" ng-bind="::viewHistory.type === 'anime' ? viewHistory.viewItem.title + ' Episode history' : viewHistory.viewItem.title + ' Chapter history'"></h4>
-        <div ng-if="viewHistory.viewItem.meta.history.length === 0">No recorded history.</div>
-        <div class="item-history-list view-height-50" ng-if="viewHistory.viewItem.meta.revisits.length > 0">
-          <div class="item-history mt" ng-repeat="repeat in viewHistory.viewItem.meta.revisits | orderBy: '-value' track by repeat.value">
-            <time title="{{repeat.start | date : 'dd-MM-yyyy HH:mm'}}" ng-bind="repeat.start | date : 'dd-MM-yy'"></time>
-            <span ng-if="repeat.end">&nbsp;to&nbsp;</span>
-            <time title="{{repeat.end | date : 'dd-MM-yyyy HH:mm'}}" ng-bind="repeat.end | date : 'dd-MM-yy'"></time>
-            <span ng-bind="::viewHistory.type === 'anime' ? ' - Re-watch ' : ' - Re-read '"></span><span ng-bind="repeat.value | numberFixedLen: 2"></span>
+        <div class="item-history-list view-height-50">
+          <div ng-if="viewHistory.viewItem.meta.revisits.length > 0">
+            <div class="item-history mt" ng-repeat="repeat in viewHistory.viewItem.meta.revisits | orderBy: '-value' track by repeat.value">
+              <time title="{{repeat.start | date : 'dd-MM-yyyy HH:mm'}}" ng-bind="repeat.start | date : 'dd-MM-yy'"></time>
+              <span ng-if="repeat.end">&nbsp;to&nbsp;</span>
+              <time title="{{repeat.end | date : 'dd-MM-yyyy HH:mm'}}" ng-bind="repeat.end | date : 'dd-MM-yy'"></time>
+              <span ng-bind="::viewHistory.type === 'anime' ? ' - Re-watch ' : ' - Re-read '"></span><span ng-bind="repeat.value | numberFixedLen: 2"></span>
+            </div>
           </div>
+          <div ng-if="viewHistory.viewItem.meta.history.length === 0">No recorded history.</div>
           <div class="item-history mt" ng-repeat="history in viewHistory.viewItem.meta.history | orderBy: '-value' track by history.value">
               <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="viewHistory.deleteHistory(viewHistory.viewItem, history)">
                 <i class="fa fa-trash-o"></i>

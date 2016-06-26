@@ -1,3 +1,7 @@
+arrancar-22 (1.27.22)
+- fixed mangaitems maximum chapters / volumes bug.
+- fix create anime image bug.
+
 arrancar-21 (1.27.21)
 - fixed bug of videoless anime appearing in watch list.
   - Added a check after watch-list query:

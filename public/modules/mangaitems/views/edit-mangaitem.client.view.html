@@ -28,7 +28,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : mangaForm.volumes.$invalid && !mangaForm.volumes.$pristine }">
                     <label for="volumes" class="col-md-2 control-label">Volumes</label>
                     <div class="col-md-6">
-                        <input type="number" class="form-control" data-ng-model="ctrl.mangaitem.volumes" min="0" ng-change="mangaitem.volumes > mangaitem.finalVolume && mangaitem.finalVolume!=0 ? mangaitem.volumes=mangaitem.finalVolume : ''" id="volumes" name="volumes" placeholder="0" required>
+                        <input type="number" class="form-control" data-ng-model="ctrl.mangaitem.volumes" min="0" ng-change="ctrl.mangaitem.volumes > ctrl.mangaitem.finalVolume && ctrl.mangaitem.finalVolume!=0 ? ctrl.mangaitem.volumes=ctrl.mangaitem.finalVolume : ''" id="volumes" name="volumes" placeholder="0" required>
                     </div>
                     <div class="col-md-4">
 						<p ng-show="mangaForm.volumes.$invalid && !mangaForm.volumes.$pristine" class="help-block" >Volumes is a whole number and is required.</p>

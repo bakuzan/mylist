@@ -105,7 +105,7 @@
           latest: ctrl.animeitem.latest,
           finalEpisode: ctrl.animeitem.finalEpisode,
 					image: ctrl.imgPath,
-          season: ctrl.animeitem.season === true ? ItemService.convertDateToSeason(new Date(ctrl.animeitem.start)) : '',
+          season: ctrl.season === true ? ItemService.convertDateToSeason(new Date(ctrl.animeitem.start)) : '',
           disc: ctrl.animeitem.disc,
           manga: ctrl.animeitem.manga!==undefined && ctrl.animeitem.manga!==null ? ctrl.animeitem.manga._id : ctrl.animeitem.manga,
           tags: ctrl.tagArray,

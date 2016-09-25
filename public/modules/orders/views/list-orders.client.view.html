@@ -1,6 +1,6 @@
 <section data-ng-controller="OrdersController as ctrl" data-ng-show="ctrl.authentication.user">
   <div layout="row">
-    <div layout="column" flex="20" ng-class="{ 'in-the-way' : inTheWay }">
+    <div layout="column" flex="30" ng-class="{ 'in-the-way' : inTheWay }">
       <header>
         <h1 class="font-32">
           Orders
@@ -17,7 +17,7 @@
      </md-input-container>
     </div>
 
-    <div layout="column" flex="75" flex-offset="5" loading-spinner name="orders" size="fullscreen">
+    <div layout="column" flex="65" flex-offset="5" loading-spinner name="orders" size="fullscreen">
         <div flex="95" page-controls page-config="ctrl.pageConfig" showing-count="showingCount"></div>
         <md-list flex="95">
           <div data-ng-repeat="item in ctrl.orders | orderBy: 'nextVolume.date' | filter: search | startFrom: ctrl.pageConfig.currentPage*ctrl.pageConfig.pageSize | limitTo: ctrl.pageConfig.pageSize" class="list-group-item col-lg-12 col-md-12 col-sm-12">

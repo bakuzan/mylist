@@ -2,215 +2,138 @@
     <header class="page-header">
       <h1 ng-bind="ctrl.config.title + ' Anime'"></h1>
     </header>
-    <div class="col-md-12">
-      <form name="animeForm" class="form-horizontal" data-ng-submit="ctrl.submit()" novalidate>
-        <fieldset>
-
-          <div class="form-group" ng-class="{ 'has-error' : animeForm.title.$invalid && !animeForm.title.$pristine }">
-            <label for="title" class="col-md-2 control-label">Title</label>
-            <div class="col-md-6">
-              <input type="text" class="form-control" data-ng-model="ctrl.animeitem.title" id="title" name="title" placeholder="Title" required>
-            </div>
-            <div class="col-md-4">
-              <p ng-show="animeForm.title.$invalid && !animeForm.title.$pristine" class="help-block" >The Title is required.</p>
-              <span ng-show="animeForm.title.$valid" class="glyphicon glyphicon-ok" style="color: green;"></span>
-            </div>
-          </div>
-
-          <div class="form-group" ng-class="{ 'has-error' : animeForm.episodes.$invalid && !animeForm.episodes.$pristine }">
-              <label for="episodes" class="col-md-2 control-label">Episodes</label>
-              <div class="col-md-6">
-                  <input type="number" class="col-md-6 form-control" data-ng-model="ctrl.animeitem.episodes" min="0" ng-change="ctrl.addedEpisodes()"
-                         id="episodes" name="episodes" placeholder="0" required>
-              </div>
-              <div class="col-md-4">
-                <p ng-show="animeForm.episodes.$invalid && !animeForm.episodes.$pristine" class="help-block" >Episodes is a whole number and is required.</p>
-                <span ng-show="animeForm.episodes.$valid" class="glyphicon glyphicon-ok" style="color: green;"></span>
-              </div>
-          </div>
-
-          <div class="form-group" ng-class="{ 'has-error' : animeForm.start.$invalid && !animeForm.start.$pristine }" ng-if="::ctrl.config.isCreate">
-            <label for="start" class="col-md-2 control-label">Start</label>
-            <div class="col-md-6">
-              <input type="date" class="form-control" data-ng-model="ctrl.animeitem.start" id="start" name="start" placeholder="" format-date required>
-            </div>
-            <div class="col-md-4">
-              <p ng-show="animeForm.start.$invalid && !animeForm.start.$pristine" class="help-block" >Start date is required.</p>
-              <span ng-show="animeForm.start.$valid && !animeForm.start.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
-            </div>
-          </div>
-
-          <div class="form-group" ng-class="{ 'has-error' : animeForm.latest.$invalid }">
-            <label for="latest" class="col-md-2 control-label">Latest</label>
-            <div class="col-md-6">
-                <input type="date" class="form-control" data-ng-model="ctrl.animeitem.latest" id="latest" name="latest" format-date required>
-            </div>
-            <div class="col-md-4">
-          		<p ng-show="animeForm.latest.$invalid && !animeForm.latest.$pristine" class="help-block" >Latest date must be 'dd/mm/yyyy' and is required.</p>
-          		<span ng-show="animeForm.latest.$valid && !animeForm.latest.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
-		        </div>
-          </div>
-
-          <div class="form-group" ng-if="::ctrl.config.isCreate">
-              <label for="season" class="col-md-2 control-label">In Season?</label>
-              <div class="col-md-6">
-                  <input type="checkbox" class="form-control" data-ng-model="ctrl.season" id="season" name="season">
-              </div>
-          </div>
-
-          <div class="form-group" ng-if="::!ctrl.config.isCreate">
-            <label for="status" class="col-md-2 control-label">Completed?</label>
-            <div class="col-md-6">
-                <input type="checkbox" class="form-control" data-ng-model="ctrl.animeitem.status" data-ng-checked="ctrl.animeitem.episodes === ctrl.animeitem.finalEpisode && ctrl.animeitem.finalEpisode!=0 || ctrl.animeitem.end!==null && ctrl.animeitem.reWatching===true" data-ng-true-value="true" id="status" name="status" disabled>
-            </div>
-          </div>
-
+    <div flex="100">
+      <form layout="column" flex-offset="20" flex="60" name="animeForm" data-ng-submit="ctrl.submit()" novalidate>
+          <md-input-container>
+            <label for="title">Title</label>
+            <input type="text" data-ng-model="ctrl.animeitem.title" id="title" name="title" placeholder="Title" required>
+          </md-input-container>
+          <md-input-container>
+            <label for="episodes">Episodes</label>
+            <input type="number" data-ng-model="ctrl.animeitem.episodes" min="0" ng-change="ctrl.addedEpisodes()"
+                   id="episodes" name="episodes" placeholder="0" required>
+          </md-input-container>
+          <md-input-container ng-if="::ctrl.config.isCreate">
+            <label for="start">Start</label>
+            <input type="date" data-ng-model="ctrl.animeitem.start" id="start" name="start" placeholder="" format-date required>
+          </md-input-container>
+          <md-input-container>
+            <label for="latest">Latest</label>
+            <input type="date" data-ng-model="ctrl.animeitem.latest" id="latest" name="latest" format-date required>
+          </md-input-container>
+          <md-input-container ng-if="::ctrl.config.isCreate">
+            <md-checkbox data-ng-model="ctrl.season" id="season" name="season">
+              In Season?
+            </md-checkbox>
+          </md-input-container>
+          <md-input-container ng-if="::ctrl.config.isCreate">
+            <md-checkbox data-ng-model="ctrl.animeitem.status" data-ng-checked="ctrl.animeitem.episodes === ctrl.animeitem.finalEpisode && ctrl.animeitem.finalEpisode!=0 || ctrl.animeitem.end!==null && ctrl.animeitem.reWatching===true" data-ng-true-value="true" id="status" name="status" disabled>
+              Completed?
+            </md-checkbox>
+          </md-input-container>
           <p class="clickable accent-text" ng-click="ctrl.section.showAdditionals=!ctrl.section.showAdditionals">
             <i class="fa" ng-class="ctrl.section.showAdditionals ? 'fa-minus-square' : 'fa-plus-square'"></i> Additional properties
           </p>
           <div ng-show="ctrl.section.showAdditionals">
-
-              <div class="form-group" ng-if="::!ctrl.config.isCreate">
-                  <label for="rating" class="col-md-2 control-label">Rating</label>
-                  <div class="col-md-6">
-                      <uib-rating class="form-control clickable rating-stars" data-ng-model="ctrl.animeitem.rating" readonly="false" max="ctrl.config.ratingActions.maxRating" on-hover="ctrl.hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></uib-rating>
-                  </div>
-                  <span data-ng-show="ctrl.config.ratingActions.overStar!=null" class="label" ng-class="{'label-warning': ctrl.config.ratingActions.percent<40, 'label-info': ctrl.config.ratingActions.percent>=30 && ctrl.config.ratingActions.percent<70, 'label-success': ctrl.config.ratingActions.percent>=70}"
-                    ng-bind="ctrl.config.ratingActions.percent + '%'">
-                  </span>
-              </div>
-
-              <div class="form-group">
-                  <label for="image" class="col-md-2 control-label">Image</label>
-                  <div class="col-md-6">
-                      <input type="file" class="form-control" file-model="ctrl.myFile" accept="image/png, image/jpeg">
-                  </div>
-                  <div class="col-md-4 form-group">
-                      <a class="btn btn-primary" data-ng-click="ctrl.uploadFile()" data-ng-disabled="ctrl.myFile==='' || ctrl.myFile===null || ctrl.myFile===undefined">Upload File</a>
-                  </div>
-              </div>
-
-              <div class="form-group" ng-class="{ 'has-error' : animeForm.manga.$invalid && !animeForm.manga.$pristine }">
-                  <label for="manga" class="col-md-2 control-label">Manga?</label>
-                  <div class="col-md-6">
-                      <select class="form-control" data-ng-options="manga.title for manga in ctrl.mangaitems | orderBy: 'title' track by manga._id" data-ng-model="ctrl.animeitem.manga" id="manga" name="manga">
-                          <option value="">-- Link to a manga --</option>
-                      </select>
-                  </div>
-                  <div class="col-md-4">
-        						<p ng-show="animeForm.manga.$invalid && !animeForm.manga.$pristine" class="help-block" >The manga is required.</p>
-        						<span ng-show="animeForm.manga.$valid && !animeForm.manga.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
-                  </div>
-              </div>
-
-              <div class="form-group">
-                <label for="disc" class="col-md-2 control-label">Disc?</label>
-                <div class="col-md-6">
-                  <input type="checkbox" class="form-control" data-ng-model="ctrl.animeitem.disc" id="disc" name="disc">
-                </div>
-              </div>
-
+            <md-input-container ng-if="::!ctrl.config.isCreate">
+              <label for="rating">Rating</label>
+              <uib-rating class="clickable rating-stars" data-ng-model="ctrl.animeitem.rating" readonly="false" max="ctrl.config.ratingActions.maxRating" on-hover="ctrl.hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></uib-rating>
+              <span data-ng-show="ctrl.config.ratingActions.overStar!=null" class="label" ng-class="{'label-warning': ctrl.config.ratingActions.percent<40, 'label-info': ctrl.config.ratingActions.percent>=30 && ctrl.config.ratingActions.percent<70, 'label-success': ctrl.config.ratingActions.percent>=70}"
+                ng-bind="ctrl.config.ratingActions.percent + '%'">
+              </span>
+            </md-input-container>
+            <div>
+              <md-input-container>
+                <label for="image"> </label>
+                <input type="file" file-model="ctrl.myFile" accept="image/png, image/jpeg">
+              </md-input-container>
+              <md-button class="md-primary" data-ng-click="ctrl.uploadFile()"
+                         data-ng-disabled="ctrl.myFile==='' || ctrl.myFile===null || ctrl.myFile===undefined">Upload File</md-button>
             </div>
-
-            <p class="clickable accent-text" ng-click="ctrl.section.showOthers=!ctrl.section.showOthers" ng-if="::!ctrl.config.isCreate">
-              <i class="fa" ng-class="ctrl.section.showOthers ? 'fa-minus-square' : 'fa-plus-square'"></i> Completion properties
-            </p>
-            <div ng-show="ctrl.section.showOthers" ng-if="::!ctrl.config.isCreate">
-
-              <div class="form-group" ng-show="!ctrl.animeitem.status || ctrl.animeitem.reWatching">
-                  <label for="onHold" class="col-md-2 control-label">On Hold?</label>
-                  <div class="col-md-6">
-                      <input type="checkbox" class="form-control" data-ng-model="ctrl.animeitem.onHold" id="onHold" name="onHold">
-                  </div>
-              </div>
-
-              <div class="form-group">
-                  <label for="season" class="col-md-2 control-label">In Season?</label>
-                  <div ng-class="(ctrl.animeitem.season.season === null) ? 'col-md-6' : 'col-md-3'">
-                      <select class="form-control" ng-options="option.text as option.text for option in ctrl.config.commonArrays.seasons" ng-model="ctrl.animeitem.season.season"
-                              ng-change="ctrl.setInSeason()" id="season" name="season">
-                          <option value="">No Season</option>
-                      </select>
-                  </div>
-                  <div class="col-md-3" ng-if="ctrl.animeitem.season.year !== null">
-                      <input type="text" class="form-control text-center" ng-model="ctrl.animeitem.season.year" disabled />
-                  </div>
-              </div>
-
-              <div class="form-group" ng-class="{ 'has-error' : animeForm.end.$invalid }">
-                  <label for="end" class="col-md-2 control-label">End</label>
-                  <div class="col-md-6">
-                      <input type="date" class="form-control" data-ng-model="ctrl.animeitem.end" id="end" name="end" format-date>
-                  </div>
-                  <div class="col-md-4">
-                    <span ng-show="animeForm.end.$valid && !animeForm.end.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
-                  </div>
-              </div>
-
-              <div class="form-group" ng-class="{ 'has-error' : animeForm.finalEpisode.$invalid && !animeForm.finalEpisode.$pristine }"
-                   ng-hide="ctrl.animeitem.end!=null && ctrl.animeitem.episodes===ctrl.animeitem.finalEpisode || ctrl.animeitem.end!=null && ctrl.animeitem.reWatching===true ">
-                  <label for="finalEpisode" class="col-md-2 control-label">Final episode</label>
-                  <div class="col-md-6">
-                      <input type="number" class="form-control" data-ng-model="ctrl.animeitem.finalEpisode" min="0" id="finalEpisode" name="finalEpisode" placeholder="0">
-                  </div>
-                  <div class="col-md-4">
-                    <p ng-show="animeForm.finalEpisode.$invalid && !animeForm.finalEpisode.$pristine" class="help-block" >Final episode is a whole number and is required.</p>
-                      <!--<p ng-show="isNumber(animeForm.chapters)" class="help-block">Chapter number should be a full number.</p>-->
-                    <span ng-show="animeForm.finalEpisode.$valid && !animeForm.finalEpisode.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
-				          </div>
-              </div>
-
-              <div class="form-group" data-ng-show="ctrl.animeitem.status==true">
-                  <label for="reWatching" class="col-md-2 control-label">Re-watching?</label>
-                  <div class="col-md-6">
-                      <input type="checkbox" class="form-control" data-ng-model="ctrl.animeitem.reWatching" data-ng-disabled="ctrl.animeitem.reWatching" data-ng-change="ctrl.animeitem.episodes=0;" id="reWatching" name="reWatching">
-                  </div>
-              </div>
-
+            <md-select data-ng-model="ctrl.animeitem.manga" id="manga" name="manga">
+                <md-option value="">-- Link to a manga --</md-option>
+                <md-option ng-repeat="manga in ctrl.mangaitems | orderBy: 'title' track by manga._id" value="{{manga}}">
+                  {{manga.title}}
+                </md-option>
+            </md-select>
+            <md-input-container>
+              <md-checkbox data-ng-model="ctrl.animeitem.disc" id="disc" name="disc">
+                Disc?
+              </md-checkbox>
+            </md-input-container>
+          </div>
+          <p class="clickable accent-text" ng-click="ctrl.section.showOthers=!ctrl.section.showOthers" ng-if="::!ctrl.config.isCreate">
+            <i class="fa" ng-class="ctrl.section.showOthers ? 'fa-minus-square' : 'fa-plus-square'"></i> Completion properties
+          </p>
+          <div ng-show="ctrl.section.showOthers" ng-if="::!ctrl.config.isCreate">
+            <md-input-container ng-show="!ctrl.animeitem.status || ctrl.animeitem.reWatching">
+              <md-checkbox data-ng-model="ctrl.animeitem.onHold" id="onHold" name="onHold">
+                On Hold?
+              </md-checkbox>
+            </md-input-container>
+            <md-select ng-model="ctrl.animeitem.season.season" ng-change="ctrl.setInSeason()" id="season" name="season">
+                <md-option value="">No Season</md-option>
+                <md-option ng-repeat="option in ctrl.config.commonArrays.seasons" value="{{option.text}}">
+                  {{option.text}}
+                </md-option>
+            </md-select>
+            <md-input-container ng-if="ctrl.animeitem.season.year !== null">
+              <label>year</label>
+              <input type="text" ng-model="ctrl.animeitem.season.year" disabled />
+            </md-input-container>
+            <md-input-container>
+              <label for="end">End</label>
+              <input type="date" data-ng-model="ctrl.animeitem.end" id="end" name="end" format-date>
+            </md-input-container>
+            <md-input-container
+                 ng-hide="ctrl.animeitem.end!=null && ctrl.animeitem.episodes===ctrl.animeitem.finalEpisode || ctrl.animeitem.end!=null && ctrl.animeitem.reWatching===true ">
+              <label for="finalEpisode">Final episode</label>
+              <input type="number" data-ng-model="ctrl.animeitem.finalEpisode" min="0" id="finalEpisode" name="finalEpisode" placeholder="0">
+            </md-input-container>
+            <md-input-container data-ng-show="ctrl.animeitem.status==true">
+              <md-checkbox data-ng-model="ctrl.animeitem.reWatching" data-ng-disabled="ctrl.animeitem.reWatching" data-ng-change="ctrl.animeitem.episodes=0;" id="reWatching" name="reWatching">
+                Re-watching?
+              </md-checkbox>
+            </md-input-container>
+          </div>
+          <p class="clickable accent-text" ng-click="ctrl.section.showItemTags=!ctrl.section.showItemTags">
+            <i class="fa" ng-class="ctrl.section.showItemTags ? 'fa-minus-square' : 'fa-plus-square'"></i> Tag properties
+          </p>
+          <div ng-show="ctrl.section.showItemTags">
+            <md-input-container>
+              <label for="tags">Tags</label>
+                  <input type="text" data-ng-model="ctrl.newTag" enter-tag="ctrl.addTag()" id="tags" name="tags" placeholder="tags..."
+                          uib-typeahead="stat.tag for stat in ctrl.config.statTags | filter: $viewValue | limitTo: 10">
+            </md-input-container>
+            <md-button class="md-primary" data-ng-click="ctrl.addTag()" data-ng-disabled="ctrl.newTag==='' || ctrl.newTag===null || ctrl.newTag===undefined">Add Tag</md-button>
+            <div class="form-group mt">
+              <md-list class="tag-list">
+                <md-list-item class="tag-bubble" ng-repeat="tag in ctrl.animeitem.tags">
+                    {{tag.text}}
+                    <md-button class="md-warn md-icon-button float-right" aria-hidden="true" ng-click="ctrl.removeTag(tag.text)">
+                      <md-icon>delete</md-icon>
+                    </md-button>
+                </md-list-item>
+              </md-list>
             </div>
-
-            <p class="clickable accent-text" ng-click="ctrl.section.showItemTags=!ctrl.section.showItemTags">
-              <i class="fa" ng-class="ctrl.section.showItemTags ? 'fa-minus-square' : 'fa-plus-square'"></i> Tag properties
-            </p>
-            <div ng-show="ctrl.section.showItemTags">
-
-              <div class="form-group" ng-class="{ 'has-error' : animeForm.tags.$invalid && !animeForm.tags.$pristine }">
-                  <label for="tags" class="col-md-2 control-label">Tags</label>
-                  <div class="col-md-6">
-                      <input type="text" class="form-control" data-ng-model="ctrl.newTag" enter-tag="ctrl.addTag()" id="tags" name="tags" placeholder="tags..."
-                              uib-typeahead="stat.tag for stat in ctrl.config.statTags | filter: $viewValue | limitTo: 10">
-                  </div>
-                  <div class="col-md-4 form-group">
-                      <a class="btn btn-primary" data-ng-click="ctrl.addTag()" data-ng-disabled="ctrl.newTag==='' || ctrl.newTag===null || ctrl.newTag===undefined">Add Tag</a>
-                  </div>
-              </div>
-
-              <div class="form-group mt">
-                  <ul class="tag-list col-md-12">
-                      <li class="tag-bubble col-md-2" ng-repeat="tag in ctrl.animeitem.tags">
-                          {{tag.text}}
-                          <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="ctrl.removeTag(tag.text)"><i class="fa fa-times"></i></a>
-                      </li>
-                  </ul>
-              </div>
-
-              <div class="form-group">
-                  <ul class="tag-list col-md-12">
-                      <li class="tag-bubble col-md-2" ng-repeat="tag in ctrl.tagArray track by $index">
-                          {{tag.text}}
-                          <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="ctrl.dropTag(tag.text)"><i class="fa fa-trash-o"></i></a>
-                      </li>
-                  </ul>
-              </div>
+            <div class="form-group">
+                <md-list class="tag-list">
+                    <md-list-item class="tag-bubble" ng-repeat="tag in ctrl.tagArray track by $index">
+                        {{tag.text}}
+                        <md-button class="md-warn md-icon-button float-right" aria-hidden="true" ng-click="ctrl.dropTag(tag.text)">
+                          <md-icon>delete</md-icon>
+                        </md-button>
+                    </md-list-item>
+                </md-list>
+            </div>
 
             </div>
             <div class="form-group padded-medium">
-                <input type="submit" value="{{ctrl.config.title}}" class="btn btn-default" ng-disabled="animeForm.$invalid">&nbsp; - &nbsp;<a href="/#!/animeitems">Back</a>
+                <md-button type="submit" class="md-default" ng-disabled="animeForm.$invalid">
+                  {{ctrl.config.title}}
+                </md-button>
+                &nbsp; - &nbsp;<a href="/#!/animeitems">Back</a>
             </div>
-      			<div data-ng-show="ctrl.error" class="text-danger">
-      				<strong data-ng-bind="ctrl.error"></strong>
-      			</div>
-          </fieldset>
         </form>
     </div>
 </section>

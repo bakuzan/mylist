@@ -1,68 +1,29 @@
-<section data-ng-controller="MangaitemsController as ctrl" data-ng-show="ctrl.authentication.user" data-ng-init="ctrl.find(); ctrl.findAnime();">
-    <div class="page-header">
-        <h1>New Manga</h1>
-    </div>
-    <div class="col-md-12">
-        <form name="mangaForm" class="form-horizontal" data-ng-submit="ctrl.create()" novalidate>
-            <fieldset>
-                <div class="form-group" ng-class="{ 'has-error' : mangaForm.title.$invalid && !mangaForm.title.$pristine }">
-                    <label for="title" class="col-md-2 control-label">Title</label>
-                    <div class="col-md-6">
-                        <input type="text" class="form-control" data-ng-model="ctrl.title" id="title" name="title" placeholder="Title" required>
-                    </div>
-                    <div class="col-md-4">
-						<p ng-show="mangaForm.title.$invalid && !mangaForm.title.$pristine" class="help-block" >The Title is required.</p>
-						<span ng-show="mangaForm.title.$valid && !mangaForm.title.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
-					</div>
-                </div>
-                <div class="form-group" ng-class="{ 'has-error' : mangaForm.chapters.$invalid && !mangaForm.chapters.$pristine }">
-                    <label for="chapters" class="col-md-2 control-label">Chapters</label>
-                    <div class="col-md-6">
-                        <input type="number" class="form-control" data-ng-model="ctrl.chapters" id="chapters" name="chapters" placeholder="0" required>
-                    </div>
-                    <div class="col-md-4">
-						<p ng-show="mangaForm.chapters.$invalid && !mangaForm.chapters.$pristine" class="help-block" >Chapters is a whole number and is required.</p>
-                        <!--<p ng-show="isNumber(mangaForm.chapters)" class="help-block">Chapter number should be a full number.</p>-->
-						<span ng-show="mangaForm.chapters.$valid && !mangaForm.chapters.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
-					</div>
-                </div>
-                <div class="form-group" ng-class="{ 'has-error' : mangaForm.volumes.$invalid && !mangaForm.volumes.$pristine }">
-                    <label for="volumes" class="col-md-2 control-label">Volumes</label>
-                    <div class="col-md-6">
-                        <input type="number" class="form-control" data-ng-model="ctrl.volumes" id="volumes" name="volumes" placeholder="0" required>
-                    </div>
-                    <div class="col-md-4">
-						<p ng-show="mangaForm.volumes.$invalid && !mangaForm.volumes.$pristine" class="help-block" >Volumes is a number and is required.</p>
-                        <!--<p ng-show="isNumber(mangaForm.volumes)" class="help-block">Volume number should be a full number.</p>-->
-						<span ng-show="mangaForm.volumes.$valid && !mangaForm.volumes.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
-					</div>
-                </div>
-                <div class="form-group" ng-class="{ 'has-error' : mangaForm.start.$invalid && !mangaForm.start.$pristine }">
-                    <label for="start" class="col-md-2 control-label">Start</label>
-                    <div class="col-md-6">
-                        <input type="date" class="form-control" data-ng-model="ctrl.start" id="start" name="start" placeholder="" required>
-                    </div>
-                    <div class="col-md-4">
-						<p ng-show="mangaForm.start.$invalid && !mangaForm.start.$pristine" class="help-block" >Start date is required.</p>
-						<span ng-show="mangaForm.start.$valid && !mangaForm.start.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
-					</div>
-                </div>
-                <div class="form-group" ng-class="{ 'has-error' : mangaForm.latest.$invalid && !mangaForm.latest.$pristine }">
-                    <label for="latest" class="col-md-2 control-label">Latest</label>
-                    <div class="col-md-6">
-                        <input type="date" class="form-control" data-ng-model="ctrl.latest" id="latest" name="latest" placeholder="" required>
-                    </div>
-                    <div class="col-md-4">
-						<p ng-show="mangaForm.latest.$invalid && !mangaForm.latest.$pristine" class="help-block" >Latest date is required.</p>
-						<span ng-show="mangaForm.latest.$valid && !mangaForm.latest.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
-					</div>
-                </div>
-                <!--<div class="form-group">
-                    <label for="status" class="col-md-2 control-label">Completed?</label>
-                    <div class="col-md-6">
-                        <input type="checkbox" class="form-control" data-ng-model="status" id="status" name="status">
-                    </div>
-                </div>-->
+<section data-ng-controller="CreateMangaController as ctrl" data-ng-show="ctrl.authentication.user">
+    <header class="page-header">
+      <h1 ng-bind="ctrl.config.title + ' Manga'"></h1>
+    </header>
+    <div flex="100">
+      <form layout="column" flex-offset="20" flex="60" name="mangaForm" data-ng-submit="ctrl.submit()" novalidate>
+        <md-input-container>
+          <label for="title">Title</label>
+          <input type="text" data-ng-model="ctrl.title" id="title" name="title" placeholder="Title" required>
+        </md-input-container>
+        <md-input-container>
+          <label for="chapters">Chapters</label>
+          <input type="number" data-ng-model="ctrl.chapters" id="chapters" name="chapters" placeholder="0" required>
+        </md-input-container>
+        <md-input-container>
+          <label for="volumes">Volumes</label>
+          <input type="number" data-ng-model="ctrl.volumes" id="volumes" name="volumes" placeholder="0" required>
+        </md-input-container>
+        <md-input-container>
+          <label for="start">Start</label>
+          <input type="date" data-ng-model="ctrl.start" id="start" name="start" placeholder="" required>
+        </md-input-container>
+        <md-input-container>
+          <label for="latest">Latest</label>
+          <input type="date" data-ng-model="ctrl.latest" id="latest" name="latest" placeholder="" required>
+        </md-input-container>
                 <div class="form-group">
                     <label for="hardcopy" class="col-md-2 control-label">Hardcopy?</label>
                     <div class="col-md-6">

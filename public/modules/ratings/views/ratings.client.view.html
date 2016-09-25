@@ -12,7 +12,7 @@
     </div>
   </div>
   <div layout="row">
-    <div class="md-padding" layout="column" flex="20" ng-class="{ 'in-the-way' : inTheWay }" ng-hide="ctrl.viewItem !== undefined">
+    <div class="md-padding" layout="column" flex="30" ng-class="{ 'in-the-way' : inTheWay }" ng-hide="ctrl.viewItem !== undefined">
       <md-input-container>
         <label>search items</label>
         <input type="text" ng-model="ctrl.search" ng-model-options="ctrl.modelOptions">
@@ -33,7 +33,7 @@
         </div>
       </div>
     </div>
-    <div layout="column" flex="75" ng-class="(ctrl.viewItem === undefined) ? 'flex-offset-5' : 'flex-offset-25'" loading-spinner name="rating" size="fullscreen">
+    <div layout="column" flex="65" ng-class="(ctrl.viewItem === undefined) ? 'flex-offset-5' : 'flex-offset-35'" loading-spinner name="rating" size="fullscreen">
         <div flex="95" page-controls page-config="ctrl.pageConfig" showing-count="showingCount"></div>
         <table flex="95" class="ratings-table">
             <thead>

@@ -1,6 +1,6 @@
 <section data-ng-controller="MangaitemsController as ctrl" data-ng-init="ctrl.find()" data-ng-show="ctrl.authentication.user" keycuts>
   <div layout="row">
-    <div layout="column" flex="20" ng-class="{ 'in-the-way' : inTheWay }">
+    <div layout="column" flex="30" ng-class="{ 'in-the-way' : inTheWay }">
       <header>
         <h1 class="font-32">
           Manga list
@@ -9,7 +9,7 @@
       </header>
         <div list-filters filter-config="ctrl.filterConfig" items="ctrl.mangaitems" page="ctrl.whichController"></div>
     </div>
-    <div layout="column" flex="75" flex-offset="5" loading-spinner name="manga" size="fullscreen">
+    <div layout="column" flex="65" flex-offset="5" loading-spinner name="manga" size="fullscreen">
         <div flex="95" page-controls page-config="ctrl.pageConfig" showing-count="ctrl.filterConfig.showingCount"></div>
         <md-list flex="95">
           <div manga-item-model

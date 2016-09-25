@@ -1,6 +1,6 @@
 <section data-ng-controller="CharactersController as ctrl" data-ng-init="ctrl.find()" data-ng-show="ctrl.authentication.user" keycuts>
   <div layout="row">
-    <aside layout="column" flex="20" ng-class="{ 'in-the-way' : inTheWay }">
+    <aside layout="column" flex="30" ng-class="{ 'in-the-way' : inTheWay }">
       <header>
           <h1 class="font-32">
             Characters {{ctrl.filterConfig.isList}}
@@ -15,7 +15,7 @@
       </div>
       <div list-filters filter-config="ctrl.filterConfig" items="ctrl.characters" page="ctrl.whichController"></div>
     </aside>
-    <section layout="column" flex="75" flex-offset="5" loading-spinner name="characters" size="fullscreen">
+    <section layout="column" flex="65" flex-offset="5" loading-spinner name="characters" size="fullscreen">
       <div flex="95" page-controls page-config="ctrl.pageConfig" showing-count="ctrl.filterConfig.showingCount" ng-hide="ctrl.filterConfig.isList === 'slider'"></div>
         <md-list flex="95" data-ng-show="ctrl.filterConfig.isList==='list'">
           <div data-ng-repeat="character in ctrl.characters | orderBy: ctrl.filterConfig.sortType:ctrl.filterConfig.sortReverse | filter: ctrl.filterConfig.search | mediaFilter: ctrl.filterConfig.media | seriesFilter: ctrl.filterConfig.seriesFilter | tagFilter: ctrl.filterConfig.searchTags:ctrl.filterConfig.taglessItem | startFrom: ctrl.pageConfig.currentPage*ctrl.pageConfig.pageSize | limitTo: ctrl.pageConfig.pageSize track by character._id" character-back="{{ctrl.trustAsResourceUrl(character.image)}}" class="list-group-item" ng-class="viewItem===character ? 'col-lg-12 col-md-12 col-sm-12 character-expanded' : ' col-lg-6 col-md-6 col-sm-6 character-default'">

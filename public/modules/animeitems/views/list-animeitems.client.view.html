@@ -1,6 +1,6 @@
 <section data-ng-show="ctrl.authentication.user">
   <div layout="row">
-      <div layout="column" flex="20" ng-class="{ 'in-the-way' : inTheWay }">
+      <div layout="column" flex="30" ng-class="{ 'in-the-way' : inTheWay }">
         <header>
             <h1>
               <span class="font-32" ng-bind="::ctrl.whichController === 'watch' ? 'Watch list' : 'Anime list'"></span>
@@ -9,7 +9,7 @@
         </header>
         <div list-filters filter-config="ctrl.filterConfig" items="ctrl.animeitems" page="ctrl.whichController"></div>
       </div>
-      <div layout="column" flex="75" flex-offset="5" loading-spinner name="anime" size="fullscreen">
+      <div layout="column" flex="65" flex-offset="5" loading-spinner name="anime" size="fullscreen">
           <div flex="95" page-controls page-config="ctrl.pageConfig" showing-count="ctrl.filterConfig.showingCount"></div>
           <md-list flex="95">
             <md-list-item anime-item-model

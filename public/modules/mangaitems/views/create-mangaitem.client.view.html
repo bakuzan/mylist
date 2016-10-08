@@ -24,68 +24,94 @@
           <label for="latest">Latest</label>
           <input type="date" data-ng-model="ctrl.latest" id="latest" name="latest" placeholder="" required>
         </md-input-container>
-                <div class="form-group">
-                    <label for="hardcopy" class="col-md-2 control-label">Hardcopy?</label>
-                    <div class="col-md-6">
-                        <input type="checkbox" class="form-control" data-ng-model="ctrl.hardcopy" id="hardcopy" name="hardcopy">
-                    </div>
-                </div>
-                <div class="form-group" ng-class="{ 'has-error' : mangaForm.anime.$invalid && !mangaForm.anime.$pristine }">
-                    <label for="anime" class="col-md-2 control-label">Anime</label>
-                    <div class="col-md-6">
-                        <select class="form-control" data-ng-options="anime.title for anime in ctrl.animeitems | orderBy: 'title'" data-ng-model="ctrl.anime" id="anime" name="anime">
-                            <option value="">-- Link to an anime --</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-						<p ng-show="mangaForm.anime.$invalid && !mangaForm.anime.$pristine" class="help-block" >The anime is required.</p>
-						<span ng-show="mangaForm.anime.$valid && !mangaForm.anime.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
-					</div>
-                </div>
-                <div class="form-group" ng-class="{ 'has-error' : mangaForm.finalChapter.$invalid && !mangaForm.finalChapter.$pristine }">
-                    <label for="finalChapter" class="col-md-2 control-label">Final chapter</label>
-                    <div class="col-md-6">
-                        <input type="number" class="form-control" data-ng-model="ctrl.finalChapter" id="finalChapter" name="finalChapter" placeholder="0">
-                    </div>
-                    <div class="col-md-4">
-                        <!--<p ng-show="isNumber(mangaForm.chapters)" class="help-block">Chapter number should be a full number.</p>-->
-						<span ng-show="mangaForm.finalChapter.$valid && !mangaForm.finalChapter.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
-					</div>
-                </div>
-                <div class="form-group" ng-class="{ 'has-error' : mangaForm.finalVolume.$invalid && !mangaForm.finalVolume.$pristine }">
-                    <label for="finalVolume" class="col-md-2 control-label">Final volume</label>
-                    <div class="col-md-6">
-                        <input type="number" class="form-control" data-ng-model="ctrl.finalVolume" id="finalVolume" name="finalVolume" placeholder="0">
-                    </div>
-                    <div class="col-md-4">
-                        <!--<p ng-show="isNumber(mangaForm.volumes)" class="help-block">Volume number should be a full number.</p>-->
-						<span ng-show="mangaForm.finalVolume.$valid && !mangaForm.finalVolume.$pristine" class="glyphicon glyphicon-ok" style="color: green;"></span>
-					</div>
-                </div>
-                <div class="form-group" ng-class="{ 'has-error' : mangaForm.tags.$invalid && !mangaForm.tags.$pristine }">
-                    <label for="tags" class="col-md-2 control-label">Tags</label>
-                    <div class="col-md-6">
-                        <input type="text" class="form-control" data-ng-model="ctrl.newTag" enter-tag="ctrl.addTag()" id="tags" name="tags" placeholder="tags..." uib-typeahead="stat.tag for stat in ctrl.filterConfig.statTags | filter: $viewValue">
-                    </div>
-                    <div class="col-md-4 form-group">
-                        <a class="btn btn-primary" data-ng-click="ctrl.addTag()" data-ng-disabled="ctrl.newTag==='' || ctrl.newTag===null || ctrl.newTag===undefined">Add Tag</a>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <ul class="tag-list col-md-12">
-                        <li class="tag-bubble col-md-2" ng-repeat="tag in ctrl.tagArray track by $index">
-                            {{tag.text}}
-                            <a class="bin-style clickable pull-right" aria-hidden="true" ng-click="ctrl.dropTag(tag.text)"><i class="fa fa-trash-o"></i></a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="form-group">
-                    <input type="submit" class="btn btn-default" ng-disabled="mangaForm.$invalid">&nbsp; - &nbsp;<a href="/#!/mangaitems">Back</a>
-                </div>
-				<div data-ng-show="ctrl.error" class="text-danger">
-					<strong data-ng-bind="ctrl.error"></strong>
-				</div>
-            </fieldset>
-        </form>
+        <md-input-container ng-if="::ctrl.config.isCreate">
+          <md-checkbox data-ng-model="ctrl.mangaitem.status" data-ng-checked="ctrl.mangaitem.chapters===ctrl.mangaitem.finalChapter && ctrl.mangaitem.volumes===ctrl.mangaitem.finalVolume && ctrl.mangaitem.finalChapter!==0 || ctrl.mangaitem.end!==null && ctrl.mangaitem.reReading===true" data-ng-true-value="true" id="status" name="status" disabled>
+            Completed?
+          </md-checkbox>
+        </md-input-container>
+        <p class="clickable accent-text" ng-init="showAdditionals = false" ng-click="showAdditionals=!showAdditionals"><i class="fa" ng-class="showAdditionals ? 'fa-minus-square' : 'fa-plus-square'"></i> Additional properties</p>
+        <div ng-show="showAdditionals">
+          <md-input-container ng-if="::!ctrl.config.isCreate">
+            <label for="rating">Rating</label>
+            <uib-rating class="clickable rating-stars" data-ng-model="ctrl.mangaitem.rating" readonly="false" max="ctrl.config.ratingActions.maxRating" on-hover="ctrl.hoveringOver(value)" on-leave="overStar = null" id="rating" name="rating"></uib-rating>
+            <span data-ng-show="ctrl.config.ratingActions.overStar!=null" class="label" ng-class="{'label-warning': ctrl.config.ratingActions.percent<40, 'label-info': ctrl.config.ratingActions.percent>=30 && ctrl.config.ratingActions.percent<70, 'label-success': ctrl.config.ratingActions.percent>=70}"
+              ng-bind="ctrl.config.ratingActions.percent + '%'">
+            </span>
+          </md-input-container>
+          <div>
+            <md-input-container>
+              <label for="image"> </label>
+              <input type="file" file-model="ctrl.myFile" accept="image/png, image/jpeg">
+            </md-input-container>
+            <md-button class="md-primary" data-ng-click="ctrl.uploadFile()"
+                       data-ng-disabled="ctrl.myFile==='' || ctrl.myFile===null || ctrl.myFile===undefined">Upload File</md-button>
+          </div>
+          <md-checkbox data-ng-model="ctrl.hardcopy" id="hardcopy" name="hardcopy">
+            Hardcopy?
+          </md-checkbox>
+          <md-select ng-model="taskCreate.newTask.day" data-ng-model="ctrl.anime" id="anime" name="anime">
+              <md-option class="disabled" value="">
+                -- Link to an anime --
+              </md-option>
+              <md-option data-ng-repeat="anime in ctrl.animeitems | orderBy: 'title'" value="{{anime}}">
+                 {{anime.title}}
+              </md-option>
+          </md-select>
+        </div>
+        <p class="clickable accent-text" ng-init="showOthers = false" ng-click="showOthers=!showOthers"><i class="fa" ng-class="showOthers ? 'fa-minus-square' : 'fa-plus-square'"></i> Completion properties</p>
+        <div ng-show="showOthers">
+          <md-input-container>
+            <label for="end">End</label>
+            <input type="date" data-ng-model="ctrl.mangaitem.end" id="end" name="end" format-date>
+          </md-input-container>
+          <md-input-container ng-hide="ctrl.mangaitem.end!=null && ctrl.mangaitem.chapters===ctrl.mangaitem.finalChapter || ctrl.mangaitem.end!=null && ctrl.mangaitem.reReading===true ">
+            <label>Final chapter</label>
+            <input type="number" data-ng-model="ctrl.finalChapter" id="finalChapter" name="finalChapter" placeholder="0">
+          </md-input-container>
+          <md-input-container ng-hide="ctrl.mangaitem.end!=null && ctrl.mangaitem.volumes===ctrl.mangaitem.finalVolume || ctrl.mangaitem.end!=null && ctrl.mangaitem.reReading===true ">
+            <label>Final volume</label>
+            <input type="number" data-ng-model="ctrl.finalVolume" id="finalVolume" name="finalVolume" placeholder="0">
+          </md-input-container>
+          <md-input-container data-ng-show="ctrl.mangaitem.status==true">
+            <md-checkbox data-ng-model="ctrl.mangaitem.reReading" data-ng-disabled="ctrl.mangaitem.reWatching" data-ng-change="ctrl.mangaitem.chapters=0; ctrl.mangaitem.volumes=0" id="reReading" name="reReading">
+              Re-reading?
+            </md-checkbox>
+          </md-input-container>
+        </div>
+        <p class="clickable accent-text" ng-click="ctrl.section.showItemTags=!ctrl.section.showItemTags">
+          <i class="fa" ng-class="ctrl.section.showItemTags ? 'fa-minus-square' : 'fa-plus-square'"></i> Tag properties
+        </p>
+        <div ng-show="ctrl.section.showItemTags">
+          <md-input-container>
+            <label for="tags">Tags</label>
+                <input type="text" data-ng-model="ctrl.newTag" enter-tag="ctrl.addTag()" id="tags" name="tags" placeholder="tags..."
+                        uib-typeahead="stat.tag for stat in ctrl.config.statTags | filter: $viewValue | limitTo: 10">
+          </md-input-container>
+          <md-button class="md-primary" data-ng-click="ctrl.addTag()" data-ng-disabled="ctrl.newTag==='' || ctrl.newTag===null || ctrl.newTag===undefined">Add Tag</md-button>
+          <md-list class="tag-list">
+            <md-list-item class="tag-bubble" ng-repeat="tag in ctrl.mangaitem.tags">
+                {{tag.text}}
+                <md-button class="md-warn md-icon-button float-right" aria-hidden="true" ng-click="ctrl.removeTag(tag.text)">
+                  <md-icon>delete</md-icon>
+                </md-button>
+            </md-list-item>
+          </md-list>
+          <md-list class="tag-list">
+              <md-list-item class="tag-bubble" ng-repeat="tag in ctrl.tagArray track by $index">
+                  {{tag.text}}
+                  <md-button class="md-warn md-icon-button float-right" aria-hidden="true" ng-click="ctrl.dropTag(tag.text)">
+                    <md-icon>delete</md-icon>
+                  </md-button>
+              </md-list-item>
+          </md-list>
+        </div>
+        <div class="form-group padded-medium">
+            <md-button type="submit" class="md-default" ng-disabled="mangaForm.$invalid">
+              {{ctrl.config.title}}
+            </md-button>
+            &nbsp; - &nbsp;<a href="/#!/mangaitems">Back</a>
+        </div>
+
+      </form>
     </div>
 </section>

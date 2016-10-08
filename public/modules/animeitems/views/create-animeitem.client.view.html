@@ -106,26 +106,22 @@
                           uib-typeahead="stat.tag for stat in ctrl.config.statTags | filter: $viewValue | limitTo: 10">
             </md-input-container>
             <md-button class="md-primary" data-ng-click="ctrl.addTag()" data-ng-disabled="ctrl.newTag==='' || ctrl.newTag===null || ctrl.newTag===undefined">Add Tag</md-button>
-            <div class="form-group mt">
-              <md-list class="tag-list">
-                <md-list-item class="tag-bubble" ng-repeat="tag in ctrl.animeitem.tags">
+            <md-list class="tag-list">
+              <md-list-item class="tag-bubble" ng-repeat="tag in ctrl.animeitem.tags">
+                  {{tag.text}}
+                  <md-button class="md-warn md-icon-button float-right" aria-hidden="true" ng-click="ctrl.removeTag(tag.text)">
+                    <md-icon>delete</md-icon>
+                  </md-button>
+              </md-list-item>
+            </md-list>
+            <md-list class="tag-list">
+                <md-list-item class="tag-bubble" ng-repeat="tag in ctrl.tagArray track by $index">
                     {{tag.text}}
-                    <md-button class="md-warn md-icon-button float-right" aria-hidden="true" ng-click="ctrl.removeTag(tag.text)">
+                    <md-button class="md-warn md-icon-button float-right" aria-hidden="true" ng-click="ctrl.dropTag(tag.text)">
                       <md-icon>delete</md-icon>
                     </md-button>
                 </md-list-item>
-              </md-list>
-            </div>
-            <div class="form-group">
-                <md-list class="tag-list">
-                    <md-list-item class="tag-bubble" ng-repeat="tag in ctrl.tagArray track by $index">
-                        {{tag.text}}
-                        <md-button class="md-warn md-icon-button float-right" aria-hidden="true" ng-click="ctrl.dropTag(tag.text)">
-                          <md-icon>delete</md-icon>
-                        </md-button>
-                    </md-list-item>
-                </md-list>
-            </div>
+            </md-list>
 
             </div>
             <div class="form-group padded-medium">

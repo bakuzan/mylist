@@ -2,9 +2,9 @@
 	'use strict';
 	angular.module('animeitems')
 	.controller('AnimeitemsController', AnimeitemsController);
-	AnimeitemsController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory', 'spinnerService', 'TagService', '$mdDialog'];
+	AnimeitemsController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', '$sce', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory', 'spinnerService', '$mdDialog'];
 
-	function AnimeitemsController($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, AnimeFactory, spinnerService, TagService, $mdDialog) {
+	function AnimeitemsController($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, $sce, ItemService, ListService, NotificationFactory, AnimeFactory, spinnerService, $mdDialog) {
 		var ctrl = this;
 
 		ctrl.authentication = Authentication;

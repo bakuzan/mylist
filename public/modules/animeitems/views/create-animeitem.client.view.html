@@ -65,7 +65,7 @@
           <p class="clickable accent-text" ng-click="ctrl.section.showOthers=!ctrl.section.showOthers" ng-if="::!ctrl.config.isCreate">
             <i class="fa" ng-class="ctrl.section.showOthers ? 'fa-minus-square' : 'fa-plus-square'"></i> Completion properties
           </p>
-          <div ng-show="ctrl.section.showOthers" ng-if="::!ctrl.config.isCreate">
+          <div ng-show="ctrl.section.showOthers">
             <md-input-container ng-show="!ctrl.animeitem.status || ctrl.animeitem.reWatching">
               <md-checkbox data-ng-model="ctrl.animeitem.onHold" id="onHold" name="onHold">
                 On Hold?

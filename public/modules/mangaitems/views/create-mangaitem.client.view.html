@@ -6,23 +6,24 @@
       <form layout="column" flex-offset="20" flex="60" name="mangaForm" data-ng-submit="ctrl.submit()" novalidate>
         <md-input-container>
           <label for="title">Title</label>
-          <input type="text" data-ng-model="ctrl.title" id="title" name="title" placeholder="Title" required>
+          <input type="text" data-ng-model="ctrl.mangaitem.title" id="title" name="title" placeholder="Title" required>
         </md-input-container>
         <md-input-container>
           <label for="chapters">Chapters</label>
-          <input type="number" data-ng-model="ctrl.chapters" id="chapters" name="chapters" placeholder="0" required>
+          <input type="number" data-ng-model="ctrl.mangaitem.chapters" ng-change="ctrl.addedChapters()"
+                 id="chapters" name="chapters" placeholder="0" required>
         </md-input-container>
         <md-input-container>
           <label for="volumes">Volumes</label>
-          <input type="number" data-ng-model="ctrl.volumes" id="volumes" name="volumes" placeholder="0" required>
+          <input type="number" data-ng-model="ctrl.mangaitem.volumes" id="volumes" name="volumes" placeholder="0" required>
         </md-input-container>
         <md-input-container>
           <label for="start">Start</label>
-          <input type="date" data-ng-model="ctrl.start" id="start" name="start" placeholder="" required>
+          <input type="date" data-ng-model="ctrl.mangaitem.start" id="start" name="start" placeholder="" required>
         </md-input-container>
         <md-input-container>
           <label for="latest">Latest</label>
-          <input type="date" data-ng-model="ctrl.latest" id="latest" name="latest" placeholder="" required>
+          <input type="date" data-ng-model="ctrl.mangaitem.latest" id="latest" name="latest" placeholder="" required>
         </md-input-container>
         <md-input-container ng-if="::ctrl.config.isCreate">
           <md-checkbox data-ng-model="ctrl.mangaitem.status" data-ng-checked="ctrl.mangaitem.chapters===ctrl.mangaitem.finalChapter && ctrl.mangaitem.volumes===ctrl.mangaitem.finalVolume && ctrl.mangaitem.finalChapter!==0 || ctrl.mangaitem.end!==null && ctrl.mangaitem.reReading===true" data-ng-true-value="true" id="status" name="status" disabled>
@@ -46,14 +47,14 @@
             <md-button class="md-primary" data-ng-click="ctrl.uploadFile()"
                        data-ng-disabled="ctrl.myFile==='' || ctrl.myFile===null || ctrl.myFile===undefined">Upload File</md-button>
           </div>
-          <md-checkbox data-ng-model="ctrl.hardcopy" id="hardcopy" name="hardcopy">
+          <md-checkbox data-ng-model="ctrl.mangaitem.hardcopy" id="hardcopy" name="hardcopy">
             Hardcopy?
           </md-checkbox>
-          <md-select ng-model="taskCreate.newTask.day" data-ng-model="ctrl.anime" id="anime" name="anime">
+          <md-select data-ng-model="ctrl.mangaitem.anime" id="anime" name="anime">
               <md-option class="disabled" value="">
                 -- Link to an anime --
               </md-option>
-              <md-option data-ng-repeat="anime in ctrl.animeitems | orderBy: 'title'" value="{{anime}}">
+              <md-option data-ng-repeat="anime in ctrl.animeitems | orderBy: 'title' track by anime._id" value="{{anime}}">
                  {{anime.title}}
               </md-option>
           </md-select>
@@ -66,11 +67,11 @@
           </md-input-container>
           <md-input-container ng-hide="ctrl.mangaitem.end!=null && ctrl.mangaitem.chapters===ctrl.mangaitem.finalChapter || ctrl.mangaitem.end!=null && ctrl.mangaitem.reReading===true ">
             <label>Final chapter</label>
-            <input type="number" data-ng-model="ctrl.finalChapter" id="finalChapter" name="finalChapter" placeholder="0">
+            <input type="number" data-ng-model="ctrl.mangaitem.finalChapter" id="finalChapter" name="finalChapter" placeholder="0">
           </md-input-container>
           <md-input-container ng-hide="ctrl.mangaitem.end!=null && ctrl.mangaitem.volumes===ctrl.mangaitem.finalVolume || ctrl.mangaitem.end!=null && ctrl.mangaitem.reReading===true ">
             <label>Final volume</label>
-            <input type="number" data-ng-model="ctrl.finalVolume" id="finalVolume" name="finalVolume" placeholder="0">
+            <input type="number" data-ng-model="ctrl.mangaitem.finalVolume" id="finalVolume" name="finalVolume" placeholder="0">
           </md-input-container>
           <md-input-container data-ng-show="ctrl.mangaitem.status==true">
             <md-checkbox data-ng-model="ctrl.mangaitem.reReading" data-ng-disabled="ctrl.mangaitem.reWatching" data-ng-change="ctrl.mangaitem.chapters=0; ctrl.mangaitem.volumes=0" id="reReading" name="reReading">

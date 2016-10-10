@@ -134,7 +134,7 @@
 		function find() {
       spinnerService.loading('manga', Mangaitems.query().$promise.then(function(result) {
           ctrl.mangaitems = result;
-					ctrl.filterConfig.statTags = ItemService.buildStatTags(result, 0);
+					ctrl.config.statTags = ItemService.buildStatTags(result, 0);
       }));
 		}
 

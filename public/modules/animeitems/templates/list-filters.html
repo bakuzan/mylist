@@ -41,7 +41,7 @@
             </div>
             <md-input-container class="clickable" ng-hide="filterConfig.isList === 'slider'" ng-click="filterConfig.sortReverse = !filterConfig.sortReverse">
               <md-icon>sort</md-icon>
-              <input type="text" value="{{filterConfig.sortReverse ? 'Descending' : 'Ascending'}}" disabled>
+              <input type="text" value="{{filterConfig.sortReverse ? 'Descending' : 'Ascending'}}" aria-label="sort direction" disabled>
             </md-input-container>
             <div class="input-group mt" ng-if="page === 'animeitem'">
               <md-checkbox data-ng-model="filterConfig.ongoingList" ng-change="itemsAvailable()" aria-label="hide completed">

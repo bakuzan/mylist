@@ -1,35 +1,36 @@
 <section data-ng-controller="CharactersController as ctrl" data-ng-init="ctrl.findOne()" data-ng-show="ctrl.authentication.user">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 page-header">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 margin-bottom-10">
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 pull-left">
-                <img ng-src="{{ctrl.trustAsResourceUrl(ctrl.character.image)}}" height="100%" width="100%"/>
-            </div>
-            <div class="col-lg-9 col-md-9 col-sm-6 col-xs-6">
-                <div class="pull-right" data-ng-show="((ctrl.authentication.user) && (ctrl.authentication.user._id === ctrl.character.user._id))">
-                    <a class="btn btn-accent" href="/#!/characters">
-                        <i class="glyphicon glyphicon-chevron-left"></i>
-                    </a>
-                    <a class="btn btn-primary" href="/#!/characters/{{ctrl.character._id}}/edit">
-                        <i class="glyphicon glyphicon-edit"></i>
-                    </a>
-                    <a class="btn btn-danger" data-ng-click="ctrl.remove()">
-                        <i class="glyphicon glyphicon-trash"></i>
-                    </a>
-                </div>
-                <h1 data-ng-bind="ctrl.character.name"></h1>
-                <p data-ng-show="ctrl.character.anime!==undefined">
-                  <span><b>Anime: </b></span>
-                  <a href="/#!/animeitems/{{ctrl.character.anime._id}}" ng-bind="ctrl.character.anime.title"></a>
-                </p>
-                <p data-ng-show="ctrl.character.manga!==undefined">
-                  <span><b>Manga: </b></span>
-                  <a href="/#!/mangaitems/{{ctrl.character.manga._id}}" ng-bind="ctrl.character.manga.title"></a>
-                </p>
-                <p><span><b>VA: </b></span><span data-ng-bind="ctrl.character.voice"></span></p>
-            </div>
-        </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 item-tags" style="clear: both">
-            <span class="col-lg-2 col-md-2 col-sm-2 tag-bubble" ng-repeat="tag in ctrl.character.tags" ng-bind="tag.text"></span>
-        </div>
-	</div>
+  <div layout="row" flex="100">
+		<div flex-gt-sm="25" flex-sm="50">
+     <img ng-src="{{ctrl.trustAsResourceUrl(ctrl.character.image)}}" height="100%" width="100%"/>
+    </div>
+    <div layout="column">
+      <h1 data-ng-bind="ctrl.character.name"></h1>
+      <div layout="row" data-ng-show="ctrl.character.anime!==undefined">
+        <p><b>Anime: </b></p>
+        <a href="/#!/animeitems/{{ctrl.character.anime._id}}" ng-bind="ctrl.character.anime.title"></a>
+      </div>
+      <div layout="row" data-ng-show="ctrl.character.manga!==undefined">
+        <p><b>Manga: </b></p>
+        <a href="/#!/mangaitems/{{ctrl.character.manga._id}}" ng-bind="ctrl.character.manga.title"></a>
+      </div>
+      <div layout="row">
+        <p><b>VA: </b></p>
+        <p data-ng-bind="ctrl.character.voice"></p>
+      </div>
+    </div>
+    <div data-ng-show="((ctrl.authentication.user) && (ctrl.authentication.user._id == ctrl.character.user._id))">
+				<a class="md-button md-primary" href="/#!/characters">
+						<i class="material-icons">back</i>
+				</a>
+				<a class="md-button md-primary" href="/#!/characters/{{ctrl.character._id}}/edit">
+						<i class="material-icons">edit</i>
+				</a>
+				<a class="md-button md-warn" data-ng-click="ctrl.remove()">
+						<i class="material-icons">delete</i>
+				</a>
+		</div>
+  </div>
+  <div class="item-tags" style="clear: both">
+      <span class="tag-bubble" ng-repeat="tag in ctrl.character.tags" ng-bind="tag.text"></span>
+  </div>
 </section>

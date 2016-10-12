@@ -1,44 +1,45 @@
 <section data-ng-controller="AnimeitemsController as ctrl" data-ng-init="ctrl.findOne()" data-ng-show="ctrl.authentication.user">
-	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 page-header">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 pull-left">
-                <img ng-src="{{ctrl.trustAsResourceUrl(ctrl.animeitem.image)}}" height="100%" width="100%"/>
-            </div>
-            <div class="col-lg-9 col-md-9 col-sm-6 col-xs-6">
-                <div class="pull-right" data-ng-show="((ctrl.authentication.user) && (ctrl.authentication.user._id == ctrl.animeitem.user._id))">
-                    <a class="btn btn-accent" href="/#!/animeitems">
-                        <i class="glyphicon glyphicon-chevron-left"></i>
-                    </a>
-                    <a class="btn btn-success" href="/#!/animeitems/watch/{{ctrl.animeitem._id}}" ng-if="ctrl.animeitem.video.files.length > 0">
-                        <i class="fa fa-film"></i>
-                    </a>
-                    <a class="btn btn-primary" href="/#!/animeitems/{{ctrl.animeitem._id}}/edit">
-                        <i class="glyphicon glyphicon-edit"></i>
-                    </a>
-                    <a class="btn btn-danger" data-ng-click="ctrl.remove()">
-                        <i class="glyphicon glyphicon-trash"></i>
-                    </a>
-                </div>
-                <h1 data-ng-bind="ctrl.animeitem.title"></h1>
-                <span class="glyphicon glyphicon-cd" data-ng-show="ctrl.animeitem.disc"></span> <span class="text-muted" data-ng-show="ctrl.animeitem.status">(Completed)</span> <span class="text-muted" data-ng-show="ctrl.animeitem.reWatching">(Watching)</span>
-                <h3>Episode </h3><span data-ng-bind="ctrl.animeitem.episodes"></span>/<span data-ng-bind="ctrl.animeitem.finalEpisode"></span>
-                <div class="related-media accent-alter-text">
-                    <p data-ng-show="ctrl.animeitem.manga!==null">Related manga: <a href="/#!/mangaitems/{{animeitem.manga._id}}">{{ctrl.animeitem.manga.title}}</a></p>
-                </div>
-                <div class="col-lg-12 col-md-12 col-sm-12 item-tags">
-                    <span class="col-lg-3 col-md-3 col-sm-3 tag-bubble" ng-repeat="tag in ctrl.animeitem.tags">{{tag.text}}</span>
-                </div>
-            </div>
-        </div>
-        <div class="text-right">
-            <span class="accent-alter-text" data-ng-show="ctrl.animeitem.status">{{ ctrl.animeitem.reWatchCount }} rewatches</span>
-        </div>
-        <div class="text-right">
-            <em class="accent-alter-text" data-ng-show="ctrl.animeitem.rating==0">No rating</em>
-            <uib-rating data-ng-model="ctrl.animeitem.rating" class="view-item-rating-stars" data-ng-show="ctrl.animeitem.rating!==0" read-only="true" max="ctrl.filterConfig.ratingActions.maxRating" id="rating" name="rating"></uib-rating>
-        </div>
+	<div layout="row" flex="100">
+		<div flex-gt-sm="25" flex-sm="50">
+				<img ng-src="{{ctrl.trustAsResourceUrl(ctrl.animeitem.image)}}" height="100%" width="100%"/>
+		</div>
+		<div layout="column">
+			<h1 data-ng-bind="ctrl.animeitem.title"></h1>
+			<span class="material-icons" data-ng-show="ctrl.animeitem.disc">disc</span> <span class="text-muted" data-ng-show="ctrl.animeitem.status">(Completed)</span> <span class="text-muted" data-ng-show="ctrl.animeitem.reWatching">(Watching)</span>
+			<div layout="row">
+				<h3>Episode </h3><p data-ng-bind="ctrl.animeitem.episodes + '/' + ctrl.animeitem.finalEpisode"></p>
+			</div>
+			<div class="related-media accent-alter-text">
+					<p data-ng-show="ctrl.animeitem.manga!==null">Related manga: <a href="/#!/mangaitems/{{animeitem.manga._id}}">{{ctrl.animeitem.manga.title}}</a></p>
+			</div>
+			<div class="item-tags">
+					<span class="tag-bubble" ng-repeat="tag in ctrl.animeitem.tags">{{tag.text}}</span>
+			</div>
+
+			<div class="text-right">
+					<span class="accent-alter-text" data-ng-show="ctrl.animeitem.status">{{ ctrl.animeitem.reWatchCount }} rewatches</span>
+			</div>
+			<div class="text-right">
+					<em class="accent-alter-text" data-ng-show="ctrl.animeitem.rating==0">No rating</em>
+					<uib-rating data-ng-model="ctrl.animeitem.rating" class="view-item-rating-stars" data-ng-show="ctrl.animeitem.rating!==0" read-only="true" max="ctrl.filterConfig.ratingActions.maxRating" id="rating" name="rating"></uib-rating>
+			</div>
+		</div>
+		<div data-ng-show="((ctrl.authentication.user) && (ctrl.authentication.user._id == ctrl.animeitem.user._id))">
+				<a class="md-button md-primary" href="/#!/animeitems">
+						<i class="material-icons">back</i>
+				</a>
+				<a class="md-button" href="/#!/animeitems/watch/{{ctrl.animeitem._id}}" ng-if="ctrl.animeitem.video.files.length > 0">
+						<i class="material-icons">film</i>
+				</a>
+				<a class="md-button md-primary" href="/#!/animeitems/{{ctrl.animeitem._id}}/edit">
+						<i class="material-icons">edit</i>
+				</a>
+				<a class="md-button md-warn" data-ng-click="ctrl.remove()">
+						<i class="material-icons">delete</i>
+				</a>
+		</div>
 	</div>
-	<small class="width-100">
+	<small flex="100">
 		<em class="accent-alter-text">
 			Start
 			<span data-ng-bind="ctrl.animeitem.start | date:'yyyy-MMM-dd'"></span><br/>
@@ -49,7 +50,7 @@
 			<span data-ng-bind="ctrl.animeitem.season.season"></span>&nbsp;<span ng-bind="ctrl.animeitem.season.year"></span>
 		</em>
 	</small>
-	<section class="col-lg-12 col-md-12 col-sm-12" style="top: -85px">
+	<section flex="100" style="top: -85px">
 		<article class="relative width-50 margin-left-auto">
 			<header>
 				<h3 ng-if="ctrl.animeitem.meta.history.length > 0" class="margin-5">Episode history</h3>

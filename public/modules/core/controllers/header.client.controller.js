@@ -2,9 +2,9 @@
 (function() {
 	'use strict';
 	angular.module('core').controller('HeaderController', HeaderController);
-	HeaderController.$inject = ['$scope', 'Authentication', 'Menus', '$state', '$location', '$mdSidenav', '$mdUtil', 'themeProvider'];
+	HeaderController.$inject = ['$scope', 'Authentication', 'Menus', '$state', '$location', '$mdSidenav', '$mdUtil'];
 
-	function HeaderController($scope, Authentication, Menus, $state, $location, $mdSidenav, $mdUtil, themeProvider) {
+	function HeaderController($scope, Authentication, Menus, $state, $location, $mdSidenav, $mdUtil) {
 		var ctrl = this;
 
 		ctrl.applicationThemes = [{ n: 'day', v: 'day-time' }, { n: 'night', v: 'night-time' }];
@@ -57,8 +57,6 @@
 
     function changeTheme() {
 			console.log('new theme: ', ctrl.theme);
-			themeProvider.reload(ctrl.theme);
-			themeProvider.setDefaultTheme(ctrl.theme);
     }
 
 	}

@@ -1,6 +1,9 @@
+arrancar-24 (1.27.24)
+- turn off autocompletes on forms
+- altered page min-height to have footer permanently off screen without scrolling.
+
 arrancar-23 (1.27.23)
 - fix create anime 'in season?' bug.
-
 
 arrancar-22 (1.27.22)
 - fixed mangaitems maximum chapters / volumes bug.

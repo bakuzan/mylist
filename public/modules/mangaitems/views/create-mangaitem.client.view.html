@@ -3,7 +3,7 @@
         <h1>New Manga</h1>
     </div>
     <div class="col-md-12">
-        <form name="mangaForm" class="form-horizontal" data-ng-submit="ctrl.create()" novalidate>
+        <form name="mangaForm" class="form-horizontal" data-ng-submit="ctrl.create()" novalidate autocomplete="off">
             <fieldset>
                 <div class="form-group" ng-class="{ 'has-error' : mangaForm.title.$invalid && !mangaForm.title.$pristine }">
                     <label for="title" class="col-md-2 control-label">Title</label>

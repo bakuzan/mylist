@@ -3,7 +3,7 @@
       <h1 ng-bind="ctrl.config.title + ' Anime'"></h1>
     </header>
     <div class="col-md-12">
-      <form name="animeForm" class="form-horizontal" data-ng-submit="ctrl.submit()" novalidate>
+      <form name="animeForm" class="form-horizontal" data-ng-submit="ctrl.submit()" novalidate autocomplete="off">
         <fieldset>
 
           <div class="form-group" ng-class="{ 'has-error' : animeForm.title.$invalid && !animeForm.title.$pristine }">

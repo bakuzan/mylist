@@ -1,2 +1,1429 @@
-.form-group p{font-size:14px}.list-group{padding:0;margin:0}.list-group-item{background-color:#fff;border-color:#ffd}.view-buttons{margin-bottom:25px;margin-top:-25px;padding-bottom:20px}.view-item-detail{margin-top:5px;padding-top:5px}.item-icons{margin:1px}.item-tags{color:#777;font-style:italic;padding:5px 0;padding-left:0}.item-actions,.item-tags{margin:10px 0}.blue-text{color:#337ab7}.green-text{color:#47a447}.padded-medium{padding:10px}.item-history-popout{position:fixed;top:10vh;left:20vw;width:60vw;height:50vh;background-color:#eff;-ms-flex-line-pack:center;align-content:center;margin-top:10px;overflow-y:hidden;z-index:3;box-shadow:0 2px 100px rgba(0,0,0,.2);transition:all .25s;backface-visibility:hidden}.item-history-popout .item-history-container{height:45vh}.item-history-popout .item-history-container .item-history-list{height:35vh}.item-history-list{position:relative;padding:0 5px 5px;margin-bottom:5px;overflow-y:hidden}.item-history-list:hover{overflow-y:auto}.item-history-list .item-history{position:relative;width:95%}.item-history-list .item-history .navbar-inverse .navbar-nav .active a:focus,.item-history-list .item-history .navbar-inverse .navbar-nav .active a:hover,.item-history-list .item-history a,.navbar-inverse .navbar-nav .active .item-history-list .item-history a:focus,.navbar-inverse .navbar-nav .active .item-history-list .item-history a:hover{margin:0}.item-history-list div.item-history:nth-child(even){background-color:#fff}.close-button{position:absolute;top:6px;right:1%;padding:5px 10px;margin:20px 0;color:#d41f1a;font-size:20px;text-align:center;cursor:pointer}.close-button:hover{background-color:#d41f1a;color:#fff}.tag-list{list-style-type:none;padding:0 20px}.loading-image{display:block;position:absolute;top:0;left:0;z-index:4;width:100vw;height:100vh;background-color:silver;background-color:hsla(0,0%,75%,.5);background-image:url(/modules/core/img/loaders/info-loader.gif);background-repeat:no-repeat;background-position:50%}.item-list-container{padding:10px;margin:40px 10px}.item-filter-container,.item-placeholder-container,.popout-filters-container{margin-top:40px}.item-filter-container,.popout-filters-container{padding:20px 10px;margin-top:0;margin-left:-10px;z-index:2;position:fixed;top:120px;left:50px;max-width:350px;min-width:200px}@media (max-width:768px){.item-filter-container,.popout-filters-container{background-color:#eff}}@media (max-width:768px){.in-the-way{display:none}}.show-actions{display:none}@media (max-width:768px){.show-actions{display:inline-block}}.search-tag-list-container{min-width:180px}@media (min-width:768px) and (max-width:1015px){.btn-ends{display:none}}.list-item-rating-stars,.rating-stars,.view-item-rating-stars{color:#222;white-space:nowrap}.list-item-rating-stars{font-size:14px}.view-item-rating-stars{font-size:16px}@media (min-width:768px) and (max-width:875px){.rating-label{display:none}}#anime-episode-history-table td{padding:0 5px}#anime-episode-history-table tbody tr.loaded,#anime-episode-history-table tbody tr:hover,#anime-watch-file-list li.loaded,#anime-watch-file-list li:hover{background-color:#eff}.paging-controls-scroll-top{background-color:#fff}.popout-filters-container{top:60px;left:100px;background-color:#eff}.dark-bordered-font{font-size:12px}.dark-bordered-font,.dark-bordered-font-heading{color:#fff;font-weight:500;text-shadow:-1px 0 #000,0 1px #000,1px 0 #000,0 -1px #000}.dark-bordered-font-heading{font-size:16px}.tag-bubble{border-radius:10px;border:2px solid #fff;padding:10px;color:#222;font-weight:600;font-size:12px;letter-spacing:.5px;background-color:#eff;white-space:nowrap}.mt{margin-top:15px}.character-default{height:150px}.character-expanded{height:auto}.view-controls{text-align:center;margin-bottom:10px}.view-controls label{max-width:45%;min-width:25%}.slide{box-shadow:0 0 15px #222}.slider-indicators li.indicator.active{background-color:#222}.slider-indicators li.indicator.active.locked{background-color:#696969}.content{margin-top:50px;padding-bottom:100px}.undecorated-link:hover{text-decoration:none}.ng-cloak,.x-ng-cloak,[data-ng-cloak],[ng-cloak],[ng\:cloak],[x-ng-cloak]{display:none!important}.ng-invalid.ng-dirty{border-color:#fa787e}.ng-valid.ng-dirty{border-color:#78fa89}.input-group input.ng-valid.ng-dirty,.input-group select.ng-valid.ng-dirty,.input-group span.ng-valid.ng-dirty{border-color:#ccc}.btn[disabled],.form-control[disabled],button[disabled],input[type=checkbox].disabled,input[type=checkbox][disabled]{cursor:default}.navbar-inverse .navbar-nav .active .open .dropdown-menu li a:hover,.navbar-inverse .navbar-nav .active a:focus,.navbar-inverse .navbar-nav .active a:hover,.navbar-inverse .navbar-nav .open .dropdown-menu li .active a:hover,a{color:#696969}.navbar-inverse .navbar-nav .active a:focus,.navbar-inverse .navbar-nav .active a:hover,.navbar-inverse .navbar-nav .open .dropdown-menu li a:hover,.navbar-inverse .navbar-nav li a:hover,a:focus,a:hover{color:#222}@media (min-width:768px){header div.container{padding:0}}.navbar-inverse,.navbar-inverse .navbar-toggle,.navbar-inverse .navbar-toggle:focus,.navbar-inverse .navbar-toggle:hover{background-image:none;background-color:#eff;border-color:#fff}.navbar-inverse .navbar-toggle:focus,.navbar-inverse .navbar-toggle:hover{background-color:#ffd}.navbar-inverse .navbar-brand,.navbar-inverse .navbar-toggle:focus .navbar-brand,.navbar-inverse .navbar-toggle:hover .navbar-brand{color:#222}.navbar-inverse .navbar-brand:focus,.navbar-inverse .navbar-brand:hover{color:#696969}.navbar-inverse .navbar-nav .active .open .dropdown-menu li a:hover,.navbar-inverse .navbar-nav .active li a:focus,.navbar-inverse .navbar-nav .active li a:hover,.navbar-inverse .navbar-nav .open .dropdown-menu li .active a:hover,.navbar-inverse .navbar-nav li .active a:focus,.navbar-inverse .navbar-nav li .active a:hover,.navbar-inverse .navbar-nav li a,.navbar-inverse .navbar-toggle:focus .navbar-nav li a,.navbar-inverse .navbar-toggle:hover .navbar-nav li a{color:#222}.navbar-inverse .navbar-nav .active li a:focus,.navbar-inverse .navbar-nav .active li a:hover,.navbar-inverse .navbar-nav .open .dropdown-menu li a:hover,.navbar-inverse .navbar-nav li .active a:focus,.navbar-inverse .navbar-nav li .active a:hover,.navbar-inverse .navbar-nav li a:focus,.navbar-inverse .navbar-nav li a:hover{color:#696969}.navbar-inverse .navbar-nav .active .open .dropdown-menu li a:hover,.navbar-inverse .navbar-nav .active a,.navbar-inverse .navbar-nav .active a:focus,.navbar-inverse .navbar-nav .active a:hover,.navbar-inverse .navbar-nav .open .dropdown-menu li .active a:hover{background-image:none;background-color:none;color:#696969}.navbar-inverse .navbar-nav li.open a.dropdown-toggle,.navbar-inverse .navbar-nav li.open a.dropdown-toggle:focus,.navbar-inverse .navbar-nav li.open a.dropdown-toggle:hover{background-image:none;background-color:#fff;color:#696969}@media (max-width:768px){.navbar-inverse .navbar-nav li.open a.dropdown-toggle,.navbar-inverse .navbar-nav li.open a.dropdown-toggle:focus,.navbar-inverse .navbar-nav li.open a.dropdown-toggle:hover{color:#696969}}.navbar-inverse .navbar-nav li.open a.dropdown-toggle:focus,.navbar-inverse .navbar-nav li.open a.dropdown-toggle:hover{color:#696969}@media (max-width:768px){.navbar-inverse .navbar-nav li.open a.dropdown-toggle:focus,.navbar-inverse .navbar-nav li.open a.dropdown-toggle:hover{color:#696969}}.navbar-inverse .navbar-nav li.open a.dropdown-toggle:hover{color:#696969}@media (max-width:768px){.navbar-inverse .navbar-nav li.open a.dropdown-toggle:hover{color:#696969}}.navbar-inverse .navbar-nav li.active a.dropdown-toggle,.navbar-inverse .navbar-nav li.active a.dropdown-toggle:focus,.navbar-inverse .navbar-nav li.active a.dropdown-toggle:hover{background-image:none;background-color:#fff;color:#696969}@media (max-width:768px){.navbar-inverse .navbar-nav li.active a.dropdown-toggle,.navbar-inverse .navbar-nav li.active a.dropdown-toggle:focus,.navbar-inverse .navbar-nav li.active a.dropdown-toggle:hover{color:#696969}}.navbar-inverse .navbar-nav li.active a.dropdown-toggle:focus,.navbar-inverse .navbar-nav li.active a.dropdown-toggle:hover{color:#696969}@media (max-width:768px){.navbar-inverse .navbar-nav li.active a.dropdown-toggle:focus,.navbar-inverse .navbar-nav li.active a.dropdown-toggle:hover{color:#696969}}.navbar-inverse .navbar-nav .active .open .dropdown-menu li a:hover,.navbar-inverse .navbar-nav .open .dropdown-menu li .active a:hover,.navbar-inverse .navbar-nav .open .dropdown-menu li a{background-image:none;background-color:#ffd;color:#222}.navbar-inverse .navbar-nav .open .dropdown-menu li a:focus,.navbar-inverse .navbar-nav .open .dropdown-menu li a:hover{background-color:#fff;color:#696969}@media (max-width:992px){nav .additional-navbar-links{display:none}}nav .additional-navbar-links .navbar-link,nav .additional-navbar-links .navbar-link:visited,nav .additional-navbar-links li.active .navbar-link:focus,nav .additional-navbar-links li.active .navbar-link:hover,nav .additional-navbar-links li.active .navbar-link:visited{color:#222;padding:15px}nav .additional-navbar-links .navbar-link:visited,nav .additional-navbar-links li.active .navbar-link:visited{text-decoration:none}nav .additional-navbar-links .navbar-link:focus,nav .additional-navbar-links .navbar-link:hover,nav .additional-navbar-links li.active .navbar-link:focus,nav .additional-navbar-links li.active .navbar-link:hover{color:#696969;text-decoration:none}nav .additional-navbar-links .navbar-link:active,nav .additional-navbar-links li.active .navbar-link,nav .additional-navbar-links li.active .navbar-link:active:focus,nav .additional-navbar-links li.active .navbar-link:active:hover,nav .additional-navbar-links li.active .navbar-link:active:visited,nav .additional-navbar-links li.active .navbar-link:focus,nav .additional-navbar-links li.active .navbar-link:hover,nav .additional-navbar-links li.active .navbar-link:visited{background-color:#fff;color:#222}nav .additional-navbar-links-dropdown{display:none}@media (max-width:992px){nav .additional-navbar-links-dropdown{display:block}}.dropdown-menu .active a,.dropdown-menu .navbar-inverse .navbar-nav .active .open .dropdown-menu li a:hover,.dropdown-menu .navbar-inverse .navbar-nav .active a:focus,.dropdown-menu .navbar-inverse .navbar-nav .active a:hover,.navbar-inverse .navbar-nav .dropdown-menu .active .open .dropdown-menu li a:hover,.navbar-inverse .navbar-nav .dropdown-menu .active a:focus,.navbar-inverse .navbar-nav .dropdown-menu .active a:hover,.navbar-inverse .navbar-nav .open .dropdown-menu li .active a:hover{background-color:#eff}.primary-text{color:#eff}.accent-text{color:#222}.accent-alter-text{color:#696969}.tagline{margin-top:-10px;text-align:center;padding:5px 20px;font-size:11px;font-weight:600;text-transform:uppercase;color:#777}.inputContainer{height:60px;border-top:1px solid #e5e5e5;position:relative;overflow:hidden}.inputContainer.last{border-bottom:1px solid #e5e5e5;margin-bottom:20px}.inputContainer.half.last.right{border-left:1px solid #efefef}.taskAdd{background:#444;padding-left:15px}.taskAdd:hover{background:#303030}.taskDelete{background:#e74c3c;padding-left:30px}.taskDelete:hover{background:#c0392b}.taskList{list-style:none;padding:0 20px}.taskList .taskItem:last-child{border-bottom:none}.taskItem{position:relative;max-height:500px;border-bottom:1px solid #ffd;padding:15px 0;color:#222;font-weight:600;font-size:14px;letter-spacing:.5px}.taskItem .checklist-list-container{max-height:350px}@media (min-width:768px) and (max-width:992px){.taskItem span.task-description-text{white-space:nowrap;overflow:hidden;position:absolute;width:50%;margin-left:5px}.taskItem span.task-times-text{position:absolute;display:block}.taskItem span.separator{display:none}}.taskCheckbox{margin-right:1em}.complete-true{text-decoration:line-through;color:#696969}.taskList .taskDate{color:#696969;font-size:10px;font-weight:700;text-transform:uppercase;display:block;width:10%;white-space:nowrap;margin-left:41px}.fa-calendar{margin-right:10px;font-size:16px}[class*=category-]{font-size:10px;background:#444;vertical-align:middle;color:#fff;padding:10px;width:75px;text-align:center;border-radius:2px;float:right;font-weight:400;text-transform:uppercase;margin-right:30px}.category-{background:transparent}.category-Watch{background:#d41f1a}.category-Read{background:#60c}.category-Play{background:#f39c12}.category-Other{background:#47a447}.taskCheckbox{-webkit-appearance:none;-moz-appearance:none;appearance:none;transition:all .3s;display:inline-block;cursor:pointer;width:19px;height:19px;vertical-align:middle}.taskCheckbox:before,.taskCheckbox:checked:before{font-family:FontAwesome;color:#222;font-size:20px;transition:all .3s}.taskCheckbox:before{content:'\f096'}.taskCheckbox:disabled:before{content:'\f03a';color:#696969}.taskCheckbox:checked:before{content:'\f14a';color:#47a447}.taskCategory{-webkit-appearance:none;-moz-appearance:none;appearance:none;cursor:pointer;padding-left:16.5px;background:#fff}.selectArrow{position:absolute;z-index:1;top:35%;right:0;margin-right:20px;color:#777;pointer-events:none}.taskCategory option{background:#fff;border:none;padding:0 100px}.collapse-bar{cursor:pointer;background-color:#e6e6e6;color:#fff;font-weight:700}.keep-cursor{cursor:default}.clickable{cursor:pointer}.site-wrap{overflow:hidden;width:100%;height:100%}.add-task-popout{position:fixed;top:10vh;left:20vw;width:65vw;height:auto;margin-top:10px;background-color:#eff;-ms-flex-line-pack:center;align-content:center;z-index:4;opacity:0}.add-task-popout.active{box-shadow:0 2px 100px rgba(0,0,0,.2);transition:all .25s;backface-visibility:hidden;opacity:1}.toggle-add-task{font-size:20px}.btn-primary{background-image:none;background-color:#eff;border-color:#fff;color:#222}.btn-primary.active,.btn-primary:active,.btn-primary:active:focus,.btn-primary:active:hover,.btn-primary:focus,.btn-primary:hover{background-color:#fff;border-color:#ffd;color:#696969}.btn-primary:disabled,.btn-primary:disabled:hover,.btn-primary[disabled],.btn-primary[disabled]:hover{background-color:#ffd;border-color:#ffd}.btn-primary.ng-valid.ng-dirty{border-color:#fff}.btn-accent{background-image:none;background-color:#222;border-color:#696969;color:#eff}.btn-accent.active,.btn-accent:active,.btn-accent:active:focus,.btn-accent:active:hover,.btn-accent:focus,.btn-accent:hover{background-color:#696969;border-color:#ffd;color:#fff}.btn-accent:disabled,.btn-accent:disabled:hover,.btn-accent[disabled],.btn-accent[disabled]:hover{background-color:#ffd;border-color:#ffd}.btn-accent.ng-valid.ng-dirty{border-color:#696969}.btn-success{background-image:none;background-color:#47a447;border-color:#0c640c;color:#fff}.btn-success.active,.btn-success:active,.btn-success:active:focus,.btn-success:active:hover,.btn-success:focus,.btn-success:hover{background-color:#0c640c;border-color:#47a447;color:#fcfcfc}.btn-success.ng-valid.ng-dirty{border-color:#0c640c}.btn-danger{background-image:none;background-color:#d41f1a;border-color:#830300;color:#fff}.btn-danger.active,.btn-danger:active,.btn-danger:active:focus,.btn-danger:active:hover,.btn-danger:focus,.btn-danger:hover{background-color:#830300;border-color:#d41f1a;color:#fcfcfc}.btn-danger.ng-valid.ng-dirty{border-color:#830300}.popout-header{padding-bottom:9px;margin:20px 0;border:1px solid #ffd;color:#222;background-color:#fff;padding:10px;width:95%}.checklist-item{padding:5px}.menu-header-bar{position:relative;display:block;background-color:#eff;color:#222;font-weight:700;padding:10px 15px;border:1px solid #ffd;border-radius:2px}.navbar-inverse .navbar-nav .active .open .dropdown-menu li a.menu-header-bar:hover,.navbar-inverse .navbar-nav .active a.menu-header-bar:focus,.navbar-inverse .navbar-nav .active a.menu-header-bar:hover,.navbar-inverse .navbar-nav .open .dropdown-menu li .active a.menu-header-bar:hover,a.menu-header-bar,a.menu-header-bar:hover{text-decoration:none}.menu-header-bar:hover{background-color:#fff;color:#696969}.task-list-container{padding:10px 5px;margin:40px 10px}.filter-container,.placeholder-container{margin-top:20px}.filter-container{padding:20px 0;margin-left:-10px;z-index:2;position:fixed;top:100px;left:50px;max-width:350px;min-width:200px}.fixed-header{position:fixed;z-index:2;top:55px;left:40px}.page-header{border-color:#222}.checklist-progress-bar{background-color:#eee;height:10px;width:75%;margin-top:10px}.checklist-progress{height:100%;background-color:#696969;background-image:linear-gradient(180deg,#696969 0,#222);background-repeat:repeat-x;filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFCA7500',endColorstr='#FFFFAC3A',GradientType=0)"}div.popover{color:#696969}.checklist-list{max-height:250px;overflow-y:auto;list-style-type:decimal-leading-zero}.options-list-container{max-height:12vh;overflow-y:auto}.options-list{list-style-type:decimal-leading-zero}.options-list li{position:relative;padding:0}.options-list li p{width:100%;padding-right:10px;margin-bottom:0}.options-list li p:hover{background-color:#eff}.navbar-inverse .navbar-nav .active .options-list li a:focus,.navbar-inverse .navbar-nav .active .options-list li a:hover,.navbar-inverse .navbar-nav .open .dropdown-menu .options-list li .active a:hover,.options-list .navbar-inverse .navbar-nav .active .open .dropdown-menu li a:hover,.options-list .navbar-inverse .navbar-nav .open .dropdown-menu li .active a:hover,.options-list li .navbar-inverse .navbar-nav .active a:focus,.options-list li .navbar-inverse .navbar-nav .active a:hover,.options-list li a{margin:0}.options-list li:hover{background-color:#fff}.small-input{display:inline;width:40px;padding:0;padding-left:5px}.ratings-table{width:100%}.ratings-table tr:hover{background-color:#fff}.ratings-table th{text-align:center}.ratings-table th.left{text-align:left}.ratings-table td{text-align:center}.ratings-table td.left{text-align:left}.sticky-scroll-top,.table-horizontal-scroll th{background-color:#fff}.tab-control-option.active{border-bottom-color:#eff}.navbar-inverse .navbar-nav .open .dropdown-menu li .tab-control-option.active a:hover,.navbar-inverse .navbar-nav .tab-control-option.active .open .dropdown-menu li a:hover,.navbar-inverse .navbar-nav .tab-control-option.active a:focus,.navbar-inverse .navbar-nav .tab-control-option.active a:hover,.tab-control-option.active a{color:#222}.navbar-inverse .navbar-nav .active .open .dropdown-menu li .tab-control-option a:hover,.navbar-inverse .navbar-nav .active .tab-control-option a:focus,.navbar-inverse .navbar-nav .active .tab-control-option a:hover,.navbar-inverse .navbar-nav .open .dropdown-menu li .active .tab-control-option a:hover,.tab-control-option .navbar-inverse .navbar-nav .active .open .dropdown-menu li a:hover,.tab-control-option .navbar-inverse .navbar-nav .active a:focus,.tab-control-option .navbar-inverse .navbar-nav .active a:hover,.tab-control-option .navbar-inverse .navbar-nav .open .dropdown-menu li .active a:hover,.tab-control-option a{color:#696969}.primary-background{background-color:#eff}.secondary-background{background-color:#fff}.accent-background{background-color:#222}.accent-alter-background{background-color:#696969}.standard-border{border:1px solid #ffd}.alter-border{border:1px solid #222}.grey-border{border:1px solid #eee}.favourite-header{display:inline-block;width:100%;padding-bottom:5px;border-bottom:1px solid #222;margin-bottom:10px;white-space:nowrap}.favourite-link{color:inherit}.favourite-link:focus,.favourite-link:hover{color:inherit;text-decoration:none}.favourite-link:hover h2:before{content:'Go to '}.favourite-link:hover h2:after{content:'?'}.trophy-1{color:gold}.trophy-1,.trophy-2{text-shadow:-1px 0 #000,0 1px #000,1px 0 #000,0 -1px #000}.trophy-2{color:silver}.trophy-3{color:#bc8f8f}.trophy-3,.trophy-4,.trophy-5{text-shadow:-1px 0 #000,0 1px #000,1px 0 #000,0 -1px #000}.trophy-4,.trophy-5{color:#fff}.favourite-item{height:10vh}.selected{border:3px solid #d41f1a}.bin-style{position:absolute;right:0;color:#d41f1a;padding:2px 4px;margin:5px}.bin-style:hover{background-color:#d41f1a;color:#fff}.current-favourites,.favourite-anime,.favourite-manga{padding-bottom:10px}.favourite-content{margin-bottom:10px}.favourite-content .navbar-inverse .navbar-nav .active a.list-group-item:hover,.favourite-content a.list-group-item:hover,.navbar-inverse .navbar-nav .active .favourite-content a.list-group-item:hover{background-color:#eff}.history-list-item:nth-child(even) p{background-color:#fff}.history-list-item h4{background-color:#eff;border-bottom:1px solid #222}.history-list-item p{padding:0 5px;margin:4px 0}.history-list-container{padding:10px 15px}.history-group-header{padding-bottom:9px;margin:0;border:1px solid #ffd;background-color:#fff;padding:10px;width:100%}#anime-episode-ratings>tbody>tr>th{width:120px}.stat-month-box{cursor:pointer;background-color:#696969;display:block;min-height:20px}.stat-month-box:hover{cursor:pointer;border:1px solid #ffd}.stat-history,.stat-history-panel,.stat-rating-panel{margin-bottom:10px}.stat-history{padding-bottom:10px}.stat-header{border-bottom:1px solid #222;margin-bottom:10px}.progress-container{height:100%}.progress-bar-placement{margin-bottom:10px}.stat-summary-info{margin-top:-25px}.related-media{padding-top:25px;font-size:small}.stat-tag-detail,.stat-tag-panel{margin-bottom:10px}.stat-header-label-container{display:-ms-inline-flexbox;display:inline-flex}.stat-header-label,.stat-header-label.ng-valid.ng-dirty{font-size:24px;padding:5px;border:1px solid #ffd;margin:10px 5px}.stat-month-header{width:8%}.stat-season-header{width:24%}.stat-overview{background-color:#eff;text-align:center;font-size:18px;font-weight:700;padding:5px 0}.stat-media-detail,.stat-media-panel,.stat-overview{margin-bottom:10px}.stat-table-row:hover{background-color:#fff;color:#696969}.stat-gender-panel{text-align:center;vertical-align:middle;height:35px;padding:7px}.stat-media-table thead,.stat-tag-detail-table thead,.stat-tag-table thead{background-color:#fff}.current-progress{color:#fff;background-color:#696969;background-image:linear-gradient(180deg,#696969 0,#222);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFCA7500',endColorstr='#FFFFAC3A',GradientType=0)}.stat-month-detail{background-color:#eff;margin-bottom:10px}.stat-voice-detail,.stat-voice-panel{margin-bottom:10px}.stat-detail{background-color:#eff}.Winter-background{background-color:#31b0d5}.Spring-background{background-color:#449d44}.Summer-background{background-color:#c9302c}.Fall-background{background-color:#a12c00}@media (min-width:992px){.nav-users{position:fixed}}.remove-account-container{display:inline-block;position:relative}.btn-remove-account{top:10px;right:10px;position:absolute}.loginBG{background-color:#fff;color:#222}html{height:100%}html body{position:relative;background-color:#eff;min-height:94%}.centerPiece{position:fixed;top:50%;left:50%}footer{position:absolute;bottom:0;width:100%;height:100px;padding-bottom:20px;text-align:center;font-size:11px;font-weight:600;text-transform:uppercase;color:#696969}.navbar-inverse .navbar-nav .active .open .dropdown-menu li footer a:hover,.navbar-inverse .navbar-nav .active footer a:focus,.navbar-inverse .navbar-nav .active footer a:hover,.navbar-inverse .navbar-nav .open .dropdown-menu li .active footer a:hover,footer .navbar-inverse .navbar-nav .active .open .dropdown-menu li a:hover,footer .navbar-inverse .navbar-nav .active a:focus,footer .navbar-inverse .navbar-nav .active a:hover,footer .navbar-inverse .navbar-nav .open .dropdown-menu li .active a:hover,footer a{color:#222}footer hr{border-color:#696969}.input-group-addon{color:#222;background-color:#fff;border:1px solid #ffd}.form-control{background-color:#fff;color:#222;border-color:#ffd}.form-control[disabled]{background-color:#ffd;color:#696969}.form-control[readonly]{background-color:#fff}.tab-filter-container:after{border-bottom:1px solid #eff}.tab-filter{background:#eff;border:1px solid #fff}.tab-filter.tab-in{background:#fff;border-bottom-color:#fff}.schedule-calendar>div.header{background:#eff;color:#222}.schedule-calendar>div.week>span.day{background:#fff;color:#222}.schedule-calendar>div.week.names>span{color:#696969}.schedule-calendar>div.week>span.day.today{background:#ffd;color:#696969}.schedule-calendar>div.week>span.day.selected{background:#eff;color:#222}input[id^=date-input-]{width:0}
-/*# sourceMappingURL=maps/main-day.css.map */
+.form-group p {
+  font-size: 14px;
+}
+
+.list-group {
+  padding: 0;
+  margin: 0;
+}
+
+.list-group-item {
+  background-color: #FFFFFF;
+  border-color: #FFFFDD;
+}
+
+.view-buttons {
+  margin-bottom: 25px;
+  margin-top: -25px;
+  padding-bottom: 20px;
+}
+
+.view-item-detail {
+  margin-top: 5px;
+  padding-top: 5px;
+}
+
+.item-icons {
+  margin: 1px;
+}
+
+.item-tags {
+  color: #777;
+  font-style: italic;
+  margin: 10px 0;
+  padding: 5px 0;
+  padding-left: 0;
+}
+
+.item-actions {
+  margin: 10px 0;
+}
+
+.blue-text {
+  color: #337ab7;
+}
+
+.green-text {
+  color: #47a447;
+}
+
+.padded-medium {
+  padding: 10px;
+}
+
+.item-history-popout {
+  position: fixed;
+  top: 10vh;
+  left: 20vw;
+  width: 60vw;
+  height: 50vh;
+  background-color: #EEFFFF;
+  align-content: center;
+  margin-top: 10px;
+  overflow-y: hidden;
+  z-index: 750;
+  -webkit-box-shadow: 0 2px 100px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 2px 100px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 100px rgba(0, 0, 0, 0.2);
+  -webkit-transition: all 250ms;
+  -o-transition: all 250ms;
+  -moz-transition: all 250ms;
+  transition: all 250ms;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.item-history-popout .item-history-container {
+  height: 45vh;
+}
+.item-history-popout .item-history-container .item-history-list {
+  height: 35vh;
+}
+
+.item-history-list {
+  position: relative;
+  padding: 0 5px 5px;
+  margin-bottom: 5px;
+  overflow-y: hidden;
+}
+.item-history-list:hover {
+  overflow-y: auto;
+}
+.item-history-list .item-history {
+  position: relative;
+  width: 95%;
+}
+.item-history-list .item-history a, .item-history-list .item-history .navbar-inverse .navbar-nav .active a:focus, .navbar-inverse .navbar-nav .active .item-history-list .item-history a:focus, .item-history-list .item-history .navbar-inverse .navbar-nav .active a:hover, .navbar-inverse .navbar-nav .active .item-history-list .item-history a:hover {
+  margin: 0;
+}
+.item-history-list div.item-history:nth-child(even) {
+  background-color: #FFFFFF;
+}
+
+.close-button {
+  position: absolute;
+  top: 6px;
+  right: 1%;
+  padding: 5px 10px;
+  margin: 20px 0;
+  color: #d41f1a;
+  font-size: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background-color: #d41f1a;
+  color: #FFF;
+}
+
+.tag-list {
+  list-style-type: none;
+  padding: 0 20px;
+}
+
+.loading-image {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  width: 100vw;
+  height: 100vh;
+  background-color: #C0C0C0;
+  background-color: rgba(192, 192, 192, 0.5);
+  background-image: url("/modules/core/img/loaders/info-loader.gif");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.item-list-container {
+  padding: 10px;
+  margin: 40px 10px;
+}
+
+.item-placeholder-container, .item-filter-container, .popout-filters-container {
+  margin-top: 40px;
+}
+
+.item-filter-container, .popout-filters-container {
+  padding: 20px 10px;
+  margin-top: 0;
+  margin-left: -10px;
+  z-index: 500;
+  position: fixed;
+  top: 120px;
+  left: 50px;
+  max-width: 350px;
+  min-width: 200px;
+}
+@media (max-width: 768px) {
+  .item-filter-container, .popout-filters-container {
+    background-color: #EEFFFF;
+  }
+}
+
+@media (max-width: 768px) {
+  .in-the-way {
+    display: none;
+  }
+}
+
+.show-actions {
+  display: none;
+}
+@media (max-width: 768px) {
+  .show-actions {
+    display: inline-block;
+  }
+}
+
+.search-tag-list-container {
+  min-width: 180px;
+}
+
+@media (min-width: 768px) and (max-width: 1015px) {
+  .btn-ends {
+    display: none;
+  }
+}
+.rating-stars, .list-item-rating-stars, .view-item-rating-stars {
+  color: #222222;
+  white-space: nowrap;
+}
+
+.list-item-rating-stars {
+  font-size: 14px;
+}
+
+.view-item-rating-stars {
+  font-size: 16px;
+}
+
+@media (min-width: 768px) and (max-width: 875px) {
+  .rating-label {
+    display: none;
+  }
+}
+/** View anime page **/
+#anime-episode-history-table td {
+  padding: 0 5px;
+}
+#anime-episode-history-table tbody tr:hover, #anime-episode-history-table tbody tr.loaded {
+  background-color: #EEFFFF;
+}
+
+/** Watch anime page **/
+#anime-watch-file-list li:hover, #anime-watch-file-list li.loaded {
+  background-color: #EEFFFF;
+}
+
+/* PAGING CONTROLS CUSTOM */
+.paging-controls-scroll-top {
+  background-color: #FFFFFF;
+}
+
+/* LIST FILTERS CUSTOM */
+.popout-filters-container {
+  top: 60px;
+  left: 100px;
+  background-color: #EEFFFF;
+}
+
+.dark-bordered-font {
+  color: #FFF;
+  font-size: 12px;
+  font-weight: 500;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.dark-bordered-font-heading {
+  color: #FFF;
+  font-size: 16px;
+  font-weight: 500;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.tag-bubble {
+  border-radius: 10px;
+  border: 2px solid #FFFFFF;
+  padding: 10px;
+  color: #222222;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  background-color: #EEFFFF;
+  white-space: nowrap;
+}
+
+.mt {
+  margin-top: 15px;
+}
+
+.character-default {
+  height: 150px;
+}
+
+.character-expanded {
+  height: auto;
+}
+
+.view-controls {
+  text-align: center;
+  margin-bottom: 10px;
+}
+.view-controls label {
+  max-width: 45%;
+  min-width: 25%;
+}
+
+/* Slider customisation */
+.slide {
+  -webkit-box-shadow: 0px 0px 15px #222222;
+  -moz-box-shadow: 0px 0px 15px #222222;
+  box-shadow: 0px 0px 15px #222222;
+}
+
+.slider-indicators li.indicator.active {
+  background-color: #222222;
+}
+.slider-indicators li.indicator.active.locked {
+  background-color: #696969;
+}
+
+.content {
+  margin-top: 50px;
+  min-height: calc(100vh - 50px);
+}
+
+.undecorated-link:hover {
+  text-decoration: none;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+.ng-invalid.ng-dirty {
+  border-color: #FA787E;
+}
+
+.ng-valid.ng-dirty {
+  border-color: #78FA89;
+}
+
+/* remove unecessary red/green borders. */
+.input-group input.ng-valid.ng-dirty,
+.input-group select.ng-valid.ng-dirty,
+.input-group span.ng-valid.ng-dirty {
+  border-color: #ccc;
+}
+
+/* remove not-allowed cursor */
+.form-control[disabled], input[type="checkbox"][disabled], input[type="checkbox"].disabled, button[disabled], .btn[disabled] {
+  cursor: default;
+}
+
+a, .navbar-inverse .navbar-nav .active a:focus, .navbar-inverse .navbar-nav .active a:hover, .navbar-inverse .navbar-nav .active .open .dropdown-menu li a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu li .active a:hover {
+  color: #696969;
+}
+
+a:focus, a:hover, .navbar-inverse .navbar-nav .active a:hover, .navbar-inverse .navbar-nav li a:hover, .navbar-inverse .navbar-nav .active a:focus, .navbar-inverse .navbar-nav .open .dropdown-menu li a:hover {
+  color: #222222;
+}
+
+@media (min-width: 768px) {
+  header div.container {
+    padding: 0;
+  }
+}
+
+.navbar-inverse, .navbar-inverse .navbar-toggle, .navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {
+  background-image: none;
+  background-color: #EEFFFF;
+  border-color: #FFFFFF;
+}
+
+.navbar-inverse .navbar-toggle:focus {
+  background-color: #FFFFDD;
+}
+
+.navbar-inverse .navbar-toggle:hover {
+  background-color: #FFFFDD;
+}
+
+.navbar-inverse .navbar-brand, .navbar-inverse .navbar-toggle:focus .navbar-brand, .navbar-inverse .navbar-toggle:hover .navbar-brand {
+  color: #222222;
+}
+
+.navbar-inverse .navbar-brand:focus {
+  color: #696969;
+}
+
+.navbar-inverse .navbar-brand:hover {
+  color: #696969;
+}
+
+.navbar-inverse .navbar-nav li a, .navbar-inverse .navbar-toggle:focus .navbar-nav li a, .navbar-inverse .navbar-toggle:hover .navbar-nav li a, .navbar-inverse .navbar-nav li .active a:focus, .navbar-inverse .navbar-nav .active li a:focus, .navbar-inverse .navbar-nav li .active a:hover, .navbar-inverse .navbar-nav .active li a:hover, .navbar-inverse .navbar-nav .active .open .dropdown-menu li a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu li .active a:hover {
+  color: #222222;
+}
+.navbar-inverse .navbar-nav li a:focus, .navbar-inverse .navbar-nav li a:hover, .navbar-inverse .navbar-nav li .active a:hover, .navbar-inverse .navbar-nav .active li a:hover, .navbar-inverse .navbar-nav li .active a:focus, .navbar-inverse .navbar-nav .active li a:focus, .navbar-inverse .navbar-nav .open .dropdown-menu li a:hover {
+  color: #696969;
+}
+.navbar-inverse .navbar-nav .active a, .navbar-inverse .navbar-nav .active a:focus, .navbar-inverse .navbar-nav .active a:hover, .navbar-inverse .navbar-nav .active .open .dropdown-menu li a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu li .active a:hover {
+  background-image: none;
+  background-color: none;
+  color: #696969;
+}
+.navbar-inverse .navbar-nav li.open a.dropdown-toggle, .navbar-inverse .navbar-nav li.open a.dropdown-toggle:focus, .navbar-inverse .navbar-nav li.open a.dropdown-toggle:hover {
+  background-image: none;
+  background-color: #FFFFFF;
+  color: #696969;
+}
+@media (max-width: 768px) {
+  .navbar-inverse .navbar-nav li.open a.dropdown-toggle, .navbar-inverse .navbar-nav li.open a.dropdown-toggle:focus, .navbar-inverse .navbar-nav li.open a.dropdown-toggle:hover {
+    color: #696969;
+  }
+}
+.navbar-inverse .navbar-nav li.open a.dropdown-toggle:hover, .navbar-inverse .navbar-nav li.open a.dropdown-toggle:focus {
+  color: #696969;
+}
+@media (max-width: 768px) {
+  .navbar-inverse .navbar-nav li.open a.dropdown-toggle:hover, .navbar-inverse .navbar-nav li.open a.dropdown-toggle:focus {
+    color: #696969;
+  }
+}
+.navbar-inverse .navbar-nav li.open a.dropdown-toggle:hover {
+  color: #696969;
+}
+@media (max-width: 768px) {
+  .navbar-inverse .navbar-nav li.open a.dropdown-toggle:hover {
+    color: #696969;
+  }
+}
+.navbar-inverse .navbar-nav li.active a.dropdown-toggle, .navbar-inverse .navbar-nav li.active a.dropdown-toggle:hover, .navbar-inverse .navbar-nav li.active a.dropdown-toggle:focus {
+  background-image: none;
+  background-color: #FFFFFF;
+  color: #696969;
+}
+@media (max-width: 768px) {
+  .navbar-inverse .navbar-nav li.active a.dropdown-toggle, .navbar-inverse .navbar-nav li.active a.dropdown-toggle:hover, .navbar-inverse .navbar-nav li.active a.dropdown-toggle:focus {
+    color: #696969;
+  }
+}
+.navbar-inverse .navbar-nav li.active a.dropdown-toggle:hover, .navbar-inverse .navbar-nav li.active a.dropdown-toggle:focus {
+  color: #696969;
+}
+@media (max-width: 768px) {
+  .navbar-inverse .navbar-nav li.active a.dropdown-toggle:hover, .navbar-inverse .navbar-nav li.active a.dropdown-toggle:focus {
+    color: #696969;
+  }
+}
+
+.navbar-inverse .navbar-nav .open .dropdown-menu li a, .navbar-inverse .navbar-nav .active .open .dropdown-menu li a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu li .active a:hover {
+  background-image: none;
+  background-color: #FFFFDD;
+  color: #222222;
+}
+.navbar-inverse .navbar-nav .open .dropdown-menu li a:focus, .navbar-inverse .navbar-nav .open .dropdown-menu li a:hover {
+  background-color: #FFFFFF;
+  color: #696969;
+}
+
+@media (max-width: 992px) {
+  nav .additional-navbar-links {
+    display: none;
+  }
+}
+nav .additional-navbar-links .navbar-link, nav .additional-navbar-links .navbar-link:visited, nav .additional-navbar-links li.active .navbar-link:visited, nav .additional-navbar-links li.active .navbar-link:focus, nav .additional-navbar-links li.active .navbar-link:hover {
+  color: #222222;
+  padding: 15px 15px;
+}
+nav .additional-navbar-links .navbar-link:visited, nav .additional-navbar-links li.active .navbar-link:visited {
+  text-decoration: none;
+}
+nav .additional-navbar-links .navbar-link:focus, nav .additional-navbar-links .navbar-link:hover, nav .additional-navbar-links li.active .navbar-link:hover, nav .additional-navbar-links li.active .navbar-link:focus {
+  color: #696969;
+  text-decoration: none;
+}
+nav .additional-navbar-links .navbar-link:active, nav .additional-navbar-links li.active .navbar-link:active:visited, nav .additional-navbar-links li.active .navbar-link:active:focus, nav .additional-navbar-links li.active .navbar-link:active:hover {
+  background-color: #FFFFFF;
+  color: #222222;
+}
+nav .additional-navbar-links li.active .navbar-link, nav .additional-navbar-links li.active .navbar-link:visited, nav .additional-navbar-links li.active .navbar-link:focus, nav .additional-navbar-links li.active .navbar-link:hover {
+  background-color: #FFFFFF;
+  color: #222222;
+}
+nav .additional-navbar-links-dropdown {
+  display: none;
+}
+@media (max-width: 992px) {
+  nav .additional-navbar-links-dropdown {
+    display: block;
+  }
+}
+
+.dropdown-menu .active a, .dropdown-menu .navbar-inverse .navbar-nav .active a:focus, .navbar-inverse .navbar-nav .dropdown-menu .active a:focus, .dropdown-menu .navbar-inverse .navbar-nav .active a:hover, .navbar-inverse .navbar-nav .dropdown-menu .active a:hover, .dropdown-menu .navbar-inverse .navbar-nav .active .open .dropdown-menu li a:hover, .navbar-inverse .navbar-nav .dropdown-menu .active .open .dropdown-menu li a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu li .active a:hover {
+  background-color: #EEFFFF;
+}
+
+.primary-text {
+  color: #EEFFFF;
+}
+
+.accent-text {
+  color: #222222;
+}
+
+.accent-alter-text {
+  color: #696969;
+}
+
+/**
+ *  Task List CSS
+ */
+.tagline {
+  margin-top: -10px;
+  text-align: center;
+  padding: 5px 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #777;
+}
+
+/* inputs */
+.inputContainer {
+  height: 60px;
+  border-top: 1px solid #e5e5e5;
+  position: relative;
+  overflow: hidden;
+}
+
+.inputContainer.last {
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 20px;
+}
+
+.inputContainer.half.last.right {
+  border-left: 1px solid #efefef;
+}
+
+.taskAdd {
+  background: #444;
+  padding-left: 15px;
+}
+
+.taskAdd:hover {
+  background: #303030;
+}
+
+.taskDelete {
+  background: #e74c3c;
+  padding-left: 30px;
+}
+
+.taskDelete:hover {
+  background: #c0392b;
+}
+
+/* task styles */
+.taskList {
+  list-style: none;
+  padding: 0 20px;
+}
+.taskList .taskItem:last-child {
+  border-bottom: none;
+}
+
+.taskItem {
+  position: relative;
+  max-height: 500px;
+  border-bottom: 1px solid #FFFFDD;
+  padding: 15px 0;
+  color: #222222;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+.taskItem .checklist-list-container {
+  max-height: 350px;
+}
+@media (min-width: 768px) and (max-width: 992px) {
+  .taskItem span.task-description-text {
+    white-space: nowrap;
+    overflow: hidden;
+    position: absolute;
+    width: 50%;
+    margin-left: 5px;
+  }
+  .taskItem span.task-times-text {
+    position: absolute;
+    display: block;
+  }
+  .taskItem span.separator {
+    display: none;
+  }
+}
+
+.taskCheckbox {
+  margin-right: 1em;
+}
+
+.complete-true {
+  text-decoration: line-through;
+  color: #696969;
+}
+
+.taskList .taskDate {
+  color: #696969;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  display: block;
+  width: 10%;
+  white-space: nowrap;
+  margin-left: 41px;
+}
+
+.fa-calendar {
+  margin-right: 10px;
+  font-size: 16px;
+}
+
+[class*='category-'] {
+  /*    display: inline-block;*/
+  font-size: 10px;
+  background: #444;
+  vertical-align: middle;
+  color: #fff;
+  padding: 10px;
+  width: 75px;
+  text-align: center;
+  border-radius: 2px;
+  float: right;
+  font-weight: normal;
+  text-transform: uppercase;
+  margin-right: 30px;
+}
+
+.category- {
+  background: transparent;
+}
+
+.category-Watch {
+  background: #d41f1a;
+}
+
+.category-Read {
+  background: #6600CC;
+}
+
+.category-Play {
+  background: #f39c12;
+}
+
+.category-Other {
+  background: #47a447;
+}
+
+/* custom checkboxes */
+.taskCheckbox {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  transition: all 0.3s;
+  display: inline-block;
+  cursor: pointer;
+  width: 19px;
+  height: 19px;
+  vertical-align: middle;
+}
+
+.taskCheckbox:before, .taskCheckbox:checked:before {
+  font-family: 'FontAwesome';
+  color: #222222;
+  font-size: 20px;
+  -webkit-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+.taskCheckbox:before {
+  content: '\f096';
+}
+
+.taskCheckbox:disabled:before {
+  content: '\f03a';
+  color: #696969;
+}
+
+.taskCheckbox:checked:before {
+  content: '\f14a';
+  color: #47a447;
+}
+
+/* custom select menu */
+.taskCategory {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  padding-left: 16.5px;
+  /*specific positioning due to difficult behavior of select element*/
+  background: #fff;
+}
+
+.selectArrow {
+  position: absolute;
+  z-index: 10;
+  top: 35%;
+  right: 0;
+  margin-right: 20px;
+  color: #777;
+  pointer-events: none;
+}
+
+.taskCategory option {
+  background: #fff;
+  border: none;
+  /*    outline: none;*/
+  padding: 0 100px;
+}
+
+.collapse-bar {
+  cursor: pointer;
+  background-color: #e6e6e6;
+  color: #FFF;
+  font-weight: bold;
+}
+
+.keep-cursor {
+  cursor: default;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.site-wrap {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.add-task-popout {
+  position: fixed;
+  top: 10vh;
+  left: 20vw;
+  width: 65vw;
+  height: auto;
+  margin-top: 10px;
+  background-color: #EEFFFF;
+  align-content: center;
+  z-index: 1000;
+  opacity: 0;
+}
+.add-task-popout.active {
+  -webkit-box-shadow: 0 2px 100px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 2px 100px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 100px rgba(0, 0, 0, 0.2);
+  -webkit-transition: all 250ms;
+  -o-transition: all 250ms;
+  -moz-transition: all 250ms;
+  transition: all 250ms;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  backface-visibility: hidden;
+  opacity: 1;
+}
+
+.toggle-add-task {
+  font-size: 20px;
+}
+
+.btn-primary {
+  background-image: none;
+  background-color: #EEFFFF;
+  border-color: #FFFFFF;
+  color: #222222;
+}
+
+.btn-primary:focus, .btn-primary:hover, .btn-primary:active, .btn-primary:active:focus, .btn-primary:active:hover, .btn-primary.active {
+  background-color: #FFFFFF;
+  border-color: #FFFFDD;
+  color: #696969;
+}
+
+.btn-primary:disabled, .btn-primary[disabled], .btn-primary:disabled:hover, .btn-primary[disabled]:hover {
+  background-color: #FFFFDD;
+  border-color: #FFFFDD;
+}
+
+/* Remove unecessary green 'valid' border */
+.btn-primary.ng-valid.ng-dirty {
+  border-color: #FFFFFF;
+}
+
+.btn-accent {
+  background-image: none;
+  background-color: #222222;
+  border-color: #696969;
+  color: #EEFFFF;
+}
+
+.btn-accent:focus, .btn-accent:hover, .btn-accent:active, .btn-accent:active:focus, .btn-accent:active:hover, .btn-accent.active {
+  background-color: #696969;
+  border-color: #FFFFDD;
+  color: #FFFFFF;
+}
+
+.btn-accent:disabled, .btn-accent[disabled], .btn-accent:disabled:hover, .btn-accent[disabled]:hover {
+  background-color: #FFFFDD;
+  border-color: #FFFFDD;
+}
+
+/* Remove unecessary green 'valid' border */
+.btn-accent.ng-valid.ng-dirty {
+  border-color: #696969;
+}
+
+.btn-success {
+  background-image: none;
+  background-color: #47a447;
+  border-color: #0C640C;
+  color: #FFF;
+}
+
+.btn-success:focus, .btn-success:hover, .btn-success:active, .btn-success:active:focus, .btn-success:active:hover, .btn-success.active {
+  background-color: #0C640C;
+  border-color: #47a447;
+  color: #fcfcfc;
+}
+
+/* Remove unecessary green 'valid' border */
+.btn-success.ng-valid.ng-dirty {
+  border-color: #0C640C;
+}
+
+.btn-danger {
+  background-image: none;
+  background-color: #d41f1a;
+  border-color: #830300;
+  color: #FFF;
+}
+
+.btn-danger:focus, .btn-danger:hover, .btn-danger:active, .btn-danger:active:focus, .btn-danger:active:hover, .btn-danger.active {
+  background-color: #830300;
+  border-color: #d41f1a;
+  color: #fcfcfc;
+}
+
+/* Remove unecessary green 'valid' border */
+.btn-danger.ng-valid.ng-dirty {
+  border-color: #830300;
+}
+
+.popout-header {
+  padding-bottom: 9px;
+  margin: 20px 0;
+  border: 1px solid #FFFFDD;
+  color: #222222;
+  background-color: #FFFFFF;
+  padding: 10px;
+  width: 95%;
+}
+
+.checklist-item {
+  padding: 5px;
+}
+
+.menu-header-bar {
+  position: relative;
+  display: block;
+  background-color: #EEFFFF;
+  color: #222222;
+  font-weight: bold;
+  padding: 10px 15px;
+  border: 1px solid #FFFFDD;
+  border-radius: 2px;
+}
+
+a.menu-header-bar, .navbar-inverse .navbar-nav .active a.menu-header-bar:focus, .navbar-inverse .navbar-nav .active a.menu-header-bar:hover, .navbar-inverse .navbar-nav .active .open .dropdown-menu li a.menu-header-bar:hover, .navbar-inverse .navbar-nav .open .dropdown-menu li .active a.menu-header-bar:hover,
+a.menu-header-bar:hover,
+.navbar-inverse .navbar-nav .active a.menu-header-bar:hover,
+.navbar-inverse .navbar-nav .active .open .dropdown-menu li a.menu-header-bar:hover,
+.navbar-inverse .navbar-nav .open .dropdown-menu li .active a.menu-header-bar:hover {
+  text-decoration: none;
+}
+
+.menu-header-bar:hover {
+  background-color: #FFFFFF;
+  color: #696969;
+}
+
+.task-list-container {
+  padding: 10px 5px;
+  margin: 40px 10px;
+}
+
+.placeholder-container, .filter-container {
+  margin-top: 20px;
+}
+
+.filter-container {
+  padding: 20px 0;
+  margin-left: -10px;
+  z-index: 500;
+  position: fixed;
+  top: 100px;
+  left: 50px;
+  max-width: 350px;
+  min-width: 200px;
+}
+
+.fixed-header {
+  position: fixed;
+  z-index: 500;
+  top: 55px;
+  left: 40px;
+}
+
+.page-header {
+  border-color: #222222;
+}
+
+.checklist-progress-bar {
+  background-color: #eee;
+  height: 10px;
+  width: 75%;
+  margin-top: 10px;
+}
+
+.checklist-progress {
+  height: 100%;
+  background-color: #696969;
+  background-image: -webkit-gradient(linear, left 0, left 100%, from(#696969), to(#222222));
+  background-image: -webkit-linear-gradient(top, #696969 0, #222222 100%);
+  background-image: -moz-linear-gradient(top, #696969 0, #222222 100%);
+  background-image: -o-linear-gradient(top, #696969 0, #222222 100%);
+  background-image: linear-gradient(to bottom, #696969 0, #222222 100%);
+  background-repeat: repeat-x;
+  filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFCA7500',endColorstr='#FFFFAC3A',GradientType=0)";
+}
+
+div.popover {
+  color: #696969;
+}
+
+.checklist-list {
+  max-height: 250px;
+  overflow-y: auto;
+  list-style-type: decimal-leading-zero;
+}
+
+.options-list-container {
+  max-height: 12vh;
+  overflow-y: auto;
+}
+
+.options-list {
+  list-style-type: decimal-leading-zero;
+}
+.options-list li {
+  position: relative;
+  padding: 0;
+}
+.options-list li p {
+  width: 100%;
+  padding-right: 10px;
+  margin-bottom: 0;
+}
+.options-list li p:hover {
+  background-color: #EEFFFF;
+}
+.options-list li a, .options-list li .navbar-inverse .navbar-nav .active a:focus, .navbar-inverse .navbar-nav .active .options-list li a:focus, .options-list li .navbar-inverse .navbar-nav .active a:hover, .navbar-inverse .navbar-nav .active .options-list li a:hover, .options-list .navbar-inverse .navbar-nav .active .open .dropdown-menu li a:hover, .options-list .navbar-inverse .navbar-nav .open .dropdown-menu li .active a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu .options-list li .active a:hover {
+  margin: 0;
+}
+.options-list li:hover {
+  background-color: #FFFFFF;
+}
+
+/** RATINGS PAGE **/
+.small-input {
+  display: inline;
+  width: 40px;
+  padding: 0;
+  padding-left: 5px;
+}
+
+.ratings-table {
+  width: 100%;
+}
+.ratings-table tr:hover {
+  background-color: #FFFFFF;
+}
+.ratings-table th {
+  text-align: center;
+}
+.ratings-table th.left {
+  text-align: left;
+}
+.ratings-table td {
+  text-align: center;
+}
+.ratings-table td.left {
+  text-align: left;
+}
+
+/* CUSTOMISE TABLE HORIZONTAL */
+.table-horizontal-scroll th {
+  background-color: #FFFFFF;
+}
+
+/** END RATINGS PAGE **/
+/** CUSTOM STICKY **/
+.sticky-scroll-top {
+  background-color: #FFFFFF;
+}
+
+/** CUSTOM STICKY END **/
+/** TABS CUSTOM CSS **/
+.tab-control-option.active {
+  border-bottom-color: #EEFFFF;
+}
+.tab-control-option.active a, .navbar-inverse .navbar-nav .tab-control-option.active a:focus, .navbar-inverse .navbar-nav .tab-control-option.active a:hover, .navbar-inverse .navbar-nav .tab-control-option.active .open .dropdown-menu li a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu li .tab-control-option.active a:hover {
+  color: #222222;
+}
+.tab-control-option a, .tab-control-option .navbar-inverse .navbar-nav .active a:focus, .navbar-inverse .navbar-nav .active .tab-control-option a:focus, .tab-control-option .navbar-inverse .navbar-nav .active a:hover, .navbar-inverse .navbar-nav .active .tab-control-option a:hover, .tab-control-option .navbar-inverse .navbar-nav .active .open .dropdown-menu li a:hover, .navbar-inverse .navbar-nav .active .open .dropdown-menu li .tab-control-option a:hover, .tab-control-option .navbar-inverse .navbar-nav .open .dropdown-menu li .active a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu li .active .tab-control-option a:hover {
+  color: #696969;
+}
+
+/** TABS CUSTOM END **/
+/** COLOURS **/
+.primary-background {
+  background-color: #EEFFFF;
+}
+
+.secondary-background {
+  background-color: #FFFFFF;
+}
+
+.accent-background {
+  background-color: #222222;
+}
+
+.accent-alter-background {
+  background-color: #696969;
+}
+
+.standard-border {
+  border: 1px solid #FFFFDD;
+}
+
+.alter-border {
+  border: 1px solid #222222;
+}
+
+.grey-border {
+  border: 1px solid #eee;
+}
+
+/** COLOURS END **/
+/** FAVOURITES STYLING **/
+.favourite-header {
+  display: inline-block;
+  width: 100%;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #222222;
+  margin-bottom: 10px;
+  white-space: nowrap;
+}
+
+.favourite-link {
+  color: inherit;
+}
+
+.favourite-link:hover,
+.favourite-link:focus {
+  color: inherit;
+  text-decoration: none;
+}
+
+.favourite-link:hover h2:before {
+  content: 'Go to ';
+}
+
+.favourite-link:hover h2:after {
+  content: '?';
+}
+
+.trophy-1 {
+  color: gold;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.trophy-2 {
+  color: silver;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.trophy-3 {
+  color: rosybrown;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.trophy-4,
+.trophy-5 {
+  color: white;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.favourite-item {
+  height: 10vh;
+}
+
+.selected {
+  border: 3px solid #d41f1a;
+}
+
+.bin-style {
+  position: absolute;
+  right: 0;
+  color: #d41f1a;
+  padding: 2px 4px;
+  margin: 5px;
+}
+
+.bin-style:hover {
+  background-color: #d41f1a;
+  color: #FFF;
+}
+
+.favourite-anime, .favourite-manga, .current-favourites {
+  padding-bottom: 10px;
+}
+
+.favourite-content {
+  margin-bottom: 10px;
+}
+.favourite-content a.list-group-item:hover, .favourite-content .navbar-inverse .navbar-nav .active a.list-group-item:hover, .navbar-inverse .navbar-nav .active .favourite-content a.list-group-item:hover {
+  background-color: #EEFFFF;
+}
+
+.history-list-item:nth-child(even) p {
+  background-color: #FFFFFF;
+}
+
+.history-list-item h4 {
+  background-color: #EEFFFF;
+  border-bottom: 1px solid #222222;
+}
+.history-list-item p {
+  padding: 0 5px;
+  margin: 4px 0;
+}
+
+.history-list-container {
+  padding: 10px 15px;
+}
+
+.history-group-header {
+  padding-bottom: 9px;
+  margin: 0;
+  border: 1px solid #FFFFDD;
+  background-color: #FFFFFF;
+  padding: 10px;
+  width: 100%;
+}
+
+#anime-episode-ratings > tbody > tr > th {
+  width: 120px;
+}
+
+.stat-month-box {
+  cursor: pointer;
+  background-color: #696969;
+  display: block;
+  min-height: 20px;
+}
+
+.stat-month-box:hover {
+  cursor: pointer;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #FFFFDD;
+}
+
+.stat-rating-panel {
+  margin-bottom: 10px;
+}
+
+.stat-history-panel {
+  margin-bottom: 10px;
+}
+
+.stat-history {
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.stat-header {
+  border-bottom: 1px solid #222222;
+  margin-bottom: 10px;
+}
+
+.progress-container {
+  height: 100%;
+}
+
+.progress-bar-placement {
+  margin-bottom: 10px;
+}
+
+.stat-summary-info {
+  margin-top: -25px;
+}
+
+.related-media {
+  padding-top: 25px;
+  font-size: small;
+}
+
+.stat-tag-panel {
+  margin-bottom: 10px;
+}
+
+.stat-tag-detail {
+  margin-bottom: 10px;
+}
+
+.stat-header-label-container {
+  display: inline-flex;
+}
+
+.stat-header-label,
+.stat-header-label.ng-valid.ng-dirty {
+  font-size: 24px;
+  padding: 5px;
+  border: 1px solid #FFFFDD;
+  margin: 10px 5px;
+}
+
+.stat-month-header {
+  width: 8%;
+}
+
+.stat-season-header {
+  width: 24%;
+}
+
+.stat-overview {
+  background-color: #EEFFFF;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 5px 0;
+  margin-bottom: 10px;
+}
+
+.stat-media-panel {
+  margin-bottom: 10px;
+}
+
+.stat-media-detail {
+  margin-bottom: 10px;
+}
+
+.stat-table-row:hover {
+  background-color: #FFFFFF;
+  color: #696969;
+}
+
+.stat-gender-panel {
+  text-align: center;
+  vertical-align: middle;
+  height: 35px;
+  padding: 7px;
+}
+
+.stat-tag-table thead, .stat-media-table thead, .stat-tag-detail-table thead {
+  background-color: #FFFFFF;
+}
+
+.current-progress {
+  color: #FFFFFF;
+  background-color: #696969;
+  background-image: -webkit-gradient(linear, left 0, left 100%, from(#696969), to(#222222));
+  background-image: -webkit-linear-gradient(top, #696969 0, #222222 100%);
+  background-image: -moz-linear-gradient(top, #696969 0, #222222 100%);
+  background-image: -o-linear-gradient(top, #696969 0, #222222 100%);
+  background-image: linear-gradient(to bottom, #696969 0, #222222 100%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFCA7500',endColorstr='#FFFFAC3A',GradientType=0);
+}
+
+.stat-month-detail {
+  background-color: #EEFFFF;
+  margin-bottom: 10px;
+}
+
+.stat-voice-panel {
+  margin-bottom: 10px;
+}
+
+.stat-voice-detail {
+  margin-bottom: 10px;
+}
+
+.stat-detail {
+  background-color: #EEFFFF;
+}
+
+/** Season classes for yearly separations.
+ */
+.Winter-background {
+  background-color: #31b0d5;
+}
+
+.Spring-background {
+  background-color: #449d44;
+}
+
+.Summer-background {
+  background-color: #c9302c;
+}
+
+.Fall-background {
+  background-color: #a12c00;
+}
+
+@media (min-width: 992px) {
+  .nav-users {
+    position: fixed;
+  }
+}
+.remove-account-container {
+  display: inline-block;
+  position: relative;
+}
+
+.btn-remove-account {
+  top: 10px;
+  right: 10px;
+  position: absolute;
+}
+
+/*/ ADDED /*/
+.loginBG {
+  background-color: #FFFFFF;
+  color: #222222;
+}
+
+html {
+  height: 100%;
+}
+html body {
+  position: relative;
+  background-color: #EEFFFF;
+  height: 100%;
+}
+
+.centerPiece {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100px;
+  padding-bottom: 20px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #696969;
+}
+
+footer a, footer .navbar-inverse .navbar-nav .active a:focus, .navbar-inverse .navbar-nav .active footer a:focus, footer .navbar-inverse .navbar-nav .active a:hover, .navbar-inverse .navbar-nav .active footer a:hover, footer .navbar-inverse .navbar-nav .active .open .dropdown-menu li a:hover, .navbar-inverse .navbar-nav .active .open .dropdown-menu li footer a:hover, footer .navbar-inverse .navbar-nav .open .dropdown-menu li .active a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu li .active footer a:hover {
+  color: #222222;
+}
+footer hr {
+  border-color: #696969;
+}
+
+.input-group-addon {
+  color: #222222;
+  background-color: #FFFFFF;
+  border: 1px solid #FFFFDD;
+}
+
+.form-control {
+  background-color: #FFFFFF;
+  color: #222222;
+  border-color: #FFFFDD;
+}
+
+.form-control[disabled] {
+  background-color: #FFFFDD;
+  color: #696969;
+}
+
+.form-control[readonly] {
+  background-color: #FFFFFF;
+}
+
+/** Tab filter customisation **/
+.tab-filter-container:after {
+  border-bottom: 1px solid #EEFFFF;
+}
+
+.tab-filter {
+  background: #EEFFFF;
+  border: 1px solid #FFFFFF;
+}
+
+.tab-filter.tab-in {
+  background: #FFFFFF;
+  border-bottom-color: #FFFFFF;
+}
+
+/** schedule-calendar customisation **/
+.schedule-calendar > div.header {
+  background: #EEFFFF;
+  color: #222222;
+}
+
+.schedule-calendar > div.week > span.day {
+  background: #FFFFFF;
+  color: #222222;
+}
+
+.schedule-calendar > div.week.names > span {
+  color: #696969;
+}
+
+.schedule-calendar > div.week > span.day.today {
+  background: #FFFFDD;
+  color: #696969;
+}
+
+.schedule-calendar > div.week > span.day.selected {
+  background: #EEFFFF;
+  color: #222222;
+}
+
+/* Hiding the task item datepicker input element
+*/
+input[id^='date-input-'] {
+  width: 0;
+}
+
+/*# sourceMappingURL=main-day.css.map */

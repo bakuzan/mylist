@@ -44,7 +44,7 @@
 	        }
 
 	        //add history entry to item.
-	        function itemHistory(item, updateHistory, type) {
+	        function itemHistory(item, updateHistory, type, episodeRating) {
 	//            console.log('item history: ', item, item.meta);
 	            //populate the history of when each part was 'checked' off.
 	            if (item.meta.history.length !== 0) {
@@ -55,7 +55,7 @@
 	                        item.meta.history.push({
 	                            date: Date.now(),
 	                            value: latestHistory + i,
-	                            rating: 0,
+	                            rating: episodeRating || 0,
 	                            title: item.title,
 	                            id: item._id
 	                        });
@@ -66,7 +66,7 @@
 	                    item.meta.history.push({
 	                        date: Date.now(),
 	                        value: (type === 'anime' ? item.episodes : item.chapters),
-	                        rating: 0,
+	                        rating: episodeRating || 0,
 	                        title: item.title,
 	                        id: item._id
 	                    });

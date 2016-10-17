@@ -24,7 +24,8 @@
               return new Date(wkBeg.setDate(diff));
           }
 
-          function updateAnimeitem(task) {
+          function updateAnimeitem(task, episodeRating) {
+            return $q(function(resolve, reject) {
               var query = Animeitems.get({
   							animeitemId: task.link.anime._id
   						});
@@ -32,8 +33,10 @@
                   //console.log(data);
                   data.episodes += 1;
                   data.latest = new Date();
-                  AnimeFactory.update(data, undefined, true, undefined);
+                  AnimeFactory.update(data, undefined, true, undefined, episodeRating);
+                  resolve(data);
               });
+            });
           }
 
           function updateMangaitem(task, chapters, volumes) {
@@ -119,6 +122,22 @@
   					return modalInstance;
   				}
 
+          //Linked anime need special options dialog.
+  				function launchAnimeUpdateDialog(task, checklistIndex) {
+  					var modalInstance = $uibModal.open({
+  						animation: true,
+  		      	templateUrl: '/modules/tasks/views/update-anime-task.client.view.html',
+  		      	controller: 'UpdateAnimeTaskController as ctrl',
+  		      	size: 'lg',
+  		      	resolve: {
+  		        	data: function () {
+  		          	return { item: angular.copy(task), itemOriginal: task };
+  							}
+  						}
+  					});
+  					return modalInstance;
+  				}
+
   				//Completes a task.
   				function tickOff(task) {
   					return $q(function(resolve, reject) {
@@ -131,9 +150,18 @@
   				         *   Update the item value AND the complete/repeat values.
   				         */
   				        if (task.link.type === 'anime') {
-  				            task.completeTimes = task.link.anime.episodes + 1;
-  				            task.repeat = task.link.anime.finalEpisode;
-  				            obj.updateAnimeitem(task);
+                      var animeDialog = launchAnimeUpdateDialog(task);
+                      animeDialog.result.then(function(result) {
+                        task = result.task;
+                        task.completeTimes = task.link.anime.episodes + 1;
+                        task.repeat = task.link.anime.finalEpisode;
+                        obj.updateAnimeitem(task, result.episodeRating).then(function(result) {
+                          return obj.updateTask(task, true);
+                        }).then(function(result) {
+                          console.log('update anime into update task: ', result);
+                          resolve(result);
+                        });
+                      });
   				        } else if (task.link.type === 'manga') {
   									  task.complete = false;
   				            var dialog = launchMangaUpdateDialog(task);
@@ -151,8 +179,7 @@
   										});
   				        }
   				    }
-  						if(!isLinked || (isLinked && task.link.type === 'anime')) {
-  					    //console.log('tickoff: ', task);
+  						if(!isLinked) {
   					    obj.updateTask(task, isLinked).then(function(result) {
   								console.log('update task resolve: ', result);
   								resolve(result);

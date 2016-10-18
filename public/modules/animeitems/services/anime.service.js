@@ -6,7 +6,7 @@
 
 	function AnimeFactory(Animeitems, ListService, ItemService, NotificationFactory, $location) {
 	    return {
-	        update: function(item, tagArray, updateHistory, imgPath) {
+	        update: function(item, tagArray, updateHistory, imgPath, episodeRating) {
 	            var animeitem = item;
 	            console.log(animeitem);
 	            //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
@@ -19,7 +19,7 @@
 	            }
 
 	            //update the item history.
-	            animeitem = ItemService.itemHistory(animeitem, updateHistory, 'anime');
+	            animeitem = ItemService.itemHistory(animeitem, updateHistory, 'anime', episodeRating);
 
 	            if (imgPath!==undefined && imgPath!==null && imgPath!=='') {
 	                animeitem.image = imgPath;

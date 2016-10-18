@@ -30,8 +30,9 @@
   							animeitemId: task.link.anime._id
   						});
               query.$promise.then(function(data) {
-                  //console.log(data);
+                  console.log('update animeitem for ', task, data);
                   data.episodes += 1;
+                  data.rating = task.link.anime.rating || data.rating;
                   data.latest = new Date();
                   AnimeFactory.update(data, undefined, true, undefined, episodeRating);
                   resolve(data);
@@ -150,10 +151,13 @@
   				         *   Update the item value AND the complete/repeat values.
   				         */
   				        if (task.link.type === 'anime') {
+                    task.complete = false;
                       var animeDialog = launchAnimeUpdateDialog(task);
                       animeDialog.result.then(function(result) {
+                        console.log('update anime task result: ', result);
                         task = result.task;
                         task.completeTimes = task.link.anime.episodes + 1;
+                        task.complete = true;
                         task.repeat = task.link.anime.finalEpisode;
                         obj.updateAnimeitem(task, result.episodeRating).then(function(result) {
                           return obj.updateTask(task, true);

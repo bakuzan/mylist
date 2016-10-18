@@ -112,19 +112,19 @@
 
             </div>
 
-            <p class="clickable accent-text" ng-click="ctrl.section.showOthers=!ctrl.section.showOthers" ng-if="::!ctrl.config.isCreate">
+            <p class="clickable accent-text" ng-click="ctrl.section.showOthers=!ctrl.section.showOthers">
               <i class="fa" ng-class="ctrl.section.showOthers ? 'fa-minus-square' : 'fa-plus-square'"></i> Completion properties
             </p>
-            <div ng-show="ctrl.section.showOthers" ng-if="::!ctrl.config.isCreate">
+            <div ng-show="ctrl.section.showOthers">
 
-              <div class="form-group" ng-show="!ctrl.animeitem.status || ctrl.animeitem.reWatching">
+              <div class="form-group" ng-if="::!ctrl.config.isCreate" ng-show="!ctrl.animeitem.status || ctrl.animeitem.reWatching">
                   <label for="onHold" class="col-md-2 control-label">On Hold?</label>
                   <div class="col-md-6">
                       <input type="checkbox" class="form-control" data-ng-model="ctrl.animeitem.onHold" id="onHold" name="onHold">
                   </div>
               </div>
 
-              <div class="form-group">
+              <div class="form-group" ng-if="::!ctrl.config.isCreate">
                   <label for="season" class="col-md-2 control-label">In Season?</label>
                   <div ng-class="(ctrl.animeitem.season.season === null) ? 'col-md-6' : 'col-md-3'">
                       <select class="form-control" ng-options="option.text as option.text for option in ctrl.config.commonArrays.seasons" ng-model="ctrl.animeitem.season.season"
@@ -137,7 +137,7 @@
                   </div>
               </div>
 
-              <div class="form-group" ng-class="{ 'has-error' : animeForm.end.$invalid }">
+              <div class="form-group" ng-if="::!ctrl.config.isCreate" ng-class="{ 'has-error' : animeForm.end.$invalid }">
                   <label for="end" class="col-md-2 control-label">End</label>
                   <div class="col-md-6">
                       <input type="date" class="form-control" data-ng-model="ctrl.animeitem.end" id="end" name="end" format-date>
@@ -160,7 +160,7 @@
 				          </div>
               </div>
 
-              <div class="form-group" data-ng-show="ctrl.animeitem.status==true">
+              <div class="form-group" ng-if="::!ctrl.config.isCreate" data-ng-show="ctrl.animeitem.status==true">
                   <label for="reWatching" class="col-md-2 control-label">Re-watching?</label>
                   <div class="col-md-6">
                       <input type="checkbox" class="form-control" data-ng-model="ctrl.animeitem.reWatching" data-ng-disabled="ctrl.animeitem.reWatching" data-ng-change="ctrl.animeitem.episodes=0;" id="reWatching" name="reWatching">

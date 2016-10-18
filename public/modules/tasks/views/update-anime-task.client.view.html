@@ -10,14 +10,14 @@
                             <label for="episodeRating" class="col-lg-3 col-md-3 col-sm-3 control-label">Episode #{{ctrl.episodeNumber}} rating</label>
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <input type="number" id="episodeRating" class="form-control" ng-model="ctrl.episodeRating"
-                                       ng-max="{{ctrl.ratingLimit}}">
+                                       ng-min="0" ng-max="{{ctrl.ratingLimit}}">
                             </div>
                         </div>
                         <div class="form-group" ng-if="::ctrl.isComplete">
                             <label for="rating" class="col-lg-3 col-md-3 col-sm-3 control-label">Rating</label>
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <input type="number" id="rating" class="form-control" ng-model="ctrl.item.link.anime.rating"
-                                       ng-max="{{ctrl.ratingLimit}}">
+                                       ng-min="0" ng-max="{{ctrl.ratingLimit}}" ng-init="ctrl.item.link.anime.rating = 0">
                             </div>
                         </div>
                     </div>
@@ -27,7 +27,7 @@
                             ng-click="ctrl.cancel()" ng-show="ctrl.stepConfig.currentStep === 1">CANCEL</button>
                     <button class="btn btn-primary width-50"
                             ng-click="ctrl.submit()" ng-show="ctrl.stepConfig.currentStep === ctrl.stepConfig.stepCount"
-                            ng-disabled="mangaForm.$invalid">UPDATE</button>
+                            ng-disabled="animeForm.$invalid">UPDATE</button>
                 </div>
             </fieldset>
         </form><!-- </form> -->

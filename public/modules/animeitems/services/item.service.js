@@ -45,7 +45,7 @@
 
 	        //add history entry to item.
 	        function itemHistory(item, updateHistory, type, episodeRating) {
-	//            console.log('item history: ', item, item.meta);
+	            console.log('item history: ', item, item.meta, episodeRating);
 	            //populate the history of when each part was 'checked' off.
 	            if (item.meta.history.length !== 0) {
 	                var latestHistory = item.meta.history[item.meta.history.length - 1].value,

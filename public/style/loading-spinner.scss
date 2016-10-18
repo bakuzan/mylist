@@ -55,7 +55,7 @@ $width: 100px;
     height: 100vh;
     background-color: #F0F0F0;
     background-color: rgba(240, 240, 240, 0.5);
-    z-index: 1000;
+    z-index: 10000;
     .circular {
         top: 25vh;
         bottom: auto;
@@ -76,7 +76,7 @@ $width: 100px;
 .path {
   stroke-dasharray: 1,200;
   stroke-dashoffset: 0;
-  animation: 
+  animation:
    dash 1.5s ease-in-out infinite,
    color 6s ease-in-out infinite
   ;

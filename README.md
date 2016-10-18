@@ -1,3 +1,10 @@
+bankai-01 (1.28.1)
+- fixed spinner css to appear above all content.
+
+bankai-00 (1.28.0)
+- added episode rating popup to anime linked task.
+- made final episode input appear in create anime.
+
 arrancar-24 (1.27.24)
 - turn off autocompletes on forms
 - altered page min-height to have footer permanently off screen without scrolling.

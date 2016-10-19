@@ -144,10 +144,10 @@
 
 		// Find existing Animeitem
 		function findOne() {
-	    Animeitems.get({ animeitemId: animeitemId }).$promise.then(function(result) {
+	    spinnerService.loading('editAnime', Animeitems.get({ animeitemId: animeitemId }).$promise.then(function(result) {
 	        ctrl.animeitem = result;
 	   			console.log(ctrl.animeitem);
-	    });
+	    }));
 		}
 
     // Find list of mangaitems for dropdown.

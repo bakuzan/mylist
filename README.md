@@ -1,9 +1,13 @@
-bankai-01 (1.28.1)
+bankai-02 (1.28.2)
 - fixed spinner css to appear above all content.
+- fixed unsorted linked task dropdown.
+- changed linked manga final ch/vol input fields to text, as when number arrows are always visible.
 
 bankai-00 (1.28.0)
 - added episode rating popup to anime linked task.
 - made final episode input appear in create anime.
+- added loading spinner to edit anime.
+- shrunk linked task dialogs to md.
 
 arrancar-24 (1.27.24)
 - turn off autocompletes on forms

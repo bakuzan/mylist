@@ -113,7 +113,7 @@
   						animation: true,
   		      	templateUrl: '/modules/tasks/views/update-manga-task.client.view.html',
   		      	controller: 'UpdateMangaTaskController as ctrl',
-  		      	size: 'lg',
+  		      	size: 'md',
   		      	resolve: {
   		        	data: function () {
   		          	return { item: angular.copy(task), itemOriginal: task };
@@ -129,7 +129,7 @@
   						animation: true,
   		      	templateUrl: '/modules/tasks/views/update-anime-task.client.view.html',
   		      	controller: 'UpdateAnimeTaskController as ctrl',
-  		      	size: 'lg',
+  		      	size: 'md',
   		      	resolve: {
   		        	data: function () {
   		          	return { item: angular.copy(task), itemOriginal: task };

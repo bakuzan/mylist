@@ -451,10 +451,10 @@ angular.module('animeitems').config(['$stateProvider',
 
 		// Find existing Animeitem
 		function findOne() {
-	    Animeitems.get({ animeitemId: animeitemId }).$promise.then(function(result) {
+	    spinnerService.loading('editAnime', Animeitems.get({ animeitemId: animeitemId }).$promise.then(function(result) {
 	        ctrl.animeitem = result;
 	   			console.log(ctrl.animeitem);
-	    });
+	    }));
 		}
 
     // Find list of mangaitems for dropdown.
@@ -1029,7 +1029,7 @@ angular.module('animeitems').config(['$stateProvider',
 
 	function AnimeFactory(Animeitems, ListService, ItemService, NotificationFactory, $location) {
 	    return {
-	        update: function(item, tagArray, updateHistory, imgPath) {
+	        update: function(item, tagArray, updateHistory, imgPath, episodeRating) {
 	            var animeitem = item;
 	            console.log(animeitem);
 	            //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
@@ -1042,7 +1042,7 @@ angular.module('animeitems').config(['$stateProvider',
 	            }
 
 	            //update the item history.
-	            animeitem = ItemService.itemHistory(animeitem, updateHistory, 'anime');
+	            animeitem = ItemService.itemHistory(animeitem, updateHistory, 'anime', episodeRating);
 
 	            if (imgPath!==undefined && imgPath!==null && imgPath!=='') {
 	                animeitem.image = imgPath;
@@ -1184,8 +1184,8 @@ angular.module('animeitems').config(['$stateProvider',
 	        }
 
 	        //add history entry to item.
-	        function itemHistory(item, updateHistory, type) {
-	//            console.log('item history: ', item, item.meta);
+	        function itemHistory(item, updateHistory, type, episodeRating) {
+	            console.log('item history: ', item, item.meta, episodeRating);
 	            //populate the history of when each part was 'checked' off.
 	            if (item.meta.history.length !== 0) {
 	                var latestHistory = item.meta.history[item.meta.history.length - 1].value,
@@ -1195,7 +1195,7 @@ angular.module('animeitems').config(['$stateProvider',
 	                        item.meta.history.push({
 	                            date: Date.now(),
 	                            value: latestHistory + i,
-	                            rating: 0,
+	                            rating: episodeRating || 0,
 	                            title: item.title,
 	                            id: item._id
 	                        });
@@ -1206,7 +1206,7 @@ angular.module('animeitems').config(['$stateProvider',
 	                    item.meta.history.push({
 	                        date: Date.now(),
 	                        value: (type === 'anime' ? item.episodes : item.chapters),
-	                        rating: 0,
+	                        rating: episodeRating || 0,
 	                        title: item.title,
 	                        id: item._id
 	                    });
@@ -3045,6 +3045,28 @@ angular.module('characters').config(['$stateProvider',
         return num;
     };
   }
+
+})();
+
+(function() {
+	'use strict';
+	angular.module('core')
+	.service('FunctionService', FunctionService);
+	FunctionService.$inject = ['moment'];
+
+	function FunctionService(moment) {
+		var obj = {
+			pad: pad
+		};
+		return obj;
+
+    function pad(number, width, padChar) {
+      padChar = padChar || '0';
+      number = number + '';
+      return number.length >= width ? number : new Array(width - number.length + 1).join(padChar) + number;
+    }
+
+	}
 
 })();
 
@@ -5756,6 +5778,38 @@ function CreateTaskController($scope, data, $stateParams, $location, Authenticat
 (function() {
 	'use strict';
 
+	angular.module('tasks').controller('UpdateAnimeTaskController', UpdateAnimeTaskController);
+	UpdateAnimeTaskController.$inject = ['$scope', '$uibModalInstance', 'data', 'FunctionService'];
+
+	function UpdateAnimeTaskController($scope, $uibModalInstance, data, FunctionService) {
+    var ctrl = this;
+		ctrl.cancel = cancel;
+		ctrl.episodeCompleted = data.item.link.anime.episodes + 1;
+    ctrl.episodeNumber = FunctionService.pad(ctrl.episodeCompleted, 3);
+    ctrl.episodeRating = 0;
+    ctrl.item = data.item;
+    ctrl.isComplete = ctrl.episodeCompleted === ctrl.item.link.anime.finalEpisode && ctrl.item.link.anime.finalEpisode !== 0;
+    ctrl.ratingLimit = 10;
+    ctrl.stepConfig = {
+        currentStep: 1,
+        stepCount: 1
+    };
+		ctrl.submit = submit;
+
+    function submit() {
+      $uibModalInstance.close({ task: ctrl.item, episodeRating: ctrl.episodeRating });
+    }
+
+    function cancel() {
+      $uibModalInstance.dismiss('cancel');
+    }
+	}
+
+})();
+
+(function() {
+	'use strict';
+
 	angular.module('tasks').controller('UpdateMangaTaskController', UpdateMangaTaskController);
 	UpdateMangaTaskController.$inject = ['$scope', '$uibModalInstance', 'data'];
 
@@ -5990,16 +6044,20 @@ function CreateTaskController($scope, data, $stateParams, $location, Authenticat
               return new Date(wkBeg.setDate(diff));
           }
 
-          function updateAnimeitem(task) {
+          function updateAnimeitem(task, episodeRating) {
+            return $q(function(resolve, reject) {
               var query = Animeitems.get({
   							animeitemId: task.link.anime._id
   						});
               query.$promise.then(function(data) {
-                  //console.log(data);
+                  console.log('update animeitem for ', task, data);
                   data.episodes += 1;
+                  data.rating = task.link.anime.rating || data.rating;
                   data.latest = new Date();
-                  AnimeFactory.update(data, undefined, true, undefined);
+                  AnimeFactory.update(data, undefined, true, undefined, episodeRating);
+                  resolve(data);
               });
+            });
           }
 
           function updateMangaitem(task, chapters, volumes) {
@@ -6075,7 +6133,23 @@ function CreateTaskController($scope, data, $stateParams, $location, Authenticat
   						animation: true,
   		      	templateUrl: '/modules/tasks/views/update-manga-task.client.view.html',
   		      	controller: 'UpdateMangaTaskController as ctrl',
-  		      	size: 'lg',
+  		      	size: 'md',
+  		      	resolve: {
+  		        	data: function () {
+  		          	return { item: angular.copy(task), itemOriginal: task };
+  							}
+  						}
+  					});
+  					return modalInstance;
+  				}
+
+          //Linked anime need special options dialog.
+  				function launchAnimeUpdateDialog(task, checklistIndex) {
+  					var modalInstance = $uibModal.open({
+  						animation: true,
+  		      	templateUrl: '/modules/tasks/views/update-anime-task.client.view.html',
+  		      	controller: 'UpdateAnimeTaskController as ctrl',
+  		      	size: 'md',
   		      	resolve: {
   		        	data: function () {
   		          	return { item: angular.copy(task), itemOriginal: task };
@@ -6097,9 +6171,21 @@ function CreateTaskController($scope, data, $stateParams, $location, Authenticat
   				         *   Update the item value AND the complete/repeat values.
   				         */
   				        if (task.link.type === 'anime') {
-  				            task.completeTimes = task.link.anime.episodes + 1;
-  				            task.repeat = task.link.anime.finalEpisode;
-  				            obj.updateAnimeitem(task);
+                    task.complete = false;
+                      var animeDialog = launchAnimeUpdateDialog(task);
+                      animeDialog.result.then(function(result) {
+                        console.log('update anime task result: ', result);
+                        task = result.task;
+                        task.completeTimes = task.link.anime.episodes + 1;
+                        task.complete = true;
+                        task.repeat = task.link.anime.finalEpisode;
+                        obj.updateAnimeitem(task, result.episodeRating).then(function(result) {
+                          return obj.updateTask(task, true);
+                        }).then(function(result) {
+                          console.log('update anime into update task: ', result);
+                          resolve(result);
+                        });
+                      });
   				        } else if (task.link.type === 'manga') {
   									  task.complete = false;
   				            var dialog = launchMangaUpdateDialog(task);
@@ -6117,8 +6203,7 @@ function CreateTaskController($scope, data, $stateParams, $location, Authenticat
   										});
   				        }
   				    }
-  						if(!isLinked || (isLinked && task.link.type === 'anime')) {
-  					    //console.log('tickoff: ', task);
+  						if(!isLinked) {
   					    obj.updateTask(task, isLinked).then(function(result) {
   								console.log('update task resolve: ', result);
   								resolve(result);

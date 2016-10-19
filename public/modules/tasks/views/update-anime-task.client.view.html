@@ -7,14 +7,14 @@
                 <div steps step-config="ctrl.stepConfig">
                     <div one-step>
                         <div class="form-group">
-                            <label for="episodeRating" class="col-lg-3 col-md-3 col-sm-3 control-label">Episode #{{ctrl.episodeNumber}} rating</label>
+                            <label for="episodeRating" class="col-lg-3 col-md-3 col-sm-3 control-label">Episode #{{ctrl.episodeNumber}}</label>
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <input type="number" id="episodeRating" class="form-control" ng-model="ctrl.episodeRating"
                                        ng-min="0" ng-max="{{ctrl.ratingLimit}}">
                             </div>
                         </div>
                         <div class="form-group" ng-if="::ctrl.isComplete">
-                            <label for="rating" class="col-lg-3 col-md-3 col-sm-3 control-label">Rating</label>
+                            <label for="rating" class="col-lg-3 col-md-3 col-sm-3 control-label">Overall Rating</label>
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <input type="number" id="rating" class="form-control" ng-model="ctrl.item.link.anime.rating"
                                        ng-min="0" ng-max="{{ctrl.ratingLimit}}" ng-init="ctrl.item.link.anime.rating = 0">

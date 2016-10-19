@@ -18,7 +18,7 @@
         stepCount: 1
     };
 		ctrl.submit = submit;
-    console.log(`update anime task : `, data.item);
+
     function submit() {
       $uibModalInstance.close({ task: ctrl.item, episodeRating: ctrl.episodeRating });
     }

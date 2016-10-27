@@ -5,15 +5,13 @@
 	MalService.$inject = ['$http'];
 
 	function MalService($http) {
-		var credentials = window.btoa('bakuzan:Myanime52');
-		$http.defaults.headers.common['Authorization'] = `Basic ${credentials}`;
 
 		function xmlToJson(xml) {
 			var ELEMENT_NODE_TYPE = 1,
 				TEXT_NODE_TYPE = 3,
 				obj = {};
 
-			if (xml.nodeType == ELEMENT_NODE_TYPE) {
+			if (xml.nodeType === ELEMENT_NODE_TYPE) {
 				if (xml.attributes.length > 0) {
 				obj['@attributes'] = {};
 					for (var j = 0; j < xml.attributes.length; j++) {
@@ -21,7 +19,7 @@
 						obj['@attributes'][attribute.nodeName] = attribute.nodeValue;
 					}
 				}
-			} else if (xml.nodeType == TEXT_NODE_TYPE) {
+			} else if (xml.nodeType === TEXT_NODE_TYPE) {
 				obj = xml.nodeValue;
 			}
 
@@ -32,10 +30,10 @@
 				for(var i = 0; i < xml.childNodes.length; i++) {
 					var item = xml.childNodes.item(i),
 						nodeName = item.nodeName;
-					if (typeof(obj[nodeName]) == 'undefined') {
+					if (typeof(obj[nodeName]) === 'undefined') {
 						obj[nodeName] = xmlToJson(item);
 					} else {
-						if (typeof(obj[nodeName].push) == 'undefined') {
+						if (typeof(obj[nodeName].push) === 'undefined') {
 							var old = obj[nodeName];
 							obj[nodeName] = [];
 							obj[nodeName].push(old);
@@ -62,17 +60,14 @@
 		return {
 			search: function(queryType, searchString) {
 				var searchUrl = `https://myanimelist.net/api/${queryType}/search.xml?q=${searchString}`;
-				$http({
-					method: 'GET', 
-					url: searchUrl
-				}).then(function success(result) {
-					console.log(`${searchUrl} >> ${result.data}`);
+				$http.get(searchUrl, { headers: {	'Authorization': `Basic ${window.btoa('bakuzan:Myanime52')}` } }).then(function success(result) {
+					console.log(`${searchUrl} >> `, result.data);
 					var processMalResponse = new Promise(function(resolve, reject) {
 						resolve(xmlProcessor(queryType, result.data));
 					});
 					return processMalResponse;
 				}, function error(result) {
-					console.log(`error searching mal at ${searchUrl}: ${result}`);
+					console.log(`error searching mal at ${searchUrl}: `, result);
 				});
 			}
 		};

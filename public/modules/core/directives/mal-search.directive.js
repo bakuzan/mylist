@@ -2,26 +2,33 @@
   'use strict';
   angular.module('core')
   .directive('malSearch', malSearch);
-  malSearch.$inject = ['MalService'];
+  malSearch.$inject = ['MalService', '$timeout'];
 
-  function malSearch(MalService) {
+  function malSearch(MalService, $timeout) {
       return {
           restrict: 'A',
           require: 'ngModel',
           scope: {
-            model: '=ngModel'
+            model: '=ngModel',
+            type: '@malSearch'
           },
           link: function (scope, element, attrs) {
-
-            function searchMalAnime(searchString) {
-              MalService.search('anime', searchString).then(function(result) {
+            console.log('init mal search: ', scope);
+            function searchMal(type, searchString) {
+              console.log(`mal ${type} search: ${searchString}`);
+              MalService.search(type, searchString).then(function(result) {
                 console.log('anime search: ', result);
               });
             }
 
+            var timeoutPromise;
+            var delayInMs = 2000;
             scope.$watch('model', function(newValue) {
               if(newValue !== undefined && newValue.length > 3) {
-                searchMalAnime(newValue);
+                $timeout.cancel(timeoutPromise);  //does nothing, if timeout alrdy done
+                timeoutPromise = $timeout(function() {
+                     searchMal(scope.type, newValue);
+                }, delayInMs);
               }
             });
 

@@ -5,6 +5,9 @@
 	MalService.$inject = ['$http'];
 
 	function MalService($http) {
+		var malService = {
+			credentials: window.btoa('bakuzan:Myanime52')
+		};
 
 		function xmlToJson(xml) {
 			var ELEMENT_NODE_TYPE = 1,
@@ -60,7 +63,11 @@
 		return {
 			search: function(queryType, searchString) {
 				var searchUrl = `https://myanimelist.net/api/${queryType}/search.xml?q=${searchString}`;
-				$http.get(searchUrl, { headers: {	'Authorization': `Basic ${window.btoa('bakuzan:Myanime52')}` } }).then(function success(result) {
+				$http.defaults.headers.common['Authorization'] = `Basic ${malService.credentials}`;
+				$http({
+					method: 'GET',
+					url: searchUrl
+				}).then(function success(result) {
 					console.log(`${searchUrl} >> `, result.data);
 					var processMalResponse = new Promise(function(resolve, reject) {
 						resolve(xmlProcessor(queryType, result.data));

@@ -69,6 +69,7 @@
 					url: searchUrl,
                     withCredentials: true,
                     headers: {
+						'Accept': 'text/xml',
                         'Authorization': `Basic ${malService.credentials}`
                     }
 				}).then(function success(result) {

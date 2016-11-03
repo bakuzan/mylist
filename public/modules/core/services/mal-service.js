@@ -67,11 +67,11 @@
 				$http({
 					method: 'GET',
 					url: searchUrl,
-                    withCredentials: true,
-                    headers: {
+          withCredentials: true,
+          headers: {
 						'Accept': 'text/xml',
-                        'Authorization': `Basic ${malService.credentials}`
-                    }
+            'Authorization': `Basic ${malService.credentials}`
+          }
 				}).then(function success(result) {
 					console.log(`${searchUrl} >> `, result.data);
 					var processMalResponse = new Promise(function(resolve, reject) {

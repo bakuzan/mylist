@@ -48,6 +48,7 @@
     "passport-local": "~1.0.0",
     "passport-twitter": "~1.0.2",
     "pixrem": "^3.0.1",
+    "popura": "^1.2.4",
     "swig": "~1.4.1"
   },
   "devDependencies": {

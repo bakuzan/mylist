@@ -13,7 +13,7 @@
             type: '@malSearch'
           },
           link: function (scope, element, attrs) {
-            console.log('init mal search: ', scope);
+
             function searchMal(type, searchString) {
               console.log(`mal ${type} search: ${searchString}`);
               MalService.search(type, searchString).then(function(result) {

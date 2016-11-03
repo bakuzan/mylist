@@ -63,10 +63,14 @@
 		return {
 			search: function(queryType, searchString) {
 				var searchUrl = `https://myanimelist.net/api/${queryType}/search.xml?q=${searchString}`;
-				$http.defaults.headers.common['Authorization'] = `Basic ${malService.credentials}`;
+				//$http.defaults.headers.common['Authorization'] = `Basic ${malService.credentials}`;
 				$http({
 					method: 'GET',
-					url: searchUrl
+					url: searchUrl,
+                    withCredentials: true,
+                    headers: {
+                        'Authorization': `Basic ${malService.credentials}`
+                    }
 				}).then(function success(result) {
 					console.log(`${searchUrl} >> `, result.data);
 					var processMalResponse = new Promise(function(resolve, reject) {

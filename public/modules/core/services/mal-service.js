@@ -2,12 +2,13 @@
 	'use strict';
 	angular.module('core')
 	.factory('MalService', MalService);
-	MalService.$inject = ['$http'];
+	MalService.$inject = ['$http', '$resource'];
 
-	function MalService($http) {
-		var malService = {
-			credentials: window.btoa('bakuzan:Myanime52')
-		};
+	function MalService($http, $resource) {
+		var malService = $resource('', {},
+			 {
+				search: { method: 'GET', url: 'malSearch/:type', params: { type: '@_type', searchString: '@_searchString' }, isArray: true }
+			 });
 
 		function xmlToJson(xml) {
 			var ELEMENT_NODE_TYPE = 1,
@@ -61,7 +62,9 @@
 		}
 
 		return {
-			search: function(queryType, searchString) {
+			search: function (queryType, searchString) { return malService.search({ type: queryType, searchString: searchString }).$promise; }
+		};
+				/*
 				var searchUrl = `https://myanimelist.net/api/${queryType}/search.xml?q=${searchString}`;
 				//$http.defaults.headers.common['Authorization'] = `Basic ${malService.credentials}`;
 				$http({
@@ -82,6 +85,6 @@
 					console.log(`error searching mal at ${searchUrl}: `, result);
 				});
 			}
-		};
+			*/
 	}
 })();

@@ -5,6 +5,6 @@ module.exports = function(app) {
 	var mal = require('../../app/controllers/mal.server.controller');
 
 	// MAL Routes
-	app.route('/malSearch/:type/:searchString')
+	app.route('/malSearch/:type')
 		.get(mal.search);
 };

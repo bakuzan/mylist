@@ -11,6 +11,7 @@ var mongoose = require('mongoose'),
 const client = popura('Bakuzan', 'Myanime52');
 
 exports.search = function(req, res) {
+	console.log('search mal: ', req);
 	//get params here
 	var type = '',
 		search = '';

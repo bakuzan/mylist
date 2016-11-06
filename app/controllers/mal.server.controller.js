@@ -11,11 +11,8 @@ var mongoose = require('mongoose'),
 var client = popura('Bakuzan', 'Myanime52');
 
 exports.search = function(req, res) {
-	console.log('search mal: ', req);
-	//get params here
-	var type = '',
-			search = '';
-
+	var type = req.params.type,
+			search = req.query.searchString;
 	// for now log the result, when got it working just return the query.
 	if(type === 'anime') {
 		client.searchAnimes(search).then(function(res) {

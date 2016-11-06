@@ -7,7 +7,12 @@
 	function MalService($http, $resource) {
 		var malService = $resource('', {},
 			 {
-				search: { method: 'GET', url: 'malSearch/:type', params: { type: '@_type', searchString: '@_searchString' }, isArray: true }
+				search: {
+					method: 'GET',
+					url: 'malSearch/:type',
+					params: { type: '@_type', searchString: '@_searchString' },
+					isArray: true
+				}
 			 });
 
 		function xmlToJson(xml) {
@@ -62,7 +67,10 @@
 		}
 
 		return {
-			search: function (queryType, searchString) { return malService.search({ type: queryType, searchString: searchString }).$promise; }
+			search: function (queryType, searchString) {
+				console.log('service - search: ', queryType, searchString);
+				return malService.search({ type: queryType, searchString: searchString }).$promise;
+			}
 		};
 				/*
 				var searchUrl = `https://myanimelist.net/api/${queryType}/search.xml?q=${searchString}`;

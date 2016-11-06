@@ -196,6 +196,17 @@ module.exports = function(grunt) {
 	    dist: {
 	      src: 'public/dist/*.css'
 	    }
+		},
+		'babel': {
+			options: {
+				sourceMap: true,
+				presets: ['es2015']
+			},
+			dist: {
+				files: {
+					'public/dist/application.js': 'public/dist/application.js'
+				}
+			}
 		}
 	});
 
@@ -215,7 +226,7 @@ module.exports = function(grunt) {
 	});
 
 	// Default task(s).
-	grunt.registerTask('default', ['lint', 'concurrent:default']);
+	grunt.registerTask('default', ['lint', 'babel', 'concurrent:default']);
 
 	// Debug task.
 	grunt.registerTask('debug', ['lint', 'concurrent:debug']);

@@ -10,3 +10,4 @@ app/tests/coverage/
 public/modules/animeitems/img/*
 public/modules/mangaitems/img/*
 public/modules/characters/img/*
+.env

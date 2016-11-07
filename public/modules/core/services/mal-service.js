@@ -68,31 +68,8 @@
 
 		return {
 			search: function (queryType, searchString) {
-				console.log('service - search: ', queryType, searchString);
 				return malService.search({ type: queryType, searchString: searchString }).$promise;
 			}
 		};
-				/*
-				var searchUrl = `https://myanimelist.net/api/${queryType}/search.xml?q=${searchString}`;
-				//$http.defaults.headers.common['Authorization'] = `Basic ${malService.credentials}`;
-				$http({
-					method: 'GET',
-					url: searchUrl,
-          withCredentials: true,
-          headers: {
-						'Accept': 'text/xml',
-            'Authorization': `Basic ${malService.credentials}`
-          }
-				}).then(function success(result) {
-					console.log(`${searchUrl} >> `, result.data);
-					var processMalResponse = new Promise(function(resolve, reject) {
-						resolve(xmlProcessor(queryType, result.data));
-					});
-					return processMalResponse;
-				}, function error(result) {
-					console.log(`error searching mal at ${searchUrl}: `, result);
-				});
-			}
-			*/
 	}
 })();

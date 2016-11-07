@@ -15,9 +15,8 @@
           link: function (scope, element, attrs) {
 
             function searchMal(type, searchString) {
-              console.log(`mal ${type} search: ${searchString}`);
-              MalService.search(type, searchString).then(function(result) {
-                console.log('anime search: ', result);
+              MalService.search(type, searchString).then(function (result) {
+                console.log('search directive result: ', result);
               });
             }
 

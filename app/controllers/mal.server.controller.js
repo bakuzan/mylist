@@ -8,7 +8,7 @@ var mongoose = require('mongoose'),
 	_ = require('lodash'),
   popura = require('popura');
 
-var client = popura('Bakuzan', 'Myanime52');
+var client = popura(process.env.MAL_USER, process.env.MAL_PASSWORD);
 
 exports.search = function(req, res) {
 	var type = req.params.type,

@@ -16,12 +16,19 @@ exports.search = function(req, res) {
 
 	if (type === 'anime') {
 		client.searchAnimes(search).then(function(result) {
-			console.log('mal res: ', result);
-			return result.$promise;
+			res.jsonp(result);
+		}).catch(function(err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
 		});
 	} else if (type === 'manga') {
 		client.searchMangas(search).then(function(result) {
-			return result.$promise;
+			res.jsonp(result);
+		}).catch(function(err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
 		});
 	}
 

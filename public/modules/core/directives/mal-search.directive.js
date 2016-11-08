@@ -17,6 +17,7 @@
             function searchMal(type, searchString) {
               MalService.search(type, searchString).then(function (result) {
                 console.log('search directive result: ', result);
+                //pass result to dropdwon. (create dropdown on init.)
               });
             }
 

@@ -11,7 +11,7 @@
           scope: {
             item: '@malSearchItem'
           },
-          link: function (scope, element, attrs) {
+          link: function (scope, element, attrs, malSearchCtrl) {
 
           }
       };

@@ -21,7 +21,8 @@
           overStar: null
       },
       statTags: [],
-      commonArrays: ListService.getCommonArrays()
+      commonArrays: ListService.getCommonArrays(),
+			malSearchType: 'anime'
     };
 		ctrl.create = create;
 		ctrl.dropTag = dropTag;
@@ -32,12 +33,19 @@
     ctrl.imgPath = ''; //image path
 		ctrl.itemUpdate = new Date(); // today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
     ctrl.init = init;
+		ctrl.malSearchOptions = {
+			placeholder: 'Title',
+			name: 'title',
+			required: true,
+			autocomplete: 'off'
+		};
 		ctrl.removeTag = removeTag;
 		ctrl.sections = {
 			showAdditional: false,
 			showCompletion: false,
 			showItemTags: false
 		};
+		ctrl.selectMalEntry = selectMalEntry;
 		ctrl.setInSeason = setInSeason;
 		ctrl.submit = submit;
     ctrl.tagArray = []; // holding tags pre-submit
@@ -60,6 +68,10 @@
       ctrl.findManga();
     }
     ctrl.init();
+
+		function selectMalEntry(malEntry) {
+			console.log('create controller: ', malEntry);
+		}
 
     //For adding new tags.
     function addTag() {

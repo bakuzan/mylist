@@ -1,8 +1,10 @@
 <div class="mal-search">
-  <input type="text" ng-model="malSearchCtrl.malSearch" />
-  <ul>
-    <li mal-search-item="item" ng-repeat="item in searchResult" class="search-results">
-      <img class="image" ng-src="item.image" /><p class="title" ng-bind="item.title"></p>
+  <input type="text" class="form-control" name="{{malSearchCtrl.options.name}}" placeholder="{{malSearchCtrl.options.placeholder}}"
+         ng-model="malSearchCtrl.searchString" ng-required="malSearchCtrl.options.required" autocomplete="{{malSearchCtrl.options.autocomplete}}" />
+  <ul ng-show="malSearchCtrl.hasSearchResults">
+    <li ng-repeat="item in malSearchCtrl.searchResults | orderBy: 'title'" ng-click="malSearchCtrl.processItem(item)" class="search-results">
+      <img class="image" ng-src="{{item.image}}" />
+      <p class="title display-inline-block" ng-bind="item.title"></p>
     </li>
   </ul>
 </div>

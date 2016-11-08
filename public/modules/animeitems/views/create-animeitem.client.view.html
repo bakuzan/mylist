@@ -8,10 +8,11 @@
 
           <div class="form-group" ng-class="{ 'has-error' : animeForm.title.$invalid && !animeForm.title.$pristine }">
             <label for="title" class="col-md-2 control-label">Title</label>
-            <div class="col-md-6">
-              <input type="text" class="form-control" id="title" name="title" placeholder="Title"
-                     data-ng-model="ctrl.animeitem.title" mal-search="anime" required>
-            </div>
+            <div class="col-md-6"
+                 data-mal-search="ctrl.config.malSearchType"
+                 data-mal-search-model="ctrl.animeitem.title"
+                 data-mal-search-options="ctrl.malSearchOptions"
+                 data-mal-search-select="ctrl.selectMalEntry()"></div>
             <div class="col-md-4">
               <p ng-show="animeForm.title.$invalid && !animeForm.title.$pristine" class="help-block" >The Title is required.</p>
               <span ng-show="animeForm.title.$valid" class="glyphicon glyphicon-ok" style="color: green;"></span>

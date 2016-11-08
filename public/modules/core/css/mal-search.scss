@@ -1,0 +1,24 @@
+.mal-search {
+  > ul {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    background: #fff;
+    padding: 10px;
+    list-style-type: none;
+    z-index: 1000;
+  }
+  .search-results {
+    padding: 2px 5px;
+    &:hover {
+      background: #000;
+    }
+    .image {
+      width: 59px;
+      height: 90px;
+    }
+    .title {
+      padding: 0 5px;
+    }
+  }
+}

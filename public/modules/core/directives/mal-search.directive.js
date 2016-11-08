@@ -9,27 +9,43 @@
           restrict: 'A',
           replace: true,
           scope: {
-            type: '@malSearch'
+            type: '=malSearch',
+            selectItem: '=malSearchSelect',
+            searchString: '=malSearchModel',
+            options: '=malSearchOptions'
           },
           controllerAs: 'malSearchCtrl',
           bindToController: true,
           templateUrl: '/modules/core/templates/mal-search.html',
           controller: function ($scope) {
+            var self = this;
+
+            self.hasSearchResults = false;
+            self.processItem = processItem;
+            self.searchResults = [];
+            self.selectedItem = null;
+            console.log('mal search scope: ', $scope);
+            function processItem(item) {
+              console.log('processItem :', item);
+              self.selectItem(item);
+              self.selectedItem = item;
+            }
 
             function searchMal(type, searchString) {
               MalService.search(type, searchString).then(function (result) {
                 console.log('search directive result: ', result);
-                $scope.searchResults = result.data; //something like this?
+                self.searchResults = result;
+                self.hasSearchResults = true;
               });
             }
 
             var timeoutPromise;
             var delayInMs = 2000;
-            $scope.$watch('searchString', function(newValue) {
-              if(newValue !== undefined && newValue.length > 3) {
+            $scope.$watch('malSearchCtrl.searchString', function(newValue) {
+              if(newValue !== undefined && newValue.length > 2) {
                 $timeout.cancel(timeoutPromise);  //does nothing, if timeout alrdy done
                 timeoutPromise = $timeout(function() {
-                     searchMal($scope.type, newValue);
+                     searchMal(self.type, newValue);
                 }, delayInMs);
               }
             });

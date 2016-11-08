@@ -797,6 +797,21 @@ div.popover {
 
 /** TABS CUSTOM END **/
 
+/** MAL Search CUSTOM **/
+
+.mal-search {
+  > ul {
+		background: $brand-primary;
+	}
+	.search-results {
+    &:hover {
+      background: $brand-secondary;
+    }
+	}
+}
+
+/** MAL Search CUSTOM END **/
+
 /** COLOURS **/
 
 .primary-background {

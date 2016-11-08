@@ -7,27 +7,29 @@
   function malSearch(MalService, $timeout) {
       return {
           restrict: 'A',
-          require: 'ngModel',
+          replace: true,
           scope: {
-            model: '=ngModel',
             type: '@malSearch'
           },
-          link: function (scope, element, attrs) {
+          controllerAs: 'malSearchCtrl',
+          bindToController: true,
+          templateUrl: '/modules/core/templates/mal-search.html',
+          controller: function ($scope) {
 
             function searchMal(type, searchString) {
               MalService.search(type, searchString).then(function (result) {
                 console.log('search directive result: ', result);
-                //pass result to dropdwon. (create dropdown on init.)
+                $scope.searchResults = result.data; //something like this?
               });
             }
 
             var timeoutPromise;
             var delayInMs = 2000;
-            scope.$watch('model', function(newValue) {
+            $scope.$watch('searchString', function(newValue) {
               if(newValue !== undefined && newValue.length > 3) {
                 $timeout.cancel(timeoutPromise);  //does nothing, if timeout alrdy done
                 timeoutPromise = $timeout(function() {
-                     searchMal(scope.type, newValue);
+                     searchMal($scope.type, newValue);
                 }, delayInMs);
               }
             });

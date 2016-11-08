@@ -1,5 +1,5 @@
 <div class="mal-search">
-  <input type="text" ng-model="malSearch" />
+  <input type="text" ng-model="malSearchCtrl.malSearch" />
   <ul>
     <li mal-search-item="item" ng-repeat="item in searchResult" class="search-results">
       <img class="image" ng-src="item.image" /><p class="title" ng-bind="item.title"></p>

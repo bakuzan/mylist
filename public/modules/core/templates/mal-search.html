@@ -1,10 +1,17 @@
 <div class="mal-search">
   <input type="text" class="form-control" name="{{malSearchCtrl.options.name}}" placeholder="{{malSearchCtrl.options.placeholder}}"
-         ng-model="malSearchCtrl.searchString" ng-required="malSearchCtrl.options.required" autocomplete="{{malSearchCtrl.options.autocomplete}}" />
-  <ul ng-show="malSearchCtrl.hasSearchResults">
+         ng-model="malSearchCtrl.searchString"
+         ng-required="malSearchCtrl.options.required"
+         autocomplete="{{malSearchCtrl.options.autocomplete}}"
+         ng-focus="malSearchCtrl.toggleSearchDropdownOnFocus($event)"
+         ng-blur="malSearchCtrl.toggleSearchDropdownOnFocus($event)" />
+  <span class="selected-result" ng-click="malSearchCtrl.displaySelectedItemActions()" ng-hide="malSearchCtrl.selectedItem === null">
+    <i class="fa fa-asterisk"></i>
+  </span>
+  <ul class="overflow-auto-hover" ng-show="malSearchCtrl.hasSearchResults && malSearchCtrl.hasFocus && malSearchCtrl.selectedItem === null">
     <li ng-repeat="item in malSearchCtrl.searchResults | orderBy: 'title'" ng-click="malSearchCtrl.processItem(item)" class="search-results">
       <img class="image" ng-src="{{item.image}}" />
-      <p class="title display-inline-block" ng-bind="item.title"></p>
+      <p class="title display-inline-block center-vertically" ng-bind="item.title"></p>
     </li>
   </ul>
 </div>

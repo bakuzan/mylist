@@ -2,23 +2,38 @@
   > ul {
     position: absolute;
     top: 40px;
-    left: 0;
+    left: 10px;
+    height: 300px;
+    width: calc(100% - 20px);
     background: #fff;
     padding: 10px;
     list-style-type: none;
     z-index: 1000;
   }
   .search-results {
+    position: relative;
+    height: 45px;
     padding: 2px 5px;
+    overflow: hidden;
+    cursor: pointer;
     &:hover {
+      height: auto;
       background: #000;
+      .title {
+        position: relative;
+        top: initial;
+      }
     }
     .image {
       width: 59px;
       height: 90px;
     }
     .title {
+      position: absolute;
+      top: 10px;
+      width: 75%;
       padding: 0 5px;
+      word-break: break-word;
     }
   }
 }

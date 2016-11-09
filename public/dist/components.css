@@ -708,24 +708,39 @@ div.slider-full-screen .slider-indicators {
 .mal-search > ul {
   position: absolute;
   top: 40px;
-  left: 0;
+  left: 10px;
+  height: 300px;
+  width: calc(100% - 20px);
   background: #fff;
   padding: 10px;
   list-style-type: none;
   z-index: 1000;
 }
 .mal-search .search-results {
+  position: relative;
+  height: 45px;
   padding: 2px 5px;
+  overflow: hidden;
+  cursor: pointer;
 }
 .mal-search .search-results:hover {
+  height: auto;
   background: #000;
+}
+.mal-search .search-results:hover .title {
+  position: relative;
+  top: initial;
 }
 .mal-search .search-results .image {
   width: 59px;
   height: 90px;
 }
 .mal-search .search-results .title {
+  position: absolute;
+  top: 10px;
+  width: 75%;
   padding: 0 5px;
+  word-break: break-word;
 }
 
 /* Variables */

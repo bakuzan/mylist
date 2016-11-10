@@ -22,13 +22,28 @@
                 timeoutPromise,
                 delayInMs = 2000;
 
+            self.displayActions = false;
             self.displaySelectedItemActions = displaySelectedItemActions;
             self.hasFocus = false;
             self.hasSearchResults = false;
             self.processItem = processItem;
             self.searchResults = [];
             self.selectedItem = null;
+            self.selectedItemActions = [
+              { displayText: 'Remove selected',
+                action: function() {
+                  console.log('remove selected');
+                  self.selectedItem = null;
+                }
+              },
+              { displayText: 'Display raw json',
+                action: function() {
+                  console.log('display json');
+                }
+              }
+            ];
             self.toggleSearchDropdownOnFocus = toggleSearchDropdownOnFocus;
+
             console.log('mal search scope: ', $scope);
 
             function processItem(item) {
@@ -38,7 +53,8 @@
             }
 
             function displaySelectedItemActions() {
-              console.log('display actions', self.selectedItem);
+              self.displayActions = true;
+              console.log('display actions', self.displayActions);
             }
 
             function searchMal(type, searchString) {

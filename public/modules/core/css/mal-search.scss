@@ -1,4 +1,10 @@
 .mal-search {
+  #selected-result {
+    position: absolute;
+    top: -20px;
+    right: 0;
+    cursor: pointer;
+  }
   > ul {
     position: absolute;
     top: 40px;
@@ -12,17 +18,12 @@
   }
   .search-results {
     position: relative;
-    height: 45px;
+    height: auto;
     padding: 2px 5px;
     overflow: hidden;
     cursor: pointer;
     &:hover {
-      height: auto;
       background: #000;
-      .title {
-        position: relative;
-        top: initial;
-      }
     }
     .image {
       width: 59px;
@@ -30,10 +31,21 @@
     }
     .title {
       position: absolute;
-      top: 10px;
+      top: 50%;
       width: 75%;
       padding: 0 5px;
+      margin: 0;
       word-break: break-word;
     }
   }
+}
+
+.action-dropdown {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 5px 10px;
+  background: #fff;
+  list-style-type: none;
+  white-space: nowrap;
 }

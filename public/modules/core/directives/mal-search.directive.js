@@ -30,13 +30,15 @@
             self.searchResults = [];
             self.selectedItem = null;
             self.selectedItemActions = [
-              { displayText: 'Remove selected',
+              { 
+                displayText: 'Remove selected',
                 action: function() {
                   console.log('remove selected');
                   self.selectedItem = null;
                 }
               },
-              { displayText: 'Display raw json',
+              { 
+                displayText: 'Display raw json',
                 action: function() {
                   console.log('display json');
                 }
@@ -66,12 +68,12 @@
             }
 
             function toggleSearchDropdownOnFocus(event) {
-              self.hasFocus = true || event.type === 'focus'; //hard code true for dev
+              self.hasFocus = event.type === 'focus';
             }
 
             $scope.$watch('malSearchCtrl.searchString', function(newValue) {
-              if(newValue !== undefined && newValue.length > 2) {
-                $timeout.cancel(timeoutPromise);  //does nothing, if timeout alrdy done
+              if(newValue !== undefined && newValue.length > 2 && self.selectedItem === null) {
+                $timeout.cancel(timeoutPromise);
                 timeoutPromise = $timeout(function() {
                      searchMal(self.type, newValue);
                 }, delayInMs);

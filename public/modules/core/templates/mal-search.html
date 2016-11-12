@@ -1,14 +1,18 @@
-<div class="mal-search" ng-focus="malSearchCtrl.toggleSearchDropdownOnFocus($event)" ng-blur="malSearchCtrl.toggleSearchDropdownOnFocus($event)">
+<div class="mal-search">
   <input type="text" class="form-control" name="{{malSearchCtrl.options.name}}" placeholder="{{malSearchCtrl.options.placeholder}}"
          ng-model="malSearchCtrl.searchString"
          ng-required="malSearchCtrl.options.required"
-         autocomplete="{{malSearchCtrl.options.autocomplete}}" />
+         autocomplete="{{malSearchCtrl.options.autocomplete}}"
+         ng-focus="malSearchCtrl.toggleSearchDropdownOnFocus($event)" ng-blur="malSearchCtrl.toggleSearchDropdownOnFocus($event)" />
   <span id="selected-result" ng-click="malSearchCtrl.displaySelectedItemActions()" ng-hide="malSearchCtrl.selectedItem === null">
     <i class="fa fa-caret-square-o-down"></i>
-    <ul class="action-dropdown" role="menu" ng-show="self.displayActions" anywhere-but-here>
+    <ul class="action-dropdown" role="menu" ng-show="malSearchCtrl.displayActions" anywhere-but-here>
       <li ng-repeat="action in malSearchCtrl.selectedItemActions" ng-click="action.action()" role="menuitem">
         {{action.displayText}}
       </li>
+      <pre ng-show="malSearchCtrl.displayRawJson">
+        {{malSearchCtrl.selectedItem | json}}
+      </pre>
     </ul>
   </span>
   <ul class="overflow-auto-hover" ng-show="malSearchCtrl.hasSearchResults && malSearchCtrl.hasFocus && malSearchCtrl.selectedItem === null">

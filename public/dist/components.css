@@ -745,6 +745,21 @@ div.slider-full-screen .slider-indicators {
   word-break: break-word;
 }
 
+.action-dropdown {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 145px;
+  padding: 5px 10px;
+  background: #fff;
+  list-style-type: none;
+  white-space: nowrap;
+  z-index: 10;
+}
+.action-dropdown li:hover:after {
+  content: ">";
+}
+
 /* Variables */
 /* Horizontal list styling base */
 .horizontal-list {

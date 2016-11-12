@@ -30,17 +30,19 @@
             self.searchResults = [];
             self.selectedItem = null;
             self.selectedItemActions = [
-              { 
+              {
                 displayText: 'Remove selected',
                 action: function() {
-                  console.log('remove selected');
                   self.selectedItem = null;
+                  self.searchString = undefined;
+                  self.displayActions = false;
                 }
               },
-              { 
+              {
                 displayText: 'Display raw json',
                 action: function() {
                   console.log('display json');
+                  self.displayRawJson = true;
                 }
               }
             ];
@@ -68,10 +70,13 @@
             }
 
             function toggleSearchDropdownOnFocus(event) {
-              self.hasFocus = event.type === 'focus';
+              $timeout(function() {
+                self.hasFocus = event.type === 'focus';
+              }, 500);
             }
 
             $scope.$watch('malSearchCtrl.searchString', function(newValue) {
+              self.hasFocus = true;
               if(newValue !== undefined && newValue.length > 2 && self.selectedItem === null) {
                 $timeout.cancel(timeoutPromise);
                 timeoutPromise = $timeout(function() {

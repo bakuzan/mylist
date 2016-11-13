@@ -33,7 +33,7 @@
               {
                 displayText: 'Remove selected',
                 action: function() {
-                  self.selectedItem = null;
+                  self.processItem(null);
                   self.searchString = undefined;
                   self.displayActions = false;
                 }
@@ -41,7 +41,6 @@
               {
                 displayText: 'Display raw json',
                 action: function() {
-                  console.log('display json');
                   self.displayRawJson = true;
                 }
               }
@@ -51,19 +50,16 @@
             console.log('mal search scope: ', $scope);
 
             function processItem(item) {
-              console.log('processItem :', item);
               self.selectItem(item);
               self.selectedItem = item;
             }
 
             function displaySelectedItemActions() {
               self.displayActions = true;
-              console.log('display actions', self.displayActions);
             }
 
             function searchMal(type, searchString) {
               MalService.search(type, searchString).then(function (result) {
-                console.log('search directive result: ', result);
                 self.searchResults = result;
                 self.hasSearchResults = true;
               });
@@ -82,6 +78,12 @@
                 timeoutPromise = $timeout(function() {
                      searchMal(self.type, newValue);
                 }, delayInMs);
+              }
+            });
+
+            $scope.$watch('malSearchCtrl.displayActions', function(nv) {
+              if(nv !== undefined) {
+                console.log(nv, $scope);
               }
             });
 

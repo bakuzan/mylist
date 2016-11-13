@@ -10,7 +10,7 @@
       <li ng-repeat="action in malSearchCtrl.selectedItemActions" ng-click="action.action()" role="menuitem">
         {{action.displayText}}
       </li>
-      <pre ng-show="malSearchCtrl.displayRawJson">
+      <pre class="raw-json" ng-show="malSearchCtrl.displayRawJson">
         {{malSearchCtrl.selectedItem | json}}
       </pre>
     </ul>

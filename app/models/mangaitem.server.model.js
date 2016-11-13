@@ -80,6 +80,12 @@ var MangaitemSchema = new Schema({
         type: Array,
         default: []
     },
+		mal: {
+			id: {
+				type: Number,
+				default: 0
+			}
+		},
     meta: {
        updated: {
 		type: Date,

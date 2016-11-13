@@ -1011,6 +1011,9 @@ div.popover {
 .mal-search .search-results:hover {
   background: #FFFFFF;
 }
+.mal-search .action-dropdown {
+  background: #EEFFFF;
+}
 
 /** MAL Search CUSTOM END **/
 /** COLOURS **/

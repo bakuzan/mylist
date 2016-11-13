@@ -71,6 +71,16 @@
 
 		function selectMalEntry(malEntry) {
 			console.log('create controller: ', malEntry);
+			if(malEntry) {
+				ctrl.animeitem.title = malEntry.title;
+				ctrl.animeitem.finalEpisode = malEntry.episodes;
+				ctrl.imgPath = malEntry.image;
+				ctrl.animeitem.mal = {
+					id: malEntry.id
+				}
+			} else {
+				ctrl.animeitem.mal = undefined;
+			}
 		}
 
     //For adding new tags.
@@ -121,6 +131,7 @@
           disc: ctrl.animeitem.disc,
           manga: ctrl.animeitem.manga!==undefined && ctrl.animeitem.manga!==null ? ctrl.animeitem.manga._id : ctrl.animeitem.manga,
           tags: ctrl.tagArray,
+					mal: ctrl.animeitem.mal,
           user: ctrl.user
        });
 

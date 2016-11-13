@@ -760,6 +760,12 @@ div.slider-full-screen .slider-indicators {
   content: ">";
 }
 
+.raw-json {
+  position: absolute;
+  right: 0;
+  max-width: 50vw;
+}
+
 /* Variables */
 /* Horizontal list styling base */
 .horizontal-list {

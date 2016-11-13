@@ -9,6 +9,15 @@
           link: function (scope, element, attrs) {
               element.data('thing', true);
 
+              scope.anywhereButHereResolve = function(path, obj, value) {
+                return path.split('.').reduce(function(prev, curr, index, array) {
+                  if(index === (array.length - 1) && value) {
+                      prev[curr] = value;
+                  }
+                  return prev[curr];
+                }, obj || this);
+              };
+
               /** On click, check what you clicked and whether you can ignore it.
                *    Based on checks false the ng-show of the anywhere-but-here element.
                */
@@ -16,9 +25,10 @@
                   var inThing = angular.element(e.target).inheritedData('thing'),
                       ignore = angular.element(e.target).attr('ignore-here');
                   if (!inThing && !ignore) {
-                      scope.$apply(function () {
-                          scope[attrs.ngShow] = false;
-                      });
+                    console.log('applying: ', scope);
+                    scope.$apply(function () {
+                      scope.anywhereButHereResolve(attrs.ngShow, scope, false);
+                    });
                   }
               });
           }

@@ -77,7 +77,7 @@
 				ctrl.imgPath = malEntry.image;
 				ctrl.animeitem.mal = {
 					id: malEntry.id
-				}
+				};
 			} else {
 				ctrl.animeitem.mal = undefined;
 			}

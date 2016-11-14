@@ -2,35 +2,23 @@
   'use strict';
   angular.module('core')
   .directive('anywhereButHere', anywhereButHere);
+  anywhereButHere.$inject = ['$compile'];
 
-  function anywhereButHere($document, $window) {
+  function anywhereButHere($compile) {
       return {
           restrict: 'A',
+          scope: {
+            showBackdrop: '=ngShow'
+          },
           link: function (scope, element, attrs) {
-              element.data('thing', true);
+            var body = document.body,
+                backdrop = angular.element('<div id="anywhere-but-here-backdrop" ng-show="showBackdrop" ng-click="triggerAnywhereButHere()"></div>')[0];
+            body.appendChild(backdrop);
+            $compile(backdrop)(scope);
 
-              scope.anywhereButHereResolve = function(path, obj, value) {
-                return path.split('.').reduce(function(prev, curr, index, array) {
-                  if(index === (array.length - 1) && value) {
-                      prev[curr] = value;
-                  }
-                  return prev[curr];
-                }, obj || this);
-              };
-
-              /** On click, check what you clicked and whether you can ignore it.
-               *    Based on checks false the ng-show of the anywhere-but-here element.
-               */
-              angular.element($document[0].body).on('click', function (e) {
-                  var inThing = angular.element(e.target).inheritedData('thing'),
-                      ignore = angular.element(e.target).attr('ignore-here');
-                  if (!inThing && !ignore) {
-                    console.log('applying: ', scope);
-                    scope.$apply(function () {
-                      scope.anywhereButHereResolve(attrs.ngShow, scope, false);
-                    });
-                  }
-              });
+            scope.triggerAnywhereButHere = function() {
+              scope.showBackdrop = false;
+            };
           }
       };
   }

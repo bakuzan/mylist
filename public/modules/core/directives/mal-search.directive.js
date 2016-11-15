@@ -47,8 +47,6 @@
             ];
             self.toggleSearchDropdownOnFocus = toggleSearchDropdownOnFocus;
 
-            console.log('mal search scope: ', $scope);
-
             function processItem(item) {
               self.selectItem(item);
               self.selectedItem = item;
@@ -73,7 +71,7 @@
 
             $scope.$watch('malSearchCtrl.searchString', function(newValue) {
               self.hasFocus = true;
-              if(newValue !== undefined && newValue.length > 2 && self.selectedItem === null) {
+              if(newValue !== undefined && newValue.length > 2 && self.selectedItem === null && !self.options.disabled) {
                 $timeout.cancel(timeoutPromise);
                 timeoutPromise = $timeout(function() {
                      searchMal(self.type, newValue);
@@ -81,9 +79,9 @@
               }
             });
 
-            $scope.$watch('malSearchCtrl.displayActions', function(nv) {
-              if(nv !== undefined) {
-                console.log(nv, $scope);
+            $scope.$watch('malSearchCtrl.displayActions', function(newValue) {
+              if(newValue !== undefined && !newValue) {
+                self.displayRawJson = newValue;
               }
             });
 

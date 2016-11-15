@@ -2,9 +2,9 @@
 	'use strict';
 	angular.module('animeitems')
 	.controller('CreateAnimeController', CreateAnimeController);
-	CreateAnimeController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory', 'spinnerService', 'TagService'];
+	CreateAnimeController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory', 'spinnerService', 'TagService', 'Enums'];
 
-	function CreateAnimeController($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, AnimeFactory, spinnerService, TagService) {
+	function CreateAnimeController($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, AnimeFactory, spinnerService, TagService, Enums) {
 		var ctrl = this,
         animeitemId = $stateParams.animeitemId;
 
@@ -37,7 +37,8 @@
 			placeholder: 'Title',
 			name: 'title',
 			required: true,
-			autocomplete: 'off'
+			autocomplete: 'off',
+			disabled: !ctrl.config.isCreate
 		};
 		ctrl.removeTag = removeTag;
 		ctrl.sections = {
@@ -70,16 +71,17 @@
     ctrl.init();
 
 		function selectMalEntry(malEntry) {
-			console.log('create controller: ', malEntry);
 			if(malEntry) {
 				ctrl.animeitem.title = malEntry.title;
 				ctrl.animeitem.finalEpisode = malEntry.episodes;
 				ctrl.imgPath = malEntry.image;
+				ctrl.season = malEntry.status === Enums.malStatus.anime.ongoing;
 				ctrl.animeitem.mal = {
 					id: malEntry.id
 				};
 			} else {
 				ctrl.animeitem.mal = undefined;
+				ctrl.season = false;
 			}
 		}
 

@@ -23,8 +23,13 @@
                 <span class="glyphicon glyphicon-cd" data-ng-show="ctrl.animeitem.disc"></span> <span class="text-muted" data-ng-show="ctrl.animeitem.status">(Completed)</span> <span class="text-muted" data-ng-show="ctrl.animeitem.reWatching">(Watching)</span>
                 <h3>Episode </h3><span data-ng-bind="ctrl.animeitem.episodes"></span>/<span data-ng-bind="ctrl.animeitem.finalEpisode"></span>
                 <div class="related-media accent-alter-text">
-                    <p data-ng-show="ctrl.animeitem.manga!==null">Related manga: <a href="/#!/mangaitems/{{animeitem.manga._id}}">{{ctrl.animeitem.manga.title}}</a></p>
+                    <p data-ng-if="::ctrl.animeitem.manga && ctrl.animeitem.manga._id">
+											Related manga: <a href="/#!/mangaitems/{{ctrl.animeitem.manga._id}}">{{ctrl.animeitem.manga.title}}</a>
+										</p>
                 </div>
+								<div class="related-media accent-alter-text" ng-if="::ctrl.animeitem.mal && ctrl.animeitem.mal.id > 0">
+									    <a class="clickable" href="https://myanimelist.net/anime/{{ctrl.animeitem.mal.id}}" target="_blank">View on MAL</a>
+								</div>
                 <div class="col-lg-12 col-md-12 col-sm-12 item-tags">
                     <span class="col-lg-3 col-md-3 col-sm-3 tag-bubble" ng-repeat="tag in ctrl.animeitem.tags">{{tag.text}}</span>
                 </div>

@@ -82,8 +82,7 @@ var MangaitemSchema = new Schema({
     },
 		mal: {
 			id: {
-				type: Number,
-				default: 0
+				type: Number
 			}
 		},
     meta: {

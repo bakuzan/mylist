@@ -86,8 +86,7 @@ var AnimeitemSchema = new Schema({
     },
 		mal: {
 			id: {
-				type: Number,
-				default: 0
+				type: Number
 			}
 		},
 		video: {

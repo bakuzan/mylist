@@ -38,7 +38,7 @@
 			name: 'title',
 			required: true,
 			autocomplete: 'off',
-			disabled: !ctrl.config.isCreate
+			disabled: true
 		};
 		ctrl.removeTag = removeTag;
 		ctrl.sections = {
@@ -61,6 +61,7 @@
 				ctrl.animeitem.episodes = 0;
 				ctrl.animeitem.start = ctrl.itemUpdate;
 				ctrl.animeitem.latest = ctrl.itemUpdate;
+				ctrl.malSearchOptions.disabled = false;
 			} else if(!ctrl.config.isCreate) {
         ctrl.config.title = 'Edit';
         ctrl.findOne();
@@ -80,6 +81,7 @@
 					id: malEntry.id
 				};
 			} else {
+				ctrl.animeitem.finalEpisode = 0;
 				ctrl.animeitem.mal = undefined;
 				ctrl.season = false;
 			}
@@ -171,7 +173,7 @@
 		function findOne() {
 	    spinnerService.loading('editAnime', Animeitems.get({ animeitemId: animeitemId }).$promise.then(function(result) {
 	        ctrl.animeitem = result;
-	   			console.log(ctrl.animeitem);
+					ctrl.malSearchOptions.disabled = (ctrl.animeitem.mal && ctrl.animeitem.mal.id > 0) || false;
 	    }));
 		}
 

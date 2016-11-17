@@ -1,3 +1,6 @@
+cero-01 (2.0.0)
+- integrated mal search feature using popura submodule.
+
 bankai-02 (1.28.2)
 - fixed spinner css to appear above all content.
 - fixed unsorted linked task dropdown.

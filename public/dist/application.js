@@ -3270,7 +3270,7 @@ angular.module('characters').config(['$stateProvider',
 		function xmlProcessor(type, data) {
 			var searchResult = [],
 				xml = data.responseXML,
-				nodes = xml.evaluate('//' + type + '/entry', xml, null, XPathResult.ANY_TYPE, null),
+				nodes = xml.evaluate(`//${type}/entry`, xml, null, XPathResult.ANY_TYPE, null),
 				result = nodes.iterateNext();
 			while (result) {
 				searchResult.push(xmlToJson(result));

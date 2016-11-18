@@ -1,5 +1,9 @@
 'use strict';
 
+//require('grunt-babel');
+require('babel-core/register');
+require('babel-polyfill');
+
 module.exports = function(grunt) {
 	// Unified Watch Object
 	var watchFiles = {

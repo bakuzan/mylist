@@ -1,4 +1,8 @@
-cero-01 (2.0.0)
+cero-10 (2.1.0)
+- reworked manga pages to be structured the same as anime.
+- added mal search to manga pages
+
+cero-00 (2.0.0)
 - integrated mal search feature using popura submodule.
 
 bankai-02 (1.28.2)

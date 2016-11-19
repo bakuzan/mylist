@@ -1,9 +1,5 @@
 'use strict';
 
-//require('grunt-babel');
-require('babel-core/register');
-require('babel-polyfill');
-
 module.exports = function(grunt) {
 	// Unified Watch Object
 	var watchFiles = {
@@ -201,14 +197,14 @@ module.exports = function(grunt) {
 	      src: 'public/dist/*.css'
 	    }
 		},
-		'babel': {
+		babel: {
 			options: {
 				sourceMap: true,
 				presets: ['es2015']
 			},
 			dist: {
 				files: {
-					'public/dist/application.min.js': 'public/dist/application.js'
+					'public/dist/application.js': 'public/dist/application.js'
 				}
 			}
 		}
@@ -242,7 +238,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('lint', ['jshint', 'csslint']);
 
 	// Build task(s).
-	grunt.registerTask('build', ['lint', 'loadConfig', 'ngAnnotate', 'babel:dist', 'sass:helper', 'sass:dist', 'postcss:dist']);
+	grunt.registerTask('build', ['lint', 'loadConfig', 'babel:dist', 'ngAnnotate', 'sass:helper', 'sass:dist', 'postcss:dist']);
 
 	// Test task.
 	grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);

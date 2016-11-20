@@ -58,7 +58,8 @@
     function init() {
       ctrl.config.isCreate = mangaitemId === undefined;
       if(ctrl.config.isCreate) {
-				ctrl.mangaitem.episodes = 0;
+				ctrl.mangaitem.chapters = 0;
+				ctrl.mangaitem.volumes = 0;
 				ctrl.mangaitem.start = ctrl.itemUpdate;
 				ctrl.mangaitem.latest = ctrl.itemUpdate;
 				ctrl.malSearchOptions.disabled = false;
@@ -81,6 +82,7 @@
 				};
 			} else {
 				ctrl.mangaitem.finalChapter = 0;
+				ctrl.mangaitem.finalVolume = 0;
 				ctrl.mangaitem.mal = undefined;
 			}
 		}

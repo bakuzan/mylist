@@ -19,7 +19,7 @@ angular.module('mangaitems').config(['$stateProvider',
 		}).
 		state('editMangaitem', {
 			url: '/mangaitems/:mangaitemId/edit',
-			templateUrl: 'modules/mangaitems/views/edit-mangaitem.client.view.html'
+			templateUrl: 'modules/mangaitems/views/create-mangaitem.client.view.html'
 		});
 	}
 ]);

@@ -1,3 +1,8 @@
+cero-13 (2.1.3)
+- babel-polyfill re-added to server.js, yes, it was required.
+- on create anime/manga return to list page.
+- added mal links to manga pages.
+
 cero-10 (2.1.0)
 - reworked manga pages to be structured the same as anime.
 - added mal search to manga pages

@@ -76,6 +76,7 @@
 			if(malEntry) {
 				ctrl.mangaitem.title = malEntry.title;
 				ctrl.mangaitem.finalChapter = malEntry.chapters;
+				ctrl.mangaitem.finalVolume = malEntry.volumes;
 				ctrl.imgPath = malEntry.image;
 				ctrl.mangaitem.mal = {
 					id: malEntry.id
@@ -141,7 +142,7 @@
     });
       // Redirect after save
       mangaitem.$save(function(response) {
-        $location.path('/mangaitems/' + response._id);
+        $location.path('/mangaitems');
         NotificationFactory.success('Saved!', 'Manga was saved successfully');
 
       }, function(errorResponse) {

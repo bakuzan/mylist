@@ -28,6 +28,7 @@
         <span ng-if="mangaitem.end!==undefined && mangaitem.end!==null">{{mangaitem.end | date:'yyyy-MMM-dd'}} ended.</span>
       </small>
     </div>
+    <a class="clickable" ng-if="::mangaitem.mal && mangaitem.mal.id > 0" href="https://myanimelist.net/manga/{{mangaitem.mal.id}}" target="_blank">View on MAL</a>
     <a class="clickable" ng-click="ctrl.viewItemHistory()">View history</a>
     <div class="item-actions" data-ng-show="((ctrl.authentication.user) && (ctrl.authentication.user._id == mangaitem.user._id))">
         <a class="btn btn-accent" href="/#!/mangaitems/{{mangaitem._id}}">

@@ -6,6 +6,7 @@ var init = require('./config/init')(),
 	config = require('./config/config'),
 	mongoose = require('mongoose'),
 	chalk = require('chalk'),
+	babelPolyfill = require('babel-polyfill'),
 	dotenv = require('dotenv');
 
 	//load .env file into process.env

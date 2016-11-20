@@ -23,6 +23,9 @@
                 <div class="related-media accent-alter-text">
                     <p data-ng-show="ctrl.mangaitem.anime!==null">Related anime: <a href="/#!/animeitems/{{ctrl.mangaitem.anime._id}}">{{ctrl.mangaitem.anime.title}}</a></p>
                 </div>
+								<div class="related-media accent-alter-text" ng-if="::ctrl.mangaitem.mal && ctrl.mangaitem.mal.id > 0">
+									    <a class="clickable" href="https://myanimelist.net/manga/{{ctrl.mangaitem.mal.id}}" target="_blank">View on MAL</a>
+								</div>
                 <div class="col-lg-9 col-md-9 col-sm-12 item-tags">
                     <span class="col-lg-3 col-md-3 col-sm-3 tag-bubble" ng-repeat="tag in ctrl.mangaitem.tags">{{tag.text}}</span>
                 </div>

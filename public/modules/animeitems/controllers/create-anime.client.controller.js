@@ -141,7 +141,7 @@
 
 			// Redirect after save
 			animeitem.$save(function(response) {
-				$location.path('/animeitems/' + response._id);
+				$location.path('/animeitems');
 				NotificationFactory.success('Saved!', 'Anime was saved successfully');
 			}, function(errorResponse) {
 				ctrl.error = errorResponse.data.message;

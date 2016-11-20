@@ -448,7 +448,7 @@ angular.module('animeitems').config(['$stateProvider',
 
 			// Redirect after save
 			animeitem.$save(function(response) {
-				$location.path('/animeitems/' + response._id);
+				$location.path('/animeitems');
 				NotificationFactory.success('Saved!', 'Anime was saved successfully');
 			}, function(errorResponse) {
 				ctrl.error = errorResponse.data.message;
@@ -4018,10 +4018,11 @@ angular.module('mangaitems').config(['$stateProvider',
 		}).
 		state('editMangaitem', {
 			url: '/mangaitems/:mangaitemId/edit',
-			templateUrl: 'modules/mangaitems/views/edit-mangaitem.client.view.html'
+			templateUrl: 'modules/mangaitems/views/create-mangaitem.client.view.html'
 		});
 	}
 ]);
+
 (function() {
 	'use strict';
 	angular.module('mangaitems')
@@ -4082,7 +4083,8 @@ angular.module('mangaitems').config(['$stateProvider',
     function init() {
       ctrl.config.isCreate = mangaitemId === undefined;
       if(ctrl.config.isCreate) {
-				ctrl.mangaitem.episodes = 0;
+				ctrl.mangaitem.chapters = 0;
+				ctrl.mangaitem.volumes = 0;
 				ctrl.mangaitem.start = ctrl.itemUpdate;
 				ctrl.mangaitem.latest = ctrl.itemUpdate;
 				ctrl.malSearchOptions.disabled = false;
@@ -4099,12 +4101,14 @@ angular.module('mangaitems').config(['$stateProvider',
 			if(malEntry) {
 				ctrl.mangaitem.title = malEntry.title;
 				ctrl.mangaitem.finalChapter = malEntry.chapters;
+				ctrl.mangaitem.finalVolume = malEntry.volumes;
 				ctrl.imgPath = malEntry.image;
 				ctrl.mangaitem.mal = {
 					id: malEntry.id
 				};
 			} else {
 				ctrl.mangaitem.finalChapter = 0;
+				ctrl.mangaitem.finalVolume = 0;
 				ctrl.mangaitem.mal = undefined;
 			}
 		}
@@ -4163,7 +4167,7 @@ angular.module('mangaitems').config(['$stateProvider',
     });
       // Redirect after save
       mangaitem.$save(function(response) {
-        $location.path('/mangaitems/' + response._id);
+        $location.path('/mangaitems');
         NotificationFactory.success('Saved!', 'Manga was saved successfully');
 
       }, function(errorResponse) {

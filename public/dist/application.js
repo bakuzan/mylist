@@ -157,9 +157,9 @@ angular.module('animeitems').config(['$stateProvider',
 	'use strict';
 	angular.module('animeitems')
 	.controller('AnimeitemsController', AnimeitemsController);
-	AnimeitemsController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory', 'spinnerService', 'TagService', '$uibModal'];
+	AnimeitemsController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory', 'spinnerService', '$uibModal'];
 
-	function AnimeitemsController($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, AnimeFactory, spinnerService, TagService, $uibModal) {
+	function AnimeitemsController($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, $sce, $window, ItemService, ListService, NotificationFactory, AnimeFactory, spinnerService, $uibModal) {
 		var ctrl = this;
 
 		ctrl.authentication = Authentication;
@@ -2243,7 +2243,7 @@ angular.module('characters').config(['$stateProvider',
         bindToController: true,
         controllerAs: 'sliderController',
         templateUrl: '/modules/characters/templates/slider.html',
-        controller: function($scope) {
+        controller: ["$scope", function($scope) {
           var self = this,
               timer,
               autoSlide;
@@ -2354,7 +2354,7 @@ angular.module('characters').config(['$stateProvider',
               self.isFullscreen = !self.isFullscreen;
           }
 
-        },
+        }],
         link: function(scope, elem, attrs, sliderController) {
             scope.childElementCount = elem[0].childElementCount - 1;
         }
@@ -2880,7 +2880,7 @@ angular.module('characters').config(['$stateProvider',
               size: '@?'
           },
           bindToController: 'loadingSpinner',
-          controller: function ($scope) {
+          controller: ["$scope", function ($scope) {
               $scope.active = false;
   //            $scope.isLoading = function () {
   //                return $http.pendingRequests.length > 0;
@@ -2913,7 +2913,7 @@ angular.module('characters').config(['$stateProvider',
               $scope.$on('$destroy', function () {
                   spinnerService._unregister($scope.name);
               });
-          }
+          }]
       };
   }
 
@@ -2938,7 +2938,7 @@ angular.module('characters').config(['$stateProvider',
           controllerAs: 'malSearchCtrl',
           bindToController: true,
           templateUrl: '/modules/core/templates/mal-search.html',
-          controller: function ($scope) {
+          controller: ["$scope", function ($scope) {
             var self = this,
                 timeoutPromise,
                 delayInMs = 2000;
@@ -3006,7 +3006,7 @@ angular.module('characters').config(['$stateProvider',
               }
             });
 
-          }
+          }]
       };
   }
 
@@ -3088,6 +3088,7 @@ angular.module('characters').config(['$stateProvider',
 
 (function() {
   'use strict';
+  dateSuffix.$inject = ["$filter"];
   angular.module('core')
   .filter('dateSuffix', dateSuffix);
 
@@ -4023,17 +4024,206 @@ angular.module('mangaitems').config(['$stateProvider',
 ]);
 (function() {
 	'use strict';
-	angular.module('mangaitems').controller('MangaitemsController', MangaitemsController);
-	MangaitemsController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'MangaFactory', 'spinnerService', 'TagService', '$uibModal'];
+	angular.module('mangaitems')
+	.controller('CreateMangaController', CreateMangaController);
+	CreateMangaController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'MangaFactory', 'spinnerService', 'TagService', 'Enums'];
 
-	function MangaitemsController($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, MangaFactory, spinnerService, TagService, $uibModal) {
-		var ctrl = this;
+	function CreateMangaController($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, MangaFactory, spinnerService, TagService, Enums) {
+		var ctrl = this,
+        mangaitemId = $stateParams.mangaitemId;
 
+		ctrl.addedChapters = addedChapters;
+    ctrl.addedVolumes = addedVolumes;
 		ctrl.addTag = addTag;
+		ctrl.mangaitem = {};
 		ctrl.authentication = Authentication;
-		ctrl.chapters = 0;
+    ctrl.config = {
+      title: 'Create',
+			updateHistory: false,
+      ratingActions: {
+          maxRating: 10,
+          percent: undefined,
+          overStar: null
+      },
+      statTags: [],
+      commonArrays: ListService.getCommonArrays(),
+			malSearchType: 'manga'
+    };
 		ctrl.create = create;
 		ctrl.dropTag = dropTag;
+    ctrl.finalNumbers = false; //default show status of final number fields in edit view.
+		ctrl.find = find;
+		ctrl.findOne = findOne;
+		ctrl.findAnime = findAnime;
+    ctrl.imgPath = ''; //image path
+		ctrl.itemUpdate = new Date(); // today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
+    ctrl.init = init;
+		ctrl.malSearchOptions = {
+			placeholder: 'Title',
+			name: 'title',
+			required: true,
+			autocomplete: 'off',
+			disabled: true
+		};
+		ctrl.removeTag = removeTag;
+		ctrl.sections = {
+			showAdditional: false,
+			showCompletion: false,
+			showItemTags: false
+		};
+		ctrl.selectMalEntry = selectMalEntry;
+		ctrl.submit = submit;
+    ctrl.tagArray = []; // holding tags pre-submit
+    ctrl.tagArrayRemove = [];
+		ctrl.update = update;
+		ctrl.uploadFile = uploadFile;
+    ctrl.usedTags = []; //for typeahead array.
+
+    function init() {
+      ctrl.config.isCreate = mangaitemId === undefined;
+      if(ctrl.config.isCreate) {
+				ctrl.mangaitem.episodes = 0;
+				ctrl.mangaitem.start = ctrl.itemUpdate;
+				ctrl.mangaitem.latest = ctrl.itemUpdate;
+				ctrl.malSearchOptions.disabled = false;
+			} else if(!ctrl.config.isCreate) {
+        ctrl.config.title = 'Edit';
+        ctrl.findOne();
+      }
+      ctrl.find();
+      ctrl.findAnime();
+    }
+    ctrl.init();
+
+		function selectMalEntry(malEntry) {
+			if(malEntry) {
+				ctrl.mangaitem.title = malEntry.title;
+				ctrl.mangaitem.finalChapter = malEntry.chapters;
+				ctrl.imgPath = malEntry.image;
+				ctrl.mangaitem.mal = {
+					id: malEntry.id
+				};
+			} else {
+				ctrl.mangaitem.finalChapter = 0;
+				ctrl.mangaitem.mal = undefined;
+			}
+		}
+
+    //For adding new tags.
+    function addTag() {
+			TagService.addTag(ctrl.tagArray, ctrl.newTag);
+      ctrl.newTag = '';
+    }
+		//Drop tag for new tags.
+		function dropTag(text) {
+			TagService.dropTag(ctrl.tagArray, text);
+		}
+		//Drop tag for tags.
+		function removeTag(text) {
+			TagService.dropTag(ctrl.mangaitem.tags, text);
+		}
+
+		function addedChapters() {
+			ctrl.mangaitem.latest = ctrl.itemUpdate;
+			ctrl.config.updateHistory = true;
+      if (ctrl.mangaitem.chapters === ctrl.mangaitem.finalChapter && ctrl.mangaitem.finalChapter !== 0 && ctrl.mangaitem.reReading === false) {
+        ctrl.mangaitem.end = ctrl.itemUpdate;
+      }
+      if (ctrl.mangaitem.chapters > ctrl.mangaitem.finalChapter && ctrl.mangaitem.finalChapter !== 0) {
+        ctrl.mangaitem.chapters = ctrl.mangaitem.finalChapter;
+      }
+		}
+
+    function addedVolumes() {
+      if (ctrl.mangaitem.volumes > ctrl.mangaitem.finalVolume && ctrl.mangaitem.finalVolume !== 0) {
+        ctrl.mangaitem.volumes = ctrl.mangaitem.finalVolume;
+      }
+    }
+
+    // Create new Mangaitem
+    function create() {
+
+      var mangaitem = new Mangaitems();
+      //Handle situation if objects not selected.
+      // Create new Mangaitem object
+     mangaitem = new Mangaitems ({
+      title: ctrl.mangaitem.title,
+      chapters: ctrl.mangaitem.chapters,
+      volumes: ctrl.mangaitem.volumes,
+      start: ctrl.mangaitem.start,
+      latest: ctrl.mangaitem.latest,
+      finalChapter: ctrl.mangaitem.finalChapter,
+      finalVolume: ctrl.mangaitem.finalVolume,
+      image: ctrl.imgPath,
+      hardcopy: ctrl.mangaitem.hardcopy,
+      anime: ctrl.mangaitem.anime !== undefined && ctrl.mangaitem.anime !== null ? ctrl.mangaitem.anime._id : ctrl.mangaitem.anime,
+      tags: ctrl.tagArray,
+      mal: ctrl.mangaitem.mal,
+      user: ctrl.user
+    });
+      // Redirect after save
+      mangaitem.$save(function(response) {
+        $location.path('/mangaitems/' + response._id);
+        NotificationFactory.success('Saved!', 'Manga was saved successfully');
+
+      }, function(errorResponse) {
+        ctrl.error = errorResponse.data.message;
+        NotificationFactory.error('Error!', errorResponse.data.message);
+      });
+    }
+
+    // Update existing Mangaitem
+    function update() {
+      var mangaitem = ctrl.mangaitem;
+      ctrl.mangaitem = undefined;
+      MangaFactory.update(mangaitem, ctrl.tagArray, ctrl.config.updateHistory, ctrl.imgPath);
+    }
+
+		function submit() {
+			if(ctrl.config.isCreate) ctrl.create();
+			if(!ctrl.config.isCreate) ctrl.update();
+		}
+
+    // Find a list of Mangaitems
+		function find() {
+      Mangaitems.query().$promise.then(function(result) {
+          ctrl.mangaitems = result;
+					ctrl.config.statTags = ItemService.buildStatTags(result, 0);
+      });
+		}
+
+		// Find existing Animeitem
+		function findOne() {
+	    spinnerService.loading('editManga', Mangaitems.get({ mangaitemId: $stateParams.mangaitemId }).$promise.then(function(result) {
+          ctrl.mangaitem = result;
+					ctrl.malSearchOptions.disabled = (ctrl.mangaitem.mal && ctrl.mangaitem.mal.id > 0) || false;
+	    }));
+		}
+
+    // Find a list of Animeitems for dropdowns.
+    function findAnime() {
+      ctrl.animeitems = Animeitems.query();
+    }
+
+    //image upload
+    function uploadFile(){
+        ctrl.imgPath = '/modules/mangaitems/img/' + ctrl.myFile.name;
+        fileUpload.uploadFileToUrl(ctrl.myFile, '/fileUpload');
+    }
+
+	}
+
+})();
+
+(function() {
+	'use strict';
+	angular.module('mangaitems').controller('MangaitemsController', MangaitemsController);
+	MangaitemsController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Mangaitems', 'Animeitems', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'MangaFactory', 'spinnerService', '$uibModal'];
+
+	function MangaitemsController($scope, $stateParams, $location, Authentication, Mangaitems, Animeitems, $sce, $window, ItemService, ListService, NotificationFactory, MangaFactory, spinnerService, $uibModal) {
+		var ctrl = this;
+
+		ctrl.authentication = Authentication;
     ctrl.filterConfig = {
         showingCount: 0,
         sortType: '',
@@ -4052,100 +4242,45 @@ angular.module('mangaitems').config(['$stateProvider',
         statTags: [],
 				viewItem: ''
     };
-		ctrl.finalNumbers = false; //default show status of final number fields in edit view.
 		ctrl.find = find;
-		ctrl.findAnime = findAnime;
 		ctrl.findOne = findOne;
-		ctrl.imgPath = ''; //image path
-		ctrl.itemUpdate = new Date(); // today's date as 'yyyy-MM-dd' for the auto-pop of 'latest' in edit page.
-		ctrl.latest = ctrl.itemUpdate;
 		ctrl.latestDate = latestDate;
     ctrl.pageConfig = {
         currentPage: 0,
         pageSize: 10
     };
 		ctrl.remove = remove;
-		ctrl.removeTag = removeTag;
-		ctrl.start = ctrl.itemUpdate;
-		ctrl.tagArray = []; // holding tags pre-submit
-		ctrl.tagArrayRemove = [];
 		ctrl.tickOff = tickOff;
 		ctrl.trustAsResourceUrl = trustAsResourceUrl;
 		ctrl.update = update;
-		ctrl.uploadFile = uploadFile;
 		ctrl.usedTags = []; //for typeahead array.
 		ctrl.viewItemHistory = viewItemHistory;
-		ctrl.volumes = 0;
 		ctrl.whichController = 'mangaitem';
 
     //allow retreival of local resource
     function trustAsResourceUrl(url) {
         return $sce.trustAsResourceUrl(url);
     }
-		//For adding new tags.
-    function addTag() {
-			TagService.addTag(ctrl.tagArray, ctrl.newTag);
-      ctrl.newTag = '';
-    }
-		//Drop tag for new tags.
-		function dropTag(text) {
-			TagService.dropTag(ctrl.tagArray, text);
-		}
-		//Drop tag for animeitem tags.
-		function removeTag(text) {
-			TagService.dropTag(ctrl.mangaitem.tags, text);
-		}
-
-    // Create new Mangaitem
-		function create() {
-
-            var mangaitem = new Mangaitems();
-            //Handle situation if objects not selected.
-                // Create new Mangaitem object
-			     mangaitem = new Mangaitems ({
-				    title: ctrl.title,
-                    chapters: ctrl.chapters,
-                    volumes: ctrl.volumes,
-                    start: ctrl.start,
-                    latest: ctrl.latest,
-                    finalChapter: ctrl.finalChapter,
-                    finalVolume: ctrl.finalVolume,
-                    hardcopy: ctrl.hardcopy,
-                    anime: ctrl.anime!==undefined && ctrl.anime!==null ? ctrl.anime._id : ctrl.anime,
-                    tags: ctrl.tagArray,
-                    user: ctrl.user
-			     });
-
-			// Redirect after save
-			mangaitem.$save(function(response) {
-				$location.path('/mangaitems/' + response._id);
-				NotificationFactory.success('Saved!', 'Manga was saved successfully');
-
-			}, function(errorResponse) {
-				ctrl.error = errorResponse.data.message;
-                NotificationFactory.error('Error!', errorResponse.data.message);
-			});
-		}
 
 		// Remove existing Mangaitem
 		function remove(mangaitem) {
-            //are you sure option...
-            NotificationFactory.confirmation(function() {
-                if ( mangaitem ) {
-                    mangaitem.$remove();
+      //are you sure option...
+      NotificationFactory.confirmation(function() {
+          if ( mangaitem ) {
+              mangaitem.$remove();
 
-                    for (var i in ctrl.mangaitems) {
-                        if (ctrl.mangaitems [i] === mangaitem) {
-                            ctrl.mangaitems.splice(i, 1);
-                        }
-                    }
-                } else {
-                    ctrl.mangaitem.$remove(function() {
-                        $location.path('/mangaitems');
-                    });
-                }
-                NotificationFactory.warning('Deleted!', 'Manga was successfully deleted.');
-            });
+              for (var i in ctrl.mangaitems) {
+                  if (ctrl.mangaitems [i] === mangaitem) {
+                      ctrl.mangaitems.splice(i, 1);
+                  }
+              }
+          } else {
+              ctrl.mangaitem.$remove(function() {
+                  $location.path('/mangaitems');
+              });
+          }
+          NotificationFactory.warning('Deleted!', 'Manga was successfully deleted.');
+      });
 		}
 
 		// Update existing Mangaitem
@@ -4161,35 +4296,6 @@ angular.module('mangaitems').config(['$stateProvider',
         ctrl.updateHistory = true; //add to history.
         ctrl.mangaitem = item;
         ctrl.update();
-    }
-
-		// Find a list of Mangaitems
-		function find() {
-			ctrl.filterConfig.selectListOptions = ListService.getSelectListOptions(ctrl.whichController);
-      spinnerService.loading('manga', Mangaitems.query().$promise.then(function(result) {
-          ctrl.mangaitems = result;
-					ctrl.filterConfig.areTagless = ListService.checkForTagless(result);
-					ctrl.filterConfig.statTags = ItemService.buildStatTags(result, 0);
-      }));
-		}
-
-		// Find existing Mangaitem
-		function findOne() {
-	    Mangaitems.get({ mangaitemId: $stateParams.mangaitemId }).$promise.then(function(result) {
-	        ctrl.mangaitem = result;
-	        //            console.log(ctrl.mangaitem);
-	    });
-		}
-
-    // Find a list of Animeitems for dropdowns.
-		function findAnime() {
-			ctrl.animeitems = Animeitems.query();
-		}
-
-    //image upload
-    function uploadFile(){
-        ctrl.imgPath = '/modules/mangaitems/img/' + ctrl.myFile.name;
-        fileUpload.uploadFileToUrl(ctrl.myFile, '/fileUpload');
     }
 
     //latest date display format.
@@ -4215,6 +4321,24 @@ angular.module('mangaitems').config(['$stateProvider',
 					ctrl.update();
 				}
       });
+		}
+
+		// Find existing Mangaitem
+		function findOne() {
+	    Mangaitems.get({ mangaitemId: $stateParams.mangaitemId }).$promise.then(function(result) {
+	        ctrl.mangaitem = result;
+	        //            console.log(ctrl.mangaitem);
+	    });
+		}
+
+		// Find a list of Mangaitems
+		function find() {
+			ctrl.filterConfig.selectListOptions = ListService.getSelectListOptions(ctrl.whichController);
+      spinnerService.loading('manga', Mangaitems.query().$promise.then(function(result) {
+          ctrl.mangaitems = result;
+					ctrl.filterConfig.areTagless = ListService.checkForTagless(result);
+					ctrl.filterConfig.statTags = ItemService.buildStatTags(result, 0);
+      }));
 		}
 
 	}
@@ -4781,6 +4905,7 @@ angular.module('ratings').config(['$stateProvider', '$urlRouterProvider',
 
 (function() {
   'use strict';
+    focusOnShow.$inject = ["$timeout"];
   angular.module('ratings')
   .directive('focusOnShow', focusOnShow);
 
@@ -5160,9 +5285,9 @@ angular.module('statistics').config(['$stateProvider', '$urlRouterProvider',
         bindToController: true,
         template: '<div class="relative {{percentageBarContainer.border}}" style="height: 20px;" ng-transclude></div>',
         controllerAs: 'percentageBarContainer',
-        controller: function($scope) {
+        controller: ["$scope", function($scope) {
 
-        }
+        }]
     };
   }
 
@@ -5210,7 +5335,7 @@ angular.module('statistics').config(['$stateProvider', '$urlRouterProvider',
         require: '?ngModel',
         bindToController: true,
         controllerAs: 'tabContainer',
-        controller: function($scope) {
+        controller: ["$scope", function($scope) {
             var self = this;
             self.tabs = [];
             self.currentTab = undefined;
@@ -5268,7 +5393,7 @@ angular.module('statistics').config(['$stateProvider', '$urlRouterProvider',
                 }
             };
 
-        },
+        }],
         link: function(scope, element, attrs, model) {
             var el = element[0],
                 ul = el.children[0].children[0];
@@ -6054,6 +6179,7 @@ function CreateTaskController($scope, data, $stateParams, $location, Authenticat
 
 (function() {
   'use strict';
+  loseInterest.$inject = ["$document", "$window"];
   angular.module('tasks')
   .directive('loseInterest', loseInterest);
 
@@ -7108,7 +7234,7 @@ angular.module('toptens').config(['$stateProvider',
           templateUrl: '/modules/toptens/templates/horizontal-list.html',
           bindToController: true,
           controllerAs: 'horizontalList',
-          controller: function($scope) {
+          controller: ["$scope", function($scope) {
               var self = this;
               self.clicks = 0;
               self.items = [];
@@ -7150,7 +7276,7 @@ angular.module('toptens').config(['$stateProvider',
                   }
               }
 
-          },
+          }],
           link: function(scope, element, attr, ctrl) {
               var el = element[0],
                   child = el.children[0];
@@ -7311,7 +7437,7 @@ angular.module('toptens').config(['$stateProvider',
                   '</div>',
         bindToController: true,
         controllerAs: 'steps',
-        controller: function($scope) {
+        controller: ["$scope", function($scope) {
             var self = this;
 
             self.register = register;
@@ -7323,7 +7449,7 @@ angular.module('toptens').config(['$stateProvider',
                     step.active = true;
                 }
             }
-        },
+        }],
         link: function(scope, element, attrs, stepsController) {
           scope.$watch('steps.stepConfig.currentStep', function(newValue) {
               if (newValue !== undefined) {

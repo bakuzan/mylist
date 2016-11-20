@@ -2,9 +2,9 @@
 	'use strict';
 	angular.module('mangaitems')
 	.controller('CreateMangaController', CreateMangaController);
-	CreateMangaController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'AnimeFactory', 'spinnerService', 'TagService', 'Enums'];
+	CreateMangaController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Animeitems', 'Mangaitems', 'fileUpload', '$sce', '$window', 'ItemService', 'ListService', 'NotificationFactory', 'MangaFactory', 'spinnerService', 'TagService', 'Enums'];
 
-	function CreateMangaController($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, AnimeFactory, spinnerService, TagService, Enums) {
+	function CreateMangaController($scope, $stateParams, $location, Authentication, Animeitems, Mangaitems, fileUpload, $sce, $window, ItemService, ListService, NotificationFactory, MangaFactory, spinnerService, TagService, Enums) {
 		var ctrl = this,
         mangaitemId = $stateParams.mangaitemId;
 

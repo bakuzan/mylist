@@ -7,7 +7,11 @@ var _ = require('lodash'),
 	errorHandler = require('../errors.server.controller'),
 	mongoose = require('mongoose'),
 	passport = require('passport'),
-	User = mongoose.model('User');
+	User = mongoose.model('User'),
+	fs = require('fs');
+
+	var json = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+	var applicationVersion = json.version;
 
 /**
  * Signup
@@ -24,7 +28,7 @@ exports.signup = function(req, res) {
 	user.provider = 'local';
 	user.displayName = user.firstName + ' ' + user.lastName;
 
-	// Then save the user 
+	// Then save the user
 	user.save(function(err) {
 		if (err) {
 			return res.status(400).send({
@@ -62,6 +66,7 @@ exports.signin = function(req, res, next) {
 				if (err) {
 					res.status(400).send(err);
 				} else {
+					user.applicationVersion = applicationVersion; //Hacky way to return applicationVersion to frontend.
 					res.json(user);
 				}
 			});

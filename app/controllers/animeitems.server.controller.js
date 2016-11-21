@@ -5,6 +5,7 @@
  */
 var mongoose = require('mongoose'),
 		errorHandler = require('./errors.server.controller'),
+		mal = require('./mal.server.controller'),
 		Animeitem = mongoose.model('Animeitem'),
     //uuid = require('node-uuid'),
     multiparty = require('multiparty'),
@@ -61,6 +62,7 @@ exports.create = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
+			mal.addToMal(animeitem);
 			res.jsonp(animeitem);
 		}
 	});

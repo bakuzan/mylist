@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Mangaitem = mongoose.model('Mangaitem'),
+	mal = require('./mal.server.controller'),
     //uuid = require('node-uuid'),
     multiparty = require('multiparty'),
     fs = require('fs'),
@@ -24,18 +25,18 @@ exports.postImage = function(req, res) {
         var tmpPath = file.path;
         var extIndex = tmpPath.lastIndexOf('.');
         var extension = (extIndex < 0) ? '' : tmpPath.substr(extIndex);
-        
+
         //uuid for unique filenames.
         //var filename = uuid.v4() + extension;
         var filename = file.originalFilename;
         var destPath = 'public/modules/mangaitems/img/' + filename;
-        
+
         //server-side file type check.
         if (contentType !== 'image/png' && contentType !== 'image/jpeg') {
             fs.unlink(tmpPath);
             return res.status(400).send('File type not supported.');
         }
-        
+
         fs.rename(tmpPath, destPath, function(err) {
             if (err) {
                 return res.status(400).send('Image not saved.');
@@ -59,6 +60,7 @@ exports.create = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
+			if (mangaitem.mal && mangaitem.mal.id > 0) mal.addOnMal('manga', mangaitem);
 			res.jsonp(mangaitem);
 		}
 	});
@@ -86,6 +88,7 @@ exports.update = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
+			if (mangaitem.mal && mangaitem.mal.id > 0) mal.updateOnMal('manga', mangaitem);
 			res.jsonp(mangaitem);
 		}
 	});
@@ -103,6 +106,7 @@ exports.delete = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
+			if (mangaitem.mal && mangaitem.mal.id > 0) mal.deleteOnMal('manga', mangaitem);
 			res.jsonp(mangaitem);
 		}
 	});
@@ -111,8 +115,8 @@ exports.delete = function(req, res) {
 /**
  * List of Mangaitems
  */
-exports.list = function(req, res) { 
-     var current = [false], all = [true, false], 
+exports.list = function(req, res) {
+     var current = [false], all = [true, false],
         status = (req.query.status === '0') ? current : all;
 
 	Mangaitem.find({ $or: [ { status: {$in: status } }, { reReading: true } ] }).sort('-created').populate('user', 'displayName').populate('anime', 'title').exec(function(err, mangaitems) {
@@ -149,7 +153,7 @@ exports.history = function(req, res) {
 /**
  * Mangaitem middleware
  */
-exports.mangaitemByID = function(req, res, next, id) { 
+exports.mangaitemByID = function(req, res, next, id) {
 	Mangaitem.findById(id).populate('user', 'displayName').populate('anime', 'title').exec(function(err, mangaitem) {
 		if (err) return next(err);
 		if (! mangaitem) return next(new Error('Failed to load Mangaitem ' + id));

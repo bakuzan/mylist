@@ -35,38 +35,85 @@ exports.search = function(req, res) {
 };
 
 function setMalStatus(onHold, status) {
-	if(onHold) return 'onhold'; 			// 3
-	if(!status) return 'watching';	  // 1
-	if(status) return 'completed';    // 2
+	if(onHold) 	return 3; 	// 'onhold'
+	if(!status) return 1;	  // 'watching'/'reading'
+	if(status) 	return 2;   // 'completed'
 }
 
 function convertUSDateFormat(date) {
-	return date.getDate() + '' + date.getMonth() + 1 + '' + date.getFullYear();
+	var month = date.getMonth() + 1;
+	return month + '' + date.getDate() + '' + date.getFullYear();
 }
 
-exports.addToMal = function(animeitem) {
-	var malValues = {
+function getMalAnime(animeitem) {
+	return {
 		episode: animeitem.episodes,
 		date_start: convertUSDateFormat(animeitem.start),
-		status: setMalStatus(animeitem.onHold, animeitem.status)
-	};
-
-	client.addAnime(animeitem.mal.id, malValues).then(function(result) {
-		console.log('add anime : ', result);
-	});
-};
-
-exports.updateOnMal = function(animeitem) {
-	var malValues = {
-		episode: animeitem.episodes,
-		date_start: convertUSDateFormat(animeitem.start),
-		date_finish: convertUSDateFormat(animeitem.end),
+		date_finish: animeitem.end ? convertUSDateFormat(animeitem.end) : null,
 		status: setMalStatus(animeitem.onHold, animeitem.status),
 		enable_rewatching: animeitem.reWatching ? 1 : 0,
 		score: animeitem.rating || 0
 	};
+}
 
-	client.updateAnime(animeitem.mal.id, malValues).then(function(result) {
-		console.log('add anime : ', result);
-	});
+function getMalManga(mangaitem) {
+	return {
+		chapter: mangaitem.chapters,
+		volume: mangaitem.volumes,
+		date_start: convertUSDateFormat(mangaitem.start),
+		date_finish: mangaitem.end ? convertUSDateFormat(mangaitem.end) : null,
+		status: setMalStatus(mangaitem.onHold, mangaitem.status),
+		enable_rereading: mangaitem.reReading ? 1 : 0,
+		score: mangaitem.rating || 0
+	};
+}
+
+exports.addOnMal = function(type, item) {
+	var malValues;
+	if (type === 'anime') {
+		malValues = getMalAnime(item);
+		client.addAnime(item.mal.id, malValues).then(function(result) {
+			console.log('add anime : ', result);
+		}).catch(function(err) {
+			console.log('add anime error : ', errorHandler.getErrorMessage(err));
+		});
+	} else if (type === 'manga') {
+		malValues = getMalManga(item);
+		client.addManga(item.mal.id, malValues).then(function(result) {
+			console.log('add manga : ', result);
+		}).catch(function(err) {
+			console.log('add manga error : ', errorHandler.getErrorMessage(err));
+		});
+	}
+};
+
+exports.updateOnMal = function(type, item) {
+	var malValues;
+	if (type === 'anime') {
+		malValues = getMalAnime(item);
+		client.updateAnime(item.mal.id, malValues).then(function(result) {
+			console.log('update anime : ', result);
+		}).catch(function(err) {
+			console.log('update anime error : ', errorHandler.getErrorMessage(err));
+		});
+	} else if (type === 'manga') {
+		malValues = getMalManga(item);
+		client.updateManga(item.mal.id, malValues).then(function(result) {
+			console.log('update manga : ', result);
+		}).catch(function(err) {
+			console.log('update manga error : ', errorHandler.getErrorMessage(err));
+		});
+	}
+};
+
+exports.deleteOnMal = function(type, item) {
+	if (type === 'anime') {
+		client.deleteAnime(item.mal.id).then(function(result) {
+			console.log('delete anime : ', result);
+		});
+	} else if (type === 'manga') {
+		client.deleteManga(item.mal.id).then(function(result) {
+			console.log('delete manga : ', result);
+		});
+	}
 };

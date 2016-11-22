@@ -62,7 +62,7 @@ exports.create = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			mal.addToMal(animeitem);
+			if (animeitem.mal && animeitem.mal.id > 0) mal.addOnMal('anime', animeitem);
 			res.jsonp(animeitem);
 		}
 	});
@@ -90,6 +90,7 @@ exports.update = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
+			if (animeitem.mal && animeitem.mal.id > 0) mal.updateOnMal('anime', animeitem);
 			res.jsonp(animeitem);
 		}
 	});
@@ -107,6 +108,7 @@ exports.delete = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
+			if (animeitem.mal && animeitem.mal.id > 0) mal.deleteOnMal('anime', animeitem);
 			res.jsonp(animeitem);
 		}
 	});

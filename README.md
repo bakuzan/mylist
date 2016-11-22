@@ -1,3 +1,8 @@
+cero-20 (2.2.0)
+- added support for adding/updating/removing anime and manga on MyAnimeList
+- added version as a variable sourced from the package.json
+  - will allow for 'single location of truth'
+
 cero-13 (2.1.3)
 - babel-polyfill re-added to server.js, yes, it was required.
 - on create anime/manga return to list page.

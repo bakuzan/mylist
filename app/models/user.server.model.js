@@ -5,7 +5,18 @@
  */
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
-	crypto = require('crypto');
+	crypto = require('crypto'),
+	fs = require('fs');
+
+	var json = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+	var applicationVersion = json.version;
+	console.log('version : ', applicationVersion);
+
+function getApplicationVersion() {
+	var name = applicationVersion.replace('.', '');
+	var number = applicationVersion.substring(applicationVersion.indexOf('-') + 1);
+	return { number: number, name: name };
+}
 
 /**
  * A Validation function for local strategy properties
@@ -75,6 +86,7 @@ var UserSchema = new Schema({
 		}],
 		default: ['user']
 	},
+	applicationVersion: getApplicationVersion(),
 	updated: {
 		type: Date
 	},

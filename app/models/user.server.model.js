@@ -12,7 +12,7 @@ var mongoose = require('mongoose'),
 	var applicationVersion = json.version;
 
 function getApplicationVersion() {
-	var name = applicationVersion.replace(/\.\d$|\./g, '');
+	var name = applicationVersion.replace(/\..[^\.]*$|\./g, '');
 	var number = applicationVersion.substring(applicationVersion.indexOf('-') + 1);
 	return {
 		number: {

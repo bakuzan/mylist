@@ -10,12 +10,20 @@ var mongoose = require('mongoose'),
 
 	var json = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 	var applicationVersion = json.version;
-	console.log('version : ', applicationVersion);
 
 function getApplicationVersion() {
-	var name = applicationVersion.replace('.', '');
+	var name = applicationVersion.replace(/\.\d$|\./g, '');
 	var number = applicationVersion.substring(applicationVersion.indexOf('-') + 1);
-	return { number: number, name: name };
+	return {
+		number: {
+			type: String,
+			default: number
+		},
+		name: {
+			type: String,
+			default: name
+		}
+	};
 }
 
 /**

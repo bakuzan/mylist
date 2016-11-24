@@ -167,7 +167,8 @@ module.exports = function(grunt) {
 					'public/dist/box-model.css': 'public/style/helper/box-model.scss',
 					'public/dist/text.css': 'public/style/helper/text.scss',
 					'public/dist/animation.css': 'public/style/helper/animation.scss',
-					'public/dist/control-overrides.css': 'public/style/helper/control-overrides.scss'
+					'public/dist/control-overrides.css': 'public/style/helper/control-overrides.scss',
+					'public/dist/float-label.css': 'public/style/helper/float-label.scss',
 				}
 			},
 		  dist: {

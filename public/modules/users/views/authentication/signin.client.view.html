@@ -2,8 +2,10 @@
 	<div class="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2">
 		<form data-ng-submit="ctrl.signin()" class="signin form-horizontal" autocomplete="off">
 			<fieldset>
-				<div class="form-group centerPiece">
-					<input type="password" id="password" name="password" class="form-control" data-ng-model="ctrl.credentials.password" placeholder="...">
+				<div class="has-float-label form-group centerPiece">
+					<input type="password" id="password" name="password" class="form-control"
+								 data-ng-model="ctrl.credentials.password" placeholder="...">
+					<label for="password">enter</label>
 				</div>
 			</fieldset>
 		</form>

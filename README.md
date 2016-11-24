@@ -1,4 +1,9 @@
-cero-20 (2.2.0)
+cero-23 (2.3.0)
+- added float-label css, starting to apply it throughout the application
+- added loading spinner to malSearch directive.
+  - involes creating new styling size for loading-spinner, 'control'
+
+cero-22 (2.2.0)
 - added support for adding/updating/removing anime and manga on MyAnimeList
 - added version as a variable sourced from the package.json
   - will allow for 'single location of truth'

@@ -5,6 +5,7 @@ $blue: #0000FF;
 $yellow: #FFFF00;
 
 $width: 100px;
+$width-sm: 30px;
 
 /** 0BC SPINNER CSS*/
 
@@ -46,6 +47,12 @@ $width: 100px;
       width: 100%;
       top: 0; bottom: 0; left: 0; right: 0;
     }
+}
+.loader.control {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: $width-sm;
 }
 .loader.fullscreen {
     position: fixed;

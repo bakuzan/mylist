@@ -1,10 +1,11 @@
 <div ng-class="(filterConfig.expandFilters) ? 'popout-filters-container animate-transition' : 'animate-transition'" lose-interest>
     <div ng-if="page !== 'task'">
-        <div class="input-group">
+        <div class="has-float-label input-group">
             <div class="input-group-addon">
                 <i class="fa fa-search"></i>
             </div>
-            <input type="text" class="form-control" placeholder="search" ng-model="filterConfig.search[filterConfig.selectListOptions.searchName]">
+            <input type="text" class="form-control" placeholder=" " ng-model="filterConfig.search[filterConfig.selectListOptions.searchName]">
+            <label for="search">search</label>
        </div>
         <div class="input-group mt" ng-if="items !== undefined">
             <div class="input-group-addon">

@@ -1212,7 +1212,7 @@ angular.module('animeitems').config(['$stateProvider',
 
 	        //add history entry to item.
 	        function itemHistory(item, updateHistory, type, episodeRating) {
-	            console.log('item history: ', item, item.meta, episodeRating);
+	            //console.log('item history: ', item, item.meta, episodeRating);
 	            //populate the history of when each part was 'checked' off.
 	            if (item.meta.history.length !== 0) {
 	                var latestHistory = item.meta.history[item.meta.history.length - 1].value,
@@ -1538,7 +1538,7 @@ angular.module('animeitems').config(['$stateProvider',
 	        function setSeason(items, year, season) {
 	            var array = $filter('endedSeason')(items, year, season);
 	            angular.forEach(array, function(item) {
-	                console.log(item.title);
+	                //console.log(item.title);
 	                item.season = obj.convertDateToSeason(new Date(item.start));
 	            });
 	            return array;
@@ -2923,9 +2923,9 @@ angular.module('characters').config(['$stateProvider',
   'use strict';
   angular.module('core')
   .directive('malSearch', malSearch);
-  malSearch.$inject = ['MalService', '$timeout'];
+  malSearch.$inject = ['MalService', '$timeout', 'spinnerService'];
 
-  function malSearch(MalService, $timeout) {
+  function malSearch(MalService, $timeout, spinnerService) {
       return {
           restrict: 'A',
           replace: true,
@@ -2938,13 +2938,13 @@ angular.module('characters').config(['$stateProvider',
           controllerAs: 'malSearchCtrl',
           bindToController: true,
           templateUrl: '/modules/core/templates/mal-search.html',
-          controller: ["$scope", function ($scope) {
-            var self = this,
-                timeoutPromise,
-                delayInMs = 2000;
+          controller: ["$scope", function($scope) {
+            var self = this;
 
+            self.delayInMs = 1500;
             self.displayActions = false;
             self.displaySelectedItemActions = displaySelectedItemActions;
+            self.handleSearchString = handleSearchString;
             self.hasFocus = false;
             self.hasSearchResults = false;
             self.processItem = processItem;
@@ -2953,7 +2953,7 @@ angular.module('characters').config(['$stateProvider',
             self.selectedItemActions = [
               {
                 displayText: 'Remove selected',
-                action: function() {
+                action: () => {
                   self.processItem(null);
                   self.searchString = undefined;
                   self.displayActions = false;
@@ -2961,11 +2961,12 @@ angular.module('characters').config(['$stateProvider',
               },
               {
                 displayText: 'Display raw json',
-                action: function() {
+                action: () => {
                   self.displayRawJson = true;
                 }
               }
             ];
+            self.spinner = `mal-search-${self.options.name}`;
             self.toggleSearchDropdownOnFocus = toggleSearchDropdownOnFocus;
 
             function processItem(item) {
@@ -2978,29 +2979,29 @@ angular.module('characters').config(['$stateProvider',
             }
 
             function searchMal(type, searchString) {
-              MalService.search(type, searchString).then(function (result) {
+              MalService.search(type, searchString).then(result => {
                 self.searchResults = result;
                 self.hasSearchResults = true;
+                spinnerService.hide(self.spinner);
               });
             }
 
             function toggleSearchDropdownOnFocus(event) {
-              $timeout(function() {
+              $timeout(() => {
                 self.hasFocus = event.type === 'focus';
-              }, 500);
+                if(self.hasFocus && self.searchResults.length === 0 && self.searchString && self.searchString.length > 2) handleSearchString();
+              }, 200);
             }
 
-            $scope.$watch('malSearchCtrl.searchString', function(newValue) {
+            function handleSearchString() {
               self.hasFocus = true;
-              if(newValue !== undefined && newValue.length > 2 && self.selectedItem === null && !self.options.disabled) {
-                $timeout.cancel(timeoutPromise);
-                timeoutPromise = $timeout(function() {
-                     searchMal(self.type, newValue);
-                }, delayInMs);
+              if(self.searchString !== undefined && self.searchString.length > 2 && self.selectedItem === null && !self.options.disabled) {
+                spinnerService.show(self.spinner);
+                searchMal(self.type, self.searchString);
               }
-            });
+            }
 
-            $scope.$watch('malSearchCtrl.displayActions', function(newValue) {
+            $scope.$watch('malSearchCtrl.displayActions', newValue => {
               if(newValue !== undefined && !newValue) {
                 self.displayRawJson = newValue;
               }
@@ -4374,7 +4375,7 @@ angular.module('mangaitems').config(['$stateProvider',
     return {
         update: function(item, tagArray, updateHistory, imgPath) {
             var mangaitem = item;
-            console.log(mangaitem);
+            //console.log(mangaitem);
             //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
             if (item.anime!==null && item.anime!==undefined) {
                 mangaitem.anime = item.anime._id;

@@ -7,11 +7,11 @@ module.exports = {
 			css: [
 				'public/lib/bootstrap/dist/css/bootstrap.min.css',
 				'public/lib/bootstrap/dist/css/bootstrap-theme.min.css',
-                'public/lib/sweetalert/dist/sweetalert.css',
-                'public/lib/toastr/toastr.min.css'
+        'public/lib/sweetalert/dist/sweetalert.css',
+        'public/lib/toastr/toastr.min.css'
 			],
 			js: [
-                'public/lib/jquery/dist/jquery.min.js',
+				'public/lib/jquery/dist/jquery.min.js',
 				'public/lib/angular/angular.min.js',
 				'public/lib/angular-resource/angular-resource.js',
 				'public/lib/angular-cookies/angular-cookies.js',
@@ -21,22 +21,23 @@ module.exports = {
 				'public/lib/angular-ui-router/release/angular-ui-router.min.js',
 				'public/lib/angular-ui-utils/ui-utils.min.js',
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
-                'public/lib/angular-local-storage/dist/angular-local-storage.min.js',
-                'public/lib/ng-file-upload/angular-file-upload.min.js',
-                'public/lib/ng-file-upload/angular-file-upload-shim.min.js',
-                'public/lib/moment/min/moment.min.js',
-                'public/lib/angular-moment/angular-moment.min.js',
-                'public/lib/sweetalert/dist/sweetalert.min.js',
-                'public/lib/toastr/toastr.min.js'
+        'public/lib/angular-local-storage/dist/angular-local-storage.min.js',
+        'public/lib/ng-file-upload/angular-file-upload.min.js',
+        'public/lib/ng-file-upload/angular-file-upload-shim.min.js',
+        'public/lib/moment/min/moment.min.js',
+        'public/lib/angular-moment/angular-moment.min.js',
+        'public/lib/sweetalert/dist/sweetalert.min.js',
+        'public/lib/toastr/toastr.min.js'
 			]
 		},
-        css: [
-            'public/lib/components-font-awesome/css/font-awesome.min.css',
-						'public/dist/components.css',
-            'public/dist/box-model.css',
-            'public/dist/text.css',
-            'public/dist/animation.css',
-            'public/dist/control-overrides.css'
+    css: [
+			'public/lib/components-font-awesome/css/font-awesome.min.css',
+			'public/dist/components.css',
+      'public/dist/box-model.css',
+      'public/dist/text.css',
+      'public/dist/animation.css',
+      'public/dist/control-overrides.css',
+			'public/dist/float-label.css'
 		],
 		js: 'public/dist/application.min.js'
 	},

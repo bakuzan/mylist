@@ -45,7 +45,7 @@
 
 	        //add history entry to item.
 	        function itemHistory(item, updateHistory, type, episodeRating) {
-	            console.log('item history: ', item, item.meta, episodeRating);
+	            //console.log('item history: ', item, item.meta, episodeRating);
 	            //populate the history of when each part was 'checked' off.
 	            if (item.meta.history.length !== 0) {
 	                var latestHistory = item.meta.history[item.meta.history.length - 1].value,
@@ -371,7 +371,7 @@
 	        function setSeason(items, year, season) {
 	            var array = $filter('endedSeason')(items, year, season);
 	            angular.forEach(array, function(item) {
-	                console.log(item.title);
+	                //console.log(item.title);
 	                item.season = obj.convertDateToSeason(new Date(item.start));
 	            });
 	            return array;

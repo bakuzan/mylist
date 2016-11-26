@@ -10,6 +10,7 @@
                             <label for="chapters" class="col-lg-3 col-md-3 col-sm-3 control-label">Chapters</label>
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <input type="number" id="chapter" class="form-control" ng-model="ctrl.item.link.manga.chapters"
+                                       ng-min="0"
                                        ng-max="{{ctrl.item.link.manga.finalChapter > 0 ? ctrl.item.link.manga.finalChapter : null }}">
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4">
@@ -20,6 +21,7 @@
                             <label for="volumes" class="col-lg-3 col-md-3 col-sm-3 control-label">Volumes</label>
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <input type="number" id="volume" class="form-control" ng-model="ctrl.item.link.manga.volumes"
+                                       ng-min="0"
                                        ng-max="{{ctrl.item.link.manga.finalVolume > 0 ? ctrl.item.link.manga.finalVolume : null }}">
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4">

@@ -20,9 +20,6 @@
   font-size: inherit;
   padding-top: 1em;
   margin-bottom: 2px;
-  border: 0;
-  border-radius: 0;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
 }
 .has-float-label input::-webkit-input-placeholder, .has-float-label select::-webkit-input-placeholder {
   opacity: 1;
@@ -32,11 +29,11 @@
   opacity: 0;
 }
 .has-float-label input:placeholder-shown:not(:focus) + *, .has-float-label select:placeholder-shown:not(:focus) + * {
-  font-size: 1.5em;
+  font-size: 1.3em;
   opacity: .5;
   pointer-events: none;
   top: .25em;
-  left: .25em;
+  left: .5em;
 }
 .has-float-label input:focus, .has-float-label select:focus {
   outline: none;

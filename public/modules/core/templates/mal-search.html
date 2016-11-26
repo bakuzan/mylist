@@ -2,12 +2,13 @@
   <div class="has-float-label">
     <input type="text" class="form-control" name="{{malSearchCtrl.options.name}}" placeholder="{{malSearchCtrl.options.placeholder}}"
            ng-model="malSearchCtrl.searchString"
+           ng-model-options="{ debounce: malSearchCtrl.delayInMs }"
            ng-change="malSearchCtrl.handleSearchString()"
            ng-required="malSearchCtrl.options.required"
            autocomplete="{{malSearchCtrl.options.autocomplete}}"
            ng-focus="malSearchCtrl.toggleSearchDropdownOnFocus($event)" ng-blur="malSearchCtrl.toggleSearchDropdownOnFocus($event)" />
-   <div loading-spinner name="{{malSearchCtrl.spinner}}" size="control"></div>
    <label for="{{malSearchCtrl.options.name}}">Search for {{malSearchCtrl.type}}...</label>
+   <div loading-spinner name="{{malSearchCtrl.spinner}}" size="control"></div>
   </div>
   <span id="selected-result" ng-click="malSearchCtrl.displaySelectedItemActions()" ng-hide="malSearchCtrl.selectedItem === null">
     <i class="fa fa-caret-square-o-down"></i>

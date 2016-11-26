@@ -2,6 +2,12 @@ cero-23 (2.3.0)
 - added float-label css, starting to apply it throughout the application
 - added loading spinner to malSearch directive.
   - involes creating new styling size for loading-spinner, 'control'
+- changed malSearch to use ng-change and ng-model-options instead of $watch and $timeout
+- perform updateOnMal when addOnMal fails
+  - typically fails as already on list as a 'plan to watch'
+- added mal icon to lists when item has mal id.
+- added ng-min to update manga popup for linked tasks.
+- made footer hr not touch the sides.
 
 cero-22 (2.2.0)
 - added support for adding/updating/removing anime and manga on MyAnimeList

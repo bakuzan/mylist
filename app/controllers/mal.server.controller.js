@@ -76,6 +76,7 @@ exports.addOnMal = function(type, item) {
 			console.log('add anime : ', result);
 		}).catch(function(err) {
 			console.log('add anime error : ', errorHandler.getErrorMessage(err));
+			module.exports.updateOnMal(type, item);
 		});
 	} else if (type === 'manga') {
 		malValues = getMalManga(item);
@@ -83,6 +84,7 @@ exports.addOnMal = function(type, item) {
 			console.log('add manga : ', result);
 		}).catch(function(err) {
 			console.log('add manga error : ', errorHandler.getErrorMessage(err));
+			module.exports.updateOnMal(type, item);
 		});
 	}
 };

@@ -8,7 +8,7 @@
     return {
         update: function(item, tagArray, updateHistory, imgPath) {
             var mangaitem = item;
-            console.log(mangaitem);
+            //console.log(mangaitem);
             //dropdown passes whole object, if-statements for lazy fix - setting them to _id.
             if (item.anime!==null && item.anime!==undefined) {
                 mangaitem.anime = item.anime._id;

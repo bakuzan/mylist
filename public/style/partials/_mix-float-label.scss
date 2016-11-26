@@ -28,7 +28,7 @@
 
 @mixin float-label-scaled {
   &:placeholder-shown:not(:focus) + * {
-      font-size: 1.5em;
+      font-size: 1.3em;
       opacity: .5;
       pointer-events: none;
       @content;

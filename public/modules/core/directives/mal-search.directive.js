@@ -18,10 +18,9 @@
           bindToController: true,
           templateUrl: '/modules/core/templates/mal-search.html',
           controller: function($scope) {
-            var self = this,
-                timeoutPromise,
-                delayInMs = 2000;
+            var self = this;
 
+            self.delayInMs = 1500;
             self.displayActions = false;
             self.displaySelectedItemActions = displaySelectedItemActions;
             self.handleSearchString = handleSearchString;
@@ -69,30 +68,17 @@
             function toggleSearchDropdownOnFocus(event) {
               $timeout(() => {
                 self.hasFocus = event.type === 'focus';
-              }, 500);
+                if(self.hasFocus && self.searchResults.length === 0 && self.searchString && self.searchString.length > 2) handleSearchString();
+              }, 200);
             }
 
-            function handleSearchString(event) {
-              console.log(`handle : `, event);
+            function handleSearchString() {
               self.hasFocus = true;
               if(self.searchString !== undefined && self.searchString.length > 2 && self.selectedItem === null && !self.options.disabled) {
-                $timeout.cancel(timeoutPromise);
                 spinnerService.show(self.spinner);
-                timeoutPromise = $timeout(() => {
-                  searchMal(self.type, self.searchString);
-                }, delayInMs);
+                searchMal(self.type, self.searchString);
               }
             }
-
-            // $scope.$watch('malSearchCtrl.searchString', function(newValue) {
-            //   self.hasFocus = true;
-            //   if(newValue !== undefined && newValue.length > 2 && self.selectedItem === null && !self.options.disabled) {
-            //     $timeout.cancel(timeoutPromise);
-            //     timeoutPromise = $timeout(function() {
-            //          searchMal(self.type, newValue);
-            //     }, delayInMs);
-            //   }
-            // });
 
             $scope.$watch('malSearchCtrl.displayActions', newValue => {
               if(newValue !== undefined && !newValue) {

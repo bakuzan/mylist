@@ -7,16 +7,15 @@
   function malSearch(MalService, $timeout, spinnerService) {
       return {
           restrict: 'A',
-          replace: true,
           scope: {
             type: '=malSearch',
             selectItem: '=malSearchSelect',
             searchString: '=malSearchModel',
             options: '=malSearchOptions'
           },
-          controllerAs: 'malSearchCtrl',
-          bindToController: true,
           templateUrl: '/modules/core/templates/mal-search.html',
+          bindToController: true,
+          controllerAs: 'malSearchCtrl',
           controller: function($scope) {
             var self = this;
 

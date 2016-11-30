@@ -1,3 +1,8 @@
+cero-23 (2.3.1)
+- removed replace attribute from mal-search directive.
+  - unconfirmed to be the culprit for the long load times.
+  - angular 2 doesn't use replace so it's probably a "better practice"
+
 cero-23 (2.3.0)
 - added float-label css, starting to apply it throughout the application
 - added loading spinner to malSearch directive.

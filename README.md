@@ -1,3 +1,13 @@
+# mylist
+
+<a href="http://meanjs.org/">MEANjs</a> application to keep track of my <a href="https://myanimelist.net/">myanimelist</a> anime/manga lists, provide statistics on those lists, and various other bits & bobs.
+
+<em>In my opinion, would provide little value to others, with the exception of some interesting code snippets.</em>
+
+<hr />
+
+<b> change history </b>
+
 cero-23 (2.3.1)
 - removed replace attribute from mal-search directive.
   - unconfirmed to be the culprit for the long load times.

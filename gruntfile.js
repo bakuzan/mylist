@@ -205,10 +205,33 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				files: {
-					'public/dist/application.min.js': 'public/dist/application.js'
+					'public/dist/application.min.js': 'public/dist/application.js',
+					'public/dist/templates.min.js': 'public/dist/templates.js',
 				}
 			}
-		}
+		},
+		ngtemplates: {
+        mylist: {
+            options: {
+                base: 'public',
+								prefix: '/',
+								quotes: 'single',
+								htmlmin: {
+								  collapseBooleanAttributes:      true,
+								  collapseWhitespace:             true,
+								  keepClosingSlash:               false, // Only if you are using SVG in HTML
+								  removeAttributeQuotes:          true,
+								  removeComments:                 false, // Only if you don't use comment directives!
+								  removeEmptyAttributes:          true,
+								  removeRedundantAttributes:      true,
+								  removeScriptTypeAttributes:     true,
+								  removeStyleLinkTypeAttributes:  true
+								}
+            },
+            src: 'public/modules/**/*.html',
+            dest: 'public/dist/templates.js'
+        }
+    }
 	});
 
 	// Load NPM tasks
@@ -239,7 +262,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('lint', ['jshint', 'csslint']);
 
 	// Build task(s).
-	grunt.registerTask('build', ['lint', 'loadConfig', 'ngAnnotate', 'babel:dist', 'sass:helper', 'sass:dist', 'postcss:dist']);
+	grunt.registerTask('build', ['lint', 'ngtemplates', 'loadConfig', 'ngAnnotate', 'babel:dist', 'sass:helper', 'sass:dist', 'postcss:dist']);
 
 	// Test task.
 	grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);

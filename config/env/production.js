@@ -39,7 +39,10 @@ module.exports = {
       'public/dist/control-overrides.css',
 			'public/dist/float-label.css'
 		],
-		js: 'public/dist/application.min.js'
+		js: [
+			'public/dist/application.min.js',
+			'public/dist/templates.min.js',
+		]
 	},
 	facebook: {
 		clientID: process.env.FACEBOOK_ID || 'APP_ID',

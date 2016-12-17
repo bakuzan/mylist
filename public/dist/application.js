@@ -380,7 +380,9 @@ angular.module('animeitems').config(['$stateProvider',
 
 		function selectMalEntry(malEntry) {
 			if(malEntry) {
-				ctrl.animeitem.title = malEntry.title;
+				if (ctrl.config.isCreate) {
+					ctrl.animeitem.title = malEntry.title;
+				}
 				ctrl.animeitem.finalEpisode = malEntry.episodes;
 				ctrl.imgPath = malEntry.image;
 				ctrl.season = malEntry.status === Enums.malStatus.anime.ongoing;

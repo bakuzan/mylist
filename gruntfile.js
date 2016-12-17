@@ -213,7 +213,7 @@ module.exports = function(grunt) {
 		ngtemplates: {
         mylist: {
             options: {
-                base: 'public',
+								base: 'public',
 								prefix: '/',
 								quotes: 'single',
 								htmlmin: {
@@ -228,7 +228,8 @@ module.exports = function(grunt) {
 								  removeStyleLinkTypeAttributes:  true
 								}
             },
-            src: 'public/modules/**/*.html',
+						cwd: 'public',
+            src: 'modules/**/*.html',
             dest: 'public/dist/templates.js'
         }
     }

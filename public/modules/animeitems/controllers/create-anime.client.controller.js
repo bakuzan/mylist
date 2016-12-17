@@ -173,7 +173,7 @@
 		function findOne() {
 	    spinnerService.loading('editAnime', Animeitems.get({ animeitemId: animeitemId }).$promise.then(function(result) {
 	        ctrl.animeitem = result;
-					ctrl.malSearchOptions.disabled = (ctrl.animeitem.mal && ctrl.animeitem.mal.id > 0) || false;
+					ctrl.malSearchOptions.disabled = false; //(ctrl.animeitem.mal && ctrl.animeitem.mal.id > 0) || false;
 	    }));
 		}
 

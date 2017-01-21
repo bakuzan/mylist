@@ -175,7 +175,7 @@
 		function findOne() {
 	    spinnerService.loading('editManga', Mangaitems.get({ mangaitemId: $stateParams.mangaitemId }).$promise.then(function(result) {
           ctrl.mangaitem = result;
-					ctrl.malSearchOptions.disabled = (ctrl.mangaitem.mal && ctrl.mangaitem.mal.id > 0) || false;
+					ctrl.malSearchOptions.disabled = false; //(ctrl.mangaitem.mal && ctrl.mangaitem.mal.id > 0) || false;
 	    }));
 		}
 
